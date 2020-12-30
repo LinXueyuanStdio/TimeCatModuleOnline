@@ -44,6 +44,7 @@ allprojects {
 
         maven { url "https://plugins.gradle.org/m2/" }
 
+        maven { url "https://raw.github.com/bmob/bmob-android-sdk/master" }
 //        maven { url "https://github.com/LinXueyuanStdio/MLang/raw/main/dist/" }
     }
 }
