@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="user_titlebar_height">48dp</dimen>
+    <dimen name="user_bg_height">250dp</dimen>
+    <dimen name="user_text_margin">16dp</dimen>
+</resources>

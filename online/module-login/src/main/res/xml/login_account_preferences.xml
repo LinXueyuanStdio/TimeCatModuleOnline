@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="时光猫账户设置" />
+    <SwitchPreference
+        android:key="syncTask"
+        android:summary="同步任务到云端"
+        android:title="同步[任务]" />
+    <SwitchPreference
+        android:key="syncNote"
+        android:summary="同步笔记到云端"
+        android:title="同步[笔记]" />
+    <SwitchPreference
+        android:key="syncHabit"
+        android:summary="同步习惯到云端"
+        android:title="同步[习惯]" />
+</PreferenceScreen>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/herf"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/master_background_dark"
+    app:cardCornerRadius="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/herf_avatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerCrop"
+            app:riv_corner_radius="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@android:drawable/ic_dialog_info" />
+
+        <TextView
+            android:id="@+id/herf_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLength="10"
+            android:textColor="@color/master_colorAccent"
+            android:textSize="14dp"
+            app:layout_constraintEnd_toStartOf="@id/herf_go"
+            app:layout_constraintStart_toEndOf="@id/herf_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述" />
+
+        <TextView
+            android:id="@+id/herf_intro"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:ellipsize="end"
+            android:lines="2"
+            android:maxLength="20"
+            android:textColor="@color/master_textColorSecondary"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toStartOf="@id/herf_go"
+            app:layout_constraintStart_toEndOf="@id/herf_avatar"
+            app:layout_constraintTop_toBottomOf="@id/herf_title"
+            tools:text="用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述" />
+
+        <Button
+            android:id="@+id/herf_go"
+
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:text="进入"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_tiny"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"  />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

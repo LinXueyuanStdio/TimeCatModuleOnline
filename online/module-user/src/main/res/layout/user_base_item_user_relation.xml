@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/fans"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:padding="@dimen/margin_small"
+        android:text="0\n粉丝"
+        android:textColor="@color/master_textColorPrimary"
+        tools:targetApi="m"
+        tools:text="0\n粉丝" />
+
+    <TextView
+        android:id="@+id/follows"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:padding="@dimen/margin_small"
+        android:text="0\n关注"
+        android:textColor="@color/master_textColorPrimary"
+        tools:targetApi="m"
+        tools:text="0\n关注" />
+
+    <TextView
+        android:id="@+id/star"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:padding="@dimen/margin_small"
+        android:text="0\n获赞"
+        android:textColor="@color/master_textColorPrimary"
+        tools:targetApi="m"
+        tools:text="0\n获赞" />
+
+    <TextView
+        android:id="@+id/creation"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:padding="@dimen/margin_small"
+        android:text="0\n造物"
+        android:textColor="@color/master_textColorPrimary"
+        tools:targetApi="m"
+        tools:text="0\n造物" />
+
+</LinearLayout>

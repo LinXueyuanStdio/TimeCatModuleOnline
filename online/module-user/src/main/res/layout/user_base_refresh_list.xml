@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gturedi.views.StatefulLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_stateful"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:stfAnimationEnabled="true"
+    app:stfInAnimation="@android:anim/fade_in"
+    app:stfOutAnimation="@android:anim/fade_out">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/base_refresh_rv" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            app:layout_behavior="@string/bye_burger_bottom_behavior">
+
+            <TextView
+                android:id="@+id/write_response"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="3"
+                android:background="?attr/selectableItemBackground"
+                android:drawableStart="@drawable/ic_edit_24dp"
+                android:drawableTint="@color/master_icon_view"
+                android:gravity="start|center_vertical"
+                android:padding="10dp"
+                android:paddingStart="@dimen/micro"
+                android:paddingEnd="@dimen/micro"
+                android:text="写回复"
+                android:textColor="@color/master_textColorPrimary"
+                tools:targetApi="m" />
+        </LinearLayout>
+    </FrameLayout>
+</com.gturedi.views.StatefulLayout>

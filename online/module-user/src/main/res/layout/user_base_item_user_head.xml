@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/head"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="10dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="8dp">
+
+    <ImageView
+        android:id="@+id/head_more"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="@dimen/spacing_micro"
+        android:contentDescription="@string/more_menu"
+        android:src="@drawable/ic_expand_more_white_24dp"
+        android:tint="@color/master_icon_view_hint"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/head_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="10dp"
+        android:lines="1"
+        android:maxLength="18"
+        android:maxLines="1"
+        android:textColor="@color/master_textColorPrimary"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@+id/head_image"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="用户名" />
+
+    <TextView
+        android:id="@+id/head_follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="@string/follow"
+        android:textColor="@color/master_colorAccent"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintRight_toLeftOf="@id/head_more"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/head_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:maxLength="18"
+        android:maxLines="1"
+        android:textColor="@color/master_textColorTertiary"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toRightOf="@id/head_image"
+        app:layout_constraintTop_toBottomOf="@id/head_title"
+        tools:text="用户描述" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/head_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/header"
+        android:src="@drawable/ic_launcher"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

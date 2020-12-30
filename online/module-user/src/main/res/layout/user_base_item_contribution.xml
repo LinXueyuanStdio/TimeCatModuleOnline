@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/contributionCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="3dp"
+        app:contentPaddingBottom="@dimen/spacing_normal"
+        app:contentPaddingLeft="@dimen/spacing_xs_large"
+        app:contentPaddingRight="@dimen/spacing_xs_large"
+        app:contentPaddingTop="@dimen/spacing_normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.timecat.module.user.view.GitHubContributionsView
+            android:id="@+id/contributionView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp"
+            app:baseColor="@color/master_colorPrimary"
+            app:baseEmptyColor="@color/material_grey_400"
+            app:displayMonth="true"
+            app:lastWeeks="53"
+            app:textColor="@color/master_textColorPrimary" />
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

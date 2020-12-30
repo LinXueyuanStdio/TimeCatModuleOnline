@@ -1,8 +1,25 @@
 apply from: "${project.rootDir}/gradle/library_header.gradle"
 
+android {
+    resourcePrefix "user_" //给 Module 内的资源名增加前缀, 避免资源名冲突
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+}
+
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api 'androidx.appcompat:appcompat:1.2.0'
+    api rootProject.ext.timecat["middle-block"]
+    api rootProject.ext.timecat["middle-setting"]
+    api rootProject.ext.timecat["middle-image"]
+
+    api rootProject.ext.timecat["component-CommonBmob"]
+
+    api rootProject.ext.dependencies["roundedimageview"]
+
+    api 'com.github.CarGuo.RickText:textUtilsLib:v2.1.5'
+    api 'com.github.razerdp:PhotoContents:2.0.1'
+    api 'com.github.chengzhicao:ChannelView:v1.1.0'
 }
 
 apply from: "${project.rootDir}/gradle/library_tail.gradle"

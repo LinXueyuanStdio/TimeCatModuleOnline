@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/container"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop="@dimen/public_mar_top_10px"
+  android:layout_marginBottom="@dimen/public_mar_bottom_16px"
+  android:layout_marginLeft="@dimen/public_mar_left_15px"
+  android:layout_marginRight="@dimen/public_mar_right_15px"
+  app:cardBackgroundColor="@color/public_white"
+  app:cardCornerRadius="2dp"
+  app:cardElevation="2dp"
+  app:contentPadding="8dp"
+  >
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+      android:id="@+id/iv_avatar"
+      android:layout_width="@dimen/public_width_200px"
+      android:layout_height="@dimen/public_height_200px"
+      android:scaleType="centerInside"
+      android:src="@drawable/ic_artifact"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+      android:id="@+id/tv_name"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:layout_marginBottom="10dp"
+      android:text="title"
+      android:textColor="@color/public_black"
+      android:textSize="@dimen/public_font_18sp"
+      app:layout_constraintLeft_toRightOf="@+id/iv_avatar"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+      android:id="@+id/tv_content"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:maxLines="3"
+      android:text="介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字介绍最多200字"
+      android:textSize="14sp"
+      app:layout_constraintLeft_toRightOf="@+id/iv_avatar"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/tv_name"/>
+    <TextView
+      android:id="@+id/url"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:padding="5dp"
+      android:text="网址：http://xichen.pub"
+      app:layout_constraintTop_toBottomOf="@+id/iv_avatar"/>
+    <TextView
+      android:id="@+id/status"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="状态：审核中"
+      app:layout_constraintTop_toBottomOf="@+id/url"/>
+    <TextView
+      android:id="@+id/extra"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="消息：已有，重复推荐"
+      app:layout_constraintTop_toBottomOf="@+id/status"/>
+    <Button
+      android:id="@+id/cancel"
+
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:text="取消推荐"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/extra"
+      />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

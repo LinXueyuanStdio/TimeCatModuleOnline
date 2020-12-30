@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--圆形图片-->
+    <declare-styleable name="UserCircleImageView">
+        <attr name="user_civ_border_width" format="dimension" />
+        <attr name="user_civ_border_color" format="color" />
+        <attr name="user_civ_border_overlay" format="boolean" />
+        <attr name="user_civ_fill_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="UserRoundProgressBar">
+        <attr name="user_round_color" format="color" />
+        <attr name="user_round_progressColor" format="color" />
+        <attr name="user_round_width" format="dimension"/>
+        <attr name="user_round_textColor" format="color" />
+        <attr name="user_round_textsize" format="dimension" />
+        <attr name="user_round_max" format="integer"/>
+    </declare-styleable>
+
+
+</resources>

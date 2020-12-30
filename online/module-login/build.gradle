@@ -1,8 +1,16 @@
 apply from: "${project.rootDir}/gradle/library_header.gradle"
 
+android {
+    resourcePrefix "login_" //给 Module 内的资源名增加前缀, 避免资源名冲突
+}
+
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
-    api 'androidx.appcompat:appcompat:1.2.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api rootProject.ext.timecat["component-CommonBase"]
+    api rootProject.ext.timecat["component-CommonUI"]
+    api rootProject.ext.timecat["component-CommonBmob"]
+    api rootProject.ext.timecat["component-CommonData"]
+    api rootProject.ext.timecat["component-SelfRouter"]
 }
 
 apply from: "${project.rootDir}/gradle/library_tail.gradle"
