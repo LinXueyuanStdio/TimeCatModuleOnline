@@ -1,1 +1,195 @@
-<manifest package="com.timecat.module.user" />
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.timecat.module.user">
+    <!--允许联网 -->
+    <!--获取GSM（2g）、WCDMA（联通3g）等网络状态的信息  -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--获取wifi网络状态的信息 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--获取sd卡写的权限，用于文件上传和下载-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--允许读取手机状态 用于创建BmobInstallation-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application>
+        <!-- 在组件集成宿主时, 由于宿主已经声明了 CommonSDK 的公有 ConfigModule, 所以在这里只需要声明业务组件自己的 ConfigModule -->
+        <activity android:name="com.timecat.module.user.search.SearchActivity" />
+
+        <activity
+            android:name="com.timecat.module.user.social.user.UserFansListActivity"
+            android:noHistory="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <!--region module-user 用户-->
+        <activity
+            android:name="com.timecat.module.user.social.user.UserFollowListActivity"
+            android:noHistory="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!--endregion-->
+
+        <!--    region user follower-->
+        <activity
+            android:name="com.timecat.module.user.social.message.MessageAlertActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.timecat.module.user.social.cloud.CloudActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.cloud.slice.WorldActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.cloud.channel.CustomChannelActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.moment.MomentEditorActivity"
+            android:theme="@style/ThemeLight"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name="com.timecat.module.user.base.UserListActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.base.TopicListActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.app.AppDetailActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.leaderboard.LeaderBoardHomeActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.leaderboard.LeaderBoardDetailActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.leaderboard.RecommendActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.moment.MomentDetailActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.comment.CommentDetailActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.comment.CommentEditorActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.app.plugin.PluginListActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.developer.app.AddPluginActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.developer.app.AddAndroidAppActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.developer.app.AddiOSAppActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.developer.app.AddWindowsAppActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.developer.app.AddWebAppActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.forum.AddForumActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.forum.post.PostDetailActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.forum.post.PostEditorActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.forum.AllForumActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.forum.ForumDetailCollapseActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.topic.AddTopicActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.topic.TopicDetailCollapseActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.tag.AllTagActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.topic.AllTopicActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.tag.TagDetailCollapseActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.tag.AddTagActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.user.UserDetailCollapseActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.user.UserSettingActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.moment.AllMomentActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.game.bag.BagActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.permission.AllMetaPermissionActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.permission.AddMetaPermissionActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.permission.AddHunPermissionActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.permission.AllHunPermissionActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.permission.identity.AddIdentityActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.permission.role.AllRoleActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.permission.identity.AllIdentityActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.permission.role.AddRoleActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.permission.auth.AddAuthEditActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.permission.auth.AllAuthActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.search.SelectActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.cloud.slice.RecommendActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.manager.user.AllUserActivity"
+            android:theme="@style/ThemeLight" />
+        <activity android:name=".game.shop.ShopActivity" />
+        <activity android:name=".game.cube.CubeActivity" />
+        <activity android:name=".game.card.CardActivity" />
+
+        <meta-data
+            android:name="com.timecat.module.user.app.GlobalConfiguration"
+            android:value="ConfigModule" />
+        <!--    endregion-->
+    </application>
+
+</manifest>

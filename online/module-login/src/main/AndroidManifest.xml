@@ -1,1 +1,56 @@
-<manifest package="com.timecat.module.login" />
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.timecat.module.login">
+
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!--查看帐户需要权限-->
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <!--添加帐户需要权限-->
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <application>
+
+        <meta-data
+            android:name="com.timecat.module.login.app.GlobalConfiguration"
+            android:value="ConfigModule" />
+
+        <activity android:name="com.timecat.module.login.activity.LoginActivity" />
+        <activity android:name="com.timecat.module.login.activity.ProtocolActivity" />
+        <activity android:name="com.timecat.module.login.activity.RegisterCheckExistActivity" />
+        <activity android:name="com.timecat.module.login.activity.RegisterVerificationCodeActivity" />
+        <activity android:name="com.timecat.module.login.activity.ForgotPwdCheckExistActivity" />
+        <activity android:name="com.timecat.module.login.activity.ForgotPwdVerificationCodeActivity" />
+        <activity android:name="com.timecat.module.login.activity.ForgotPwdSetNewPwdActivity" />
+        <activity android:name="com.timecat.module.login.activity.RegisterSetPwdActivity" />
+
+        <service
+            android:name="com.timecat.module.login.sync.AuthenticationService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/login_authenticator" />
+        </service>
+
+
+        <service
+            android:name="com.timecat.module.login.sync.SyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/login_sync_adapter" />
+        </service>
+
+        <provider
+            android:name="com.timecat.module.login.sync.AccountProvider"
+            android:authorities="${applicationId}.account.provider"
+            android:exported="false"
+            android:syncable="true" />
+    </application>
+
+</manifest>
