@@ -189,6 +189,7 @@
             android:name="com.timecat.module.user.social.leaderboard.LeaderBoardCollapseActivity"
             android:theme="@style/ThemeLight" />
         <activity android:name=".social.app.add.AddMacAppActivity" />
+        <activity android:name=".social.app.edit.EditPluginAppActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

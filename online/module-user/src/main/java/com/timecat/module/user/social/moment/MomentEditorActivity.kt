@@ -14,6 +14,7 @@ import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.MomentBlock
 import com.timecat.identity.data.service.DataError
 import com.timecat.identity.data.service.OnSaveListener
+import com.timecat.module.user.base.BaseComplexEditorActivity
 import kotlinx.android.synthetic.main.user_activity_moment_add.*
 
 /**
@@ -24,7 +25,7 @@ import kotlinx.android.synthetic.main.user_activity_moment_add.*
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddMomentActivity)
-class MomentEditorActivity : BaseBlockEditorActivity() {
+class MomentEditorActivity : BaseComplexEditorActivity() {
     /**
      * 暂时没用
      */

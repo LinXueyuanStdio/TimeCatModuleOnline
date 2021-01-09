@@ -32,11 +32,11 @@ import kotlinx.coroutines.launch
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020/6/11
- * @description 上传 一个 Android 应用
+ * @description 上传一个应用
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddPluginAppActivity)
-class AddPluginAppActivity : BaseAddAppActivity() {
+open class AddPluginAppActivity : BaseAddAppActivity() {
     override fun title(): String = "时光猫插件"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
