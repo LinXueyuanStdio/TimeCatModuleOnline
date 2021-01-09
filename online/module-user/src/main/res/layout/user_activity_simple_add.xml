@@ -23,7 +23,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/publish"
+                android:id="@+id/ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
@@ -55,21 +55,4 @@
         </ScrollView>
 
     </com.gturedi.views.StatefulLayout>
-
-    <TextView
-        android:id="@+id/tv_delete_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/red_400"
-        android:drawableTop="@drawable/picture_icon_delete"
-        android:drawablePadding="5dp"
-        android:gravity="center"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:text="@string/app_drag_delete"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:visibility="gone"
-        tools:visibility="visible" />
 </RelativeLayout>

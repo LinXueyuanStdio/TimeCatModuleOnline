@@ -1,28 +1,25 @@
 package com.timecat.module.user.social.forum
 
-import android.text.InputType
 import android.view.ViewGroup
 import com.afollestad.vvalidator.form
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
-import com.xiaojinzi.component.anno.RouterAnno
-
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.dao.UserDao
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.ext.Forum
-import com.timecat.data.bmob.ext.create
-import com.timecat.data.bmob.ext.net.checkForumExistByTitle
 import com.timecat.data.bmob.ext.bmob.requestExist
 import com.timecat.data.bmob.ext.bmob.saveBlock
-import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
-import com.timecat.middle.setting.MaterialForm
-import com.timecat.middle.setting.BaseNewActivity
-import com.timecat.module.user.R
-import com.timecat.module.user.base.GO
+import com.timecat.data.bmob.ext.create
+import com.timecat.data.bmob.ext.net.checkForumExistByTitle
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.NoteBody
 import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.ForumBlock
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.middle.setting.MaterialForm
+import com.timecat.module.user.R
+import com.timecat.module.user.base.GO
+import com.timecat.module.user.base.login.BaseLoginEditActivity
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -35,17 +32,18 @@ import kotlinx.coroutines.launch
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddForumActivity)
-open class AddForumActivity : BaseNewActivity() {
+open class AddForumActivity : BaseLoginEditActivity() {
     @AttrValueAutowiredAnno("name")
-    lateinit var name: String
+    @JvmField
+    var name: String? = null
 
     @AttrValueAutowiredAnno("content")
-    lateinit var content: String
+    @JvmField
+    var content: String? = null
 
     @AttrValueAutowiredAnno("icon")
-    lateinit var icon: String
-
-    var I = UserDao.getCurrentUser()!!
+    @JvmField
+    var icon: String? = null
 
     override fun routerInject() = NAV.inject(this)
 
@@ -60,9 +58,10 @@ open class AddForumActivity : BaseNewActivity() {
     val formData: FormData = FormData()
 
     override fun addSettingItems(container: ViewGroup) {
-        formData.name = name
-        formData.content = content
-        formData.icon = icon
+        name?.let { formData.name = it }
+        content?.let { formData.content = it }
+        icon?.let { formData.icon = it }
+
         MaterialForm(this, container).apply {
             val titleItem = OneLineInput("论坛名", formData.name) {
                 formData.name = it ?: ""
@@ -93,7 +92,7 @@ open class AddForumActivity : BaseNewActivity() {
                     ToastUtil.e("创建失败！${it.msg}")
                     LogUtil.e("创建失败！${it.msg}")
                 }
-                onSuccess = {exist->
+                onSuccess = { exist ->
                     if (exist) {
                         ToastUtil.w("已存在，请修改论坛名！")
                     } else {
@@ -106,7 +105,7 @@ open class AddForumActivity : BaseNewActivity() {
 
     open fun save() {
         saveBlock {
-            target = I create Forum {
+            target = I() create Forum {
                 title = formData.name
                 content = formData.content
                 headerBlock = ForumBlock(

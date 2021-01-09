@@ -15,10 +15,15 @@ ext {
              projectName : ":data:bmob",
              projectMaven: "com.timecat.data:bmob"
             ],
-            [isLocal     : false,
+            [isLocal     : true,
              projectPath : "../TimeCatMiddle",
              projectName : ":middle:selector",
-             projectMaven: "com.timecat.middle:image"
+             projectMaven: "com.timecat.middle:selector"
+            ],
+            [isLocal     : true,
+             projectPath : "../TimeCatMiddle",
+             projectName : ":middle:setting",
+             projectMaven: "com.timecat.middle:setting"
             ]
     ]
 }

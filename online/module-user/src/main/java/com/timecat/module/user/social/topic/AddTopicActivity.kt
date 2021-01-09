@@ -2,23 +2,22 @@ package com.timecat.module.user.social.topic
 
 import android.view.ViewGroup
 import com.afollestad.vvalidator.form
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.dao.UserDao
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.ext.Topic
 import com.timecat.data.bmob.ext.bmob.requestExist
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.checkTopicExistByTitle
-import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
-import com.timecat.middle.setting.BaseNewActivity
-import com.timecat.middle.setting.MaterialForm
-import com.timecat.module.user.R
-import com.timecat.module.user.base.GO
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.NoteBody
 import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.TopicBlock
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.middle.setting.MaterialForm
+import com.timecat.module.user.R
+import com.timecat.module.user.base.GO
+import com.timecat.module.user.base.login.BaseLoginEditActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.coroutines.Dispatchers
@@ -33,17 +32,18 @@ import kotlinx.coroutines.launch
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddTopicActivity)
-open class AddTopicActivity : BaseNewActivity() {
+open class AddTopicActivity : BaseLoginEditActivity() {
     @AttrValueAutowiredAnno("name")
-    lateinit var name: String
+    @JvmField
+    var name: String? = null
 
     @AttrValueAutowiredAnno("content")
-    lateinit var content: String
+    @JvmField
+    var content: String? = null
 
     @AttrValueAutowiredAnno("icon")
-    lateinit var icon: String
-
-    var I = UserDao.getCurrentUser()!!
+    @JvmField
+    var icon: String? = null
 
     override fun routerInject() = NAV.inject(this)
 
@@ -58,9 +58,10 @@ open class AddTopicActivity : BaseNewActivity() {
     val formData: FormData = FormData()
 
     override fun addSettingItems(container: ViewGroup) {
-        formData.name = name
-        formData.content = content
-        formData.icon = icon
+        name?.let { formData.name = it }
+        content?.let { formData.content = it }
+        icon?.let { formData.icon = it }
+
         MaterialForm(this, container).apply {
             val titleItem = OneLineInput("话题名", formData.name) {
                 formData.name = it ?: ""
@@ -91,7 +92,7 @@ open class AddTopicActivity : BaseNewActivity() {
                     ToastUtil.e("创建失败！${it.msg}")
                     LogUtil.e("创建失败！${it.msg}")
                 }
-                onSuccess = {exist->
+                onSuccess = { exist ->
                     if (exist) {
                         ToastUtil.w("已存在，请修改话题名！")
                     } else {
@@ -104,7 +105,7 @@ open class AddTopicActivity : BaseNewActivity() {
 
     open fun save() {
         saveBlock {
-            target = I create Topic {
+            target = I() create Topic {
                 title = formData.name
                 content = formData.content
                 headerBlock = TopicBlock(

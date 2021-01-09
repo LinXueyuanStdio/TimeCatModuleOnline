@@ -35,7 +35,7 @@
                 tools:text="动态" />
 
             <Button
-                android:id="@+id/publish"
+                android:id="@+id/ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
@@ -65,10 +65,11 @@
             app:edit_view="@id/emojiEditText">
 
             <ScrollView
+                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_below="@id/toolbar"
+                android:layout_weight="1"
                 android:clipChildren="false">
 
                 <LinearLayout
@@ -107,7 +108,7 @@
                 android:id="@+id/bottom_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
+                android:background="@color/master_background_dark"
                 android:gravity="bottom"
                 android:minHeight="@dimen/dp_50"
                 android:orientation="horizontal"
@@ -123,7 +124,6 @@
                     android:contentDescription="@string/temp"
                     android:padding="8dp"
                     android:src="@drawable/ic_add_emoji"
-                    android:visibility="gone"
                     app:tint="@color/master_icon_view" />
 
                 <ImageView
@@ -164,7 +164,6 @@
                     android:contentDescription="@string/temp"
                     android:padding="8dp"
                     android:src="@drawable/ic_infinite_white_24dp"
-                    android:visibility="gone"
                     app:tint="@color/master_icon_view" />
 
                 <ImageView
@@ -175,7 +174,6 @@
                     android:contentDescription="@string/temp"
                     android:padding="8dp"
                     android:src="@drawable/ic_add_circle_white_24dp"
-                    android:visibility="gone"
                     app:tint="@color/master_icon_view" />
 
                 <ImageView

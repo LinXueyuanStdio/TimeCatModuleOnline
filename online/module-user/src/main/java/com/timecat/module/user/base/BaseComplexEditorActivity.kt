@@ -90,12 +90,18 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
                 .addPanelChangeListener {
                     onKeyboard {
                         //可选实现，输入法显示回调
+                        keyboard.animate().cancel()
+                        keyboard.animate().rotation(0f).start()
                     }
                     onNone {
                         //可选实现，默认状态回调
+                        keyboard.animate().cancel()
+                        keyboard.animate().rotation(180f).start()
                     }
                     onPanel {
                         //可选实现，面板显示回调
+                        keyboard.animate().cancel()
+                        keyboard.animate().rotation(0f).start()
                     }
                     onPanelSizeChange { panelView, _, _, _, width, height ->
                         //可选实现，输入法动态调整时引起的面板高度变化动态回调
@@ -119,14 +125,17 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
 //                    getPanelTriggerId { R.id.add_btn }
 //                }
                 .addContentScrollMeasurer { //可选，滑动模式下，可以针对内容面板内的view，定制滑动距离，默认滑动距离为 defaultDistance
-                    getScrollDistance { defaultDistance -> 0 }
-                    getScrollViewId { R.id.container }
+                    getScrollDistance { defaultDistance -> getScrollDistanceOfScrollView(defaultDistance) }
+                    getScrollViewId { R.id.scrollView }
                 }
                 .contentScrollOutsideEnable(true)  //可选，默认为true
                 .logTrack(true)                   //可选，默认false，是否开启log信息输出
                 .build(true)                      //可选，默认false，是否默认打开输入法
-
         }
+    }
+
+    protected open fun getScrollDistanceOfScrollView(defaultDistance:Int) :Int{
+        return 0
     }
 
     override fun onBackPressed() {
@@ -161,16 +170,8 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
             mHelper?.apply {
                 when {
                     isPanelState() -> toKeyboardState()
-                    isKeyboardState() -> {
-                        keyboard.animate().cancel()
-                        keyboard.animate().rotation(0.5f)
-                        hideKeyboard()
-                    }
-                    else -> {
-                        keyboard.animate().cancel()
-                        keyboard.animate().rotation(0.5f)
-                        toKeyboardState()
-                    }
+                    isKeyboardState() -> hideKeyboard()
+                    else -> toKeyboardState()
                 }
             }
         }
@@ -199,7 +200,7 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
         startActivityForResult(intent, REQUEST_TOPIC_CODE_INPUT)
     }
 
-    override fun publish(view: View) {
+    protected fun publish() {
         KeyboardUtil.hideKeyboard(emojiEditText)
         val content = emojiEditText.realText
         val originImgs = imageAdapter.data.map { it.savablePath() }.filterNotNull()

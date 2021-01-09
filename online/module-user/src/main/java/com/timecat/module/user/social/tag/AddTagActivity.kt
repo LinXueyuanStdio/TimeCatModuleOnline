@@ -23,6 +23,7 @@ import com.timecat.module.user.base.GO
 import com.timecat.identity.data.base.NoteBody
 import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.TagBlock
+import com.timecat.module.user.base.login.BaseLoginEditActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -35,17 +36,18 @@ import kotlinx.coroutines.launch
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddTagActivity)
-open class AddTagActivity : BaseNewActivity() {
+open class AddTagActivity : BaseLoginEditActivity() {
     @AttrValueAutowiredAnno("name")
-    lateinit var name: String
+    @JvmField
+    var name: String? = null
 
     @AttrValueAutowiredAnno("content")
-    lateinit var content: String
+    @JvmField
+    var content: String? = null
 
     @AttrValueAutowiredAnno("icon")
-    lateinit var icon: String
-
-    var I = UserDao.getCurrentUser()!!
+    @JvmField
+    var icon: String? = null
 
     override fun routerInject() = NAV.inject(this)
 
@@ -60,9 +62,10 @@ open class AddTagActivity : BaseNewActivity() {
     val formData: FormData = FormData()
 
     override fun addSettingItems(container: ViewGroup) {
-        formData.name = name
-        formData.content = content
-        formData.icon = icon
+        name?.let { formData.name = it }
+        content?.let { formData.content = it }
+        icon?.let { formData.icon = it }
+
         MaterialForm(this, container).apply {
             val titleItem = OneLineInput("标签名", formData.name) {
                 formData.name = it ?: ""
@@ -106,7 +109,7 @@ open class AddTagActivity : BaseNewActivity() {
 
     open fun save() {
         saveBlock {
-            target = I create Tag {
+            target = I() create Tag {
                 title = formData.name
                 content = formData.content
                 headerBlock = TagBlock(
