@@ -2,14 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false">
 
     <View
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
     <com.timecat.page.base.view.BlurringToolbar
         android:id="@+id/toolbar"
@@ -22,6 +23,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/title_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:textColor="@color/master_textColorPrimary"
+                android:textSize="16sp"
+                tools:text="动态" />
+
             <Button
                 android:id="@+id/publish"
                 android:layout_width="wrap_content"
@@ -33,75 +45,219 @@
         </LinearLayout>
     </com.timecat.page.base.view.BlurringToolbar>
 
-    <com.gturedi.views.StatefulLayout
-        android:id="@+id/ll_stateful"
+    <com.effective.android.panel.view.PanelSwitchLayout
+        android:id="@+id/panel_switch_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        app:stfAnimationEnabled="true"
-        app:stfInAnimation="@android:anim/fade_in"
-        app:stfOutAnimation="@android:anim/fade_out">
+        android:orientation="vertical"
+        app:animationSpeed="standard">
 
-        <ScrollView
+        <!-- 内容区域 -->
+        <!-- linear_edit_view 指定一个 EditText 用于输入 ，必须项-->
+        <!-- linear_auto_reset_enable 指定是否 LinearContentContainer 是否能够接受 Touch 事件自动隐藏面板-->
+        <!-- linear_auto_reset_area 指定是否 LinearContentContainer 只接受某个 View 区域的 Touch 事件来自定隐藏面板-->
+        <com.effective.android.panel.view.content.LinearContentContainer
+            android:id="@+id/linear_content_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:edit_view="@id/emojiEditText">
 
-            <LinearLayout
-                android:id="@+id/container"
+            <com.gturedi.views.StatefulLayout
+                android:id="@+id/ll_stateful"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_below="@id/toolbar"
+                android:layout_weight="1"
+                app:stfAnimationEnabled="true"
+                app:stfInAnimation="@android:anim/fade_in"
+                app:stfOutAnimation="@android:anim/fade_out">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/toolbar"
+                    android:clipChildren="false">
+
+                    <LinearLayout
+                        android:id="@+id/container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipChildren="false"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/spacing_small"
+                            android:contentDescription="@string/image"
+                            android:src="@drawable/ic_add_image" />
+
+                        <EditText
+                            android:id="@+id/name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/spacing_small"
+                            android:background="@null"
+                            android:hint="名字（必填）"
+                            android:maxLines="1"
+                            android:padding="@dimen/spacing_small" />
+
+                        <EditText
+                            android:id="@+id/herf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/spacing_small"
+                            android:background="@null"
+                            android:hint="最新版本的链接（必填，url）"
+                            android:maxLines="1"
+                            android:padding="@dimen/spacing_small" />
+
+                        <com.shuyu.textutillib.RichEditText
+                            android:id="@+id/emojiEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:background="@null"
+                            android:gravity="start"
+                            android:hint="清晰的描述（可选）"
+                            android:maxLines="7"
+                            android:minHeight="120dp"
+                            android:textColor="@color/master_textColorPrimary"
+                            android:textColorHint="@color/master_textColorTertiary"
+                            app:richMaxLength="1000" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:overScrollMode="never" />
+
+                    </LinearLayout>
+                </ScrollView>
+            </com.gturedi.views.StatefulLayout>
+
+            <LinearLayout
+                android:id="@+id/bottom_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="bottom"
+                android:minHeight="@dimen/dp_50"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_7">
 
                 <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/emoji"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:contentDescription="@string/image"
-                    android:src="@drawable/ic_add_image" />
+                    android:layout_weight="1"
+                    android:contentDescription="@string/temp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_add_emoji"
+                    app:tint="@color/master_icon_view" />
 
-                <EditText
-                    android:id="@+id/name"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/photo"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:background="@null"
-                    android:hint="名字（必填）"
-                    android:maxLines="1"
-                    android:padding="@dimen/spacing_small" />
+                    android:layout_weight="1"
+                    android:contentDescription="@string/temp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_feed_list_photo_special_24dp"
+                    app:tint="@color/master_icon_view" />
 
-                <EditText
-                    android:id="@+id/herf"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/at"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:background="@null"
-                    android:hint="最新版本的链接（必填，url）"
-                    android:maxLines="1"
-                    android:padding="@dimen/spacing_small" />
+                    android:layout_weight="1"
+                    android:contentDescription="@string/temp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_at"
+                    app:tint="@color/master_icon_view" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/topic"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:overScrollMode="never" />
+                    android:layout_weight="1"
+                    android:contentDescription="@string/temp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_topic"
+                    app:tint="@color/master_icon_view" />
 
-                <EditText
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/block"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:background="@null"
-                    android:hint="描述（必填）"
-                    android:maxLines="100"
-                    android:padding="@dimen/spacing_small" />
+                    android:layout_weight="1"
+                    android:contentDescription="@string/temp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_infinite_white_24dp"
+                    android:visibility="gone"
+                    app:tint="@color/master_icon_view" />
+
+                <ImageView
+                    android:id="@+id/more"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/temp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_add_circle_white_24dp"
+                    android:visibility="gone"
+                    app:tint="@color/master_icon_view" />
+
+                <ImageView
+                    android:id="@+id/keyboard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/temp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_keyboard_hide_white_24dp"
+                    app:tint="@color/master_icon_view" />
             </LinearLayout>
-        </ScrollView>
 
-    </com.gturedi.views.StatefulLayout>
+        </com.effective.android.panel.view.content.LinearContentContainer>
+
+
+        <!-- 面板区域，仅能包含PanelView-->
+        <com.effective.android.panel.view.panel.PanelContainer
+            android:id="@+id/panel_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null">
+
+            <!-- 每一项面板 -->
+            <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
+            <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
+            <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
+            <com.effective.android.panel.view.panel.PanelView
+                android:id="@+id/panel_emotion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:panel_layout="@layout/panel_emotion_layout"
+                app:panel_trigger="@id/emoji" />
+
+            <!-- 除了使用框架提供的 PanelView，也可以使用自定义 Panel -->
+            <!--            <com.example.demo.scene.api.CusPanelView-->
+            <!--                android:id="@+id/panel_addition"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                app:cus_panel_toggle="true"-->
+            <!--                app:cus_panel_trigger="@id/add_btn" />-->
+
+        </com.effective.android.panel.view.panel.PanelContainer>
+    </com.effective.android.panel.view.PanelSwitchLayout>
 
     <TextView
         android:id="@+id/tv_delete_text"
