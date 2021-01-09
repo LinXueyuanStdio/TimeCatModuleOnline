@@ -50,11 +50,7 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
     }
 
     override fun publish(content: String, attachments: AttachmentTail?) {
-        if (currentUser == null) {
-            NAV.go(RouterHub.LOGIN_LoginActivity)
-            return
-        }
-        val block = Block.forComment(currentUser, content)
+        val block = Block.forComment(I(), content)
         block.privacy = PrivacyScope(isPrivate = true)
         block.structure = CommentBlock(
             COMMENT_SIMPLE,
@@ -73,7 +69,7 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
             ).toJson()
         ).toJson()
 
-        CommentDao.addComment(currentUser, block, parent!!, {
+        CommentDao.addComment(I(), block, parent!!, {
             relay?.let {
                 it.isRelays {
                     finish()

@@ -10,8 +10,8 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description 上传 一个 Android 应用
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_AddAndroidAppActivity)
-class AddAndroidAppActivity : BaseAddAppActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_AddPluginAppActivity)
+class AddPluginAppActivity : BaseAddAppActivity() {
     override fun appBlockStructure(): String {
         TODO("Not yet implemented")
     }

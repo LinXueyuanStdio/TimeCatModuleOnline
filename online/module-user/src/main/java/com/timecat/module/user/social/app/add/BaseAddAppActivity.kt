@@ -1,22 +1,18 @@
 package com.timecat.module.user.social.app.add
 
-import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.config.PictureMimeType
-import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.dao.UserDao
+import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
 import com.timecat.data.bmob.dao.block.BlockDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.element.alert.ToastUtil
-import com.timecat.extend.image.IMG
-import com.timecat.extend.image.selectForResult
+import com.timecat.identity.data.base.AttachmentTail
 import com.timecat.identity.data.service.DataError
 import com.timecat.identity.data.service.OnSaveListener
-import com.timecat.identity.readonly.RouterHub
-import com.timecat.middle.image.BaseImageSelectorActivity
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
-import com.timecat.module.user.base.login.BaseLoginEditorActivity
-import com.timecat.page.base.view.MyClickListener
-import kotlinx.android.synthetic.main.user_activity_app_add.*
+import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.timecat.module.user.ext.chooseImage
 
 /**
  * @author 林学渊
@@ -25,7 +21,7 @@ import kotlinx.android.synthetic.main.user_activity_app_add.*
  * @description 开发者上传 app
  * @usage null
  */
-abstract class BaseAddAppActivity : BaseLoginEditorActivity() {
+abstract class BaseAddAppActivity : BaseBlockEditorActivity() {
 
     override fun title(): String = "应用"
     override fun layout(): Int = R.layout.user_activity_app_add
@@ -36,22 +32,29 @@ abstract class BaseAddAppActivity : BaseLoginEditorActivity() {
     val title: String
         get() = name.text?.toString() ?: ""
 
-    override fun initView() {
-        super.initView()
-        icon.setOnClickListener(MyClickListener {
-            selectIcon()
-        })
-        publish.setOnClickListener(MyClickListener {
-            publish()
-        })
+    lateinit var name: EditText
+    lateinit var description: EditText
+    lateinit var icon: ImageView
+    lateinit var publish: View
+
+    override fun bindView() {
+        super.bindView()
+        name = findViewById(R.id.name)
+        description = findViewById(R.id.description)
+        icon = findViewById(R.id.icon)
+        publish = findViewById(R.id.publish)
     }
 
-    fun selectIcon() {
-        IMG.select(PictureSelector.create(this).openGallery(PictureMimeType.ofImage()))
-                .maxSelectNum(1)
-                .selectForResult {
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        icon.setShakelessClickListener {
+            chooseImage(true) {
 
-                }
+            }
+        }
+        publish.setShakelessClickListener {
+            publish()
+        }
     }
 
     private fun publish() {
@@ -59,12 +62,7 @@ abstract class BaseAddAppActivity : BaseLoginEditorActivity() {
             ToastUtil.e("名字为空")
             return
         }
-        val user = UserDao.getCurrentUser()
-        if (user == null) {
-            NAV.go(RouterHub.LOGIN_LoginActivity)
-            return
-        }
-        val block = Block.forApp(user, title)
+        val block = Block.forApp(I(), title)
         block.content = content
         block.structure = appBlockStructure()
         BlockDao.save(block, object : OnSaveListener<Block> {
@@ -76,6 +74,10 @@ abstract class BaseAddAppActivity : BaseLoginEditorActivity() {
 
             }
         })
+    }
+
+    override fun publish(content: String, attachments: AttachmentTail?) {
+        TODO("Not yet implemented")
     }
 
     abstract fun appBlockStructure(): String

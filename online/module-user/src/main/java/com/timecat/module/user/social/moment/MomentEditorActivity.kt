@@ -52,11 +52,7 @@ class MomentEditorActivity : BaseBlockEditorActivity() {
     }
 
     override fun publish(content: String, attachments: AttachmentTail?) {
-        if (currentUser == null) {
-            NAV.go(RouterHub.LOGIN_LoginActivity)
-            return
-        }
-        val block = Block.forMoment(currentUser, content)
+        val block = Block.forMoment(I(), content)
         block.parent = parent
         block.privacy = PrivacyScope(isPrivate = true)
         block.structure = MomentBlock(

@@ -78,7 +78,7 @@
             android:name="com.timecat.module.user.social.app.plugin.PluginListActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.social.app.add.AddPluginActivity"
+            android:name="com.timecat.module.user.social.app.add.AddPluginAppActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name="com.timecat.module.user.social.app.add.AddAndroidAppActivity"
@@ -188,6 +188,7 @@
         <activity
             android:name="com.timecat.module.user.social.leaderboard.LeaderBoardCollapseActivity"
             android:theme="@style/ThemeLight" />
+        <activity android:name=".social.app.add.AddMacAppActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

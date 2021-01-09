@@ -1,5 +1,8 @@
 package com.timecat.module.user.social.app.add
 
+import com.timecat.identity.readonly.RouterHub
+import com.xiaojinzi.component.anno.RouterAnno
+
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
@@ -7,7 +10,9 @@ package com.timecat.module.user.social.app.add
  * @description 上传 一个 Android 应用
  * @usage null
  */
-class AddPluginActivity : BaseAddAppActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_AddMacAppActivity)
+class AddMacAppActivity : BaseAddAppActivity() {
+
     override fun appBlockStructure(): String {
         TODO("Not yet implemented")
     }

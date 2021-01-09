@@ -36,12 +36,8 @@ class PostEditorActivity : BaseBlockEditorActivity() {
     }
 
     override fun publish(content: String, attachments: AttachmentTail?) {
-        if (currentUser == null) {
-            NAV.go(RouterHub.LOGIN_LoginActivity)
-            return
-        }
         //TODO infix refactor
-        val block = Block.forPost(currentUser, content)
+        val block = Block.forPost(I(), content)
         block.parent = parent
         block.privacy = PrivacyScope(isPrivate = true)
         block.structure = PostBlock(

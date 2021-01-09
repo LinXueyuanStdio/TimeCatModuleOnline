@@ -60,7 +60,7 @@ class BlockSmallItem(
                 holder.tv_name.setText(leaderboard.title)
                 LOAD.image(leaderboard.simpleAvatar(), holder.iv_avatar)
                 holder.root.safeClick {
-                    GO.leaderBoardDetail(leaderboard)
+                    GO.leaderBoardDetail(leaderboard.objectId)
                 }
             }
             BLOCK_FORUM -> {
