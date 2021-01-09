@@ -1,8 +1,10 @@
 package com.timecat.module.user.manager.topic
 
+import com.timecat.data.bmob.data.common.Block
 import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.ext.net.allTopic
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.module.user.adapter.block.BlockSmallItem
 import com.timecat.module.user.base.BaseEndlessBlockActivity
 
 /**
@@ -16,4 +18,5 @@ import com.timecat.module.user.base.BaseEndlessBlockActivity
 class AllTopicActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "所有话题"
     override fun query() = allTopic()
+    override fun block2Item(block: Block) = BlockSmallItem(this, block)
 }

@@ -1,4 +1,4 @@
-package com.timecat.module.user.developer.app
+package com.timecat.module.user.social.app.add
 
 /**
  * @author 林学渊
@@ -7,8 +7,8 @@ package com.timecat.module.user.developer.app
  * @description 上传 一个 Android 应用
  * @usage null
  */
-class AddWebAppActivity:BaseAddAppActivity() {
-    override fun appBlock(): String {
+class AddWebAppActivity : BaseAddAppActivity() {
+    override fun appBlockStructure(): String {
         TODO("Not yet implemented")
     }
 }

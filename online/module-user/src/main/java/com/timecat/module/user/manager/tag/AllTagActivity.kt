@@ -1,8 +1,10 @@
 package com.timecat.module.user.manager.tag
 
+import com.timecat.data.bmob.data.common.Block
 import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.ext.net.allTag
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.module.user.adapter.block.BlockSmallItem
 import com.timecat.module.user.base.BaseEndlessBlockActivity
 
 /**
@@ -16,4 +18,5 @@ import com.timecat.module.user.base.BaseEndlessBlockActivity
 class AllTagActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "所有标签"
     override fun query() = allTag()
+    override fun block2Item(block: Block) = BlockSmallItem(this, block)
 }

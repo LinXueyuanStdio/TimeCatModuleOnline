@@ -10,7 +10,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/master_background_dark"
+        android:alpha="0.1"
+        android:background="@color/master_background_reverse"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -32,8 +33,8 @@
             android:layout_height="1dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:alpha="0.3"
-            android:background="@color/master_background_dark"
+            android:alpha="0.1"
+            android:background="@color/master_background_reverse"
             app:layout_constraintBottom_toTopOf="@+id/footer" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -41,6 +42,7 @@
         android:id="@+id/end"
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/master_background_dark"
+        android:alpha="0.1"
+        android:background="@color/master_background_reverse"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

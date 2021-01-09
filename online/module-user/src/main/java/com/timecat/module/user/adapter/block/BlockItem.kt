@@ -429,7 +429,7 @@ class BlockItem(
         holder.root.footer_share.text = block.shareText()
 
         setupLikeBlockButton(
-            BaseApplication.getContext(),
+            activity,
             holder.root.footer_like_ll.footer_like_icon,
             block
         ) {

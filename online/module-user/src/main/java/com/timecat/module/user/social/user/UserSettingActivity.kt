@@ -4,21 +4,15 @@ import android.view.ViewGroup
 import cn.bmob.v3.datatype.BmobFile
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
-import com.afollestad.materialdialogs.list.listItemsSingleChoice
-import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.config.PictureMimeType
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data._User
 import com.timecat.data.bmob.ext.bmob.updateUser
-import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.extend.image.IMG
-import com.timecat.extend.image.savablePath
-import com.timecat.extend.image.selectForResult
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.middle.setting.BaseSettingActivity
-import com.timecat.module.user.R
+import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.uploadImageByUser
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
@@ -32,14 +26,17 @@ import com.xiaojinzi.component.anno.RouterAnno
  */
 @RouterAnno(hostAndPath = RouterHub.USER_UserSettingActivity)
 class UserSettingActivity : BaseSettingActivity() {
-    lateinit var avatarItem: ImageItem
-    lateinit var coverItem: ImageItem
 
     @AttrValueAutowiredAnno("user")
     @JvmField
     var user: _User? = null
+
     override fun title(): String = "编辑资料"
     override fun routerInject() = NAV.inject(this)
+
+    lateinit var avatarItem: ImageItem
+    lateinit var coverItem: ImageItem
+
     override fun addSettingItems(container: ViewGroup) {
         if (user == null) {
             ToastUtil.w("找不到用户！")
@@ -135,87 +132,4 @@ class UserSettingActivity : BaseSettingActivity() {
             }
         }
     }
-
-
-    //region 图片处理逻辑
-    private fun chooseImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
-        MaterialDialog(this).show {
-            val choice = listOf(
-                "拍照",
-                "本地相册",
-//                "我的在线相册" TODO
-//                "内置图标"
-            )
-            positiveButton(R.string.ok)
-            listItemsSingleChoice(items = choice, initialSelection = 2) { dialog, index, text ->
-                when (index) {
-                    0 -> {
-                        //拍照
-                        takeOnePhoto(isAvatar, onSuccess)
-                    }
-                    1 -> {
-                        //本地相册
-                        selectOneLocalImage(isAvatar, onSuccess)
-                    }
-                    2 -> {
-                        //我的在线相册
-                        selectOneOnlineImage(isAvatar, onSuccess)
-                    }
-                }
-            }
-        }
-    }
-
-    protected fun takeOnePhoto(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
-        var aspect_ratio_x = 1
-        var aspect_ratio_y = 1
-        if (!isAvatar) {
-            aspect_ratio_x = 3
-            aspect_ratio_y = 2
-        }
-        IMG.select(PictureSelector.create(this).openCamera(PictureMimeType.ofImage()))
-            .maxSelectNum(1)
-            .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
-            .isGif(false)
-            .isEnableCrop(true)
-            .selectForResult {
-                if (it.isNotEmpty()) {
-                    val media = it[0]
-                    val path = media.savablePath()
-                    if (path == null) {
-                        ToastUtil.e_long("图片路径错误！")
-                    } else {
-                        onSuccess(path)
-                    }
-                }
-            }
-    }
-
-    protected fun selectOneLocalImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
-        var aspect_ratio_x = 1
-        var aspect_ratio_y = 1
-        if (!isAvatar) {
-            aspect_ratio_x = 3
-            aspect_ratio_y = 2
-        }
-        IMG.select(PictureSelector.create(this).openGallery(PictureMimeType.ofImage()))
-            .maxSelectNum(1)
-            .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
-            .isGif(false)
-            .isEnableCrop(true)
-            .selectForResult {
-                if (it.isNotEmpty()) {
-                    val media = it[0]
-                    val path = media.savablePath()
-                    if (path == null) {
-                        ToastUtil.e_long("图片路径错误！")
-                    } else {
-                        onSuccess(path)
-                    }
-                }
-            }
-    }
-
-    protected fun selectOneOnlineImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {}
-    //endregion
 }

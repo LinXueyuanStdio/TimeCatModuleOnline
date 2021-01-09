@@ -1,8 +1,8 @@
 package com.timecat.module.user.base;
 
+import com.timecat.component.router.app.NAV;
 import com.timecat.data.bmob.data.common.Block;
 import com.timecat.identity.readonly.RouterHub;
-import com.timecat.component.router.app.NAV;
 
 import java.io.Serializable;
 
@@ -48,6 +48,18 @@ public class GO {
         NAV.go(RouterHub.APP_DETAIL_AppDetailActivity, "blockId", blockId);
     }
 
+    public static void leaderBoardDetail(String blockId) {
+        NAV.go(RouterHub.USER_LeaderBoardDetailActivity, "blockId", blockId);
+    }
+
+    public static void allTag(Block parent) {
+        NAV.go(RouterHub.USER_AllTagActivity, "parent", (Serializable) parent);
+    }
+
+    public static void addRecommendFor(Block parent) {
+        NAV.go(RouterHub.USER_AddRecommendActivity, "parent", (Serializable) parent);
+    }
+
     public static void addCommentFor(Block parent) {
         NAV.go(RouterHub.USER_AddCommentActivity, "parent", (Serializable) parent);
     }
@@ -62,10 +74,10 @@ public class GO {
 
     public static void addForum(String name, String content, String icon) {
         NAV.raw(RouterHub.USER_AddForumActivity)
-                .withString("name", name)
-                .withString("content", content)
-                .withString("icon", icon)
-                .navigation();
+           .withString("name", name)
+           .withString("content", content)
+           .withString("icon", icon)
+           .navigation();
     }
 
     public static void addIdentity() {
@@ -84,18 +96,34 @@ public class GO {
         NAV.go(RouterHub.USER_AddHunPermissionActivity);
     }
 
+    public static void addIdentity(Block block) {
+        NAV.go(RouterHub.USER_AddIdentityActivity, "block", (Serializable) block);
+    }
+
+    public static void addRole(Block block) {
+        NAV.go(RouterHub.USER_AddRoleActivity, "block", (Serializable) block);
+    }
+
+    public static void addMetaPermission(Block block) {
+        NAV.go(RouterHub.USER_AddMetaPermissionActivity, "block", (Serializable) block);
+    }
+
+    public static void addHunPermission(Block block) {
+        NAV.go(RouterHub.USER_AddHunPermissionActivity, "block", (Serializable) block);
+    }
+
     public static void relayMoment(Block parent, Block relay) {
         NAV.raw(RouterHub.USER_AddMomentActivity)
-                .withSerializable("parent", parent)
-                .withSerializable("relay", relay)
-                .navigation();
+           .withSerializable("parent", parent)
+           .withSerializable("relay", relay)
+           .navigation();
     }
 
     public static void relayComment(Block parent, Block relay) {
         NAV.raw(RouterHub.USER_AddCommentActivity)
-                .withSerializable("parent", parent)
-                .withSerializable("relay", relay)
-                .navigation();
+           .withSerializable("parent", parent)
+           .withSerializable("relay", relay)
+           .navigation();
     }
 
 }

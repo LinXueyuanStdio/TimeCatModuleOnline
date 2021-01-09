@@ -24,6 +24,7 @@ import com.timecat.identity.data.base.AIT_PHOTO
 import com.timecat.identity.data.base.AttachmentItem
 import com.timecat.identity.data.base.AttachmentTail
 import com.timecat.middle.block.util.KeyboardUtil
+import com.timecat.module.user.ext.uploadImageByUser
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -85,12 +86,12 @@ abstract class BaseBlockEditorActivity : BaseLoginEditorActivity() {
         }
 
         at.setOnClickListener {
-            val intent = Intent(this, UserListActivity::class.java)
+            val intent = Intent(this, UserListBlockActivity::class.java)
             startActivityForResult(intent, REQUEST_USER_CODE_CLICK)
         }
 
         topic.setOnClickListener {
-            val intent = Intent(this, TopicListActivity::class.java)
+            val intent = Intent(this, TopicListBlockActivity::class.java)
             startActivityForResult(intent, REQUEST_TOPIC_CODE_CLICK)
         }
 
@@ -109,11 +110,11 @@ abstract class BaseBlockEditorActivity : BaseLoginEditorActivity() {
         publish.setOnClickListener {
             KeyboardUtil.hideKeyboard(emojiEditText)
             val content = emojiEditText.realText
-            val originImgs = imageAdapter.data.map { it.savablePath() }
+            val originImgs = imageAdapter.data.map { it.savablePath() }.filterNotNull()
             if (originImgs.isEmpty()) {
                 publish(content, null)
             } else {
-                uploadImage(originImgs, false) { origins ->
+                uploadImageByUser(I(), originImgs, false) { origins ->
                     publish(
                         content, AttachmentTail(
                             origins.map {
@@ -133,12 +134,12 @@ abstract class BaseBlockEditorActivity : BaseLoginEditorActivity() {
             .setColorTopic("#2962FF")
             .setEditTextAtUtilJumpListener(object : OnEditTextUtilJumpListener {
                 override fun notifyAt() {
-                    val intent = Intent(this@BaseBlockEditorActivity, UserListActivity::class.java)
+                    val intent = Intent(this@BaseBlockEditorActivity, UserListBlockActivity::class.java)
                     startActivityForResult(intent, REQUEST_USER_CODE_INPUT)
                 }
 
                 override fun notifyTopic() {
-                    val intent = Intent(this@BaseBlockEditorActivity, TopicListActivity::class.java)
+                    val intent = Intent(this@BaseBlockEditorActivity, TopicListBlockActivity::class.java)
                     startActivityForResult(intent, REQUEST_TOPIC_CODE_INPUT)
                 }
             })
@@ -147,82 +148,6 @@ abstract class BaseBlockEditorActivity : BaseLoginEditorActivity() {
 
     abstract fun publish(content: String, attachments: AttachmentTail?)
 
-    private fun uploadImage(
-        filePaths: List<String?>,
-        isCompress: Boolean,
-        onFinish: (List<String>) -> Unit
-    ) {
-        fun getUploadText(done: Int, all: Int): String {
-            return if (isCompress) {
-                "正在上传压缩图中($done/${all})"
-            } else {
-                "正在上传原图中($done/${all})"
-            }
-        }
-
-        val list = arrayListOf<String>()
-        val d = MaterialDialog(this).show {
-            message(text = getUploadText(0, filePaths.size))
-            cancelOnTouchOutside(false)
-        }
-        LogUtil.se("")
-        Observable.concat(filePaths.filterNotNull().map {
-            val file = File(it)
-            val bytes = FileIOUtils.readFile2BytesByStream(file)
-            val encode2String: String = EncodeUtils.base64Encode2String(bytes)
-            val today = DateTime().toString("yyyyMMdd")
-            val HHmm = DateTime().toString("HHmm-ss-")
-            val path = if (isCompress) {
-                "${GiteeService.imagePathPrefix}${today}/compress/$HHmm${file.name}"
-            } else {
-                "${GiteeService.imagePathPrefix}${today}/$HHmm${file.name}"
-            }
-            WEB.gitee().upload(
-                GiteeService.owner, GiteeService.repo, path,
-                GiteeFile(
-                    message = "${currentUser?.objectId}" +
-                            " username=${currentUser?.username}" +
-                            " email=${currentUser?.email}",
-                    content = encode2String, access_token = GiteeService.GiteeToken
-                )
-            ).subscribeOn(Schedulers.io())
-        })
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<GitFileResponse> {
-                override fun onComplete() {
-                    list.forEach { LogUtil.se(it) }
-                    onFinish(list)
-                    d.dismiss()
-                }
-
-                override fun onSubscribe(p0: Disposable) {
-                }
-
-                override fun onNext(resp: GitFileResponse) {
-                    LogUtil.se("${resp.content.name}  => ${resp.content.path}")
-                    val url = resp.content.download_url
-                    val newUrlIdx = url.indexOf(GiteeService.imagePathPrefix)
-                    val token = url.lastIndexOf("?")
-
-                    val trueUrl = if (token > 0) {
-                        GiteeService.urlPathPrefix + url.substring(newUrlIdx, token)
-                    } else {
-                        GiteeService.urlPathPrefix + url.substring(newUrlIdx)
-                    }
-                    LogUtil.se(trueUrl)
-                    list.add(trueUrl)
-                    d.message(text = getUploadText(list.size, filePaths.size))
-                }
-
-                override fun onError(e: Throwable) {
-                    e.printStackTrace()
-                    list.forEach { LogUtil.se(it) }
-                    ToastUtil.e("上传失败 " + e.message)
-                    d.dismiss()
-                }
-            })
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         data?.let {
@@ -230,23 +155,23 @@ abstract class BaseBlockEditorActivity : BaseLoginEditorActivity() {
                 when (requestCode) {
                     REQUEST_USER_CODE_CLICK -> emojiEditText.resolveAtResult(
                         it.getSerializableExtra(
-                            UserListActivity.DATA
+                            UserListBlockActivity.DATA
                         ) as UserModel
                     )
                     REQUEST_USER_CODE_INPUT -> emojiEditText.resolveAtResultByEnterAt(
                         it.getSerializableExtra(
-                            UserListActivity.DATA
+                            UserListBlockActivity.DATA
                         ) as UserModel
                     )
 
                     REQUEST_TOPIC_CODE_INPUT -> emojiEditText.resolveTopicResultByEnter(
                         it.getSerializableExtra(
-                            TopicListActivity.DATA
+                            TopicListBlockActivity.DATA
                         ) as TopicModel
                     )
                     REQUEST_TOPIC_CODE_CLICK -> emojiEditText.resolveTopicResult(
                         it.getSerializableExtra(
-                            TopicListActivity.DATA
+                            TopicListBlockActivity.DATA
                         ) as TopicModel
                     )
                 }

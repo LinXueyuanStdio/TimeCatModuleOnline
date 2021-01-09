@@ -103,7 +103,7 @@
                     android:contentDescription="@string/add"
                     android:padding="8dp"
                     android:src="@drawable/ic_location"
-                    android:tint="@color/master_icon_view" />
+                    app:tint="@color/master_icon_view" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -127,7 +127,7 @@
                     android:contentDescription="@string/temp"
                     android:padding="8dp"
                     android:src="@drawable/ic_arrow_right_white_24dp"
-                    android:tint="@color/master_icon_view" />
+                    app:tint="@color/master_icon_view" />
             </LinearLayout>
 
             <LinearLayout
@@ -148,7 +148,7 @@
                     android:contentDescription="@string/add"
                     android:padding="8dp"
                     android:src="@drawable/ic_eye"
-                    android:tint="@color/master_icon_view" />
+                    app:tint="@color/master_icon_view" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -173,7 +173,7 @@
                     android:contentDescription="@string/temp"
                     android:padding="8dp"
                     android:src="@drawable/ic_arrow_right_white_24dp"
-                    android:tint="@color/master_icon_view" />
+                    app:tint="@color/master_icon_view" />
             </LinearLayout>
 
         </LinearLayout>
@@ -200,8 +200,8 @@
                 android:contentDescription="@string/temp"
                 android:padding="8dp"
                 android:src="@drawable/ic_add_emoji"
-                android:tint="@color/master_icon_view"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:tint="@color/master_icon_view" />
 
             <ImageView
                 android:id="@+id/photo"
@@ -211,7 +211,7 @@
                 android:contentDescription="@string/temp"
                 android:padding="8dp"
                 android:src="@drawable/ic_feed_list_photo_special_24dp"
-                android:tint="@color/master_icon_view" />
+                app:tint="@color/master_icon_view" />
 
             <ImageView
                 android:id="@+id/at"
@@ -221,7 +221,7 @@
                 android:contentDescription="@string/temp"
                 android:padding="8dp"
                 android:src="@drawable/ic_at"
-                android:tint="@color/master_icon_view" />
+                app:tint="@color/master_icon_view" />
 
             <ImageView
                 android:id="@+id/topic"
@@ -231,8 +231,7 @@
                 android:contentDescription="@string/temp"
                 android:padding="8dp"
                 android:src="@drawable/ic_topic"
-                android:tint="@color/master_icon_view"
-                />
+                app:tint="@color/master_icon_view" />
 
             <ImageView
                 android:id="@+id/block"
@@ -242,8 +241,8 @@
                 android:contentDescription="@string/temp"
                 android:padding="8dp"
                 android:src="@drawable/ic_infinite_white_24dp"
-                android:tint="@color/master_icon_view"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:tint="@color/master_icon_view" />
 
             <ImageView
                 android:id="@+id/more"
@@ -252,9 +251,9 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/temp"
                 android:padding="8dp"
-                android:src="@drawable/ic_add_circle_special_24dp"
-                android:tint="@color/master_icon_view"
-                android:visibility="gone" />
+                android:src="@drawable/ic_add_circle_white_24dp"
+                android:visibility="gone"
+                app:tint="@color/master_icon_view" />
 
             <ImageView
                 android:id="@+id/keyboard"
@@ -264,7 +263,7 @@
                 android:contentDescription="@string/temp"
                 android:padding="8dp"
                 android:src="@drawable/ic_keyboard_hide_white_24dp"
-                android:tint="@color/master_icon_view" />
+                app:tint="@color/master_icon_view" />
         </LinearLayout>
 
         <com.shuyu.textutillib.EmojiLayout

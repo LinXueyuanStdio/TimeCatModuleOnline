@@ -1,8 +1,12 @@
 package com.timecat.module.user.manager.forum
 
+import com.timecat.data.bmob.data.common.Block
 import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.ext.net.allForum
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.entity.BaseItem
+import com.timecat.module.user.adapter.block.BlockSmallItem
+import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.BaseEndlessBlockActivity
 
 /**
@@ -16,4 +20,5 @@ import com.timecat.module.user.base.BaseEndlessBlockActivity
 class AllForumActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "所有论坛"
     override fun query() = allForum()
+    override fun block2Item(block: Block) = BlockSmallItem(this, block)
 }

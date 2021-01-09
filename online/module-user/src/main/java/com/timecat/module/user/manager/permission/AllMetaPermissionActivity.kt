@@ -2,6 +2,7 @@ package com.timecat.module.user.manager.permission
 
 import android.view.Menu
 import android.view.MenuItem
+import com.timecat.data.bmob.data.common.Block
 import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.ext.net.allMetaPermission
 import com.timecat.data.bmob.ext.bmob.requestBlock
@@ -9,6 +10,7 @@ import com.timecat.data.bmob.ext.net.allTopic
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.BlockItem
+import com.timecat.module.user.adapter.block.BlockSmallItem
 import com.timecat.module.user.base.BaseBlockListActivity
 import com.timecat.module.user.base.BaseEndlessBlockActivity
 import com.timecat.module.user.base.GO
@@ -24,6 +26,7 @@ import com.timecat.module.user.base.GO
 class AllMetaPermissionActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "元权限"
     override fun query() = allMetaPermission()
+    override fun block2Item(block: Block) = BlockSmallItem(this, block)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_add, menu)

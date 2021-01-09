@@ -1,20 +1,21 @@
-package com.timecat.module.user.developer.app
+package com.timecat.module.user.social.app.add
 
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.dao.block.BlockDao
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.page.base.view.MyClickListener
+import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.image.IMG
 import com.timecat.extend.image.selectForResult
-import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
-import com.timecat.middle.image.BaseImageSelectorActivity
-import com.timecat.module.user.R
 import com.timecat.identity.data.service.DataError
 import com.timecat.identity.data.service.OnSaveListener
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.middle.image.BaseImageSelectorActivity
+import com.timecat.module.user.R
+import com.timecat.module.user.base.login.BaseLoginEditorActivity
+import com.timecat.page.base.view.MyClickListener
 import kotlinx.android.synthetic.main.user_activity_app_add.*
 
 /**
@@ -24,7 +25,7 @@ import kotlinx.android.synthetic.main.user_activity_app_add.*
  * @description 开发者上传 app
  * @usage null
  */
-abstract class BaseAddAppActivity : BaseImageSelectorActivity() {
+abstract class BaseAddAppActivity : BaseLoginEditorActivity() {
 
     override fun title(): String = "应用"
     override fun layout(): Int = R.layout.user_activity_app_add
@@ -47,10 +48,10 @@ abstract class BaseAddAppActivity : BaseImageSelectorActivity() {
 
     fun selectIcon() {
         IMG.select(PictureSelector.create(this).openGallery(PictureMimeType.ofImage()))
-            .maxSelectNum(1)
-            .selectForResult {
+                .maxSelectNum(1)
+                .selectForResult {
 
-            }
+                }
     }
 
     private fun publish() {
@@ -58,14 +59,14 @@ abstract class BaseAddAppActivity : BaseImageSelectorActivity() {
             ToastUtil.e("名字为空")
             return
         }
-        val user  = UserDao.getCurrentUser()
+        val user = UserDao.getCurrentUser()
         if (user == null) {
             NAV.go(RouterHub.LOGIN_LoginActivity)
             return
         }
         val block = Block.forApp(user, title)
         block.content = content
-        block.structure = appBlock()
+        block.structure = appBlockStructure()
         BlockDao.save(block, object : OnSaveListener<Block> {
             override fun success(data: Block) {
                 finish()
@@ -77,5 +78,5 @@ abstract class BaseAddAppActivity : BaseImageSelectorActivity() {
         })
     }
 
-    abstract fun appBlock(): String
+    abstract fun appBlockStructure(): String
 }

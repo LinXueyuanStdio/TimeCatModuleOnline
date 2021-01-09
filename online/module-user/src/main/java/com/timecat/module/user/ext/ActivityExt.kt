@@ -1,9 +1,20 @@
 package com.timecat.module.user.ext
 
 import android.app.Activity
+import android.content.Context
+import android.graphics.Typeface
+import android.widget.ImageView
+import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.bottomsheets.GridItem
+import com.afollestad.materialdialogs.bottomsheets.gridItems
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.blankj.utilcode.util.EncodeUtils
 import com.blankj.utilcode.util.FileIOUtils
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureMimeType
+import com.timecat.component.commonsdk.extension.beGone
 import com.timecat.element.alert.ToastUtil
 import com.timecat.data.bmob.data._User
 import com.timecat.component.commonsdk.utils.override.LogUtil
@@ -11,11 +22,22 @@ import com.timecat.data.system.model.api.GitFileResponse
 import com.timecat.data.system.model.api.GiteeFile
 import com.timecat.data.system.network.WEB
 import com.timecat.data.system.network.api.GiteeService
+import com.timecat.extend.image.IMG
+import com.timecat.extend.image.savablePath
+import com.timecat.extend.image.selectForResult
+import com.timecat.identity.font.FontAwesome
+import com.timecat.identity.font.FontDrawable
+import com.timecat.layout.ui.utils.IconLoader
+import com.timecat.module.user.R
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import java.io.File
 
@@ -26,6 +48,7 @@ import java.io.File
  * @description null
  * @usage null
  */
+//region 图片上传
 fun Activity.uploadImageByUser(
     currentUser: _User,
     filePaths: List<String>,
@@ -100,3 +123,149 @@ fun Activity.uploadImageByUser(
             }
         })
 }
+//endregion
+
+//region 图片处理逻辑
+fun Activity.chooseImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
+    MaterialDialog(this).show {
+        val choice = listOf(
+                "拍照",
+                "本地相册",
+                "内置图标",
+//                "我的在线相册" TODO
+        )
+        positiveButton(R.string.ok)
+        listItemsSingleChoice(items = choice, initialSelection = 2) { dialog, index, text ->
+            when (index) {
+                0 -> {
+                    //拍照
+                    takeOnePhoto(isAvatar, onSuccess)
+                }
+                1 -> {
+                    //本地相册
+                    selectOneLocalImage(isAvatar, onSuccess)
+                }
+                2 -> {
+                    //内置图标
+                    selectOneLocalIcon(isAvatar, onSuccess)
+                }
+                3 -> {
+                    //我的在线相册
+                    selectOneOnlineImage(isAvatar, onSuccess)
+                }
+            }
+        }
+    }
+}
+
+fun Activity.takeOnePhoto(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
+    var aspect_ratio_x = 1
+    var aspect_ratio_y = 1
+    if (!isAvatar) {
+        aspect_ratio_x = 3
+        aspect_ratio_y = 2
+    }
+    IMG.select(PictureSelector.create(this).openCamera(PictureMimeType.ofImage()))
+            .maxSelectNum(1)
+            .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
+            .isGif(false)
+            .isEnableCrop(true)
+            .selectForResult {
+                if (it.isNotEmpty()) {
+                    val media = it[0]
+                    val path = media.savablePath()
+                    if (path == null) {
+                        ToastUtil.e_long("图片路径错误！")
+                    } else {
+                        onSuccess(path)
+                    }
+                }
+            }
+}
+
+fun Activity.selectOneLocalImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
+    var aspect_ratio_x = 1
+    var aspect_ratio_y = 1
+    if (!isAvatar) {
+        aspect_ratio_x = 3
+        aspect_ratio_y = 2
+    }
+    IMG.select(PictureSelector.create(this).openGallery(PictureMimeType.ofImage()))
+            .maxSelectNum(1)
+            .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
+            .isGif(false)
+            .isEnableCrop(true)
+            .selectForResult {
+                if (it.isNotEmpty()) {
+                    val media = it[0]
+                    val path = media.savablePath()
+                    if (path == null) {
+                        ToastUtil.e_long("图片路径错误！")
+                    } else {
+                        onSuccess(path)
+                    }
+                }
+            }
+}
+
+fun Activity.selectOneOnlineImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {}
+
+class FontAwesomeGridItem(val context: Context, val font: Typeface, val iconRes: Int) : GridItem {
+    override val title: String
+        get() = context.resources.getResourceEntryName(iconRes)
+
+    override fun populateIcon(imageView: ImageView) {
+        val fontDrawable = FontDrawable(context, font, iconRes)
+        fontDrawable.setTextSize(24f)
+        imageView.setImageDrawable(fontDrawable)
+    }
+
+    override fun configureTitle(textView: TextView) {
+//        textView.typeface = font
+////                    textView.ellipsize = TextUtils.TruncateAt.END
+//        textView.setLines(1)
+//        textView.gravity = Gravity.CENTER
+//        textView.text =""// title.substring(3)
+        textView.beGone()
+    }
+
+}
+
+fun Activity.selectOneLocalIcon(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
+    GlobalScope.launch(Dispatchers.IO) {
+        val regularFont = FontAwesome.getFontAwesomeRegular(this@selectOneLocalIcon)
+        val regularIcons = FontAwesome.regularIcons().map {
+            FontAwesomeGridItem(this@selectOneLocalIcon, regularFont, it)
+        }
+        val maxRegularCount = regularIcons.size
+        val solidFont = FontAwesome.getFontAwesomeSolid(this@selectOneLocalIcon)
+        val solidIcons = FontAwesome.solidIcons().map {
+            FontAwesomeGridItem(this@selectOneLocalIcon, solidFont, it)
+        }.plus(regularIcons)
+        val maxSolidCount = solidIcons.size + maxRegularCount
+        val brandFont = FontAwesome.getFontAwesomeBrand(this@selectOneLocalIcon)
+        val brandIcons = FontAwesome.brandIcons().map {
+            FontAwesomeGridItem(this@selectOneLocalIcon, brandFont, it)
+        }
+        val maxBrandCount = brandIcons.size + maxSolidCount
+        val icons = regularIcons.plus(solidIcons).plus(brandIcons)
+        withContext(Dispatchers.Main) {
+            MaterialDialog(this@selectOneLocalIcon, BottomSheet()).show {
+                positiveButton(R.string.ok)
+                negativeButton(R.string.cancel)
+                gridItems(icons, R.integer.icon_row_count) { _, idx, item ->
+                    val text = item.title
+                    val url = when (idx) {
+                        in 0 until maxRegularCount -> "${IconLoader.FONTAWESOME_SCHEME}${IconLoader.FONTAWESOME_REGULAR}$text"
+                        in maxRegularCount until maxSolidCount -> "${IconLoader.FONTAWESOME_SCHEME}${IconLoader.FONTAWESOME_SOLID}$text"
+                        in maxSolidCount until maxBrandCount -> "${IconLoader.FONTAWESOME_SCHEME}${IconLoader.FONTAWESOME_BRAND}$text"
+                        else -> "${IconLoader.FONTAWESOME_SCHEME}$text"
+                    }
+                    LogUtil.sd(url)
+                    onSuccess(url)
+                }
+            }
+        }
+    }
+}
+//endregion

@@ -7,6 +7,4 @@ package com.timecat.module.user.base
  * @description 搜索，选择
  * @usage null
  */
-abstract class BaseSelectActivity : BaseBlockListActivity() {
-
-}
+abstract class BaseSelectUserRelationActivity : BaseEndlessUserRelationActivity()

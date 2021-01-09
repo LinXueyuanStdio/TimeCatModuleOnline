@@ -28,14 +28,11 @@
             android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
-        <!--region module-user 用户-->
         <activity
             android:name="com.timecat.module.user.social.user.UserFollowListActivity"
             android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <!--endregion-->
 
-        <!--    region user follower-->
         <activity
             android:name="com.timecat.module.user.social.message.MessageAlertActivity"
             android:screenOrientation="portrait"
@@ -54,19 +51,16 @@
             android:theme="@style/ThemeLight"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.timecat.module.user.base.UserListActivity"
+            android:name="com.timecat.module.user.base.UserListBlockActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.base.TopicListActivity"
+            android:name="com.timecat.module.user.base.TopicListBlockActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name="com.timecat.module.user.social.app.AppDetailActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name="com.timecat.module.user.social.leaderboard.LeaderBoardHomeActivity"
-            android:theme="@style/ThemeLight" />
-        <activity
-            android:name="com.timecat.module.user.social.leaderboard.LeaderBoardDetailActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name="com.timecat.module.user.social.leaderboard.RecommendActivity"
@@ -84,19 +78,19 @@
             android:name="com.timecat.module.user.social.app.plugin.PluginListActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.developer.app.AddPluginActivity"
+            android:name="com.timecat.module.user.social.app.add.AddPluginActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.developer.app.AddAndroidAppActivity"
+            android:name="com.timecat.module.user.social.app.add.AddAndroidAppActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.developer.app.AddiOSAppActivity"
+            android:name="com.timecat.module.user.social.app.add.AddiOSAppActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.developer.app.AddWindowsAppActivity"
+            android:name="com.timecat.module.user.social.app.add.AddWindowsAppActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.developer.app.AddWebAppActivity"
+            android:name="com.timecat.module.user.social.app.add.AddWebAppActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name="com.timecat.module.user.social.forum.AddForumActivity"
@@ -182,14 +176,22 @@
         <activity
             android:name="com.timecat.module.user.manager.user.AllUserActivity"
             android:theme="@style/ThemeLight" />
-        <activity android:name=".game.shop.ShopActivity" />
-        <activity android:name=".game.cube.CubeActivity" />
-        <activity android:name=".game.card.CardActivity" />
+        <activity
+            android:name="com.timecat.module.user.game.shop.ShopActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.game.cube.CubeActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.game.card.CardActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name="com.timecat.module.user.social.leaderboard.LeaderBoardCollapseActivity"
+            android:theme="@style/ThemeLight" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"
             android:value="ConfigModule" />
-        <!--    endregion-->
     </application>
 
 </manifest>

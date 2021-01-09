@@ -2,25 +2,25 @@ package com.timecat.module.user.base
 
 import cn.bmob.v3.BmobQuery
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.data.common.Block2Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.layout.ui.entity.BaseItem
+import com.timecat.data.bmob.ext.bmob.requestBlockRelation
 import com.timecat.module.user.adapter.block.BlockItem
-import com.timecat.module.user.adapter.block.BlockSmallItem
-import com.timecat.module.user.adapter.detail.BaseDetailVH
-import com.timecat.identity.data.block.type.*
 
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020/11/27
- * @description null
+ * @description 无尽的块，自动分页加载
  * @usage null
  */
-abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
-    abstract fun query(): BmobQuery<Block>
+abstract class BaseEndlessBlock2BlockFragment : BaseEndlessListFragment() {
+
+    abstract fun name(): String
+    abstract fun query(): BmobQuery<Block2Block>
 
     override fun loadFirst() {
-        requestBlock {
+        requestBlockRelation {
             query = query().apply {
                 setLimit(pageSize)
                 setSkip(offset)
@@ -32,27 +32,25 @@ abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
             onSuccess = {
                 offset += 1
                 mRefreshLayout.isRefreshing = false
-                adapter.updateDataSet(listOf(block2Item(it)))
+                val activity = requireActivity()
+                adapter.reload(listOf(BlockItem(activity, it.to)))
                 mStatefulLayout?.showContent()
             }
             onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
+                val activity = requireActivity()
                 val items = it.map {
-                    block2Item(it)
+                    BlockItem(activity, it.to)
                 }
-                adapter.updateDataSet(items)
+                adapter.reload(items)
                 mStatefulLayout?.showContent()
             }
         }
     }
 
-    open fun block2Item(block:Block): BaseItem<out BaseDetailVH> {
-        return BlockSmallItem(this, block)
-    }
-
-    override fun loadMore() {
-        requestBlock {
+    override  fun loadMore() {
+        requestBlockRelation {
             query = query().apply {
                 setLimit(pageSize)
                 setSkip(offset)
@@ -63,14 +61,16 @@ abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
             onSuccess = {
                 offset += 1
                 mRefreshLayout.isRefreshing = false
-                adapter.onLoadMoreComplete(listOf(block2Item(it)))
+                val activity = requireActivity()
+                adapter.onLoadMoreComplete(listOf(BlockItem(activity, it.to)))
                 mStatefulLayout?.showContent()
             }
             onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
+                val activity = requireActivity()
                 val items = it.map {
-                    block2Item(it)
+                    BlockItem(activity, it.to)
                 }
                 adapter.onLoadMoreComplete(items)
                 mStatefulLayout?.showContent()

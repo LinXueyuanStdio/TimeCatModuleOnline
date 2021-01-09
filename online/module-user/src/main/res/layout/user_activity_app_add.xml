@@ -42,60 +42,178 @@
         app:stfInAnimation="@android:anim/fade_in"
         app:stfOutAnimation="@android:anim/fade_out">
 
-        <ScrollView
+        <com.effective.android.panel.view.PanelSwitchLayout
+            android:id="@+id/panel_switch_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            app:animationSpeed="standard"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <!-- 内容区域 -->
+            <!-- linear_edit_view 指定一个 EditText 用于输入 ，必须项-->
+            <!-- linear_auto_reset_enable 指定是否 LinearContentContainer 是否能够接受 Touch 事件自动隐藏面板-->
+            <!-- linear_auto_reset_area 指定是否 LinearContentContainer 只接受某个 View 区域的 Touch 事件来自定隐藏面板-->
+            <com.effective.android.panel.view.content.LinearContentContainer
+                android:id="@+id/content_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:edit_view="@id/edit_text">
 
-                <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:contentDescription="@string/image"
-                    android:src="@drawable/ic_add_image" />
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/name"
+                    <LinearLayout
+                        android:id="@+id/container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/spacing_small"
+                            android:contentDescription="@string/image"
+                            android:src="@drawable/ic_add_image" />
+
+                        <EditText
+                            android:id="@+id/name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/spacing_small"
+                            android:background="@null"
+                            android:hint="名字（必填）"
+                            android:maxLines="1"
+                            android:padding="@dimen/spacing_small" />
+
+                        <EditText
+                            android:id="@+id/herf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/spacing_small"
+                            android:background="@null"
+                            android:hint="最新版本的链接（必填，url）"
+                            android:maxLines="1"
+                            android:padding="@dimen/spacing_small" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <EditText
+                            android:id="@+id/description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/spacing_small"
+                            android:background="@null"
+                            android:hint="描述（必填）"
+                            android:maxLines="100"
+                            android:padding="@dimen/spacing_small" />
+                    </LinearLayout>
+                </ScrollView>
+
+                <LinearLayout
+                    android:id="@+id/bottom_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:background="@null"
-                    android:hint="名字（必填）"
-                    android:maxLines="1"
-                    android:padding="@dimen/spacing_small" />
+                    android:background="@drawable/shape_input_layout"
+                    android:gravity="bottom"
+                    android:minHeight="@dimen/dp_50"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingBottom="@dimen/dp_7.5">
 
-                <EditText
-                    android:id="@+id/herf"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:background="@null"
-                    android:hint="最新版本的链接（必填，url）"
-                    android:maxLines="1"
-                    android:padding="@dimen/spacing_small" />
+                    <!-- 更多入口 -->
+                    <ImageView
+                        android:id="@+id/add_btn"
+                        android:layout_width="@dimen/dp_35"
+                        android:layout_height="@dimen/dp_35"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:src="@drawable/icon_add" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <!-- 输入入口 -->
+                    <EditText
+                        android:id="@+id/edit_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:layout_weight="1"
+                        android:background="@drawable/selector_edit_focus"
+                        android:imeOptions="actionSearch"
+                        android:maxLines="5"
+                        android:minHeight="@dimen/dp_35"
+                        android:paddingLeft="@dimen/dp_3"
+                        android:paddingTop="@dimen/dp_7.5"
+                        android:paddingRight="@dimen/dp_3"
+                        android:paddingBottom="@dimen/dp_3"
+                        android:textCursorDrawable="@drawable/shape_edit_cursor"
+                        android:textSize="@dimen/sp_16" />
 
-                <EditText
-                    android:id="@+id/description"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_35"
+                        android:orientation="horizontal">
+
+                        <!-- 表情入口 -->
+                        <ImageView
+                            android:id="@+id/emotion_btn"
+                            android:layout_width="@dimen/dp_35"
+                            android:layout_height="@dimen/dp_35"
+                            android:layout_marginEnd="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:src="@drawable/selector_emotion_btn" />
+
+                        <TextView
+                            android:id="@+id/send"
+                            android:layout_width="@dimen/dp_50"
+                            android:layout_height="@dimen/dp_35"
+                            android:background="@drawable/selector_send_btn"
+                            android:gravity="center"
+                            android:text="@string/send"
+                            android:textColor="@color/color_send_btn"
+                            android:textSize="@dimen/sp_15" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.effective.android.panel.view.content.LinearContentContainer>
+
+
+            <!-- 面板区域，仅能包含PanelView-->
+            <com.effective.android.panel.view.panel.PanelContainer
+                android:id="@+id/panel_container"
+                android:layout_width="match_parent"
+                android:background="@color/master_background"
+                android:layout_height="wrap_content">
+
+                <!-- 每一项面板 -->
+                <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
+                <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
+                <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
+                <com.effective.android.panel.view.panel.PanelView
+                    android:id="@+id/panel_emotion"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:background="@null"
-                    android:hint="描述（必填）"
-                    android:maxLines="100"
-                    android:padding="@dimen/spacing_small" />
-            </LinearLayout>
-        </ScrollView>
+                    android:layout_height="match_parent"
+                    app:panel_layout="@layout/panel_emotion_layout"
+                    app:panel_trigger="@id/emotion_btn" />
+
+                <!-- 除了使用框架提供的 PanelView，也可以使用自定义 Panel -->
+                <com.example.demo.scene.api.CusPanelView
+                    android:id="@+id/panel_addition"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cus_panel_trigger="@id/add_btn"
+                    app:cus_panel_toggle="true"/>
+
+            </com.effective.android.panel.view.panel.PanelContainer>
+        </com.effective.android.panel.view.PanelSwitchLayout>
+
 
     </com.gturedi.views.StatefulLayout>
 

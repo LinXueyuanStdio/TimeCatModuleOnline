@@ -1,4 +1,4 @@
-package com.timecat.module.user.developer.app
+package com.timecat.module.user.social.app.add
 
 /**
  * @author 林学渊
@@ -8,7 +8,7 @@ package com.timecat.module.user.developer.app
  * @usage null
  */
 class AddiOSAppActivity : BaseAddAppActivity() {
-    override fun appBlock(): String {
+    override fun appBlockStructure(): String {
         TODO("Not yet implemented")
     }
 }

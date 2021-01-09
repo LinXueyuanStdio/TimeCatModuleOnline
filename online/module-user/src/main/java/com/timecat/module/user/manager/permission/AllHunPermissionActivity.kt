@@ -2,10 +2,12 @@ package com.timecat.module.user.manager.permission
 
 import android.view.Menu
 import android.view.MenuItem
+import com.timecat.data.bmob.data.common.Block
 import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.ext.net.allHunPermission
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.R
+import com.timecat.module.user.adapter.block.BlockSmallItem
 import com.timecat.module.user.base.BaseEndlessBlockActivity
 import com.timecat.module.user.base.GO
 
@@ -19,8 +21,8 @@ import com.timecat.module.user.base.GO
 @RouterAnno(hostAndPath = RouterHub.USER_AllHunPermissionActivity)
 class AllHunPermissionActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "混权限"
-
     override fun query() = allHunPermission()
+    override fun block2Item(block: Block) = BlockSmallItem(this, block)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_add, menu)

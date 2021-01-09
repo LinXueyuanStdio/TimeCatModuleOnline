@@ -1,5 +1,7 @@
-package com.timecat.module.user.social.app
+package com.timecat.module.user.social.leaderboard
 
+import android.view.Menu
+import android.view.MenuItem
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
@@ -20,12 +22,17 @@ import com.timecat.data.bmob.ext.follow
 import com.timecat.data.bmob.ext.net.allFollowBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.data.block.AppBlock
+import com.timecat.identity.data.block.ForumBlock
+import com.timecat.identity.data.block.LeaderBoardBlock
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockDetailCollapseActivity
-import com.timecat.module.user.social.app.fragment.AppDetailFragment
-import com.timecat.module.user.social.app.fragment.CommentListFragment
-import com.timecat.module.user.social.app.vm.AppViewModel
+import com.timecat.module.user.base.GO
+import com.timecat.module.user.social.forum.fragment.CommentListFragment
+import com.timecat.module.user.social.leaderboard.fragment.LeaderBoardDetailFragment
+import com.timecat.module.user.social.leaderboard.fragment.LeaderBoardListFragment
+import com.timecat.module.user.social.leaderboard.fragment.RecommendListFragment
+import com.timecat.module.user.social.leaderboard.vm.LeaderBoardViewModel
 import com.timecat.module.user.view.ForumCard
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
@@ -33,22 +40,22 @@ import com.xiaojinzi.component.anno.RouterAnno
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
- * @date 2019-09-08
- * @description 应用详情，包括评论，预览
+ * @date 2021/1/9
+ * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.APP_DETAIL_AppDetailActivity)
-class AppDetailActivity : BaseBlockDetailCollapseActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_LeaderBoardDetailActivity)
+class LeaderBoardCollapseActivity : BaseBlockDetailCollapseActivity() {
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
-    lateinit var viewModel: AppViewModel
+    lateinit var viewModel: LeaderBoardViewModel
     lateinit var card: ForumCard
     override fun routerInject() = NAV.inject(this)
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        viewModel = ViewModelProvider(this).get(AppViewModel::class.java)
-        viewModel.app.observe(this, {
+        viewModel = ViewModelProvider(this).get(LeaderBoardViewModel::class.java)
+        viewModel.board.observe(this, {
             it?.let {
                 loadDetail(it)
             }
@@ -65,7 +72,7 @@ class AppDetailActivity : BaseBlockDetailCollapseActivity() {
 
     private fun loadDetail(block: Block) {
         // 1. 加载头部卡片
-        val headerBlock = AppBlock.fromJson(block.structure)
+        val headerBlock = LeaderBoardBlock.fromJson(block.structure)
         titleString = block.title
         card.apply {
             title = block.title
@@ -146,7 +153,7 @@ class AppDetailActivity : BaseBlockDetailCollapseActivity() {
         requestBlock {
             query = oneBlockOf(blockId)
             onSuccess = {
-                viewModel.app.postValue(it)
+                viewModel.board.postValue(it)
             }
             onError = {
                 mStatefulLayout?.showError("出错啦") {
@@ -156,19 +163,41 @@ class AppDetailActivity : BaseBlockDetailCollapseActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.leaderboard_recommend, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val i = item.itemId
+        if (i == android.R.id.home) {
+            finish()
+            return true
+        }
+        if (i == R.id.add) {
+            viewModel.board.value?.let {
+                GO.addRecommendFor(it)
+            }
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun getAdapter(): FragmentStatePagerAdapter {
         return DetailAdapter(supportFragmentManager)
     }
 
     class DetailAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getCount(): Int {
-            return 2
+            return 4
         }
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> AppDetailFragment()
-                1 -> CommentListFragment()
+                0 -> LeaderBoardDetailFragment()
+                1 -> LeaderBoardListFragment()
+                2 -> RecommendListFragment()
+                3 -> CommentListFragment()
                 else -> FallBackFragment()
             }
         }
@@ -176,7 +205,9 @@ class AppDetailActivity : BaseBlockDetailCollapseActivity() {
         override fun getPageTitle(position: Int): CharSequence? {
             return when (position) {
                 0 -> "详情"
-                1 -> "讨论"
+                1 -> "排行榜"
+                2 -> "举荐"
+                3 -> "讨论"
                 else -> super.getPageTitle(position)
             }
         }
