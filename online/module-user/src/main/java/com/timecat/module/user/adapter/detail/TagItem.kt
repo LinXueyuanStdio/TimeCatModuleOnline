@@ -13,8 +13,8 @@ import eu.davidea.flexibleadapter.items.IFlexible
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020/10/4
- * @description 一个作者
- * @usage 可关注作者，点击进入作者个人详情页
+ * @description 标签
+ * @usage block 的标签
  */
 class TagItem(
     val activity: Activity,

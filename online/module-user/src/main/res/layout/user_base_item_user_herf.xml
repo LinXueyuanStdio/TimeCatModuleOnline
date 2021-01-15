@@ -44,5 +44,5 @@
         android:layout_marginEnd="10dp"
         android:contentDescription="@string/temp"
         android:src="@drawable/ic_arrow_right_white_24dp"
-        android:tint="@color/master_icon_view" />
+        app:tint="@color/master_icon_view" />
 </LinearLayout>

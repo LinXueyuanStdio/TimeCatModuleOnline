@@ -22,7 +22,7 @@ import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.AppBlock
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.module.user.base.BaseBlockDetailCollapseActivity
+import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.social.app.fragment.AppDetailFragment
 import com.timecat.module.user.social.app.fragment.CommentListFragment
 import com.timecat.module.user.social.app.vm.AppViewModel
@@ -38,7 +38,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.APP_DETAIL_AppDetailActivity)
-class AppDetailActivity : BaseBlockDetailCollapseActivity() {
+class AppDetailActivity : BaseDetailCollapseActivity() {
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
     lateinit var viewModel: AppViewModel

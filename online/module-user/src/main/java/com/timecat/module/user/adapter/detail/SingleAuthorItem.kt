@@ -1,7 +1,6 @@
 package com.timecat.module.user.adapter.detail
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data._User
 import com.timecat.module.user.R

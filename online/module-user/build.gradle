@@ -14,6 +14,7 @@ dependencies {
     api rootProject.ext.timecat["middle-image"]
 
     api rootProject.ext.timecat["component-CommonBmob"]
+    api rootProject.ext.timecat["component-CommonStatic"]
 
     api rootProject.ext.dependencies["roundedimageview"]
 

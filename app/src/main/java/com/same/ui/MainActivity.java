@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.timecat.data.bmob.data._User;
 import com.timecat.identity.readonly.RouterHub;
 import com.xiaojinzi.component.impl.Callback;
 import com.xiaojinzi.component.impl.Router;
@@ -30,6 +31,18 @@ public class MainActivity extends Activity {
         linearLayout.addView(createButton("登录", RouterHub.LOGIN_LoginActivity));
         linearLayout.addView(createButton("添加插件", RouterHub.USER_AddPluginAppActivity));
         linearLayout.addView(createButton("添加动态", RouterHub.USER_AddMomentActivity));
+        linearLayout.addView(createButton("背包", RouterHub.USER_BagActivity));
+        Button a = createButton("用户", RouterHub.USER_UserDetailActivity);
+        a.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Router.with().hostAndPath(RouterHub.USER_UserDetailActivity)
+                      .putString("userId", _User.getCurrentUser(_User.class).getObjectId())
+                      .forward();
+
+            }
+        });
+        linearLayout.addView(a);
 
         setContentView(linearLayout);
     }

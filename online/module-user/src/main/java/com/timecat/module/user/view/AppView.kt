@@ -10,13 +10,12 @@ import android.view.View
 import android.widget.LinearLayout
 
 import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.dao.StatisticDao
-import com.timecat.data.bmob.dao.api.OnCountListener
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.focusSum
 import com.timecat.component.commonsdk.helper.HERF
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.ext.bmob.requestBlockCount
+import com.timecat.data.bmob.ext.net.findAllComment
 import com.timecat.identity.service.PluginService
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.ImageAdapter
@@ -111,11 +110,12 @@ class AppView : LinearLayout {
     }
 
     private fun initStatistic(root: View, block: Block) {
-        StatisticDao.getCommentSum(block, object : OnCountListener {
-            override fun onSuccess(count: Int) {
-                root.commentSum.text = "${count} 评论"
+        requestBlockCount {
+            query = block.findAllComment()
+            onSuccess = {
+                root.commentSum.text = "$it 评论"
             }
-        })
+        }
         root.downloadSum.text = "${block.usedBy} 浏览"
     }
 

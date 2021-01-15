@@ -23,7 +23,7 @@ import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
-import com.timecat.module.user.base.BaseBlockDetailCollapseActivity
+import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.social.topic.fragment.CommentListFragment
 import com.timecat.module.user.social.topic.fragment.MomentListFragment
 import com.timecat.module.user.social.topic.fragment.PostListFragment
@@ -40,7 +40,7 @@ import com.timecat.identity.data.block.ForumBlock
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_TopicDetailActivity)
-class TopicDetailCollapseActivity : BaseBlockDetailCollapseActivity() {
+class TopicDetailCollapseActivity : BaseDetailCollapseActivity() {
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
     lateinit var viewModel: TopicViewModel

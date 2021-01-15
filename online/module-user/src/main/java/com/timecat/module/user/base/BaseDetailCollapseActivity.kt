@@ -20,7 +20,7 @@ import kotlin.math.abs
  * @description AppBarLayout + CollapsingToolbarLayout + Toolbar
  * @usage 复杂的 detail 页面
  */
-abstract class BaseBlockDetailCollapseActivity : BaseLoginDetailActivity() {
+abstract class BaseDetailCollapseActivity : BaseLoginDetailActivity() {
 
     var titleString = ""
     var primaryColor: Int = 0

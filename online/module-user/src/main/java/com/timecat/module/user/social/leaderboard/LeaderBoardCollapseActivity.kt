@@ -22,11 +22,10 @@ import com.timecat.data.bmob.ext.follow
 import com.timecat.data.bmob.ext.net.allFollowBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.data.block.ForumBlock
 import com.timecat.identity.data.block.LeaderBoardBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.R
-import com.timecat.module.user.base.BaseBlockDetailCollapseActivity
+import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.social.forum.fragment.CommentListFragment
 import com.timecat.module.user.social.leaderboard.fragment.LeaderBoardDetailFragment
@@ -45,7 +44,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_LeaderBoardDetailActivity)
-class LeaderBoardCollapseActivity : BaseBlockDetailCollapseActivity() {
+class LeaderBoardCollapseActivity : BaseDetailCollapseActivity() {
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
     lateinit var viewModel: LeaderBoardViewModel

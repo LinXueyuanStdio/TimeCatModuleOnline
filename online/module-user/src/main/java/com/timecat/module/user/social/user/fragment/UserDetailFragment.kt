@@ -8,6 +8,7 @@ import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.adapter.detail.ContributionItem
 import com.timecat.module.user.adapter.detail.SimpleContentItem
+import com.timecat.module.user.adapter.detail.TraceItem
 import com.timecat.module.user.adapter.detail.UserRelationItem
 import com.timecat.module.user.base.login.BaseLoginListFragment
 import com.timecat.module.user.social.user.vm.UserViewModel
@@ -25,15 +26,17 @@ class UserDetailFragment : BaseLoginListFragment() {
 
     private fun loadDetail(user: _User) {
         val list = mutableListOf<BaseItem<*>>()
-        list.add(SimpleContentItem(requireActivity(), user.brief_intro))
-        list.add(UserRelationItem(requireActivity(), user))
-        list.add(ContributionItem(requireActivity(), user))
+        val activity = requireActivity()
+        list.add(SimpleContentItem(activity, user.brief_intro))
+        list.add(UserRelationItem(activity, user))
+        list.add(ContributionItem(activity, user))
         if (user.objectId == UserDao.getCurrentUser()?.objectId) {
-
+            list.add(TraceItem(activity, user))
         }
         adapter.reload(list)
         mRefreshLayout.isRefreshing = false
     }
+
     lateinit var viewModel: UserViewModel
     override fun initViewAfterLogin() {
         viewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)

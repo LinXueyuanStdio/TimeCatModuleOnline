@@ -8,19 +8,16 @@
     app:stfInAnimation="@android:anim/fade_in"
     app:stfOutAnimation="@android:anim/fade_out">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <include layout="@layout/base_refresh_rv" />
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <LinearLayout xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal"
-            app:layout_behavior="@string/bye_burger_bottom_behavior">
+            android:layout_gravity="top"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/write_response"
@@ -39,5 +36,7 @@
                 android:textColor="@color/master_textColorPrimary"
                 tools:targetApi="m" />
         </LinearLayout>
-    </FrameLayout>
+
+        <include layout="@layout/base_refresh_rv" />
+    </LinearLayout>
 </com.gturedi.views.StatefulLayout>

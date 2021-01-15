@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
-import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data._User
 import com.timecat.data.bmob.ext.net.oneUserOf
 import com.timecat.data.bmob.ext.bmob.requestUser
@@ -18,7 +17,7 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
-import com.timecat.module.user.base.BaseBlockDetailCollapseActivity
+import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.social.user.fragment.CommentListFragment
 import com.timecat.module.user.social.user.fragment.MomentListFragment
 import com.timecat.module.user.social.user.fragment.PostListFragment
@@ -36,7 +35,7 @@ import java.io.Serializable
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_UserDetailActivity)
-class UserDetailCollapseActivity : BaseBlockDetailCollapseActivity() {
+class UserDetailCollapseActivity : BaseDetailCollapseActivity() {
     @AttrValueAutowiredAnno("userId")
     lateinit var userId: String
     lateinit var viewModel: UserViewModel
