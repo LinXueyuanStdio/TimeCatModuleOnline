@@ -4,16 +4,13 @@ import android.view.View
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
-import com.timecat.data.bmob.dao.block.BlockDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.isRelays
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
-import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.MomentBlock
-import com.timecat.identity.data.service.DataError
-import com.timecat.identity.data.service.OnSaveListener
 import com.timecat.module.user.base.BaseComplexEditorActivity
 import kotlinx.android.synthetic.main.user_activity_moment_add.*
 
@@ -66,18 +63,19 @@ class MomentEditorActivity : BaseComplexEditorActivity() {
             }.toMutableList()),
             relayScope = relay?.let { RelayScope(it.objectId) }
         ).toJson()
-        BlockDao.save(block, object : OnSaveListener<Block> {
-            override fun success(data: Block) {
+        saveBlock {
+            target = block
+            onError = errorCallback
+            onSuccess = {
                 relay?.let {
-                    it.isRelays {
-                        finish()
-                    }
+                    it.isRelays { finish() }
                 } ?: finish()
             }
-
-            override fun error(e: DataError) {
-
+            onListSuccess = {
+                relay?.let {
+                    it.isRelays { finish() }
+                } ?: finish()
             }
-        })
+        }
     }
 }

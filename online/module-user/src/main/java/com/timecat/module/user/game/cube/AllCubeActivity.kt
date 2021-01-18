@@ -10,11 +10,12 @@ import cn.bmob.v3.BmobQuery
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.game.agent.OwnCube
-import com.timecat.data.bmob.ext.bmob.request
+import com.timecat.data.bmob.ext.bmob.requestOwnCube
+import com.timecat.data.bmob.ext.net.allOwnCube
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.game.cube.fragment.*
-import com.timecat.module.user.game.shop.vm.CubeViewModel
+import com.timecat.module.user.game.cube.vm.CubeViewModel
 import com.timecat.module.user.view.TopicCard
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -61,10 +62,8 @@ class AllCubeActivity : BaseDetailCollapseActivity() {
     }
 
     override fun fetch() {
-        request<OwnCube> {
-            query = BmobQuery<OwnCube>().apply {
-                addWhereEqualTo("user", I())
-            }
+        requestOwnCube {
+            query = I().allOwnCube()
             onSuccess = {
                 viewModel.cube.postValue(it)
             }

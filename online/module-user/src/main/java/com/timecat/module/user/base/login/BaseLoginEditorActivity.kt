@@ -1,10 +1,14 @@
 package com.timecat.module.user.base.login
 
+import com.gturedi.views.CustomStateOptions
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data._User
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.service.DataError
 import com.timecat.middle.image.BaseImageSelectorActivity
+import com.timecat.module.user.R
 
 /**
  * @author 林学渊

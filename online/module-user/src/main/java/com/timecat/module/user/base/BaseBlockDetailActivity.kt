@@ -2,21 +2,18 @@ package com.timecat.module.user.base
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.dao.block.BlockDao
-import com.timecat.data.bmob.dao.block.CommentDao
-import com.timecat.data.bmob.data.common.Block
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.net.findAllComment
+import com.timecat.data.bmob.ext.net.oneBlockOf
+import com.timecat.element.alert.ToastUtil
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.BlockAdapter
 import com.timecat.module.user.adapter.BlockItem
 import com.timecat.module.user.base.login.BaseLoginListActivity
 import com.timecat.module.user.view.FooterView
-import com.timecat.identity.data.block.BlockMini
-import com.timecat.identity.data.service.DataError
-import com.timecat.identity.data.service.OnFindListener
 import kotlinx.android.synthetic.main.user_activity_app_detail.*
 
 /**
@@ -50,17 +47,22 @@ abstract class BaseBlockDetailActivity : BaseLoginListActivity() {
     }
 
     override fun onRefresh() {
-        BlockDao.findByMini(BlockMini(getDetailBlockId()), object : OnFindListener<Block> {
-            override fun success(data: List<Block>) {
+        requestBlock {
+            query = oneBlockOf(getDetailBlockId())
+            onSuccess = {
+                val data = listOf(it)
                 initByBlock(data[0])
                 mRefreshLayout.isRefreshing = false
             }
-
-            override fun error(e: DataError) {
-                ToastUtil.e_long(e.message)
+            onListSuccess = { data ->
+                initByBlock(data[0])
                 mRefreshLayout.isRefreshing = false
             }
-        })
+            onError = {
+                ToastUtil.e_long(it.message)
+                mRefreshLayout.isRefreshing = false
+            }
+        }
     }
 
     private fun initByBlock(block: Block) {
@@ -70,16 +72,16 @@ abstract class BaseBlockDetailActivity : BaseLoginListActivity() {
     }
 
     private fun initComment(block: Block) {
-        CommentDao.findAll(block, object : OnFindListener<Block> {
-            override fun success(data: List<Block>) {
-                blockAdapter.replaceData(data.map { BlockItem(it) })
-                LogUtil.i(data)
+        requestBlock {
+            query = block.findAllComment()
+            onSuccess = {
+                blockAdapter.setList(listOf(BlockItem(it)))
             }
-
-            override fun error(e: DataError) {
-                LogUtil.e(e)
+            onListSuccess = {
+                blockAdapter.setList(it.map { BlockItem(it) })
+                LogUtil.i(it)
             }
-        })
+        }
     }
 
     private fun initFooterByBlock(block: Block) {

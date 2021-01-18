@@ -6,7 +6,6 @@ import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.dao.block.BlockDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.data.bmob.ext.bmob.requestBlock
@@ -32,8 +31,6 @@ import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.BLOCK_COMMENT
 import com.timecat.identity.data.block.type.BLOCK_MOMENT
 import com.timecat.identity.data.block.type.BLOCK_POST
-import com.timecat.identity.data.service.DataError
-import com.timecat.identity.data.service.OnFindListener
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import kotlinx.android.synthetic.main.user_base_item_footer.view.*
@@ -224,8 +221,10 @@ open class BlockContentItem (
     ) {
         holder.root.momentHerf.visibility = View.GONE
         relayScope?.let {
-            BlockDao.find(it.objectId, object : OnFindListener<Block> {
-                override fun success(data: List<Block>) {
+            requestBlock {
+                query = oneBlockOf(it.objectId)
+                onSuccess = {
+                    val data = listOf(it)
                     holder.root.momentHerf.apply {
                         visibility = View.VISIBLE
                         if (data.isEmpty()) {
@@ -236,11 +235,21 @@ open class BlockContentItem (
                         }
                     }
                 }
-
-                override fun error(e: DataError) {
-                    e.printStackTrace()
+                onListSuccess = {data->
+                    holder.root.momentHerf.apply {
+                        visibility = View.VISIBLE
+                        if (data.isEmpty()) {
+                            isNotExist()
+                        } else {
+                            bindBlock(data[0])
+                            setRelay(data[0])
+                        }
+                    }
                 }
-            })
+                onError = {
+                    it.printStackTrace()
+                }
+            }
         }
     }
 

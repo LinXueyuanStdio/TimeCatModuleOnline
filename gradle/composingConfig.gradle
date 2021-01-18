@@ -12,7 +12,7 @@ ext {
              projectName : ":identity:anim",
              projectMaven: "com.timecat.identity:anim"
             ],
-            [isLocal     : false,
+            [isLocal     : true,
              projectPath : "../TimeCatIdentity",
              projectName : ":identity:data",
              projectMaven: "com.timecat.identity:data"

@@ -54,6 +54,7 @@ class PostEditorActivity : BaseBlockEditorActivity() {
             onSuccess = {
                 finish()
             }
+            onError = errorCallback
         }
     }
 }

@@ -26,21 +26,21 @@ class LeaderBoardHomeActivity : BaseEndlessBlockActivity() {
     override fun query() = allLeaderBoard()
     override fun block2Item(block: Block) = BlockSmallItem(this, block)
 
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        menuInflater.inflate(R.menu.leaderboard_leaderboard, menu)//排行榜规则、推荐到排行榜的推荐列表
-//        return super.onCreateOptionsMenu(menu)
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        val i = item.itemId
-//        if (i == android.R.id.home) {
-//            finish()
-//            return true
-//        }
-//        if (i == R.id.recommend) {
-//            NAV.go(this, RouterHub.LEADERBOARD_RecommendActivity)
-//            return true
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.leaderboard_leaderboard, menu)//排行榜规则、推荐到排行榜的推荐列表
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val i = item.itemId
+        if (i == android.R.id.home) {
+            finish()
+            return true
+        }
+        if (i == R.id.recommend) {
+            NAV.go(this, RouterHub.LEADERBOARD_RecommendActivity)
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

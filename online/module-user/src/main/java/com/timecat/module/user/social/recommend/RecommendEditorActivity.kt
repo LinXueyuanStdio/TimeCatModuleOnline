@@ -1,20 +1,20 @@
 package com.timecat.module.user.social.recommend
 
 import android.view.View
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
-import com.xiaojinzi.component.anno.RouterAnno
-
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.dao.block.CommentDao
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.isRelays
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
-import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.saveBlock
+import com.timecat.data.bmob.ext.isRelays
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.COMMENT_SIMPLE
 import com.timecat.identity.data.block.CommentBlock
 import com.timecat.identity.data.block.SimpleComment
+import com.timecat.identity.data.block.type.BLOCK_COMMENT
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.android.synthetic.main.user_activity_moment_add.*
 
 /**
@@ -69,15 +69,27 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
             ).toJson()
         ).toJson()
 
-        CommentDao.addComment(I(), block, parent!!, {
-            relay?.let {
-                it.isRelays {
-                    finish()
-                }
-            } ?: finish()
-            ToastUtil.ok("评论成功")
-        }, {
-            ToastUtil.e_long("评论失败")
-        })
+        block.type = BLOCK_COMMENT
+        block.user = I()
+        block.parent = parent
+        block.tableName = "Block"
+        saveBlock {
+            target = block
+            onSuccess = {
+                relay?.let {
+                    it.isRelays { finish() }
+                } ?: finish()
+                ToastUtil.ok("评论成功")
+            }
+            onListSuccess = {
+                relay?.let {
+                    it.isRelays {
+                        finish()
+                    }
+                } ?: finish()
+                ToastUtil.ok("评论成功")
+            }
+            onError = errorCallback
+        }
     }
 }

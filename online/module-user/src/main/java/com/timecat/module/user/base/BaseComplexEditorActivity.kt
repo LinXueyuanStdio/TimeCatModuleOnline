@@ -13,10 +13,13 @@ import com.shuyu.textutillib.listener.OnEditTextUtilJumpListener
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
 import com.timecat.component.commonsdk.extension.hideKeyboard
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.image.savablePath
 import com.timecat.identity.data.base.AIT_PHOTO
 import com.timecat.identity.data.base.AttachmentItem
 import com.timecat.identity.data.base.AttachmentTail
+import com.timecat.identity.data.service.DataError
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.util.KeyboardUtil
 import com.timecat.module.user.R
@@ -134,7 +137,7 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
         }
     }
 
-    protected open fun getScrollDistanceOfScrollView(defaultDistance:Int) :Int{
+    protected open fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return 0
     }
 
@@ -200,8 +203,23 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
         startActivityForResult(intent, REQUEST_TOPIC_CODE_INPUT)
     }
 
-    protected fun publish() {
+    protected fun lockEverythingForPublish() {
         KeyboardUtil.hideKeyboard(emojiEditText)
+        mStatefulLayout?.showLoading()
+    }
+
+    var errorCallback: (DataError) -> Unit = {
+        ToastUtil.e("创建失败！${it.msg}")
+        LogUtil.e("创建失败！${it.msg}")
+        unlockEverythingWhenPublishInFailure()
+    }
+
+    protected fun unlockEverythingWhenPublishInFailure() {
+        mStatefulLayout?.showContent()
+    }
+
+    protected fun publish() {
+        lockEverythingForPublish()
         val content = emojiEditText.realText
         val originImgs = imageAdapter.data.map { it.savablePath() }.filterNotNull()
         if (originImgs.isEmpty()) {

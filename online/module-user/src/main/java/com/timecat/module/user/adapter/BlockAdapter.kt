@@ -15,7 +15,6 @@ import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.dao.block.BlockDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.commonsdk.utils.LetMeKnow
@@ -24,6 +23,8 @@ import com.timecat.extend.image.IMG
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -35,10 +36,9 @@ import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.*
-import com.timecat.identity.data.service.DataError
-import com.timecat.identity.data.service.OnFindListener
 import com.timecat.middle.block.util.CopyToClipboard
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.header_moment_detail.view.*
 import kotlinx.android.synthetic.main.user_base_item_footer.view.*
 
 /**
@@ -308,8 +308,10 @@ class BlockAdapter(
     ) {
         holder.getView<MomentHerfView>(R.id.momentHerf).visibility = View.GONE
         relayScope?.let {
-            BlockDao.find(it.objectId, object : OnFindListener<Block> {
-                override fun success(data: List<Block>) {
+            requestBlock {
+                query = oneBlockOf(it.objectId)
+                onSuccess = {
+                    val data = listOf(it)
                     holder.getView<MomentHerfView>(R.id.momentHerf).apply {
                         visibility = View.VISIBLE
                         if (data.isEmpty()) {
@@ -320,11 +322,21 @@ class BlockAdapter(
                         }
                     }
                 }
-
-                override fun error(e: DataError) {
-                    e.printStackTrace()
+                onListSuccess = {data->
+                    holder.getView<MomentHerfView>(R.id.momentHerf).apply {
+                        visibility = View.VISIBLE
+                        if (data.isEmpty()) {
+                            isNotExist()
+                        } else {
+                            bindBlock(data[0])
+                            setRelay(data[0])
+                        }
+                    }
                 }
-            })
+                onError = {
+                    it.printStackTrace()
+                }
+            }
         }
     }
 

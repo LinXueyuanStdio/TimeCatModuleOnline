@@ -10,19 +10,18 @@ import android.widget.LinearLayout
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
-import com.timecat.data.bmob.dao.block.BlockDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.extend.image.IMG
 import com.timecat.component.identity.Attr
+import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.mySpanCreateListener
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
-import com.timecat.identity.data.service.DataError
-import com.timecat.identity.data.service.OnFindListener
 import kotlinx.android.synthetic.main.header_moment_detail.view.*
 import kotlinx.android.synthetic.main.user_base_item_comment_header.view.*
 
@@ -188,8 +187,10 @@ class CommentView : LinearLayout {
         relayScope: RelayScope? = null
     ) {
         relayScope?.let {
-            BlockDao.find(it.objectId, object : OnFindListener<Block> {
-                override fun success(data: List<Block>) {
+            requestBlock {
+                query = oneBlockOf(it.objectId)
+                onSuccess = {
+                    val data = listOf(it)
                     root.momentHerf.apply {
                         visibility = View.VISIBLE
                         if (data.isEmpty()) {
@@ -200,11 +201,21 @@ class CommentView : LinearLayout {
                         }
                     }
                 }
-
-                override fun error(e: DataError) {
-                    e.printStackTrace()
+                onListSuccess = {data->
+                    root.momentHerf.apply {
+                        visibility = View.VISIBLE
+                        if (data.isEmpty()) {
+                            isNotExist()
+                        } else {
+                            bindBlock(data[0])
+                            setRelay(data[0])
+                        }
+                    }
                 }
-            })
+                onError = {
+                    it.printStackTrace()
+                }
+            }
         }
     }
 

@@ -85,10 +85,7 @@ class AddiOSAppActivity : BaseAddAppActivity() {
         GlobalScope.launch(Dispatchers.IO) {
             requestExist {
                 query = checkLeaderBoardExistByTitle(formData.name)
-                onError = {
-                    ToastUtil.e("创建失败！${it.msg}")
-                    LogUtil.e("创建失败！${it.msg}")
-                }
+                onError = errorCallback
                 onSuccess = { exist ->
                     if (exist) {
                         ToastUtil.w("已存在，请修改排行榜名！")
@@ -123,10 +120,7 @@ class AddiOSAppActivity : BaseAddAppActivity() {
                 GO.appDetail(it.objectId)
                 finish()
             }
-            onError = {
-                ToastUtil.e("创建失败！${it.msg}")
-                LogUtil.e("创建失败！${it.msg}")
-            }
+            onError = errorCallback
         }
     }
 }
