@@ -1,4 +1,4 @@
-package com.timecat.module.user.manager.permission.identity
+package com.timecat.module.user.permission.identity
 
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
@@ -10,7 +10,6 @@ import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
 import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.common.Block2Block
 import com.timecat.data.bmob.ext.Identity
@@ -24,7 +23,6 @@ import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
 import com.timecat.layout.ui.business.setting.ContainerItem
-import com.timecat.middle.setting.BaseNewActivity
 import com.timecat.module.user.R
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.base.BaseBlockEditActivity

@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.timecat.data.bmob.data.common.Action
 import com.timecat.identity.data.action.*
+import com.timecat.identity.data.block.type.*
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -53,30 +54,43 @@ class ActionItem(
             val block = action.block
             GO.toAnyDetail(block)
         }
+        val block = action.block
+        val title = block?.title
+        val typeStr =when(block?.type){
+            BLOCK_MOMENT -> "动态"
+            BLOCK_FORUM -> "论坛"
+            BLOCK_TOPIC -> "主题"
+            BLOCK_TAG -> "标签"
+            BLOCK_POST -> "帖子"
+            BLOCK_COMMENT -> "评论"
+            BLOCK_APP -> "App"
+            BLOCK_LEADER_BOARD -> "排行榜"
+            else-> ""
+        } 
         when (action.type) {
             ACTION_CLICK -> {
-                holder.tv_name.setText("${action.user.nick} 点击 ${action.block?.title}")
+                holder.tv_name.setText("${action.user.nick} 点击 $typeStr ${title}")
             }
             ACTION_LIKE -> {
-                holder.tv_name.setText("${action.user.nick} 点赞 ${action.block?.title}")
+                holder.tv_name.setText("${action.user.nick} 点赞 $typeStr ${title}")
             }
             ACTION_DING -> {
-                holder.tv_name.setText("${action.user.nick} 拍了拍 ${action.block?.title}")
+                holder.tv_name.setText("${action.user.nick} 拍了拍 $typeStr ${title}")
             }
             ACTION_SCORE -> {
-                holder.tv_name.setText("${action.user.nick} 评分 ${action.block?.title}")
+                holder.tv_name.setText("${action.user.nick} 评分 $typeStr ${title}")
             }
             ACTION_DOWNLOAD -> {
-                holder.tv_name.setText("${action.user.nick} 下载 ${action.block?.title}")
+                holder.tv_name.setText("${action.user.nick} 下载 $typeStr ${title}")
             }
             ACTION_FOCUS -> {
-                holder.tv_name.setText("${action.user.nick} 关注 ${action.block?.title}")
+                holder.tv_name.setText("${action.user.nick} 关注 $typeStr ${title}")
             }
             ACTION_VOTE -> {
-                holder.tv_name.setText("${action.user.nick} 投票 ${action.block?.title}")
+                holder.tv_name.setText("${action.user.nick} 投票 $typeStr ${title}")
             }
             ACTION_RECOMMEND -> {
-                holder.tv_name.setText("${action.user.nick} 推荐 ${action.block?.title}")
+                holder.tv_name.setText("${action.user.nick} 推荐 $typeStr ${title}")
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.timecat.module.user.manager.permission.role
+package com.timecat.module.user.permission.role
 
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog

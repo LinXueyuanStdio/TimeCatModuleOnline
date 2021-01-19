@@ -1,4 +1,4 @@
-package com.timecat.module.user.manager.user
+package com.timecat.module.user.social.user
 
 import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.ext.net.allUsers

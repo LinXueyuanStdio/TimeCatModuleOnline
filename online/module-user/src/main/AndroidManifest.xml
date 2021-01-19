@@ -97,7 +97,7 @@
             android:name="com.timecat.module.user.social.forum.post.PostEditorActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.forum.AllForumActivity"
+            android:name="com.timecat.module.user.social.forum.AllForumActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name="com.timecat.module.user.social.forum.ForumDetailCollapseActivity"
@@ -109,10 +109,10 @@
             android:name="com.timecat.module.user.social.topic.TopicDetailCollapseActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.tag.AllTagActivity"
+            android:name="com.timecat.module.user.social.tag.AllTagActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.topic.AllTopicActivity"
+            android:name="com.timecat.module.user.social.topic.AllTopicActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name="com.timecat.module.user.social.tag.TagDetailCollapseActivity"
@@ -127,40 +127,40 @@
             android:name="com.timecat.module.user.social.user.UserSettingActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.moment.AllMomentActivity"
+            android:name="com.timecat.module.user.social.moment.AllMomentActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name="com.timecat.module.user.game.bag.BagActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.permission.AllMetaPermissionActivity"
+            android:name="com.timecat.module.user.permission.AllMetaPermissionActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.permission.AddMetaPermissionActivity"
+            android:name="com.timecat.module.user.permission.AddMetaPermissionActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.permission.AddHunPermissionActivity"
+            android:name="com.timecat.module.user.permission.AddHunPermissionActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.permission.AllHunPermissionActivity"
+            android:name="com.timecat.module.user.permission.AllHunPermissionActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.permission.identity.AddIdentityActivity"
+            android:name="com.timecat.module.user.permission.identity.AddIdentityActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.permission.role.AllRoleActivity"
+            android:name="com.timecat.module.user.permission.role.AllRoleActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.permission.identity.AllIdentityActivity"
+            android:name="com.timecat.module.user.permission.identity.AllIdentityActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.permission.role.AddRoleActivity"
+            android:name="com.timecat.module.user.permission.role.AddRoleActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.permission.auth.AddAuthEditActivity"
+            android:name="com.timecat.module.user.permission.auth.AddAuthEditActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.permission.auth.AllAuthActivity"
+            android:name="com.timecat.module.user.permission.auth.AllAuthActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name="com.timecat.module.user.search.SelectActivity"
@@ -169,7 +169,7 @@
             android:name="com.timecat.module.user.social.cloud.slice.RecommendActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.manager.user.AllUserActivity"
+            android:name="com.timecat.module.user.social.user.AllUserActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name="com.timecat.module.user.game.shop.ShopActivity"
@@ -190,11 +190,12 @@
             android:name=".social.app.edit.EditPluginAppActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name=".manager.me.AllTraceActivity"
+            android:name=".social.trace.AllTraceActivity"
             android:theme="@style/ThemeLight" />
         <activity
             android:name=".game.cube.AllCubeActivity"
             android:theme="@style/ThemeLight" />
+        <activity android:name=".game.mail.AllMailActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

@@ -1,19 +1,11 @@
-package com.timecat.module.user.game.bag
+package com.timecat.module.user.social.trace
 
 import androidx.fragment.app.Fragment
-import cn.bmob.v3.BmobQuery
 import com.timecat.component.router.app.FallBackFragment
-import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.net.allTag
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data._User
-import com.timecat.data.bmob.data.game.agent.OwnCube
-import com.timecat.data.bmob.data.game.item.OwnItem
-import com.timecat.data.bmob.ext.bmob.request
-import com.timecat.data.bmob.ext.bmob.requestOwnItem
-import com.timecat.module.user.adapter.BlockItem
-import com.timecat.module.user.base.BaseBlockListActivity
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.module.user.base.login.BaseLoginToolbarActivity
 import com.timecat.page.base.R
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
@@ -22,19 +14,20 @@ import com.xiaojinzi.component.impl.Router
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
- * @date 2020/10/4
- * @description 背包的所有物品
+ * @date 2021/1/15
+ * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_BagActivity)
-class BagActivity : BaseBlockListActivity() {
-    override fun title(): String = "物品"
-    override fun routerInject() = NAV.inject(this)
+@RouterAnno(hostAndPath = RouterHub.USER_AllTraceActivity)
+class AllTraceActivity : BaseLoginToolbarActivity() {
     @AttrValueAutowiredAnno("user")
     @JvmField
     var user: _User? = null
 
- 0   override fun initViewAfterLogin() {
+    override fun title(): String = "足迹"
+    override fun routerInject() = NAV.inject(this)
+
+    override fun initViewAfterLogin() {
         val fm = this.supportFragmentManager
         var fragment = fm.findFragmentById(R.id.container)
         if (fragment == null) {
@@ -44,8 +37,9 @@ class BagActivity : BaseBlockListActivity() {
     }
 
     fun createFragment(): Fragment {
-        return Router.with(RouterHub.USER_BagFragment)
+        return Router.with(RouterHub.USER_TraceFragment)
             .putSerializable("user", user)
             .navigate() ?: FallBackFragment()
     }
+
 }

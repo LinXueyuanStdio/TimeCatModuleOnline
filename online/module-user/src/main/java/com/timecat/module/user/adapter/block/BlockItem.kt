@@ -30,7 +30,7 @@ import com.timecat.module.user.adapter.detail.BaseDetailItem
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.*
-import com.timecat.module.user.manager.permission.PermissionValidator
+import com.timecat.module.user.permission.PermissionValidator
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*

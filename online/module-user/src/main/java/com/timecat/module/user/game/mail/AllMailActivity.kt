@@ -1,4 +1,4 @@
-package com.timecat.module.user.manager.me
+package com.timecat.module.user.game.mail
 
 import androidx.fragment.app.Fragment
 import com.timecat.component.router.app.FallBackFragment
@@ -18,13 +18,13 @@ import com.xiaojinzi.component.impl.Router
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_AllTraceActivity)
-class AllTraceActivity : BaseLoginToolbarActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_AllMailActivity)
+class AllMailActivity : BaseLoginToolbarActivity() {
     @AttrValueAutowiredAnno("user")
     @JvmField
     var user: _User? = null
 
-    override fun title(): String = "足迹"
+    override fun title(): String = "邮箱"
     override fun routerInject() = NAV.inject(this)
 
     override fun initViewAfterLogin() {
@@ -37,7 +37,7 @@ class AllTraceActivity : BaseLoginToolbarActivity() {
     }
 
     fun createFragment(): Fragment {
-        return Router.with(RouterHub.USER_TraceFragment)
+        return Router.with(RouterHub.USER_MailFragment)
             .putSerializable("user", user)
             .navigate() ?: FallBackFragment()
     }

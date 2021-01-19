@@ -1,4 +1,4 @@
-package com.timecat.module.user.manager.moment
+package com.timecat.module.user.social.moment
 
 import com.timecat.data.bmob.data.common.Block
 import com.xiaojinzi.component.anno.RouterAnno

@@ -1,4 +1,4 @@
-package com.timecat.module.user.manager.permission
+package com.timecat.module.user.permission
 
 import cn.bmob.v3.BmobQuery
 import com.timecat.data.bmob.ext.bmob.requestBlock

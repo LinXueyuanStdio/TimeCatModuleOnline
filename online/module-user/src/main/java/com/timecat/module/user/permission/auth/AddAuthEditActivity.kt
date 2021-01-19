@@ -1,4 +1,4 @@
-package com.timecat.module.user.manager.permission.auth
+package com.timecat.module.user.permission.auth
 
 import android.content.Intent
 import android.view.ViewGroup
@@ -28,7 +28,7 @@ import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditActivity
 import com.timecat.module.user.base.GO
-import com.timecat.module.user.manager.permission.UserContext
+import com.timecat.module.user.permission.UserContext
 import com.timecat.module.user.search.SelectActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
