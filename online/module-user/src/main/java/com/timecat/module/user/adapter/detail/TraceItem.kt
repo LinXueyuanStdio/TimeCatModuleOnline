@@ -43,7 +43,9 @@ class TraceItem(val activity: Activity, val user: _User) : BaseDetailItem<TraceI
             text = "浏览记录"
             beVisible()
             setShakelessClickListener {
-                NAV.raw(activity, RouterHub.USER_AllTraceActivity).putSerializable("user", user).navigate()
+                NAV.raw(activity, RouterHub.USER_AllTraceActivity)
+                    .putSerializable("user", user)
+                    .forward()
             }
         }
     }

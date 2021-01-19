@@ -6,7 +6,14 @@ import com.timecat.identity.readonly.RouterHub;
 
 import java.io.Serializable;
 
-;
+;import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_APP;
+import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_COMMENT;
+import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_FORUM;
+import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_LEADER_BOARD;
+import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_MOMENT;
+import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_POST;
+import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_TAG;
+import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_TOPIC;
 
 /**
  * @author 林学渊
@@ -18,6 +25,36 @@ import java.io.Serializable;
 public class GO {
     public static void userDetail(String objectId) {
         NAV.go(RouterHub.USER_UserDetailActivity, "userId", objectId);
+    }
+
+    public static void toAnyDetail(Block block) {
+        String id = block.getObjectId();
+        switch (block.getType()) {
+            case BLOCK_MOMENT:
+                momentDetail(id);
+                break;
+            case BLOCK_FORUM:
+                forumDetail(id);
+                break;
+            case BLOCK_TOPIC:
+                topicDetail(id);
+                break;
+            case BLOCK_TAG:
+                tagDetail(id);
+                break;
+            case BLOCK_POST:
+                postDetail(id);
+                break;
+            case BLOCK_COMMENT:
+                commentDetail(id);
+                break;
+            case BLOCK_APP:
+                appDetail(id);
+                break;
+            case BLOCK_LEADER_BOARD:
+                leaderBoardDetail(id);
+                break;
+        }
     }
 
     public static void momentDetail(String blockId) {

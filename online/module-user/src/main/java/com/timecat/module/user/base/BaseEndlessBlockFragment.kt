@@ -53,6 +53,7 @@ abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
+                cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback

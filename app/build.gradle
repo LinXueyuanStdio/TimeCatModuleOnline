@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.xiaojinzi.component.plugin'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 //region 签名
 def keystorePSW = ''

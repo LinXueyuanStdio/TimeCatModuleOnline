@@ -21,7 +21,7 @@ import com.timecat.identity.data.block.ForumBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.game.cube.fragment.*
-import com.timecat.module.user.game.shop.vm.CubeViewModel
+import com.timecat.module.user.game.cube.vm.CubeViewModel
 import com.timecat.module.user.view.TopicCard
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno

@@ -1,15 +1,12 @@
 package com.timecat.module.user.adapter.block
 
 import android.app.Activity
-import android.os.Parcelable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.block.ForumBlock
 import com.timecat.identity.data.block.type.*
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -39,7 +36,7 @@ class BlockSmallItem(
         val tv_name: TextView = root.findViewById(R.id.tv_name)
     }
 
-    override fun getLayoutRes(): Int = R.layout.leaderboard_board_item
+    override fun getLayoutRes(): Int = R.layout.user_block_small_item
 
     override fun createViewHolder(
             view: View,

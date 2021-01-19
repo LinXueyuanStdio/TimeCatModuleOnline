@@ -3,6 +3,7 @@ package com.timecat.module.user.base
 import cn.bmob.v3.BmobQuery
 import com.timecat.data.bmob.data.common.Action
 import com.timecat.data.bmob.ext.bmob.requestAction
+import com.timecat.module.user.adapter.action.ActionItem
 import com.timecat.module.user.adapter.block.BlockItem
 
 /**
@@ -31,7 +32,7 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
                 offset += 1
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
-                adapter.reload(listOf(BlockItem(activity, it.block!!)))
+                adapter.reload(listOf(ActionItem(activity, it)))
                 mStatefulLayout?.showContent()
             }
             onListSuccess = {
@@ -39,7 +40,7 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    BlockItem(activity, it.block!!)
+                    ActionItem(activity, it)
                 }
                 adapter.reload(items)
                 mStatefulLayout?.showContent()
@@ -47,12 +48,13 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
         }
     }
 
-    override  fun loadMore() {
+    override fun loadMore() {
         requestAction {
             query = query().apply {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
+                cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback
@@ -60,7 +62,7 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
                 offset += 1
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
-                adapter.onLoadMoreComplete(listOf(BlockItem(activity, it.block!!)))
+                adapter.onLoadMoreComplete(listOf(ActionItem(activity, it)))
                 mStatefulLayout?.showContent()
             }
             onListSuccess = {
@@ -68,7 +70,7 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    BlockItem(activity, it.block!!)
+                    ActionItem(activity, it)
                 }
                 adapter.onLoadMoreComplete(items)
                 mStatefulLayout?.showContent()

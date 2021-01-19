@@ -183,10 +183,18 @@
         <activity
             android:name="com.timecat.module.user.social.leaderboard.LeaderBoardCollapseActivity"
             android:theme="@style/ThemeLight" />
-        <activity android:name=".social.app.add.AddMacAppActivity" />
-        <activity android:name=".social.app.edit.EditPluginAppActivity" />
-        <activity android:name=".manager.me.AllTraceActivity" />
-        <activity android:name=".game.cube.AllCubeActivity" />
+        <activity
+            android:name=".social.app.add.AddMacAppActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name=".social.app.edit.EditPluginAppActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name=".manager.me.AllTraceActivity"
+            android:theme="@style/ThemeLight" />
+        <activity
+            android:name=".game.cube.AllCubeActivity"
+            android:theme="@style/ThemeLight" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

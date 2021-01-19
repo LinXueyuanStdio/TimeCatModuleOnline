@@ -57,14 +57,14 @@ class BlockAdapter(
         addItemType(BLOCK_COMMENT, R.layout.user_moment_item_main)
         addItemType(BLOCK_POST, R.layout.user_moment_item_main)
 
-        addItemType(BLOCK_LEADER_BOARD, R.layout.leaderboard_board_item)
-        addItemType(BLOCK_FORUM, R.layout.leaderboard_board_item)
-        addItemType(BLOCK_APP, R.layout.leaderboard_board_item)
-        addItemType(BLOCK_TOPIC, R.layout.leaderboard_board_item)
-        addItemType(BLOCK_TAG, R.layout.leaderboard_board_item)
-        addItemType(BLOCK_PERMISSION, R.layout.leaderboard_board_item)
-        addItemType(BLOCK_ROLE, R.layout.leaderboard_board_item)
-        addItemType(BLOCK_IDENTITY, R.layout.leaderboard_board_item)
+        addItemType(BLOCK_LEADER_BOARD, R.layout.user_block_small_item)
+        addItemType(BLOCK_FORUM, R.layout.user_block_small_item)
+        addItemType(BLOCK_APP, R.layout.user_block_small_item)
+        addItemType(BLOCK_TOPIC, R.layout.user_block_small_item)
+        addItemType(BLOCK_TAG, R.layout.user_block_small_item)
+        addItemType(BLOCK_PERMISSION, R.layout.user_block_small_item)
+        addItemType(BLOCK_ROLE, R.layout.user_block_small_item)
+        addItemType(BLOCK_IDENTITY, R.layout.user_block_small_item)
     }
 
     override fun convert(holder: BaseViewHolder, item: BlockItem) {
