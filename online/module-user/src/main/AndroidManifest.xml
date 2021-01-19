@@ -196,6 +196,8 @@
             android:name=".game.cube.AllCubeActivity"
             android:theme="@style/ThemeLight" />
         <activity android:name=".game.mail.AllMailActivity" />
+        <activity android:name=".game.cube.CubeEditorActivity" />
+        <activity android:name=".game.cube.CubeSkillEditorActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

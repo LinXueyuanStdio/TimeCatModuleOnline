@@ -1,4 +1,4 @@
-package com.timecat.module.user.game.mail
+package com.timecat.module.user.game.cube
 
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
@@ -17,10 +17,10 @@ import kotlinx.android.synthetic.main.user_activity_moment_add.*
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_MailEditorActivity)
-class MailEditorActivity : BaseComplexEditorActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_CubeSkillEditorActivity)
+class CubeSkillEditorActivity : BaseComplexEditorActivity() {
 
-    override fun title(): String = "方块"
+    override fun title(): String = "方块技能"
     override fun routerInject() = NAV.inject(this)
 
     override fun initViewAfterLogin() {

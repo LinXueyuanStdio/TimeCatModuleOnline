@@ -34,7 +34,7 @@ class BagActivity : BaseBlockListActivity() {
     @JvmField
     var user: _User? = null
 
- 0   override fun initViewAfterLogin() {
+    override fun initViewAfterLogin() {
         val fm = this.supportFragmentManager
         var fragment = fm.findFragmentById(R.id.container)
         if (fragment == null) {
