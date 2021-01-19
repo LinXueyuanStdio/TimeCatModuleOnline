@@ -12,7 +12,7 @@ ext {
              projectName : ":identity:anim",
              projectMaven: "com.timecat.identity:anim"
             ],
-            [isLocal     : true,
+            [isLocal     : false,
              projectPath : "../TimeCatIdentity",
              projectName : ":identity:data",
              projectMaven: "com.timecat.identity:data"
@@ -22,7 +22,7 @@ ext {
              projectName : ":identity:font",
              projectMaven: "com.timecat.identity:font"
             ],
-            [isLocal     : true,
+            [isLocal     : false,
              projectPath : "../TimeCatIdentity",
              projectName : ":identity:readonly",
              projectMaven: "com.timecat.identity:readonly"
@@ -91,12 +91,12 @@ ext {
              projectMaven: "com.timecat.component:setting"
             ],
             //数据
-            [isLocal     : true,
+            [isLocal     : false,
              projectPath : "../TimeCatDatabase",
              projectName : ":data:bmob",
              projectMaven: "com.timecat.data:bmob"
             ],
-            [isLocal     : true,
+            [isLocal     : false,
              projectPath : "../TimeCatDatabase",
              projectName : ":data:greendao",
              projectMaven: "com.timecat.data:greendao"
