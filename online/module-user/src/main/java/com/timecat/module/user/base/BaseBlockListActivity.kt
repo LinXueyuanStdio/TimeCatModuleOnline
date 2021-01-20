@@ -31,6 +31,8 @@ abstract class BaseBlockListActivity : BaseLoginListActivity() {
     var errorCallback: (DataError) -> Unit = {
         mRefreshLayout.isRefreshing = false
         mStatefulLayout?.showError("查询失败") {
+            mRefreshLayout.isRefreshing = true
+            mStatefulLayout?.showLoading()
             onRefresh()
         }
         ToastUtil.e("查询失败")

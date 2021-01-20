@@ -72,7 +72,9 @@ abstract class BaseEndlessListFragment : BaseLoginListFragment() {
     var errorCallback: (DataError) -> Unit = {
         mRefreshLayout.isRefreshing = false
         mStatefulLayout?.showError("查询失败") {
-            onRefresh()
+            mRefreshLayout.isRefreshing = true
+            mStatefulLayout?.showLoading()
+            loadData()
         }
         ToastUtil.e("查询失败")
         it.printStackTrace()
