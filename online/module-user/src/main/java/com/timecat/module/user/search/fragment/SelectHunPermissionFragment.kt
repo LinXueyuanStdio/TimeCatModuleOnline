@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import cn.leancloud.AVQuery
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.timecat.component.commonsdk.utils.override.LogUtil
@@ -39,7 +40,7 @@ class SelectHunPermissionFragment : BaseSearchFragment() {
         mStatefulLayout.showLoading()
         //本来是可以直接使用bmob的模糊查询的，但是要付费，所以只能另辟蹊径
         requestBlock {
-            query = BmobQuery<Block>().or(mutableListOf(
+            query = AVQuery.or(mutableListOf(
                 allHunPermission().apply { whereContains("title", q) },
                 allHunPermission().apply { whereContains("objectId", q) }
             ))
@@ -51,10 +52,6 @@ class SelectHunPermissionFragment : BaseSearchFragment() {
                 mStatefulLayout.showEmpty()
             }
             onSuccess = {
-                mStatefulLayout.showContent()
-                searchResultAdapter.setList(listOf(it))
-            }
-            onListSuccess = {
                 mStatefulLayout.showContent()
                 searchResultAdapter.setList(it)
             }

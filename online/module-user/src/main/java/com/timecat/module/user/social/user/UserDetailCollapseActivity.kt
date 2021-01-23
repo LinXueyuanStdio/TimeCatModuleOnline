@@ -10,6 +10,7 @@ import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.ext.bmob.requestOneUser
 import com.timecat.data.bmob.ext.bmob.requestUser
 import com.timecat.data.bmob.ext.net.oneUserOf
 import com.timecat.extend.image.IMG
@@ -45,9 +46,7 @@ class UserDetailCollapseActivity : BaseDetailCollapseActivity() {
         super.initViewAfterLogin()
         viewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         viewModel.user.observe(this, {
-            it?.let {
-                loadDetail(it)
-            }
+            it?.let { loadDetail(it) }
         })
         card = UserCard(this)
         card.placeholder.updateLayoutParams<ConstraintLayout.LayoutParams> {
@@ -97,7 +96,7 @@ class UserDetailCollapseActivity : BaseDetailCollapseActivity() {
         if (userId == I().objectId) {
             viewModel.user.postValue(I())
         } else {
-            requestUser {
+            requestOneUser {
                 query = oneUserOf(userId)
                 onSuccess = {
                     viewModel.user.postValue(it)

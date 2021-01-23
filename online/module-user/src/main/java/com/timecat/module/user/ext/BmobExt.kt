@@ -1,8 +1,9 @@
 package com.timecat.module.user.ext
 
-import cn.bmob.v3.BmobObject
+import cn.leancloud.AVObject
 import com.timecat.component.commonsdk.utils.string.StringUtil
-import org.joda.time.format.DateTimeFormat
+import org.joda.time.DateTime
+import java.util.*
 
 /**
  * @author 林学渊
@@ -11,9 +12,8 @@ import org.joda.time.format.DateTimeFormat
  * @description null
  * @usage null
  */
-fun BmobObject.friendlyUpdateTimeText(): String = friendlyTimeText(updatedAt)
-fun BmobObject.friendlyCreateTimeText(): String = friendlyTimeText(createdAt)
-fun friendlyTimeText(time: String): String {
-    val dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
-    return StringUtil.friendlyTime(dateTimeFormat.parseDateTime(time))
+fun AVObject.friendlyUpdateTimeText(): String = friendlyTimeText(updatedAt)
+fun AVObject.friendlyCreateTimeText(): String = friendlyTimeText(createdAt)
+fun friendlyTimeText(time: Date): String {
+    return StringUtil.friendlyTime(DateTime(time))
 }

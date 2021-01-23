@@ -80,10 +80,6 @@ class AddIdentityActivity : BaseBlockEditActivity() {
                 mStatefulLayout?.showContent()
             }
             onSuccess = {
-                roles = listOf(it)
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 roles = it
                 mStatefulLayout?.showContent()
             }
@@ -141,10 +137,6 @@ class AddIdentityActivity : BaseBlockEditActivity() {
                     dismiss()
                 }
                 onSuccess = { data ->
-                    showAddRoleDialog(listOf(data))
-                    dismiss()
-                }
-                onListSuccess = { data ->
                     showAddRoleDialog(data)
                     dismiss()
                 }
@@ -194,25 +186,9 @@ class AddIdentityActivity : BaseBlockEditActivity() {
                         title = formData.name
                         content = formData.content
                     }
-                    onSuccess = { block ->
-                        LogUtil.e(roles)
-                        deleteThenInsertBatch {
-                            delete = roles.map { role ->
-                                role.copy().also { it.objectId = block.objectId }
-                            }
-                            insert = formData.roles.map { role ->
-                                I() let_Identity_has_role (block to role)
-                            }
-                            onSuccess = {
-                                ToastUtil.ok("创建成功！")
-                                finish()
-                            }
-                            onError = {
-                                btnOk.isEnabled = true
-                                ToastUtil.e("创建失败！${it.msg}")
-                                LogUtil.e("创建失败！${it.msg}")
-                            }
-                        }
+                    onSuccess = {
+                        ToastUtil.ok("创建成功！")
+                        finish()
                     }
                     onError = {
                         btnOk.isEnabled = true

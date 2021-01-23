@@ -12,6 +12,6 @@ import com.timecat.data.bmob.data.common.Block
  * @usage null
  */
 class ForumViewModel : ViewModel() {
-    val forum: MutableLiveData<Block> = MutableLiveData()
+    val forum: MutableLiveData<Block?> = MutableLiveData()
 
 }

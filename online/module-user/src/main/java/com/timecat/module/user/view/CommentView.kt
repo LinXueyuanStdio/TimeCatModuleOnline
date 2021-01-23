@@ -13,7 +13,7 @@ import com.shuyu.textutillib.model.UserModel
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
@@ -188,28 +188,16 @@ class CommentView : LinearLayout {
         relayScope: RelayScope? = null
     ) {
         relayScope?.let {
-            requestBlock {
+            requestOneBlock {
                 query = oneBlockOf(it.objectId)
-                onSuccess = {
-                    val data = listOf(it)
+                onSuccess = { data ->
                     root.momentHerf.apply {
                         visibility = View.VISIBLE
-                        if (data.isEmpty()) {
+                        if (data == null) {
                             isNotExist()
                         } else {
-                            bindBlock(data[0])
-                            setRelay(data[0])
-                        }
-                    }
-                }
-                onListSuccess = { data ->
-                    root.momentHerf.apply {
-                        visibility = View.VISIBLE
-                        if (data.isEmpty()) {
-                            isNotExist()
-                        } else {
-                            bindBlock(data[0])
-                            setRelay(data[0])
+                            bindBlock(data)
+                            setRelay(data)
                         }
                     }
                 }

@@ -1,7 +1,7 @@
 package com.timecat.module.user.social.user
 
 import android.view.ViewGroup
-import cn.bmob.v3.datatype.BmobFile
+import cn.leancloud.AVFile
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.timecat.component.commonsdk.utils.override.LogUtil
@@ -48,7 +48,7 @@ class UserSettingActivity : BaseSettingActivity() {
                 chooseImage(isAvatar = true) { path ->
                     uploadImageByUser(user, listOf(path), false) {
                         for (i in it) {
-                            val file = BmobFile(path, "avatar", i)
+                            val file = AVFile("avatar", i)
                             user.setheadPortrait(file)
                             updateUserObject(user) {
                                 ToastUtil.ok("头像更换成功")
@@ -62,7 +62,7 @@ class UserSettingActivity : BaseSettingActivity() {
                 chooseImage(isAvatar = false) { path ->
                     uploadImageByUser(user, listOf(path), false) {
                         for (i in it) {
-                            val file = BmobFile(path, "cover", i)
+                            val file = AVFile("cover", i)
                             user.coverPage = file
                             updateUserObject(user) {
                                 ToastUtil.ok("封面更换成功")

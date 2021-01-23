@@ -191,9 +191,6 @@ class AddAuthEditActivity : BaseBlockEditActivity() {
                 ToastUtil.e("没有可授权的身份")
             }
             onSuccess = {
-                showAuthThing(nextItem, listOf(it))
-            }
-            onListSuccess = {
                 showAuthThing(nextItem, it)
             }
         }

@@ -5,7 +5,9 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
+import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.arms.BaseApplication
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
@@ -77,11 +79,15 @@ class ActionItem(
     }
 
     fun rebind(adapter: FlexibleAdapter<IFlexible<*>>, block: Block) {
-        requestBlock {
+        requestOneBlock {
             query = oneBlockOf(block.objectId)
             onSuccess = {
-                this@ActionItem.block = it
-                adapter.updateItem(this@ActionItem)
+                if (it == null) {
+                    ToastUtil.e("发生错误")
+                } else {
+                    this@ActionItem.block = it
+                    adapter.updateItem(this@ActionItem)
+                }
             }
             onError = {
                 it.printStackTrace()

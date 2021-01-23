@@ -37,7 +37,7 @@ class LeaderBoardDetailFragment : BaseLoginListFragment() {
     override fun initViewAfterLogin() {
         viewModel = ViewModelProvider(requireActivity()).get(LeaderBoardViewModel::class.java)
         viewModel.board.observe(viewLifecycleOwner, {
-            loadDetail(it)
+            it?.let { loadDetail(it) }
         })
     }
 
@@ -54,8 +54,6 @@ class LeaderBoardDetailFragment : BaseLoginListFragment() {
     }
 
     override fun onRefresh() {
-        viewModel.board.value?.let {
-            loadDetail(it)
-        }
+        viewModel.board.value?.let { loadDetail(it) }
     }
 }

@@ -71,11 +71,6 @@ class AddRoleActivity : BaseBlockEditActivity() {
                 mStatefulLayout?.showContent()
             }
             onSuccess = {
-                setPermission(listOf(it.to))
-                permissions = listOf(it)
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 setPermission(it.map { it.to })
                 permissions = it
                 mStatefulLayout?.showContent()
@@ -145,10 +140,6 @@ class AddRoleActivity : BaseBlockEditActivity() {
                     dismiss()
                 }
                 onSuccess = { data ->
-                    showPermissionDialog(listOf(data))
-                    dismiss()
-                }
-                onListSuccess = { data ->
                     showPermissionDialog(data)
                     dismiss()
                 }

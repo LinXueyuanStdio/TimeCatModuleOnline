@@ -21,7 +21,7 @@ class CubeViewModel : ViewModel() {
     /**
      * 当前选中的方块
      */
-    val cube: MutableLiveData<OwnCube> = MutableLiveData()
+    val cube: MutableLiveData<OwnCube?> = MutableLiveData()
 
-    val block: MutableLiveData<Block> = MutableLiveData()
+    val block: MutableLiveData<Block?> = MutableLiveData()
 }

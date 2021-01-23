@@ -12,5 +12,5 @@ import com.timecat.data.bmob.data._User
  * @usage null
  */
 class UserViewModel : ViewModel() {
-    val user: MutableLiveData<_User> = MutableLiveData()
+    val user: MutableLiveData<_User?> = MutableLiveData()
 }

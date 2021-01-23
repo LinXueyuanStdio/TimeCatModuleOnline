@@ -33,7 +33,7 @@ class TopicDetailFragment : BaseLoginListFragment() {
     override fun initViewAfterLogin() {
         viewModel = ViewModelProvider(requireActivity()).get(TopicViewModel::class.java)
         viewModel.topic.observe(viewLifecycleOwner, {
-            loadDetail(it)
+            it?.let { loadDetail(it) }
         })
     }
 
@@ -50,8 +50,6 @@ class TopicDetailFragment : BaseLoginListFragment() {
     }
 
     override fun onRefresh() {
-        viewModel.topic.value?.let {
-            loadDetail(it)
-        }
+        viewModel.topic.value?.let { loadDetail(it) }
     }
 }

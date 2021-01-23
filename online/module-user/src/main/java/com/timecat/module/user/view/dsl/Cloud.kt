@@ -40,7 +40,7 @@ fun setupFollowUserButton(
         isEnabled = false
         var relation: User2User? = null
         val I = UserDao.getCurrentUser() ?: return@apply
-        requestUserRelation {
+        requestOneUserRelation {
             query = I.allFollow(user)
             onError = {
                 isEnabled = true
@@ -48,25 +48,19 @@ fun setupFollowUserButton(
                 tag = "关注"
                 setTextColor(Attr.getPrimaryColor(context))
             }
-            onEmpty = {
-                isEnabled = true
-                text = "关注"
-                tag = "关注"
-                setTextColor(Attr.getPrimaryColor(context))
-            }
             onSuccess = {
-                isEnabled = true
-                relation = it
-                text = "已关注"
-                tag = "已关注"
-                setTextColor(Attr.getBackgroundDarkestColor(context))
-            }
-            onListSuccess = {
-                isEnabled = true
-                relation = it[0]
-                text = "已关注"
-                tag = "已关注"
-                setTextColor(Attr.getBackgroundDarkestColor(context))
+                if (it == null) {
+                    isEnabled = true
+                    text = "关注"
+                    tag = "关注"
+                    setTextColor(Attr.getPrimaryColor(context))
+                } else {
+                    isEnabled = true
+                    relation = it
+                    text = "已关注"
+                    tag = "已关注"
+                    setTextColor(Attr.getBackgroundDarkestColor(context))
+                }
             }
         }
         setShakelessClickListener {
@@ -114,7 +108,7 @@ fun setupFollowBlockButton(
         text = "关注"
         var relation: Action? = null
         val I = UserDao.getCurrentUser() ?: return@apply
-        requestAction {
+        requestOneAction {
             query = I.allFollowBlock(block)
             onError = {
                 isEnabled = true
@@ -122,25 +116,19 @@ fun setupFollowBlockButton(
                 tag = "关注"
                 setTextColor(Attr.getPrimaryColor(context))
             }
-            onEmpty = {
-                isEnabled = true
-                text = "关注"
-                tag = "关注"
-                setTextColor(Attr.getPrimaryColor(context))
-            }
             onSuccess = {
-                isEnabled = true
-                relation = it
-                text = "已关注"
-                tag = "已关注"
-                setTextColor(Attr.getBackgroundDarkestColor(context))
-            }
-            onListSuccess = {
-                isEnabled = true
-                relation = it[0]
-                text = "已关注"
-                tag = "已关注"
-                setTextColor(Attr.getBackgroundDarkestColor(context))
+                if (it == null) {
+                    isEnabled = true
+                    text = "关注"
+                    tag = "关注"
+                    setTextColor(Attr.getPrimaryColor(context))
+                } else {
+                    isEnabled = true
+                    relation = it
+                    text = "已关注"
+                    tag = "已关注"
+                    setTextColor(Attr.getBackgroundDarkestColor(context))
+                }
             }
         }
         setShakelessClickListener {
@@ -189,7 +177,7 @@ fun setupLikeBlockButton(
         isEnabled = false
         var relation: Action? = null
         val I = UserDao.getCurrentUser() ?: return@apply
-        requestAction {
+        requestOneAction {
             query = I.allLikeBlock(block)
             onError = {
                 isEnabled = true
@@ -200,35 +188,27 @@ fun setupLikeBlockButton(
                 text = "点赞"
                 tag = "点赞"
             }
-            onEmpty = {
-                isEnabled = true
-                drawable_top = R.drawable.user_ic_love
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    compoundDrawableTintList = ColorStateList.valueOf(Attr.getIconColor(context))
-                }
-                text = "点赞"
-                tag = "点赞"
-            }
             onSuccess = {
-                isEnabled = true
-                relation = it
-                drawable_top = R.drawable.user_ic_favorite_24dp
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    compoundDrawableTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
+                if (it == null) {
+                    isEnabled = true
+                    drawable_top = R.drawable.user_ic_love
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        compoundDrawableTintList = ColorStateList.valueOf(Attr.getIconColor(context))
+                    }
+                    text = "点赞"
+                    tag = "点赞"
+                } else {
+                    isEnabled = true
+                    relation = it
+                    drawable_top = R.drawable.user_ic_favorite_24dp
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        compoundDrawableTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
+                    }
+                    text = "已点赞"
+                    tag = "已点赞"
                 }
-                text = "已点赞"
-                tag = "已点赞"
             }
-            onListSuccess = {
-                isEnabled = true
-                relation = it[0]
-                drawable_top = R.drawable.user_ic_favorite_24dp
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    compoundDrawableTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
-                }
-                text = "已点赞"
-                tag = "已点赞"
-            }
+
         }
         setShakelessClickListener {
             if (relation == null) {
@@ -280,7 +260,7 @@ fun setupLikeBlockButton(
         isEnabled = false
         var relation: Action? = null
         val I = UserDao.getCurrentUser() ?: return@apply
-        requestAction {
+        requestOneAction {
             query = I.allLikeBlock(block)
             onError = {
                 isEnabled = true
@@ -289,28 +269,21 @@ fun setupLikeBlockButton(
                 tag = "点赞"
                 tag = "点赞"
             }
-            onEmpty = {
-                isEnabled = true
-                setImageResource(R.drawable.user_ic_love)
-                imageTintList = ColorStateList.valueOf(Attr.getIconColor(context))
-                tag = "点赞"
-                tag = "点赞"
-            }
             onSuccess = {
-                isEnabled = true
-                relation = it
-                setImageResource(R.drawable.user_ic_favorite_24dp)
-                imageTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
-                tag = "已点赞"
-                tag = "已点赞"
-            }
-            onListSuccess = {
-                isEnabled = true
-                relation = it[0]
-                setImageResource(R.drawable.user_ic_favorite_24dp)
-                imageTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
-                tag = "已点赞"
-                tag = "已点赞"
+                if (it == null) {
+                    isEnabled = true
+                    setImageResource(R.drawable.user_ic_love)
+                    imageTintList = ColorStateList.valueOf(Attr.getIconColor(context))
+                    tag = "点赞"
+                    tag = "点赞"
+                } else {
+                    isEnabled = true
+                    relation = it
+                    setImageResource(R.drawable.user_ic_favorite_24dp)
+                    imageTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
+                    tag = "已点赞"
+                    tag = "已点赞"
+                }
             }
         }
         setShakelessClickListener {

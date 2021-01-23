@@ -31,7 +31,7 @@ class CubeEquipFragment : BaseLoginListFragment() {
     override fun initViewAfterLogin() {
         viewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
         viewModel.cube.observe(viewLifecycleOwner, {
-            loadDetail(it)
+            it?.let{loadDetail(it)}
         })
     }
 
@@ -48,8 +48,6 @@ class CubeEquipFragment : BaseLoginListFragment() {
     }
 
     override fun onRefresh() {
-        viewModel.cube.value?.let {
-            loadDetail(it)
-        }
+        viewModel.cube.value?.let { loadDetail(it) }
     }
 }

@@ -43,7 +43,7 @@ public class ForumServiceImpl implements ForumService {
             NAV.go(RouterHub.LOGIN_LoginActivity);
             return;
         }
-        BmobQuery<Block> query = new BmobQuery<>();
+        AVQuery<Block> query = new AVQuery<>();
         query.whereEqualTo("title", name);
         query.setLimit(1);
         query.findObjects(new FindListener<Block>() {

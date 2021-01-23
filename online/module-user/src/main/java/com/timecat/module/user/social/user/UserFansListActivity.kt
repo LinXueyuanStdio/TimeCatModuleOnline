@@ -69,13 +69,6 @@ class UserFansListActivity : BaseRefreshListActivity() {
                 mRefreshLayout.isRefreshing = false
                 mStatefulLayout?.showContent()
                 val users: MutableList<_User> = ArrayList()
-                users.add(it.author)
-                userAdapter.setList(users)
-            }
-            onListSuccess = {
-                mRefreshLayout.isRefreshing = false
-                mStatefulLayout?.showContent()
-                val users: MutableList<_User> = ArrayList()
                 for (f in it) {
                     users.add(f.author)
                 }

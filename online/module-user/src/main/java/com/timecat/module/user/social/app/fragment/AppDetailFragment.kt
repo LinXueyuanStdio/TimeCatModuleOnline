@@ -37,7 +37,7 @@ class AppDetailFragment : BaseLoginListFragment() {
     override fun initViewAfterLogin() {
         viewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
         viewModel.app.observe(viewLifecycleOwner, {
-            loadDetail(it)
+            it?.let { loadDetail(it) }
         })
     }
 
@@ -54,8 +54,6 @@ class AppDetailFragment : BaseLoginListFragment() {
     }
 
     override fun onRefresh() {
-        viewModel.app.value?.let {
-            loadDetail(it)
-        }
+        viewModel.app.value?.let { loadDetail(it) }
     }
 }

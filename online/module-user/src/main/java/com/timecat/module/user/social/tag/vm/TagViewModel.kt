@@ -12,5 +12,5 @@ import com.timecat.data.bmob.data.common.Block
  * @usage null
  */
 class TagViewModel : ViewModel() {
-    val tag: MutableLiveData<Block> = MutableLiveData()
+    val tag: MutableLiveData<Block?> = MutableLiveData()
 }

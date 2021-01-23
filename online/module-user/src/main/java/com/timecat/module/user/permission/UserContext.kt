@@ -1,6 +1,7 @@
 package com.timecat.module.user.permission
 
 
+import cn.leancloud.AVQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data._User
@@ -83,12 +84,6 @@ object UserContext {
                 loadRole()
             }
             onSuccess = {
-                LogUtil.sd(it)
-                clearInterAction()
-                loadInterAction(it)
-                loadRole()
-            }
-            onListSuccess = {
                 LogUtil.d(it)
                 clearInterAction()
                 it.forEach {
@@ -138,12 +133,6 @@ object UserContext {
                 loadHunPermission()
             }
             onSuccess = {
-                LogUtil.sd(it)
-                roleOfIdentity.clear()
-                roleOfIdentity.add(it.to)
-                loadHunPermission()
-            }
-            onListSuccess = {
                 LogUtil.d(it)
                 roleOfIdentity.clear()
                 roleOfIdentity.addAll(it.map { it.to })
@@ -173,12 +162,6 @@ object UserContext {
                 loadOwnsPermission()
             }
             onSuccess = {
-                LogUtil.sd(it)
-                hunPermissionOfRole.clear()
-                hunPermissionOfRole.add(it.to)
-                loadOwnsPermission()
-            }
-            onListSuccess = {
                 LogUtil.d(it)
                 hunPermissionOfRole.clear()
                 hunPermissionOfRole.addAll(it.map { it.to })

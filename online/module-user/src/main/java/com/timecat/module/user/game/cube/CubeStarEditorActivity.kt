@@ -44,8 +44,6 @@ class CubeStarEditorActivity : BaseComplexEditorActivity() {
             onError = errorCallback
             onSuccess = {
             }
-            onListSuccess = {
-            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.timecat.module.user.base
 
 
+import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.common.InterAction
 import com.timecat.data.bmob.ext.bmob.requestInterAction
 import com.timecat.module.user.adapter.interaction.InterActionItem
@@ -13,7 +14,7 @@ import com.timecat.module.user.adapter.interaction.InterActionItem
  * @usage null
  */
 abstract class BaseInterActionListActivity : BaseEndlessListActivity() {
-    abstract fun query(): BmobQuery<InterAction>
+    abstract fun query(): AVQuery<InterAction>
 
     override fun loadFirst() {
         requestInterAction {
@@ -26,13 +27,6 @@ abstract class BaseInterActionListActivity : BaseEndlessListActivity() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = this@BaseInterActionListActivity
-                adapter.updateDataSet(listOf(InterActionItem(activity, it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = this@BaseInterActionListActivity
@@ -55,13 +49,6 @@ abstract class BaseInterActionListActivity : BaseEndlessListActivity() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = this@BaseInterActionListActivity
-                adapter.onLoadMoreComplete(listOf(InterActionItem(activity, it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = this@BaseInterActionListActivity

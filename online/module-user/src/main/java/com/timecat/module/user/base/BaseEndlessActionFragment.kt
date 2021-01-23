@@ -1,6 +1,7 @@
 package com.timecat.module.user.base
 
 
+import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.common.Action
 import com.timecat.data.bmob.ext.bmob.requestAction
 import com.timecat.module.user.adapter.action.ActionItem
@@ -15,7 +16,7 @@ import com.timecat.module.user.adapter.action.ActionItem
 abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
 
     abstract fun name(): String
-    abstract fun query(): BmobQuery<Action>
+    abstract fun query(): AVQuery<Action>
 
     override fun loadFirst() {
         requestAction {
@@ -28,13 +29,6 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = requireActivity()
-                adapter.reload(listOf(ActionItem(activity, it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
@@ -58,13 +52,6 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = requireActivity()
-                adapter.onLoadMoreComplete(listOf(ActionItem(activity, it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()

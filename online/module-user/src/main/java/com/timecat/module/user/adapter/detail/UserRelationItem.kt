@@ -2,8 +2,7 @@ package com.timecat.module.user.adapter.detail
 
 import android.app.Activity
 import android.view.View
-import cn.bmob.v3.exception.BmobException
-import cn.bmob.v3.listener.QueryListener
+import cn.leancloud.AVQuery
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data._User
@@ -82,29 +81,29 @@ class UserRelationItem(
                     NAV.go(RouterHub.USER_UserFollowListActivity, "id", user.objectId)
                 }
             }
-            val query = BmobQuery<Block>()
-            query.whereEqualTo("user", user)
-            query.sum(arrayOf("likes"))
-            query.setHasGroupCount(true)
-            query.findStatistics(Block::class.java, object : QueryListener<JSONArray?>() {
-                override fun done(jsonArray: JSONArray?, e: BmobException?) {
-                    if (e == null) {
-                        try {
-                            val jsonObject: JSONObject? = jsonArray?.getJSONObject(0)
-                            val sum: Int = jsonObject?.getInt("_sumLikes") ?: return
-                            root.star.apply {
-                                text = "$sum\n获赞"
-                            }
-                            val sum2: Int = jsonObject?.getInt("_count") ?: return
-                            root.creation.apply {
-                                text = "$sum2\n造物"
-                            }
-                        } catch (e1: JSONException) {
-                            e1.printStackTrace()
-                        }
-                    }
-                }
-            })
+//            val query = AVQuery<Block>("Block")
+//            query.whereEqualTo("user", user)
+//            query.sum(arrayOf("likes"))
+//            query.setHasGroupCount(true)
+//            query.findStatistics(Block::class.java, object : QueryListener<JSONArray?>() {
+//                override fun done(jsonArray: JSONArray?, e: BmobException?) {
+//                    if (e == null) {
+//                        try {
+//                            val jsonObject: JSONObject? = jsonArray?.getJSONObject(0)
+//                            val sum: Int = jsonObject?.getInt("_sumLikes") ?: return
+//                            root.star.apply {
+//                                text = "$sum\n获赞"
+//                            }
+//                            val sum2: Int = jsonObject?.getInt("_count") ?: return
+//                            root.creation.apply {
+//                                text = "$sum2\n造物"
+//                            }
+//                        } catch (e1: JSONException) {
+//                            e1.printStackTrace()
+//                        }
+//                    }
+//                }
+//            })
         }
     }
 }

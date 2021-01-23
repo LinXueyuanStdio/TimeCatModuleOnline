@@ -11,7 +11,9 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
+import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.arms.BaseApplication
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
@@ -223,19 +225,7 @@ open class BlockContentItem(
         relayScope?.let {
             requestBlock {
                 query = oneBlockOf(it.objectId)
-                onSuccess = {
-                    val data = listOf(it)
-                    holder.root.momentHerf.apply {
-                        visibility = View.VISIBLE
-                        if (data.isEmpty()) {
-                            isNotExist()
-                        } else {
-                            bindBlock(data[0])
-                            setRelay(data[0])
-                        }
-                    }
-                }
-                onListSuccess = { data ->
+                onSuccess = { data ->
                     holder.root.momentHerf.apply {
                         visibility = View.VISIBLE
                         if (data.isEmpty()) {
@@ -277,11 +267,15 @@ open class BlockContentItem(
     }
 
     fun rebind(adapter: FlexibleAdapter<IFlexible<*>>, block: Block) {
-        requestBlock {
+        requestOneBlock {
             query = oneBlockOf(block.objectId)
             onSuccess = {
-                this@BlockContentItem.block = it
-                adapter.updateItem(this@BlockContentItem)
+                if (it == null) {
+                    ToastUtil.e("发生错误")
+                } else {
+                    this@BlockContentItem.block = it
+                    adapter.updateItem(this@BlockContentItem)
+                }
             }
             onError = {
                 it.printStackTrace()

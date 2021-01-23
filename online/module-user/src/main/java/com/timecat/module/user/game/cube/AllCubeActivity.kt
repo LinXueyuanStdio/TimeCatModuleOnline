@@ -46,9 +46,7 @@ class AllCubeActivity : BaseDetailCollapseActivity() {
         super.initViewAfterLogin()
         viewModel = ViewModelProvider(this).get(CubeViewModel::class.java)
         viewModel.cube.observe(this, {
-            it?.let {
-                loadDetail(it)
-            }
+            it?.let { loadDetail(it) }
         })
         viewModel.cubes.observe(this, {
             mBottomBar.removeAllViews()
@@ -99,9 +97,6 @@ class AllCubeActivity : BaseDetailCollapseActivity() {
         requestOwnCube {
             query = I().allOwnCube()
             onSuccess = {
-                viewModel.cubes.postValue(listOf(it))
-            }
-            onListSuccess = {
                 viewModel.cubes.postValue(it)
             }
             onError = {

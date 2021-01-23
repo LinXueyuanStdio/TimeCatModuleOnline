@@ -309,19 +309,7 @@ class BlockAdapter(
         relayScope?.let {
             requestBlock {
                 query = oneBlockOf(it.objectId)
-                onSuccess = {
-                    val data = listOf(it)
-                    holder.getView<MomentHerfView>(R.id.momentHerf).apply {
-                        visibility = View.VISIBLE
-                        if (data.isEmpty()) {
-                            isNotExist()
-                        } else {
-                            bindBlock(data[0])
-                            setRelay(data[0])
-                        }
-                    }
-                }
-                onListSuccess = { data ->
+                onSuccess = { data ->
                     holder.getView<MomentHerfView>(R.id.momentHerf).apply {
                         visibility = View.VISIBLE
                         if (data.isEmpty()) {

@@ -12,5 +12,5 @@ import com.timecat.data.bmob.data.common.Block
  * @usage null
  */
 class ShopViewModel : ViewModel() {
-    val shop: MutableLiveData<Block> = MutableLiveData()
+    val shop: MutableLiveData<Block?> = MutableLiveData()
 }

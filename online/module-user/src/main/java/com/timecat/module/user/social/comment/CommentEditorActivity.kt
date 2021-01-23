@@ -71,16 +71,10 @@ class CommentEditorActivity : BaseBlockEditorActivity() {
         block.type = BLOCK_COMMENT
         block.user = I()
         block.parent = parent
-        block.tableName = "Block"
+        block.className = "Block"
         saveBlock {
             target = block
             onSuccess = {
-                relay?.let {
-                    it.isRelays { finish() }
-                } ?: finish()
-                ToastUtil.ok("评论成功")
-            }
-            onListSuccess = {
                 relay?.let {
                     it.isRelays {
                         finish()

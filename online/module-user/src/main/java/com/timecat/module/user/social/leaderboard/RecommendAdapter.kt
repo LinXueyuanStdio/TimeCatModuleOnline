@@ -6,9 +6,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.view.View
-import android.widget.Toast
-import cn.bmob.v3.exception.BmobException
-import cn.bmob.v3.listener.UpdateListener
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.timecat.component.commonsdk.utils.override.LogUtil
@@ -58,37 +55,11 @@ class RecommendAdapter(data: MutableList<Exec>) :
             if (item.status <= 2) {
                 //撤销推荐
                 item.status = RecommendBlock.RECOMMEND_CANCEL
-                item.update(object : UpdateListener() {
-                    override fun done(e: BmobException?) {
-                        if (e == null) {
-                            holder.setText(R.id.cancel, "再次推荐")
-                            holder.setText(R.id.status, "状态：" + r.getStatusStr(item.status))
-                            holder.setText(R.id.extra, "消息：" + r.extra)
-                            holder.setVisible(R.id.extra, true)
-                        } else {
-                            Toast.makeText(context, "操作失败$e", Toast.LENGTH_LONG).show()
-                            LogUtil.e(e.toString())
-                            item.status = RecommendBlock.RECOMMEND_WAITING_TO_CHECK//回滚
-                        }
-                    }
-                })
+
             } else {
                 //再次推荐
                 item.status = RecommendBlock.RECOMMEND_WAITING_TO_CHECK
-                item.update(object : UpdateListener() {
-                    override fun done(e: BmobException?) {
-                        if (e == null) {
-                            holder.setText(R.id.cancel, "取消推荐")
-                            holder.setText(R.id.status, "状态：" + r.getStatusStr(item.status))
-                            holder.setText(R.id.extra, "消息：" + r.extra)
-                            holder.setVisible(R.id.extra, true)
-                        } else {
-                            Toast.makeText(context, "操作失败$e", Toast.LENGTH_LONG).show()
-                            LogUtil.e(e.toString())
-                            item.status = RecommendBlock.RECOMMEND_CANCEL //回滚
-                        }
-                    }
-                })
+
             }
         }
     }

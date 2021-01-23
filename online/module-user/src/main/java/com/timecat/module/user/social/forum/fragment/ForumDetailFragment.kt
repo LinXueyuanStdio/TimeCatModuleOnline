@@ -37,7 +37,7 @@ class ForumDetailFragment : BaseLoginListFragment() {
     override fun initViewAfterLogin() {
         viewModel = ViewModelProvider(requireActivity()).get(ForumViewModel::class.java)
         viewModel.forum.observe(viewLifecycleOwner, {
-            loadDetail(it)
+            it?.let{loadDetail(it)}
         })
     }
 
@@ -54,8 +54,6 @@ class ForumDetailFragment : BaseLoginListFragment() {
     }
 
     override fun onRefresh() {
-        viewModel.forum.value?.let {
-            loadDetail(it)
-        }
+        viewModel.forum.value?.let { loadDetail(it) }
     }
 }

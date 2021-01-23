@@ -69,19 +69,8 @@ class UserFollowListActivity : BaseRefreshListActivity() {
                 mRefreshLayout.isRefreshing = false
                 mStatefulLayout?.showContent()
                 val users: MutableList<_User> = ArrayList()
-                it.target?.let {
-                    users.add(it)
-                }
-                userAdapter.setList(users)
-            }
-            onListSuccess = {
-                mRefreshLayout.isRefreshing = false
-                mStatefulLayout?.showContent()
-                val users: MutableList<_User> = ArrayList()
                 for (f in it) {
-                    f.target?.let {
-                        users.add(it)
-                    }
+                    users.add(f.target)
                 }
                 userAdapter.setList(users)
             }

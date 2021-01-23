@@ -49,12 +49,7 @@ abstract class BaseBlockDetailActivity : BaseLoginListActivity() {
     override fun onRefresh() {
         requestBlock {
             query = oneBlockOf(getDetailBlockId())
-            onSuccess = {
-                val data = listOf(it)
-                initByBlock(data[0])
-                mRefreshLayout.isRefreshing = false
-            }
-            onListSuccess = { data ->
+            onSuccess = { data ->
                 initByBlock(data[0])
                 mRefreshLayout.isRefreshing = false
             }
@@ -75,9 +70,6 @@ abstract class BaseBlockDetailActivity : BaseLoginListActivity() {
         requestBlock {
             query = block.findAllComment()
             onSuccess = {
-                blockAdapter.setList(listOf(BlockItem(it)))
-            }
-            onListSuccess = {
                 blockAdapter.setList(it.map { BlockItem(it) })
                 LogUtil.i(it)
             }

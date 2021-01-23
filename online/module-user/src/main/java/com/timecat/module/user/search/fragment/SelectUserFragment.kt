@@ -50,10 +50,6 @@ class SelectUserFragment : BaseSearchFragment() {
             }
             onSuccess = {
                 mStatefulLayout.showContent()
-                searchResultAdapter.setList(listOf(it))
-            }
-            onListSuccess = {
-                mStatefulLayout.showContent()
                 searchResultAdapter.setList(it)
             }
         }

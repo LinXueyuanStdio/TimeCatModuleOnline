@@ -1,6 +1,7 @@
 package com.timecat.module.user.base
 
 
+import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.common.User2User
 import com.timecat.data.bmob.ext.bmob.requestUserRelation
 import com.timecat.module.user.adapter.user.UserItem
@@ -13,7 +14,7 @@ import com.timecat.module.user.adapter.user.UserItem
  * @usage null
  */
 abstract class BaseEndlessUserRelationActivity : BaseEndlessListActivity() {
-    abstract fun query(): BmobQuery<User2User>
+    abstract fun query(): AVQuery<User2User>
 
     override fun loadFirst() {
         requestUserRelation {
@@ -26,15 +27,6 @@ abstract class BaseEndlessUserRelationActivity : BaseEndlessListActivity() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = this@BaseEndlessUserRelationActivity
-                it.target?.let {
-                    adapter.updateDataSet(listOf(UserItem(activity, it)))
-                }
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = this@BaseEndlessUserRelationActivity
@@ -57,15 +49,6 @@ abstract class BaseEndlessUserRelationActivity : BaseEndlessListActivity() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = this@BaseEndlessUserRelationActivity
-                it.target?.let {
-                    adapter.onLoadMoreComplete(listOf(UserItem(activity, it)))
-                }
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = this@BaseEndlessUserRelationActivity

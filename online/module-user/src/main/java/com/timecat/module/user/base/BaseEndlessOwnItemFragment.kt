@@ -1,6 +1,7 @@
 package com.timecat.module.user.base
 
 
+import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.game.item.OwnItem
 import com.timecat.data.bmob.ext.bmob.requestOwnItem
 import com.timecat.module.user.adapter.game.BagItem
@@ -15,7 +16,7 @@ import com.timecat.module.user.adapter.game.BagItem
 abstract class BaseEndlessOwnItemFragment : BaseEndlessListFragment() {
 
     abstract fun name(): String
-    abstract fun query(): BmobQuery<OwnItem>
+    abstract fun query(): AVQuery<OwnItem>
 
     override fun loadFirst() {
         requestOwnItem {
@@ -28,13 +29,6 @@ abstract class BaseEndlessOwnItemFragment : BaseEndlessListFragment() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = requireActivity()
-                adapter.reload(listOf(BagItem(activity, it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
@@ -58,13 +52,6 @@ abstract class BaseEndlessOwnItemFragment : BaseEndlessListFragment() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = requireActivity()
-                adapter.onLoadMoreComplete(listOf(BagItem(activity, it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()

@@ -70,11 +70,6 @@ class MomentEditorActivity : BaseComplexEditorActivity() {
                     it.isRelays { finish() }
                 } ?: finish()
             }
-            onListSuccess = {
-                relay?.let {
-                    it.isRelays { finish() }
-                } ?: finish()
-            }
         }
     }
 }

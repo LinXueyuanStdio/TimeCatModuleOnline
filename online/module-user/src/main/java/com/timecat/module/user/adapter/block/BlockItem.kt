@@ -16,7 +16,7 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.deleteBlock
-import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.image.IMG
@@ -137,7 +137,7 @@ class BlockItem(
                             }
                             R.id.delete -> {
                                 deleteBlock {
-                                    target = block.copy().also { it.objectId = block.objectId }
+                                    target = block
                                     onError = {
                                         LogUtil.e(it)
                                         ToastUtil.e("删除出错")
@@ -193,7 +193,7 @@ class BlockItem(
                             }
                             R.id.delete -> {
                                 deleteBlock {
-                                    target = block.copy().also { it.objectId = block.objectId }
+                                    target = block
                                     onError = {
                                         LogUtil.e(it)
                                         ToastUtil.e("删除出错")
@@ -362,28 +362,16 @@ class BlockItem(
     ) {
         holder.root.momentHerf.visibility = View.GONE
         relayScope?.let {
-            requestBlock {
+            requestOneBlock {
                 query = oneBlockOf(it.objectId)
-                onSuccess = {
-                    val data = listOf(it)
+                onSuccess = { data ->
                     holder.root.momentHerf.apply {
                         visibility = View.VISIBLE
-                        if (data.isEmpty()) {
+                        if (data == null) {
                             isNotExist()
                         } else {
-                            bindBlock(data[0])
-                            setRelay(data[0])
-                        }
-                    }
-                }
-                onListSuccess = { data ->
-                    holder.root.momentHerf.apply {
-                        visibility = View.VISIBLE
-                        if (data.isEmpty()) {
-                            isNotExist()
-                        } else {
-                            bindBlock(data[0])
-                            setRelay(data[0])
+                            bindBlock(data)
+                            setRelay(data)
                         }
                     }
                 }
@@ -418,11 +406,15 @@ class BlockItem(
     }
 
     fun rebind(adapter: FlexibleAdapter<IFlexible<*>>, block: Block) {
-        requestBlock {
+        requestOneBlock {
             query = oneBlockOf(block.objectId)
             onSuccess = {
-                this@BlockItem.block = it
-                adapter.updateItem(this@BlockItem)
+                if (it == null) {
+                    ToastUtil.e("发生错误")
+                } else {
+                    this@BlockItem.block = it
+                    adapter.updateItem(this@BlockItem)
+                }
             }
             onError = {
                 it.printStackTrace()

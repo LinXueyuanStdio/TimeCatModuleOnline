@@ -1,6 +1,7 @@
 package com.timecat.module.user.base
 
 
+import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.mail.OwnMail
 import com.timecat.data.bmob.ext.bmob.requestOwnMail
 import com.timecat.module.user.adapter.game.MailItem
@@ -15,7 +16,7 @@ import com.timecat.module.user.adapter.game.MailItem
 abstract class BaseEndlessOwnMailFragment : BaseEndlessListFragment() {
 
     abstract fun name(): String
-    abstract fun query(): BmobQuery<OwnMail>
+    abstract fun query(): AVQuery<OwnMail>
 
     override fun loadFirst() {
         requestOwnMail {
@@ -28,13 +29,6 @@ abstract class BaseEndlessOwnMailFragment : BaseEndlessListFragment() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = requireActivity()
-                adapter.reload(listOf(MailItem(activity, it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
@@ -58,13 +52,6 @@ abstract class BaseEndlessOwnMailFragment : BaseEndlessListFragment() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = requireActivity()
-                adapter.onLoadMoreComplete(listOf(MailItem(activity, it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()

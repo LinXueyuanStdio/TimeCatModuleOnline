@@ -44,8 +44,6 @@ class MailEditorActivity : BaseComplexEditorActivity() {
             onError = errorCallback
             onSuccess = {
             }
-            onListSuccess = {
-            }
         }
     }
 }
