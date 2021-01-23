@@ -18,13 +18,10 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.afollestad.materialdialogs.MaterialDialog
-import com.xiaojinzi.component.anno.RouterAnno
 import com.google.android.material.tabs.TabLayout
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.page.base.base.lazyload.adapter.FragmentLazyPagerAdapter
-import com.timecat.page.base.friend.toolbar.BaseStatusBarActivity
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.standard.flowlayout.FlowLayout
 import com.timecat.layout.ui.standard.flowlayout.TagAdapter
@@ -33,6 +30,9 @@ import com.timecat.module.user.R
 import com.timecat.module.user.search.db.RecordsDao
 import com.timecat.module.user.search.vm.SearchViewModel
 import com.timecat.module.user.search.vm.SearchViewModelFactory
+import com.timecat.page.base.base.lazyload.adapter.FragmentLazyPagerAdapter
+import com.timecat.page.base.friend.toolbar.BaseStatusBarActivity
+import com.xiaojinzi.component.anno.RouterAnno
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
@@ -263,7 +263,7 @@ open class SearchActivity : BaseStatusBarActivity() {
     }
 
     private fun showDialog(dialogTitle: String, onClick: () -> Unit) {
-        MaterialDialog(this).show{
+        MaterialDialog(this).show {
             title(text = dialogTitle)
             positiveButton(R.string.confirm) {
                 onClick()

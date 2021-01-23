@@ -7,36 +7,35 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.appcompat.widget.PopupMenu
-
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.shuyu.textutillib.RichTextView
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data.common.Block
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.commonsdk.utils.LetMeKnow
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.extend.image.IMG
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
+import com.timecat.extend.image.IMG
+import com.timecat.identity.data.base.*
+import com.timecat.identity.data.block.*
+import com.timecat.identity.data.block.type.*
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.middle.block.util.CopyToClipboard
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.ext.*
 import com.timecat.module.user.view.MomentHerfView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
-import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.*
-import com.timecat.identity.data.block.type.*
-import com.timecat.middle.block.util.CopyToClipboard
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.header_moment_detail.view.*
 import kotlinx.android.synthetic.main.user_base_item_footer.view.*
@@ -139,10 +138,10 @@ class BlockAdapter(
                 holder.getView<View>(R.id.container).setOnClickListener {
                     when (block.subtype) {
                         PERMISSION_Hun -> {
-                            NAV.go(context,RouterHub.USER_AddHunPermissionActivity, "block", block as Parcelable)
+                            NAV.go(context, RouterHub.USER_AddHunPermissionActivity, "block", block as Parcelable)
                         }
                         PERMISSION_Meta -> {
-                            NAV.go(context,RouterHub.USER_AddHunPermissionActivity, "block", block as Parcelable)
+                            NAV.go(context, RouterHub.USER_AddHunPermissionActivity, "block", block as Parcelable)
                         }
                     }
 
@@ -153,7 +152,7 @@ class BlockAdapter(
                 holder.setText(R.id.tv_name, block.title)
                 LOAD.image(block.simpleAvatar(), holder.getView(R.id.iv_avatar))
                 holder.getView<View>(R.id.container).setOnClickListener {
-                    NAV.go(context,RouterHub.USER_AddRoleActivity, "block", block as Parcelable)
+                    NAV.go(context, RouterHub.USER_AddRoleActivity, "block", block as Parcelable)
                 }
             }
             BLOCK_IDENTITY -> {
@@ -161,7 +160,7 @@ class BlockAdapter(
                 holder.setText(R.id.tv_name, block.title)
                 LOAD.image(block.simpleAvatar(), holder.getView(R.id.iv_avatar))
                 holder.getView<View>(R.id.container).setOnClickListener {
-                    NAV.go(context,RouterHub.USER_AddIdentityActivity, "block", block as Parcelable)
+                    NAV.go(context, RouterHub.USER_AddIdentityActivity, "block", block as Parcelable)
                 }
             }
         }
@@ -322,7 +321,7 @@ class BlockAdapter(
                         }
                     }
                 }
-                onListSuccess = {data->
+                onListSuccess = { data ->
                     holder.getView<MomentHerfView>(R.id.momentHerf).apply {
                         visibility = View.VISIBLE
                         if (data.isEmpty()) {

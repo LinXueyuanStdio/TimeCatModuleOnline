@@ -9,7 +9,8 @@ import com.afollestad.materialdialogs.datetime.dateTimePicker
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.afollestad.vvalidator.form
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data._User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.auth_Identity
@@ -20,9 +21,8 @@ import com.timecat.data.bmob.ext.bmob.saveInterAction
 import com.timecat.data.bmob.ext.net.allHunPermission
 import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.data.bmob.ext.net.allRole
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R

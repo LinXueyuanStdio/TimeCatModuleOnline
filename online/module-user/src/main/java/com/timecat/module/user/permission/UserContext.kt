@@ -1,6 +1,7 @@
 package com.timecat.module.user.permission
 
-import cn.bmob.v3.BmobQuery
+
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data._User
 import com.timecat.data.bmob.data.common.Block
@@ -10,7 +11,6 @@ import com.timecat.data.bmob.ext.bmob.requestInterAction
 import com.timecat.data.bmob.ext.net.allTargetedByAuth
 import com.timecat.data.bmob.ext.net.findAllHunPermission
 import com.timecat.data.bmob.ext.net.findAllRoles
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.identity.data.action.INTERACTION_Auth_Identity
 import com.timecat.identity.data.action.INTERACTION_Auth_Permission
 import com.timecat.identity.data.action.INTERACTION_Auth_Role
@@ -75,7 +75,7 @@ object UserContext {
         LogUtil.sd(user)
         requestInterAction {
             query = user.allTargetedByAuth().apply {
-                cachePolicy = BmobQuery.CachePolicy.NETWORK_ELSE_CACHE
+                cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
             }
             onEmpty = {
                 LogUtil.sd("empty")
@@ -130,7 +130,7 @@ object UserContext {
         }
         requestBlockRelation {
             query = identity.findAllRoles().apply {
-                cachePolicy = BmobQuery.CachePolicy.NETWORK_ELSE_CACHE
+                cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
             }
             onEmpty = {
                 LogUtil.sd("empty")
@@ -165,7 +165,7 @@ object UserContext {
         }
         requestBlockRelation {
             query = role.findAllHunPermission().apply {
-                cachePolicy = BmobQuery.CachePolicy.NETWORK_ELSE_CACHE
+                cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
             }
             onEmpty = {
                 LogUtil.sd("empty")

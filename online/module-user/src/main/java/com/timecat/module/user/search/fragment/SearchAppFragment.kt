@@ -1,17 +1,16 @@
 package com.timecat.module.user.search.fragment
 
+
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import cn.bmob.v3.BmobQuery
-
+import cn.leancloud.AVQuery
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data._User
 import com.timecat.data.bmob.ext.bmob.requestUser
-import com.timecat.component.commonsdk.utils.override.LogUtil
-
+import com.timecat.element.alert.ToastUtil
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
@@ -36,9 +35,9 @@ class SearchAppFragment : BaseSearchFragment() {
         mStatefulLayout.showLoading()
         //本来是可以直接使用bmob的模糊查询的，但是要付费，所以只能另辟蹊径
         requestUser {
-            query = BmobQuery<_User>().or(mutableListOf(
-                BmobQuery<_User>().apply { addWhereContains("username", q) },
-                BmobQuery<_User>().apply { addWhereContains("objectId", q) }
+            query = AVQuery.or(mutableListOf(
+                AVQuery<_User>("_User").apply { whereContains("username", q) },
+                AVQuery<_User>("_User").apply { whereContains("objectId", q) }
             ))
             onError = {
                 mStatefulLayout.showEmpty()
@@ -48,10 +47,6 @@ class SearchAppFragment : BaseSearchFragment() {
                 mStatefulLayout.showEmpty()
             }
             onSuccess = {
-                mStatefulLayout.showContent()
-                searchResultAdapter.setList(listOf(it))
-            }
-            onListSuccess = {
                 mStatefulLayout.showContent()
                 searchResultAdapter.setList(it)
             }

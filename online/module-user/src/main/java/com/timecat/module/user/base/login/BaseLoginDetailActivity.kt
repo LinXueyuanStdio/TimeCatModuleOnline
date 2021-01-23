@@ -1,9 +1,9 @@
 package com.timecat.module.user.base.login
 
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data._User
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import com.timecat.middle.block.page.BaseCollapseDetailActivity
 
 /**
@@ -13,9 +13,9 @@ import com.timecat.middle.block.page.BaseCollapseDetailActivity
  * @description Collapse + Login
  * @usage null
  */
-abstract class BaseLoginDetailActivity: BaseCollapseDetailActivity() {
+abstract class BaseLoginDetailActivity : BaseCollapseDetailActivity() {
 
-    fun I(): _User =  UserDao.getCurrentUser() ?: throw Exception("未登录")
+    fun I(): _User = UserDao.getCurrentUser() ?: throw Exception("未登录")
 
     override fun initView() {
         super.initView()

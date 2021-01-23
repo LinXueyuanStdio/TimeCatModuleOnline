@@ -5,8 +5,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.timecat.data.bmob.data.mail.OwnMail
-import com.timecat.identity.data.action.*
-import com.timecat.identity.data.block.type.*
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -54,9 +52,9 @@ class MailItem(
         holder.root.safeClick {
         }
 
-        val typeStr =when(type){
-            else-> ""
-        } 
+        val typeStr = when (type) {
+            else -> ""
+        }
         when (type) {
 
             else -> {

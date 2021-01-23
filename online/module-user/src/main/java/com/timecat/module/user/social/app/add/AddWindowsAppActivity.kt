@@ -1,10 +1,9 @@
 package com.timecat.module.user.social.app.add
 
 import com.afollestad.vvalidator.form
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.ext.App
-import com.timecat.data.bmob.ext.bmob.requestExist
+import com.timecat.data.bmob.ext.bmob.requestExistBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.checkLeaderBoardExistByTitle
@@ -20,7 +19,6 @@ import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.uploadImageByUser
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -85,7 +83,7 @@ class AddWindowsAppActivity : BaseAddAppActivity() {
 
     protected fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
-            requestExist {
+            requestExistBlock {
                 query = checkLeaderBoardExistByTitle(formData.name)
                 onError = errorCallback
                 onSuccess = { exist ->

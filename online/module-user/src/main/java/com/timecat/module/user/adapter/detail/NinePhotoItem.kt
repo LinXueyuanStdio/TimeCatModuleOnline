@@ -3,9 +3,9 @@ package com.timecat.module.user.adapter.detail
 import android.app.Activity
 import android.view.View
 import com.timecat.extend.image.IMG
+import com.timecat.identity.data.base.AttachmentTail
 import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
 import com.timecat.module.user.R
-import com.timecat.identity.data.base.AttachmentTail
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import kotlinx.android.synthetic.main.user_base_item_media.view.*

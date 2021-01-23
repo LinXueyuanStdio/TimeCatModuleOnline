@@ -1,9 +1,9 @@
 package com.timecat.module.user.base.login
 
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data._User
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import com.timecat.middle.setting.BaseNewActivity
 
 /**

@@ -3,10 +3,10 @@ package com.timecat.module.user.base
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.service.DataError
 import com.timecat.layout.ui.entity.BaseAdapter
 import com.timecat.module.user.adapter.block.NotMoreItem
 import com.timecat.module.user.base.login.BaseLoginListActivity
-import com.timecat.identity.data.service.DataError
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.Payload
 
@@ -17,7 +17,7 @@ import eu.davidea.flexibleadapter.Payload
  * @description 无尽的块，自动分页加载
  * @usage null
  */
-abstract class BaseEndlessListActivity: BaseLoginListActivity() {
+abstract class BaseEndlessListActivity : BaseLoginListActivity() {
     private val notMoreItem: NotMoreItem = NotMoreItem()
     lateinit var adapter: BaseAdapter
 
@@ -56,6 +56,7 @@ abstract class BaseEndlessListActivity: BaseLoginListActivity() {
     override fun loadData() {
         load()
     }
+
     override fun onRefresh() {
         mRefreshLayout.isRefreshing = false
     }

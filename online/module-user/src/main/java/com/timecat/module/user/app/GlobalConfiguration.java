@@ -17,12 +17,15 @@ package com.timecat.module.user.app;
 
 import android.app.Application;
 import android.content.Context;
-import androidx.annotation.Keep;
-import androidx.fragment.app.FragmentManager;
+
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.jess.arms.di.module.GlobalConfigModule;
 import com.jess.arms.integration.ConfigModule;
+
 import java.util.List;
+
+import androidx.annotation.Keep;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * ================================================

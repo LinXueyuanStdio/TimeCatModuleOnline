@@ -6,7 +6,7 @@ import com.timecat.identity.readonly.RouterHub;
 
 import java.io.Serializable;
 
-;import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_APP;
+import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_APP;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_COMMENT;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_FORUM;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_LEADER_BOARD;
@@ -14,6 +14,8 @@ import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_MOMENT;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_POST;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_TAG;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_TOPIC;
+
+;
 
 /**
  * @author 林学渊

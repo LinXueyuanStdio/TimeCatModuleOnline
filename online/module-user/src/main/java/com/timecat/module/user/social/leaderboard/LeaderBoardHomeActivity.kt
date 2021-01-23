@@ -5,13 +5,11 @@ import android.view.MenuItem
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.allLeaderBoard
-import com.timecat.data.bmob.ext.net.allTopic
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.block.BlockSmallItem
 import com.timecat.module.user.base.BaseEndlessBlockActivity
 import com.xiaojinzi.component.anno.RouterAnno
-import java.util.*
 
 /**
  * @author dlink

@@ -2,13 +2,13 @@ package com.timecat.module.user.social.leaderboard
 
 
 import androidx.recyclerview.widget.RecyclerView
-import com.xiaojinzi.component.anno.RouterAnno
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.page.base.friend.toolbar.BaseRefreshListActivity
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.page.base.friend.toolbar.BaseRefreshListActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.RouterAnno
 import java.util.*
 
 /**
@@ -23,7 +23,7 @@ class RecommendActivity : BaseRefreshListActivity() {
 
     @AttrValueAutowiredAnno("block")
     @JvmField
-    var block: Block?= null
+    var block: Block? = null
     override fun routerInject() = NAV.inject(this)
     lateinit var mAdapter: RecommendAdapter
 

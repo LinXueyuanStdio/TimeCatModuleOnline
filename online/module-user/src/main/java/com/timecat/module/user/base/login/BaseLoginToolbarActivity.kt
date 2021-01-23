@@ -1,10 +1,9 @@
 package com.timecat.module.user.base.login
 
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data._User
-import com.timecat.page.base.friend.toolbar.BaseRefreshListActivity
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
 
 /**
@@ -14,8 +13,8 @@ import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
  * @description null
  * @usage null
  */
-abstract class BaseLoginToolbarActivity: BaseToolbarActivity() {
-    fun I(): _User =  UserDao.getCurrentUser() ?: throw Exception("未登录")
+abstract class BaseLoginToolbarActivity : BaseToolbarActivity() {
+    fun I(): _User = UserDao.getCurrentUser() ?: throw Exception("未登录")
 
     override fun initView() {
         val I = UserDao.getCurrentUser()
@@ -28,5 +27,6 @@ abstract class BaseLoginToolbarActivity: BaseToolbarActivity() {
             initViewAfterLogin()
         }
     }
-    protected open fun initViewAfterLogin(){}
+
+    protected open fun initViewAfterLogin() {}
 }

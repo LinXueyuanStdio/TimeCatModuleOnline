@@ -6,14 +6,13 @@ import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import cn.bmob.v3.BmobQuery
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.net.allMetaPermission
-import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.net.allMetaPermission
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.IconLoader
@@ -41,8 +40,8 @@ class SelectMetaPermissionFragment : BaseSearchFragment() {
         //本来是可以直接使用bmob的模糊查询的，但是要付费，所以只能另辟蹊径
         requestBlock {
             query = BmobQuery<Block>().or(mutableListOf(
-                allMetaPermission().apply { addWhereContains("title", q) },
-                allMetaPermission().apply { addWhereContains("objectId", q) }
+                allMetaPermission().apply { whereContains("title", q) },
+                allMetaPermission().apply { whereContains("objectId", q) }
             ))
             onError = {
                 mStatefulLayout.showEmpty()

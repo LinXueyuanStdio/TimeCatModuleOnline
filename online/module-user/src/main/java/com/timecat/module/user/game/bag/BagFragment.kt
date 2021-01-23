@@ -1,16 +1,10 @@
 package com.timecat.module.user.game.bag
 
 import android.os.Bundle
-import android.util.Log
-import cn.bmob.v3.BmobQuery
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data._User
-import com.timecat.data.bmob.ext.bmob.requestAction
-import com.timecat.data.bmob.ext.net.allAction
 import com.timecat.data.bmob.ext.net.allOwnItem
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.module.user.base.BaseEndlessActionFragment
 import com.timecat.module.user.base.BaseEndlessOwnItemFragment
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.FragmentAnno
@@ -33,6 +27,7 @@ class BagFragment : BaseEndlessOwnItemFragment() {
         NAV.inject(this)
         super.onCreate(savedInstanceState)
     }
+
     override fun name() = "足迹"
     override fun query() = user?.allOwnItem() ?: I().allOwnItem()
     override fun initViewAfterLogin() {

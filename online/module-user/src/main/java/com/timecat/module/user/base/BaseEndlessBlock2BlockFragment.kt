@@ -1,9 +1,7 @@
 package com.timecat.module.user.base
 
-import cn.bmob.v3.BmobQuery
-import com.timecat.data.bmob.data.common.Block
+
 import com.timecat.data.bmob.data.common.Block2Block
-import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.requestBlockRelation
 import com.timecat.module.user.adapter.block.BlockItem
 
@@ -25,7 +23,7 @@ abstract class BaseEndlessBlock2BlockFragment : BaseEndlessListFragment() {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback
@@ -49,13 +47,13 @@ abstract class BaseEndlessBlock2BlockFragment : BaseEndlessListFragment() {
         }
     }
 
-    override  fun loadMore() {
+    override fun loadMore() {
         requestBlockRelation {
             query = query().apply {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback

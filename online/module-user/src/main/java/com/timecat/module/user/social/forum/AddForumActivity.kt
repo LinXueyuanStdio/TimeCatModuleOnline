@@ -5,7 +5,7 @@ import com.afollestad.vvalidator.form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.ext.Forum
-import com.timecat.data.bmob.ext.bmob.requestExist
+import com.timecat.data.bmob.ext.bmob.requestExistBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.checkForumExistByTitle
@@ -86,7 +86,7 @@ open class AddForumActivity : BaseLoginEditActivity() {
 
     override fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
-            requestExist {
+            requestExistBlock {
                 query = checkForumExistByTitle(formData.name)
                 onError = {
                     ToastUtil.e("创建失败！${it.msg}")

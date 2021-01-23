@@ -18,13 +18,13 @@ package com.timecat.module.user.app;
 import android.app.Application;
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-
 import com.jess.arms.base.delegate.AppLifecycles;
-import com.timecat.data.bmob.dao.UserDao;
 import com.timecat.component.commonsdk.utils.override.LogUtil;
+import com.timecat.data.bmob.dao.UserDao;
 import com.timecat.module.user.permission.MetaPermissionPool;
 import com.timecat.module.user.permission.UserContext;
+
+import androidx.annotation.NonNull;
 
 /**
  * ================================================

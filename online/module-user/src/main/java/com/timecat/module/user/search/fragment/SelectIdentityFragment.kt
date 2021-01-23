@@ -6,14 +6,14 @@ import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import cn.bmob.v3.BmobQuery
+import cn.leancloud.AVQuery
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.net.allIdentity
-import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.net.allIdentity
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.IconLoader
@@ -40,10 +40,10 @@ class SelectIdentityFragment : BaseSearchFragment() {
         mStatefulLayout.showLoading()
         //本来是可以直接使用bmob的模糊查询的，但是要付费，所以只能另辟蹊径
         requestBlock {
-            query = BmobQuery<Block>().or(mutableListOf(
-                allIdentity().apply { addWhereContains("title", q) },
-                allIdentity().apply { addWhereContains("content", q) },
-                allIdentity().apply { addWhereContains("objectId", q) }
+            query = AVQuery.or(mutableListOf(
+                allIdentity().apply { whereContains("title", q) },
+                allIdentity().apply { whereContains("content", q) },
+                allIdentity().apply { whereContains("objectId", q) }
             ))
             onError = {
                 mStatefulLayout.showEmpty()
@@ -53,10 +53,6 @@ class SelectIdentityFragment : BaseSearchFragment() {
                 mStatefulLayout.showEmpty()
             }
             onSuccess = {
-                mStatefulLayout.showContent()
-                searchResultAdapter.setList(listOf(it))
-            }
-            onListSuccess = {
                 mStatefulLayout.showContent()
                 searchResultAdapter.setList(it)
             }

@@ -14,6 +14,6 @@ class DetailAdapter : BaseAdapter {
     constructor(items: MutableList<BaseItem<*>>?) : super(items)
     constructor(items: MutableList<BaseItem<*>>?, listeners: Any?) : super(items, listeners)
     constructor(items: MutableList<BaseItem<*>>?, listeners: Any?, stableIds: Boolean)
-            : super(items, listeners, stableIds)
+        : super(items, listeners, stableIds)
 
 }

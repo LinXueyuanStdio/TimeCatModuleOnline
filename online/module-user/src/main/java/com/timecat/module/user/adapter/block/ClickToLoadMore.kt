@@ -2,7 +2,6 @@ package com.timecat.module.user.adapter.block
 
 import android.view.View
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailItem
@@ -17,8 +16,8 @@ import eu.davidea.flexibleadapter.items.IFlexible
  * @description 点击加载更多
  * @usage null
  */
-class ClickToLoadMore (
-    val onClick:()-> Unit
+class ClickToLoadMore(
+    val onClick: () -> Unit
 ) : BaseDetailItem<ClickToLoadMore.DetailVH>("点击加载更多") {
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter)

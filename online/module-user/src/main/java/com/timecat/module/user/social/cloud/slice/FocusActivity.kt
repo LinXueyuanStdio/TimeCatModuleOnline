@@ -1,10 +1,10 @@
 package com.timecat.module.user.social.cloud.slice
 
 import androidx.fragment.app.Fragment
-import com.xiaojinzi.component.anno.RouterAnno
-import com.timecat.page.base.friend.compact.BaseFragmentActivity
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.page.base.friend.compact.BaseFragmentActivity
+import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊
@@ -14,6 +14,6 @@ import com.timecat.component.router.app.NAV
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_FocusActivity)
-class FocusActivity: BaseFragmentActivity() {
+class FocusActivity : BaseFragmentActivity() {
     override fun createFragment(): Fragment = NAV.fragment(RouterHub.USER_FocusFragment)
 }

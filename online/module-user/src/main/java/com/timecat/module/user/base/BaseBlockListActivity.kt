@@ -1,14 +1,13 @@
 package com.timecat.module.user.base
 
 import androidx.recyclerview.widget.RecyclerView
-
 import com.gturedi.views.CustomStateOptions
-import com.timecat.element.alert.ToastUtil
 import com.timecat.component.router.app.NAV
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.service.DataError
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.BlockAdapter
 import com.timecat.module.user.base.login.BaseLoginListActivity
-import com.timecat.identity.data.service.DataError
 import java.util.*
 
 /**

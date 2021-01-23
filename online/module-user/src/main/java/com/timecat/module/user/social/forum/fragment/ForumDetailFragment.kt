@@ -3,6 +3,7 @@ package com.timecat.module.user.social.forum.fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.identity.data.block.ForumBlock
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.adapter.detail.ActionItem
@@ -10,7 +11,6 @@ import com.timecat.module.user.adapter.detail.NinePhotoItem
 import com.timecat.module.user.adapter.detail.SimpleContentItem
 import com.timecat.module.user.base.login.BaseLoginListFragment
 import com.timecat.module.user.social.forum.vm.ForumViewModel
-import com.timecat.identity.data.block.ForumBlock
 import java.util.*
 
 /**

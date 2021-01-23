@@ -2,13 +2,10 @@ package com.timecat.module.user.adapter.detail
 
 import android.app.Activity
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
-import cn.bmob.v3.BmobQuery
 import cn.bmob.v3.exception.BmobException
 import cn.bmob.v3.listener.QueryListener
 import com.timecat.data.bmob.data._User
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.module.user.R
 import com.timecat.module.user.view.ContributionsDay
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -52,7 +49,7 @@ class ContributionItem(
         super.bindViewHolder(adapter, holder, position, payloads)
         holder.apply {
             val query = BmobQuery<Block>()
-            query.addWhereEqualTo("user", user)
+            query.whereEqualTo("user", user)
             query.groupby(arrayOf("createdAt"))
             query.setHasGroupCount(true)
             query.findStatistics(Block::class.java, object : QueryListener<JSONArray?>() {

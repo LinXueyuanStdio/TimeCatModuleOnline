@@ -1,16 +1,14 @@
 package com.timecat.module.user.social.forum.post
 
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
-import com.xiaojinzi.component.anno.RouterAnno
-
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.saveBlock
-import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
-import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.PostBlock
-import kotlinx.android.synthetic.main.user_activity_moment_add.*
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊

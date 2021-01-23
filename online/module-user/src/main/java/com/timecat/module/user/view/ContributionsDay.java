@@ -24,7 +24,7 @@ public class ContributionsDay {
     }
 
     public int key() {
-        DateTime dateTime = new DateTime(year, month, day, 0,0);
+        DateTime dateTime = new DateTime(year, month, day, 0, 0);
         return dateTime.getDayOfYear();
     }
 }

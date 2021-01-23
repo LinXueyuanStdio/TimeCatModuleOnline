@@ -1,9 +1,9 @@
 package com.timecat.module.user.app;
 
+import com.timecat.component.router.app.NAV;
 import com.timecat.data.bmob.dao.UserDao;
 import com.timecat.data.bmob.data.common.Block;
 import com.timecat.identity.readonly.RouterHub;
-import com.timecat.component.router.app.NAV;
 import com.timecat.identity.service.ForumService;
 import com.timecat.module.user.base.GO;
 import com.xiaojinzi.component.anno.ServiceAnno;
@@ -11,9 +11,10 @@ import com.xiaojinzi.component.impl.Router;
 
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+
+;
 
 /**
  * @author 林学渊
@@ -43,7 +44,7 @@ public class ForumServiceImpl implements ForumService {
             return;
         }
         BmobQuery<Block> query = new BmobQuery<>();
-        query.addWhereEqualTo("title", name);
+        query.whereEqualTo("title", name);
         query.setLimit(1);
         query.findObjects(new FindListener<Block>() {
             @Override
@@ -52,10 +53,10 @@ public class ForumServiceImpl implements ForumService {
                     if (list == null || list.isEmpty()) {
                         //当前用户创建论坛
                         Router.with().hostAndPath(RouterHub.USER_AddForumActivity)
-                                .putString("name", name)
-                                .putString("content", content)
-                                .putString("icon", icon)
-                                .forward();
+                              .putString("name", name)
+                              .putString("content", content)
+                              .putString("icon", icon)
+                              .forward();
                     } else {
                         //论坛已存在，正常跳转
                         Block b = list.get(0);

@@ -3,20 +3,18 @@ package com.timecat.module.login.activity
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.TextView
-import cn.bmob.v3.exception.BmobException
-import cn.bmob.v3.listener.LogInListener
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.jess.arms.utils.DeviceUtils
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.ext.bmob.EasyRequestUser
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.module.login.R
 import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
 import com.timecat.page.base.view.MyClickListener
-import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
-import com.timecat.module.login.R
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -83,19 +81,18 @@ class LoginActivity : BaseToolbarActivity() {
         get() = usernameEt.text?.toString() ?: ""
 
     private fun doLogin(username: String, password: String) {
-        UserDao.login(username, password, object : LogInListener<_User>() {
-            override fun done(o: _User?, e: BmobException?) {
-                if (e == null) {
-                    //登录成功
-                    val user = UserDao.getCurrentUser()
-                    if (user != null) {
-                        LogUtil.e("登陆成功")
-                        onLoginSuccess()
-                    }
-                } else {
-                    LogUtil.e(e.message + "(" + e.errorCode + ")")
-                    ToastUtil.e_long(e.message + "(" + e.errorCode + ")")
+        UserDao.login(username, password, EasyRequestUser().apply {
+            onSuccess = {
+                //登录成功
+                val user = UserDao.getCurrentUser()
+                if (user != null) {
+                    LogUtil.e("登陆成功")
+                    onLoginSuccess()
                 }
+            }
+            onError = {
+                LogUtil.e(it.message)
+                ToastUtil.e_long(it.message)
             }
         })
     }

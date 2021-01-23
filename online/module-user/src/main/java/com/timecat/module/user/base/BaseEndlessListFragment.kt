@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.service.DataError
 import com.timecat.layout.ui.entity.BaseAdapter
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.block.NotMoreItem
 import com.timecat.module.user.base.login.BaseLoginListFragment
-import com.timecat.identity.data.service.DataError
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.Payload
 

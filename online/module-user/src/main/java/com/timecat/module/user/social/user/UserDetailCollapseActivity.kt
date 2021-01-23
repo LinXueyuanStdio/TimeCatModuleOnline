@@ -6,17 +6,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
-import com.xiaojinzi.component.anno.RouterAnno
-
-import com.timecat.data.bmob.data._User
-import com.timecat.data.bmob.ext.net.oneUserOf
-import com.timecat.data.bmob.ext.bmob.requestUser
-import com.timecat.extend.image.IMG
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.ext.bmob.requestUser
+import com.timecat.data.bmob.ext.net.oneUserOf
+import com.timecat.extend.image.IMG
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.social.user.fragment.CommentListFragment
 import com.timecat.module.user.social.user.fragment.MomentListFragment
@@ -25,6 +22,8 @@ import com.timecat.module.user.social.user.fragment.UserDetailFragment
 import com.timecat.module.user.social.user.vm.UserViewModel
 import com.timecat.module.user.view.UserCard
 import com.timecat.module.user.view.dsl.setupFollowUserButton
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.RouterAnno
 import java.io.Serializable
 
 /**

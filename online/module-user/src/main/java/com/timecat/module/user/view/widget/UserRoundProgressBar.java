@@ -98,15 +98,15 @@ public class UserRoundProgressBar extends View {
         /**
          * 画最外层的大圆环
          */
-        int centre = getWidth()/2; //获取圆心的x坐标
-        int radius = (int) (centre - roundWidth/2); //圆环的半径
+        int centre = getWidth() / 2; //获取圆心的x坐标
+        int radius = (int) (centre - roundWidth / 2); //圆环的半径
         paint.setColor(roundColor); //设置圆环的颜色
         paint.setStyle(Paint.Style.STROKE); //设置空心
         paint.setStrokeWidth(roundWidth); //设置圆环的宽度
         paint.setAntiAlias(true);  //消除锯齿
 
 
-        if(isSpinning){
+        if (isSpinning) {
             /**
              * 画圆弧 ，画圆环的进度
              */
@@ -116,8 +116,8 @@ public class UserRoundProgressBar extends View {
             RectF oval = new RectF(centre - radius, centre - radius, centre
                     + radius, centre + radius);  //用于定义的圆弧的形状和大小的界限
             paint.setStyle(Paint.Style.STROKE);
-            canvas.drawArc(oval, progress-90, 320 , false, paint);  //根据进度画圆弧
-        }else{
+            canvas.drawArc(oval, progress - 90, 320, false, paint);  //根据进度画圆弧
+        } else {
             /**
              * 画圆弧 ，画圆环的进度
              */
@@ -127,9 +127,8 @@ public class UserRoundProgressBar extends View {
             RectF oval = new RectF(centre - radius, centre - radius, centre
                     + radius, centre + radius);  //用于定义的圆弧的形状和大小的界限
             paint.setStyle(Paint.Style.STROKE);
-            canvas.drawArc(oval, -90, progress , false, paint);  //根据进度画圆弧
+            canvas.drawArc(oval, -90, progress, false, paint);  //根据进度画圆弧
         }
-
 
 
     }
@@ -165,8 +164,7 @@ public class UserRoundProgressBar extends View {
      */
     public void incrementProgress() {
         isSpinning = false;
-        if (progress > 360)
-            progress = 0;
+        if (progress > 360) { progress = 0; }
         spinHandler.sendEmptyMessage(0);
     }
 

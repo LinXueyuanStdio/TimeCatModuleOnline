@@ -1,8 +1,8 @@
 package com.timecat.module.user.search.fragment
 
 import androidx.lifecycle.ViewModelProvider
-import com.timecat.page.base.friend.list.BaseStatefulListFragment
 import com.timecat.module.user.search.vm.SearchViewModel
+import com.timecat.page.base.friend.list.BaseStatefulListFragment
 
 /**
  * @author 林学渊

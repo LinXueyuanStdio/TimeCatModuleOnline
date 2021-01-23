@@ -6,10 +6,8 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.afollestad.vvalidator.form
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
-import com.xiaojinzi.component.anno.RouterAnno
-
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.common.Block2Block
 import com.timecat.data.bmob.ext.Identity
@@ -19,13 +17,14 @@ import com.timecat.data.bmob.ext.let_Identity_has_role
 import com.timecat.data.bmob.ext.net.allRole
 import com.timecat.data.bmob.ext.net.checkIdentityExistByTitle
 import com.timecat.data.bmob.ext.net.findAllRole
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import com.timecat.layout.ui.business.setting.ContainerItem
-import com.timecat.module.user.R
 import com.timecat.middle.setting.MaterialForm
+import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditActivity
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -198,7 +197,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
                     onSuccess = { block ->
                         LogUtil.e(roles)
                         deleteThenInsertBatch {
-                            delete = roles.map { role->
+                            delete = roles.map { role ->
                                 role.copy().also { it.objectId = block.objectId }
                             }
                             insert = formData.roles.map { role ->
@@ -222,7 +221,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
                     }
                 }
             } else {
-                requestExist {
+                requestExistBlock {
                     query = checkIdentityExistByTitle(formData.name)
                     onError = {
                         btnOk.isEnabled = true

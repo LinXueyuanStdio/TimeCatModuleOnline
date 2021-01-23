@@ -38,7 +38,8 @@ abstract class BaseListFragment : BaseEndlessBlockFragment() {
             }
         }
     }
+
     override fun loadData() {}
 
-    open fun addNew(block:Block) {}
+    open fun addNew(block: Block) {}
 }

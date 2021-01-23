@@ -1,6 +1,6 @@
 package com.timecat.module.user.base
 
-import cn.bmob.v3.BmobQuery
+import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.module.user.adapter.block.BlockItem
@@ -15,7 +15,7 @@ import com.timecat.module.user.adapter.block.BlockItem
 abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
 
     abstract fun name(): String
-    abstract fun query(): BmobQuery<Block>
+    abstract fun query(): AVQuery<Block>
 
     override fun loadFirst() {
         requestBlock {
@@ -23,18 +23,11 @@ abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = requireActivity()
-                adapter.reload(listOf(BlockItem(activity, it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
@@ -47,24 +40,17 @@ abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
         }
     }
 
-    override  fun loadMore() {
+    override fun loadMore() {
         requestBlock {
             query = query().apply {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                val activity = requireActivity()
-                adapter.onLoadMoreComplete(listOf(BlockItem(activity, it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()

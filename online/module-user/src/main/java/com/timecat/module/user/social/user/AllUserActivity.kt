@@ -1,9 +1,9 @@
 package com.timecat.module.user.social.user
 
-import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.ext.net.allUsers
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseEndlessUserActivity
+import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊

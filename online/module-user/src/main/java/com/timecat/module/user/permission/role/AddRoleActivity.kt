@@ -6,7 +6,8 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.afollestad.vvalidator.form
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.common.Block2Block
 import com.timecat.data.bmob.ext.Role
@@ -16,9 +17,8 @@ import com.timecat.data.bmob.ext.let_Role_has_permission
 import com.timecat.data.bmob.ext.net.allHunPermission
 import com.timecat.data.bmob.ext.net.checkRoleExistByTitle
 import com.timecat.data.bmob.ext.net.findAllHunPermission
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
@@ -217,7 +217,7 @@ class AddRoleActivity : BaseBlockEditActivity() {
                     }
                 }
             } else {
-                requestExist {
+                requestExistBlock {
                     query = checkRoleExistByTitle(formData.name)
                     onError = {
                         btnOk.isEnabled = true
@@ -237,7 +237,7 @@ class AddRoleActivity : BaseBlockEditActivity() {
         }
     }
 
-    private fun savePermissionsOfRole(role:Block) {
+    private fun savePermissionsOfRole(role: Block) {
         LogUtil.e(formData.permissions)
         saveBatch {
             target = formData.permissions.map { permission ->

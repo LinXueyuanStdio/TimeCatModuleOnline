@@ -1,13 +1,11 @@
 package com.timecat.module.user.social.forum
 
 import com.timecat.data.bmob.data.common.Block
-import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.ext.net.allForum
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.block.BlockSmallItem
-import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.BaseEndlessBlockActivity
+import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊

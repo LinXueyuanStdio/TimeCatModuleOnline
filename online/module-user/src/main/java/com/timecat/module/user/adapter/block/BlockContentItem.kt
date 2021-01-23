@@ -5,16 +5,21 @@ import android.view.View
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.extend.arms.BaseApplication
 import com.timecat.component.commonsdk.helper.HERF
-import com.timecat.extend.image.IMG
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.net.oneBlockOf
+import com.timecat.extend.arms.BaseApplication
+import com.timecat.extend.image.IMG
+import com.timecat.identity.data.base.*
+import com.timecat.identity.data.block.*
+import com.timecat.identity.data.block.type.BLOCK_COMMENT
+import com.timecat.identity.data.block.type.BLOCK_MOMENT
+import com.timecat.identity.data.block.type.BLOCK_POST
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -26,11 +31,6 @@ import com.timecat.module.user.ext.likeText
 import com.timecat.module.user.ext.mySpanCreateListener
 import com.timecat.module.user.ext.shareText
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
-import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.*
-import com.timecat.identity.data.block.type.BLOCK_COMMENT
-import com.timecat.identity.data.block.type.BLOCK_MOMENT
-import com.timecat.identity.data.block.type.BLOCK_POST
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import kotlinx.android.synthetic.main.user_base_item_footer.view.*
@@ -44,7 +44,7 @@ import kotlinx.android.synthetic.main.user_base_item_moment_content.view.*
  * @description null
  * @usage null
  */
-open class BlockContentItem (
+open class BlockContentItem(
     open val activity: Activity,
     open var block: Block,
 ) : BaseDetailItem<BlockContentItem.DetailVH>(block.objectId) {
@@ -66,7 +66,7 @@ open class BlockContentItem (
     ) {
         super.bindViewHolder(adapter, holder, position, payloads)
         holder.itemView.tag = block.objectId
-        when(block.type) {
+        when (block.type) {
             BLOCK_MOMENT -> {
                 setMomentContent(holder, block)
                 setFooter(adapter, holder, block)
@@ -235,7 +235,7 @@ open class BlockContentItem (
                         }
                     }
                 }
-                onListSuccess = {data->
+                onListSuccess = { data ->
                     holder.root.momentHerf.apply {
                         visibility = View.VISIBLE
                         if (data.isEmpty()) {

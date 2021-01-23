@@ -10,11 +10,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.github.florent37.viewtooltip.ViewTooltip
 import com.google.android.material.tabs.TabLayout
-import com.timecat.extend.arms.BaseApplication
-import com.timecat.page.base.base.OnFragmentOpenDrawerListener
-import com.timecat.page.base.base.rxevent.BaseEventSupportFragment
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
+import com.timecat.extend.arms.BaseApplication
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.utils.ScreenUtil
 import com.timecat.layout.ui.utils.ToolbarUtils
 import com.timecat.module.user.R
@@ -22,6 +20,8 @@ import com.timecat.module.user.adapter.ChannelPagerAdapter
 import com.timecat.module.user.social.cloud.channel.ChannelListEvent
 import com.timecat.module.user.social.cloud.channel.ChannelManager
 import com.timecat.module.user.social.cloud.channel.ChannelPagerModel
+import com.timecat.page.base.base.OnFragmentOpenDrawerListener
+import com.timecat.page.base.base.rxevent.BaseEventSupportFragment
 import com.xiaojinzi.component.anno.FragmentAnno
 import org.greenrobot.eventbus.Subscribe
 
@@ -46,7 +46,7 @@ class CloudFragment : BaseEventSupportFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = getThemedView(R.layout.user_fragment_cloud, inflater, container)
-        tint_statusbar= view.findViewById(R.id.tint_statusbar)
+        tint_statusbar = view.findViewById(R.id.tint_statusbar)
         ToolbarUtils.initTintStatusBar(tint_statusbar, _mActivity)
         tabs = view.findViewById(R.id.tabs)
         pager = view.findViewById(R.id.viewPager)

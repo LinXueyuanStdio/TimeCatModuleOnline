@@ -9,7 +9,6 @@ import com.timecat.module.user.adapter.detail.ActionItem
 import com.timecat.module.user.adapter.detail.SimpleContentItem
 import com.timecat.module.user.base.login.BaseLoginListFragment
 import com.timecat.module.user.game.shop.vm.ShopViewModel
-import com.timecat.module.user.social.topic.vm.TopicViewModel
 import java.util.*
 
 /**

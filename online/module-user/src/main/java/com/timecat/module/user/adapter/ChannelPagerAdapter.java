@@ -1,13 +1,13 @@
 package com.timecat.module.user.adapter;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-
 import com.cheng.channel.Channel;
 import com.timecat.module.user.social.cloud.channel.ChannelPagerModel;
 
 import java.util.List;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 /**
  * @author 林学渊

@@ -7,21 +7,20 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
-import com.timecat.data.bmob.data.common.Block
 import com.timecat.component.commonsdk.helper.HERF
-import com.timecat.extend.image.IMG
 import com.timecat.component.identity.Attr
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
+import com.timecat.extend.image.IMG
+import com.timecat.identity.data.base.*
 import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.mySpanCreateListener
-import com.timecat.identity.data.base.*
 import kotlinx.android.synthetic.main.header_moment_detail.view.*
 import kotlinx.android.synthetic.main.header_moment_detail.view.circle_image_container
 import kotlinx.android.synthetic.main.header_moment_detail.view.momentHerf
@@ -52,13 +51,13 @@ abstract class BaseBlockView : LinearLayout {
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int)
-            : super(context, attrs, defStyleAttr) {
+        : super(context, attrs, defStyleAttr) {
         init(context)
     }
 
     @TargetApi(21)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int)
-            : super(context, attrs, defStyleAttr, defStyleRes) {
+        : super(context, attrs, defStyleAttr, defStyleRes) {
         init(context)
     }
 
@@ -185,7 +184,7 @@ abstract class BaseBlockView : LinearLayout {
                         }
                     }
                 }
-                onListSuccess = {data->
+                onListSuccess = { data ->
                     root.momentHerf.apply {
                         visibility = VISIBLE
                         if (data.isEmpty()) {

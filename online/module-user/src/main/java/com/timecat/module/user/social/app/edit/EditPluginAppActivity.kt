@@ -12,5 +12,5 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_EditPluginAppActivity)
-class EditPluginAppActivity:AddPluginAppActivity() {
+class EditPluginAppActivity : AddPluginAppActivity() {
 }

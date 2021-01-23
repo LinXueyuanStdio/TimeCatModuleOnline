@@ -23,11 +23,11 @@ class MomentView : BaseBlockView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int)
-            : super(context, attrs, defStyleAttr)
+        : super(context, attrs, defStyleAttr)
 
     @TargetApi(21)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int)
-            : super(context, attrs, defStyleAttr, defStyleRes)
+        : super(context, attrs, defStyleAttr, defStyleRes)
 
     /**
      * 必须调用，初始化

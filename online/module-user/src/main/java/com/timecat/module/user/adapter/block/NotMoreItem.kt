@@ -1,7 +1,6 @@
 package com.timecat.module.user.adapter.block
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailItem
 import com.timecat.module.user.adapter.detail.BaseDetailVH
@@ -36,7 +35,7 @@ class NotMoreItem : BaseDetailItem<NotMoreItem.DetailVH>("无更多") {
     }
 
     var status: Status = Status.NO_MORE_LOAD
-    
+
     init {
         isHidden = true
         isEnabled = false

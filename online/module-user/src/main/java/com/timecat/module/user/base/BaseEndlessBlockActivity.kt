@@ -1,13 +1,11 @@
 package com.timecat.module.user.base
 
-import cn.bmob.v3.BmobQuery
+import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.layout.ui.entity.BaseItem
-import com.timecat.module.user.adapter.block.BlockItem
 import com.timecat.module.user.adapter.block.BlockSmallItem
 import com.timecat.module.user.adapter.detail.BaseDetailVH
-import com.timecat.identity.data.block.type.*
 
 /**
  * @author 林学渊
@@ -17,7 +15,7 @@ import com.timecat.identity.data.block.type.*
  * @usage null
  */
 abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
-    abstract fun query(): BmobQuery<Block>
+    abstract fun query(): AVQuery<Block>
 
     override fun loadFirst() {
         requestBlock {
@@ -25,17 +23,11 @@ abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                adapter.updateDataSet(listOf(block2Item(it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val items = it.map {
@@ -47,7 +39,7 @@ abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
         }
     }
 
-    open fun block2Item(block:Block): BaseItem<out BaseDetailVH> {
+    open fun block2Item(block: Block): BaseItem<out BaseDetailVH> {
         return BlockSmallItem(this, block)
     }
 
@@ -57,16 +49,11 @@ abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
+                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
-                offset += 1
-                mRefreshLayout.isRefreshing = false
-                adapter.onLoadMoreComplete(listOf(block2Item(it)))
-                mStatefulLayout?.showContent()
-            }
-            onListSuccess = {
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val items = it.map {

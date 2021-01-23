@@ -3,17 +3,17 @@ package com.timecat.module.user.app;
 import android.app.Activity;
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-
-import com.timecat.data.bmob.dao.UserDao;
 import com.timecat.component.commonsdk.utils.override.LogUtil;
-import com.timecat.identity.readonly.RouterHub;
 import com.timecat.component.router.app.NavInterceptor;
+import com.timecat.data.bmob.dao.UserDao;
+import com.timecat.identity.readonly.RouterHub;
 import com.xiaojinzi.component.anno.InterceptorAnno;
 import com.xiaojinzi.component.impl.Router;
 import com.xiaojinzi.component.impl.RouterErrorResult;
 import com.xiaojinzi.component.impl.RouterResult;
 import com.xiaojinzi.component.support.CallbackAdapter;
+
+import androidx.annotation.NonNull;
 
 /**
  * @author 林学渊
@@ -53,20 +53,20 @@ public class LoginInterceptor implements NavInterceptor {
         } else {
             final Context context = chain.request().getRawContext();
             Router.with(context)
-                    .hostAndPath(RouterHub.LOGIN_LoginActivity)
-                    .requestCodeRandom()
-                    // 匹配目标界面返回的 ResultCode
-                    .forwardForResultCodeMatch(new CallbackAdapter() {
-                        @Override
-                        public void onSuccess(@NonNull RouterResult result) {
-                            chain.proceed(chain.request());
-                        }
+                  .hostAndPath(RouterHub.LOGIN_LoginActivity)
+                  .requestCodeRandom()
+                  // 匹配目标界面返回的 ResultCode
+                  .forwardForResultCodeMatch(new CallbackAdapter() {
+                      @Override
+                      public void onSuccess(@NonNull RouterResult result) {
+                          chain.proceed(chain.request());
+                      }
 
-                        @Override
-                        public void onError(@NonNull RouterErrorResult errorResult) {
-                            chain.callback().onError(new Exception("login fail"));
-                        }
-                    }, Activity.RESULT_OK);
+                      @Override
+                      public void onError(@NonNull RouterErrorResult errorResult) {
+                          chain.callback().onError(new Exception("login fail"));
+                      }
+                  }, Activity.RESULT_OK);
         }
     }
 }

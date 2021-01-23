@@ -9,13 +9,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.agent.OwnCube
 import com.timecat.data.bmob.ext.bmob.requestOwnCube
 import com.timecat.data.bmob.ext.net.allOwnCube
-import com.timecat.data.system.model.eventbus.TabReselectedEvent
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.standard.navi.AbstractBottomBarTab
 import com.timecat.layout.ui.standard.navi.BottomBar
 import com.timecat.layout.ui.standard.navi.BottomBarIvTextTab
 import com.timecat.module.user.R
@@ -24,7 +21,6 @@ import com.timecat.module.user.game.cube.fragment.*
 import com.timecat.module.user.game.cube.vm.CubeViewModel
 import com.timecat.module.user.view.TopicCard
 import com.xiaojinzi.component.anno.RouterAnno
-import me.yokeyword.eventbusactivityscope.EventBusActivityScope
 
 /**
  * @author 林学渊

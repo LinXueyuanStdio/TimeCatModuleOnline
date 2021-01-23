@@ -1,12 +1,11 @@
 package com.timecat.module.user.app;
 
-import androidx.annotation.NonNull;
-
 import com.timecat.data.bmob.dao.UserDao;
 import com.timecat.data.bmob.data._User;
 import com.timecat.identity.service.UserService;
 import com.xiaojinzi.component.anno.ServiceAnno;
 
+import androidx.annotation.NonNull;
 import cn.bmob.v3.datatype.BmobFile;
 
 /**

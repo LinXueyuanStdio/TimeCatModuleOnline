@@ -1,6 +1,6 @@
 package com.timecat.module.user.social.tag.fragment
 
-import cn.bmob.v3.BmobQuery
+
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.findAllPost
 import com.timecat.module.user.base.GO
@@ -14,7 +14,7 @@ import com.timecat.module.user.base.GO
  */
 class PostListFragment : BaseListFragment() {
     override fun name(): String = "帖子"
-    override fun query(): BmobQuery<Block> = viewModel.tag.value!!.findAllPost()
+    override fun query() = viewModel.tag.value!!.findAllPost()
     override fun addNew(block: Block) {
         GO.addPostFor(block)
     }

@@ -40,17 +40,17 @@ class BlockHerfView : LinearLayout {
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int)
-            : super(context, attrs, defStyleAttr) {
+        : super(context, attrs, defStyleAttr) {
         init(context)
     }
 
     @TargetApi(21)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int)
-            : super(context, attrs, defStyleAttr, defStyleRes) {
+        : super(context, attrs, defStyleAttr, defStyleRes) {
         init(context)
     }
 
-    lateinit var userSection:LinearLayout
+    lateinit var userSection: LinearLayout
     lateinit var focusUser: Button
     lateinit var userHead: ImageView
     lateinit var userName: TextView

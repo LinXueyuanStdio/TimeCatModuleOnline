@@ -2,11 +2,11 @@ package com.timecat.module.user.game.export
 
 import android.view.View
 import android.widget.Button
-import com.timecat.page.base.friend.main.BaseMainFragment
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
+import com.timecat.page.base.friend.main.BaseMainFragment
 import com.xiaojinzi.component.anno.FragmentAnno
 
 /**

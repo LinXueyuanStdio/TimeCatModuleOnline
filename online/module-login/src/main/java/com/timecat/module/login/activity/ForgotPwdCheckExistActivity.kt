@@ -1,24 +1,20 @@
 package com.timecat.module.login.activity
 
 import android.text.TextUtils
-import cn.bmob.v3.exception.BmobException
-import cn.bmob.v3.listener.FindListener
-import cn.bmob.v3.listener.UpdateListener
-
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
-import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
-import com.timecat.page.base.view.MyClickListener
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import android.view.View
+import android.widget.EditText
 import com.timecat.component.commonsdk.utils.string.Check
 import com.timecat.component.commonsdk.utils.string.StringUtil
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
+import com.timecat.data.bmob.ext.bmob.EasyRequest
+import com.timecat.data.bmob.ext.bmob.EasyRequestUserNull
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.login.R
-import com.timecat.module.login.data.UserCheckExist
+import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.android.synthetic.main.login_activity_forgot_pwd_send_phone.*
 
 /**
  * 忘记密码
@@ -32,8 +28,16 @@ class ForgotPwdCheckExistActivity : BaseToolbarActivity() {
     override fun layout(): Int = R.layout.login_activity_forgot_pwd_send_phone
     override fun routerInject() = NAV.inject(this)
 
+    lateinit var btn_next: View
+    lateinit var username_et: EditText
+    override fun bindView() {
+        super.bindView()
+        btn_next = findViewById(R.id.btn_next)
+        username_et = findViewById(R.id.username_et)
+    }
+
     override fun initView() {
-        btn_next.setOnClickListener(MyClickListener {
+        btn_next.setShakelessClickListener {
             val phoneOrEmail = textFromEditText
             when {
                 TextUtils.isEmpty(phoneOrEmail) -> ToastUtil.w("不能为空")
@@ -41,7 +45,7 @@ class ForgotPwdCheckExistActivity : BaseToolbarActivity() {
                 Check.isMobileNO(phoneOrEmail) -> userCheckPhone(phoneOrEmail)
                 else -> ToastUtil.w("格式不正确:不是手机号也不是邮箱")
             }
-        })
+        }
     }
 
     private val textFromEditText: String
@@ -49,78 +53,54 @@ class ForgotPwdCheckExistActivity : BaseToolbarActivity() {
 
     private fun resetPasswordByEmail(email: String) {
         mStatefulLayout?.showLoading()
-        UserDao.resetPasswordByEmail(email, object : UpdateListener() {
-            override fun done(e: BmobException?) {
+
+        UserDao.requestPasswordResetByEmail(email, EasyRequest().apply {
+            onError = {
                 mStatefulLayout?.showContent()
-                if (e == null) {
-                    ToastUtil.ok("重置密码请求成功，请到" + email + "邮箱进行密码重置操作")
-                } else {
-                    ToastUtil.e_long("失败:" + e.message)
-                }
+                ToastUtil.e_long("失败:" + it.message)
+            }
+            onSuccess = {
+                mStatefulLayout?.showContent()
+                ToastUtil.ok("重置密码请求成功，请到" + email + "邮箱进行密码重置操作")
             }
         })
     }
 
-    private fun userCheckEmail(email: String?) {
+    private fun userCheckEmail(email: String) {
         mStatefulLayout?.showLoading()
-        UserDao.queryEmail(email, 1, object : FindListener<_User>() {
-            override fun done(list: List<_User>?, e: BmobException?) {
+        UserDao.queryUsersExits(email, EasyRequestUserNull().apply {
+            onError = {
                 mStatefulLayout?.showContent()
-
-                val userCheckExistEmail =
-                    UserCheckExist()
-                userCheckExistEmail.data = email
-                if (e != null) {
-                    userCheckExistEmail.code = e.errorCode
-                    userCheckExistEmail.msg = e.toString()
-                } else if (list == null || list.isEmpty()) {
-                    userCheckExistEmail.code = 404
-                    userCheckExistEmail.msg = "邮箱不存在！"
+                ToastUtil.e_long("${it.msg}")
+            }
+            onSuccess = {
+                mStatefulLayout?.showContent()
+                if (it == null) {
+                    ToastUtil.w_long("邮箱不存在！")
                 } else {
-                    userCheckExistEmail.code = 200
-                    userCheckExistEmail.msg = "邮箱存在，可以重置密码"
+                    resetPasswordByEmail(email)
+                    ToastUtil.ok("邮箱存在，可以重置密码")
                 }
-                userCheckEmailSuccess(userCheckExistEmail)
             }
         })
     }
 
     private fun userCheckPhone(phone: String?) {
         mStatefulLayout?.showLoading()
-        UserDao.queryPhone(phone, 1, object : FindListener<_User>() {
-            override fun done(list: List<_User>?, e: BmobException?) {
+        UserDao.queryUsersExits(phone, EasyRequestUserNull().apply {
+            onError = {
                 mStatefulLayout?.showContent()
-                val userCheckExistPhone = UserCheckExist()
-                userCheckExistPhone.data = phone
-                if (e != null) {
-                    userCheckExistPhone.code = e.errorCode
-                    userCheckExistPhone.msg = e.toString()
-                } else if (list == null || list.isEmpty()) {
-                    userCheckExistPhone.code = 404
-                    userCheckExistPhone.msg = "此号码未绑定账号！"
+                ToastUtil.e_long("${it.msg}")
+            }
+            onSuccess = {
+                mStatefulLayout?.showContent()
+                if (it == null) {
+                    ToastUtil.w_long("此号码未绑定账号!")
                 } else {
-                    userCheckExistPhone.code = 200
-                    userCheckExistPhone.msg = "号码存在，可以重置密码"
+                    NAV.goAndFinish(this@ForgotPwdCheckExistActivity, RouterHub.LOGIN_ForgotPwdVerificationCodeActivity, "mPhone", phone)
+                    ToastUtil.ok("号码存在，可以重置密码")
                 }
-                userCheckPhoneSuccess(userCheckExistPhone)
             }
         })
-    }
-
-    private fun userCheckEmailSuccess(userCheckExistEmail: UserCheckExist) {
-        LogUtil.e(userCheckExistEmail.toString())
-        if (userCheckExistEmail.code == 200) {
-            resetPasswordByEmail(userCheckExistEmail.data)
-        }
-        ToastUtil.w(userCheckExistEmail.msg)
-    }
-
-    private fun userCheckPhoneSuccess(userCheckPhoneExist: UserCheckExist) {
-        LogUtil.e(userCheckPhoneExist.toString())
-        if (userCheckPhoneExist.code == 200) {
-            NAV.goAndFinish(this, RouterHub.LOGIN_ForgotPwdVerificationCodeActivity, "mPhone", userCheckPhoneExist.data)
-        } else {
-            ToastUtil.w(userCheckPhoneExist.msg)
-        }
     }
 }

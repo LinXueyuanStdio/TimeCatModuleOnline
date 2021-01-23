@@ -2,13 +2,13 @@ package com.timecat.module.user.social.cloud.channel;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import com.cheng.channel.Channel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 /**
  * @author 林学渊

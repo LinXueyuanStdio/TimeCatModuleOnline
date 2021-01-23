@@ -1,6 +1,6 @@
 package com.timecat.module.user.base
 
-import cn.bmob.v3.BmobQuery
+
 import com.timecat.data.bmob.data.common.InterAction
 import com.timecat.data.bmob.ext.bmob.requestInterAction
 import com.timecat.module.user.adapter.interaction.InterActionItem
@@ -21,7 +21,7 @@ abstract class BaseInterActionListActivity : BaseEndlessListActivity() {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback

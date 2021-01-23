@@ -91,7 +91,7 @@ ext {
              projectMaven: "com.timecat.component:setting"
             ],
             //数据
-            [isLocal     : false,
+            [isLocal     : true,
              projectPath : "../TimeCatDatabase",
              projectName : ":data:bmob",
              projectMaven: "com.timecat.data:bmob"

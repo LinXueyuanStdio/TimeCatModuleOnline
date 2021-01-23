@@ -1,12 +1,12 @@
 package com.timecat.module.user.social.moment
 
 import android.view.View
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
-import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockDetailActivity
 import com.timecat.module.user.view.MomentView
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊

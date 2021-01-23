@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
  * @description null
  * @usage null
  */
-class SearchViewModelFactory: ViewModelProvider.Factory {
+class SearchViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return SearchViewModel() as T

@@ -1,6 +1,6 @@
 package com.timecat.module.user.social.forum.fragment
 
-import cn.bmob.v3.BmobQuery
+
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.findAllMoment
 import com.timecat.module.user.base.GO
@@ -14,7 +14,7 @@ import com.timecat.module.user.base.GO
  */
 class MomentListFragment : BaseListFragment() {
     override fun name(): String = "转发的动态"
-    override fun query(): BmobQuery<Block> = viewModel.forum.value!!.findAllMoment()
+    override fun query() = viewModel.forum.value!!.findAllMoment()
     override fun addNew(block: Block) {
         GO.addMomentFor(block)
     }

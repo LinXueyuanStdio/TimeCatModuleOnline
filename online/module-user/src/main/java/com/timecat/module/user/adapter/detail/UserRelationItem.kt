@@ -2,18 +2,16 @@ package com.timecat.module.user.adapter.detail
 
 import android.app.Activity
 import android.view.View
-import cn.bmob.v3.BmobQuery
 import cn.bmob.v3.exception.BmobException
 import cn.bmob.v3.listener.QueryListener
-
-import com.timecat.data.bmob.data._User
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.net.allFollow
-import com.timecat.data.bmob.ext.net.fansOf
-import com.timecat.data.bmob.ext.bmob.requestUserRelationCount
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestUserRelationCount
+import com.timecat.data.bmob.ext.net.allFollow
+import com.timecat.data.bmob.ext.net.fansOf
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -85,10 +83,10 @@ class UserRelationItem(
                 }
             }
             val query = BmobQuery<Block>()
-            query.addWhereEqualTo("user", user)
+            query.whereEqualTo("user", user)
             query.sum(arrayOf("likes"))
             query.setHasGroupCount(true)
-            query.findStatistics(Block::class.java,object : QueryListener<JSONArray?>() {
+            query.findStatistics(Block::class.java, object : QueryListener<JSONArray?>() {
                 override fun done(jsonArray: JSONArray?, e: BmobException?) {
                     if (e == null) {
                         try {

@@ -8,21 +8,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
-import com.xiaojinzi.component.anno.RouterAnno;
 import com.cheng.channel.Channel;
 import com.cheng.channel.ChannelView;
 import com.cheng.channel.ViewHolder;
 import com.cheng.channel.adapter.BaseStyleAdapter;
 import com.cheng.channel.adapter.ChannelListenerAdapter;
-import com.timecat.page.base.friend.toolbar.BaseToolbarActivity;
 import com.timecat.identity.readonly.RouterHub;
 import com.timecat.module.user.R;
+import com.timecat.page.base.friend.toolbar.BaseToolbarActivity;
+import com.xiaojinzi.component.anno.RouterAnno;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 @RouterAnno(hostAndPath = RouterHub.USER_CustomChannelActivity)
 public class CustomChannelActivity extends BaseToolbarActivity {
@@ -46,7 +46,7 @@ public class CustomChannelActivity extends BaseToolbarActivity {
         textView.setOnClickListener(v -> {
             List<Channel> channelList = channelView.getMyChannel();
             List<String> strings = new ArrayList<>();
-            for (Channel c:channelList){
+            for (Channel c : channelList) {
                 strings.add(c.getChannelName());
             }
             ChannelManager.saveChannel(strings);
@@ -69,7 +69,7 @@ public class CustomChannelActivity extends BaseToolbarActivity {
             @Override
             public void channelEditFinish(List<Channel> channelList) {
                 List<String> strings = new ArrayList<>();
-                for (Channel c:channelList){
+                for (Channel c : channelList) {
                     strings.add(c.getChannelName());
                 }
                 ChannelManager.saveChannel(strings);

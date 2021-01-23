@@ -8,13 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import cn.bmob.v3.BmobQuery
-import cn.bmob.v3.exception.BmobException
-import cn.bmob.v3.listener.FindListener
+import cn.leancloud.AVQuery
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
-import com.timecat.data.bmob.data.common.Action
 import com.timecat.data.bmob.ext.bmob.requestAction
 import com.timecat.data.bmob.ext.net.allAction
 import com.timecat.identity.readonly.RouterHub
@@ -29,7 +25,7 @@ class MainActivity : Activity() {
         linearLayout.addView(createButton("添加插件", RouterHub.USER_AddPluginAppActivity))
         linearLayout.addView(createButton("添加动态", RouterHub.USER_AddMomentActivity))
         linearLayout.addView(createButton("背包", RouterHub.USER_BagActivity))
-        val user = _User.getCurrentUser(_User::class.java)
+        val user = UserDao.getCurrentUser()!!
         linearLayout.addView(createButton("用户") {
             Router.with().hostAndPath(RouterHub.USER_UserDetailActivity)
                 .putString("userId", user.objectId)
@@ -42,42 +38,19 @@ class MainActivity : Activity() {
         })
         linearLayout.addView(createButton("用户浏览记录2") {
             requestAction {
-                query = user.allAction().apply{
+                query = user.allAction().apply {
                     order("-createdAt")
-                    cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
+                    cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
                 }
                 onError = {
                     it.printStackTrace()
                 }
                 onSuccess = {
-                    Log.e("s", it.createdAt.toString())
-                }
-                onListSuccess = {
                     for (action in it) {
                         Log.e("s", action.createdAt.toString())
                     }
                 }
             }
-        })
-        linearLayout.addView(createButton("test") {
-            Log.e("s", "test")
-            val qa = BmobQuery<Action>()
-            qa.addWhereEqualTo("user", UserDao.getCurrentUser())
-            qa.include("block")
-            qa.setLimit(10)
-            qa.setSkip(100)
-            qa.order("-createdAt")
-            qa.findObjects(object : FindListener<Action>() {
-                override fun done(list: List<Action>, e: BmobException) {
-                    for (action in list) {
-                        Log.e("s", action.createdAt.toString())
-                    }
-                    if (e != null) {
-                        e.printStackTrace()
-                    }
-                }
-            })
-            Log.e("s", "test end")
         })
         setContentView(linearLayout)
     }

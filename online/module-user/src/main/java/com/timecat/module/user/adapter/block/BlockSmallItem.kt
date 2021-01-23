@@ -26,9 +26,9 @@ import eu.davidea.flexibleadapter.items.IFlexible
  * @usage null
  */
 class BlockSmallItem(
-        val activity: Activity,
-        val block: Block,
-        val onClick: ((View) -> Unit)? = null
+    val activity: Activity,
+    val block: Block,
+    val onClick: ((View) -> Unit)? = null
 ) : BaseHeaderItem<BlockSmallItem.DetailVH>(block.objectId) {
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
@@ -39,17 +39,17 @@ class BlockSmallItem(
     override fun getLayoutRes(): Int = R.layout.user_block_small_item
 
     override fun createViewHolder(
-            view: View,
-            adapter: FlexibleAdapter<IFlexible<*>>
+        view: View,
+        adapter: FlexibleAdapter<IFlexible<*>>
     ): DetailVH = DetailVH(view, adapter)
 
     var timeString: String = block.friendlyCreateTimeText()
 
     override fun bindViewHolder(
-            adapter: FlexibleAdapter<IFlexible<*>>,
-            holder: DetailVH,
-            position: Int,
-            payloads: MutableList<Any>?
+        adapter: FlexibleAdapter<IFlexible<*>>,
+        holder: DetailVH,
+        position: Int,
+        payloads: MutableList<Any>?
     ) {
         when (block.type) {
             BLOCK_LEADER_BOARD -> {

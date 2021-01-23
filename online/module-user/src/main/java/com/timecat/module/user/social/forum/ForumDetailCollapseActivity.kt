@@ -6,10 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
-import com.xiaojinzi.component.anno.RouterAnno
-
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.FallBackFragment
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Action
 import com.timecat.data.bmob.data.common.Block
@@ -19,10 +18,9 @@ import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.saveAction
 import com.timecat.data.bmob.ext.follow
 import com.timecat.data.bmob.ext.net.*
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.block.ForumBlock
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.FallBackFragment
-import com.timecat.component.router.app.NAV
 import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.social.forum.fragment.CommentListFragment
 import com.timecat.module.user.social.forum.fragment.ForumDetailFragment
@@ -30,7 +28,8 @@ import com.timecat.module.user.social.forum.fragment.MomentListFragment
 import com.timecat.module.user.social.forum.fragment.PostListFragment
 import com.timecat.module.user.social.forum.vm.ForumViewModel
 import com.timecat.module.user.view.ForumCard
-import com.timecat.identity.data.block.ForumBlock
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.RouterAnno
 
 
 /**

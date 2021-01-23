@@ -1,17 +1,16 @@
 package com.timecat.module.user.social.moment
 
 import android.view.View
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
-import com.xiaojinzi.component.anno.RouterAnno
-
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.isRelays
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.saveBlock
+import com.timecat.data.bmob.ext.isRelays
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.MomentBlock
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseComplexEditorActivity
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.android.synthetic.main.user_activity_moment_add.*
 
 /**

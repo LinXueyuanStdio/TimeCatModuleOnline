@@ -6,15 +6,15 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import com.timecat.element.alert.ToastUtil
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.block.AppBlock
+import com.timecat.identity.data.block.type.BLOCK_COMMENT
+import com.timecat.identity.data.block.type.BLOCK_MOMENT
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
-import com.timecat.identity.data.block.AppBlock
-import com.timecat.identity.data.block.type.BLOCK_COMMENT
-import com.timecat.identity.data.block.type.BLOCK_MOMENT
 import kotlinx.android.synthetic.main.user_base_item_card_herf.view.*
 
 /**

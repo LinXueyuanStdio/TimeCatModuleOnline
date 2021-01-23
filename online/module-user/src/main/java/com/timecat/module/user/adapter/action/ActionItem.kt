@@ -56,7 +56,7 @@ class ActionItem(
         }
         val block = action.block
         val title = block?.title
-        val typeStr =when(block?.type){
+        val typeStr = when (block?.type) {
             BLOCK_MOMENT -> "动态"
             BLOCK_FORUM -> "论坛"
             BLOCK_TOPIC -> "主题"
@@ -65,8 +65,8 @@ class ActionItem(
             BLOCK_COMMENT -> "评论"
             BLOCK_APP -> "App"
             BLOCK_LEADER_BOARD -> "排行榜"
-            else-> ""
-        } 
+            else -> ""
+        }
         when (action.type) {
             ACTION_CLICK -> {
                 holder.tv_name.setText("${action.user.nick} 点击 $typeStr ${title}")

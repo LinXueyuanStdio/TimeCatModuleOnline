@@ -1,21 +1,20 @@
 package com.timecat.module.user.social.comment
 
 import android.view.View
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
-import com.xiaojinzi.component.anno.RouterAnno
-
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.isRelays
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.saveBlock
-import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.timecat.data.bmob.ext.isRelays
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.COMMENT_SIMPLE
 import com.timecat.identity.data.block.CommentBlock
 import com.timecat.identity.data.block.SimpleComment
 import com.timecat.identity.data.block.type.BLOCK_COMMENT
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.android.synthetic.main.user_activity_moment_add.*
 
 /**

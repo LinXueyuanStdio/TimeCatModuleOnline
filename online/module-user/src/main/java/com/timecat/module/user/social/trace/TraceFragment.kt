@@ -1,12 +1,8 @@
 package com.timecat.module.user.social.trace
 
 import android.os.Bundle
-import android.util.Log
-import cn.bmob.v3.BmobQuery
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data._User
-import com.timecat.data.bmob.ext.bmob.requestAction
 import com.timecat.data.bmob.ext.net.allAction
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseEndlessActionFragment
@@ -31,6 +27,7 @@ class TraceFragment : BaseEndlessActionFragment() {
         NAV.inject(this)
         super.onCreate(savedInstanceState)
     }
+
     override fun name() = "足迹"
     override fun query() = user?.allAction() ?: I().allAction()
     override fun initViewAfterLogin() {

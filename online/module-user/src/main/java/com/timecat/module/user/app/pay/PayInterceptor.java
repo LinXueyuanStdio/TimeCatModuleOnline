@@ -2,15 +2,14 @@ package com.timecat.module.user.app.pay;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-
+import com.timecat.component.commonsdk.utils.override.LogUtil;
+import com.timecat.component.router.app.NavInterceptor;
 import com.timecat.data.bmob.dao.UserDao;
 import com.timecat.data.bmob.data._User;
-import com.timecat.data.bmob.data.own.Asset;
-import com.timecat.component.commonsdk.utils.override.LogUtil;
 import com.timecat.identity.readonly.RouterHub;
-import com.timecat.component.router.app.NavInterceptor;
 import com.xiaojinzi.component.anno.InterceptorAnno;
+
+import androidx.annotation.NonNull;
 
 /**
  * @author dlink
@@ -55,37 +54,18 @@ public class PayInterceptor implements NavInterceptor {
 
     private boolean isPay(String path) {
         _User user = UserDao.getCurrentUser();
-        if (user == null) return false;
-        Asset asset = user.getAsset();
-        return canContinue_assetHasPermission(path, asset);
+        if (user == null) { return false; }
+        return canContinue_assetHasPermission(path, user);
     }
 
     /**
      * 时间资产的权限里有 path 对应的权限，则可正常跳转
      *
-     * @param path  特定的喵才能去到的地方
-     * @param asset 时间资产
+     * @param path 特定的喵才能去到的地方
+     * @param user 用户
      * @return 有权限:true；无权限:false
      */
-    private boolean canContinue_assetHasPermission(@NonNull String path, @NonNull Asset asset) {
-        if (path.startsWith(RouterHub.APP_EnhanceNotificationActivity)) {
-            return asset.getAppEnhanceNotify();
-        }
-        if (path.startsWith(RouterHub.THEME_ThemeActivity)) {
-            return asset.getMasterTheme();
-        }
-        if (path.startsWith(RouterHub.GITHUB_ThemeActivity)) {
-            return asset.getMasterTheme();
-        }
-        if (path.startsWith(RouterHub.NOVEL_ReadStyleActivity)) {
-            return asset.getNovelBackground();
-        }
-        if (path.startsWith(RouterHub.GITHUB_MainActivity)) {
-            return asset.getProGithub();
-        }
-        if (path.startsWith(RouterHub.Data_DataManagerActivity)) {
-            return asset.getDataManager();
-        }
+    private boolean canContinue_assetHasPermission(@NonNull String path, @NonNull _User user) {
         return true;//默认都可以跳转
     }
 
@@ -102,7 +82,7 @@ public class PayInterceptor implements NavInterceptor {
                 || path.startsWith(RouterHub.GITHUB_ThemeActivity)
                 || path.startsWith(RouterHub.Data_DataManagerActivity)
                 || path.startsWith(RouterHub.GITHUB_MainActivity)
-//        || path.startsWith(RouterHub.NOVEL_ReadBookActivity)//不要拦截，影响体验
+                //        || path.startsWith(RouterHub.NOVEL_ReadBookActivity)//不要拦截，影响体验
                 || path.startsWith(RouterHub.NOVEL_ReadStyleActivity);
     }
 
@@ -110,13 +90,13 @@ public class PayInterceptor implements NavInterceptor {
     public void intercept(@NonNull Chain chain) throws Exception {
         LogUtil.se("付费校验");
         final Context context = chain.request().getRawContext();
-//        chain.request().
-//                String path = chain.getPath();
-//        if (checkPay(path)) {
-//            callback.onContinue(postcard);
-//        } else {
-//            postcard.withString("InterruptError", "权限不足");
-//            callback.onInterrupt(new Exception("权限不足"));
-//        }
+        //        chain.request().
+        //                String path = chain.getPath();
+        //        if (checkPay(path)) {
+        //            callback.onContinue(postcard);
+        //        } else {
+        //            postcard.withString("InterruptError", "权限不足");
+        //            callback.onInterrupt(new Exception("权限不足"));
+        //        }
     }
 }

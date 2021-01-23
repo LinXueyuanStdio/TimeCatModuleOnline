@@ -7,7 +7,6 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseEndlessBlockFragment
-import com.timecat.module.user.social.forum.vm.ForumViewModel
 import com.timecat.module.user.social.leaderboard.vm.LeaderBoardViewModel
 
 /**
@@ -39,7 +38,8 @@ abstract class BaseListFragment : BaseEndlessBlockFragment() {
             }
         }
     }
+
     override fun loadData() {}
 
-    open fun addNew(block:Block) {}
+    open fun addNew(block: Block) {}
 }

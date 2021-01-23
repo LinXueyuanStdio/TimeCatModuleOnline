@@ -2,10 +2,9 @@ package com.timecat.module.user.social.app.add
 
 import android.text.InputType
 import com.afollestad.vvalidator.form
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.ext.App
-import com.timecat.data.bmob.ext.bmob.requestExist
+import com.timecat.data.bmob.ext.bmob.requestExistBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.checkLeaderBoardExistByTitle
@@ -121,7 +120,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
 
     protected fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
-            requestExist {
+            requestExistBlock {
                 query = checkLeaderBoardExistByTitle(formData.name)
                 onError = errorCallback
                 onSuccess = { exist ->

@@ -5,7 +5,7 @@ import com.afollestad.vvalidator.form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.ext.LeaderBoard
-import com.timecat.data.bmob.ext.bmob.requestExist
+import com.timecat.data.bmob.ext.bmob.requestExistBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.checkLeaderBoardExistByTitle
@@ -47,9 +47,9 @@ open class AddLeaderBoardActivity : BaseBlockEditActivity() {
     override fun title(): String = "创建排行榜"
 
     data class FormData(
-            var name: String = "新建排行榜",
-            var content: String = "",
-            var icon: String = "R.drawable.ic_folder"
+        var name: String = "新建排行榜",
+        var content: String = "",
+        var icon: String = "R.drawable.ic_folder"
     )
 
     val formData: FormData = FormData()
@@ -82,7 +82,7 @@ open class AddLeaderBoardActivity : BaseBlockEditActivity() {
 
     override fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
-            requestExist {
+            requestExistBlock {
                 query = checkLeaderBoardExistByTitle(formData.name)
                 onError = {
                     ToastUtil.e("创建失败！${it.msg}")
@@ -105,12 +105,12 @@ open class AddLeaderBoardActivity : BaseBlockEditActivity() {
                 title = formData.name
                 content = formData.content
                 headerBlock = LeaderBoardBlock(
-                        content = NoteBody(),
-                        header = PageHeader(
-                                icon = formData.icon,
-                                avatar = formData.icon,
-                                cover = formData.icon,
-                        )
+                    content = NoteBody(),
+                    header = PageHeader(
+                        icon = formData.icon,
+                        avatar = formData.icon,
+                        cover = formData.icon,
+                    )
                 )
             }
             onSuccess = {

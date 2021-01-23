@@ -7,11 +7,11 @@ import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.identity.Attr
+import com.timecat.identity.data.base.AtScope
+import com.timecat.identity.data.base.TopicScope
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.mySpanCreateListener
-import com.timecat.identity.data.base.AtScope
-import com.timecat.identity.data.base.TopicScope
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import kotlinx.android.synthetic.main.user_base_item_richtext.view.*

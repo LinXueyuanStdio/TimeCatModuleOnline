@@ -2,10 +2,9 @@ package com.timecat.module.user.adapter.detail
 
 import android.app.Activity
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.module.user.R
 import com.timecat.identity.data.base.AttachmentTail
+import com.timecat.module.user.R
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 

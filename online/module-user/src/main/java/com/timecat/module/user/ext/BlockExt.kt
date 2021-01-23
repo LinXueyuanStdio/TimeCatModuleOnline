@@ -1,10 +1,10 @@
 package com.timecat.module.user.ext
 
-import com.timecat.element.alert.ToastUtil
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.module.user.base.GO
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.AppBlock
 import com.timecat.identity.data.block.type.*
+import com.timecat.module.user.base.GO
 
 /**
  * @author 林学渊

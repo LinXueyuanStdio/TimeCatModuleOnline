@@ -2,17 +2,17 @@ package com.timecat.module.user.permission
 
 import android.view.ViewGroup
 import com.afollestad.vvalidator.form
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.HunPermission
-import com.timecat.data.bmob.ext.bmob.requestExist
+import com.timecat.data.bmob.ext.bmob.requestExistBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.bmob.updateBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.checkHunPermExistByTitle
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditActivity
@@ -97,7 +97,7 @@ class AddHunPermissionActivity : BaseBlockEditActivity() {
                     }
                 }
             } else {
-                requestExist {
+                requestExistBlock {
                     query = checkHunPermExistByTitle(formData.name)
                     onError = {
                         btnOk.isEnabled = true

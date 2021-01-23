@@ -15,13 +15,13 @@ import com.blankj.utilcode.util.FileIOUtils
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
 import com.timecat.component.commonsdk.extension.beGone
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.data._User
 import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.data.bmob.data._User
 import com.timecat.data.system.model.api.GitFileResponse
 import com.timecat.data.system.model.api.GiteeFile
 import com.timecat.data.system.network.WEB
 import com.timecat.data.system.network.api.GiteeService
+import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.image.IMG
 import com.timecat.extend.image.savablePath
 import com.timecat.extend.image.selectForResult
@@ -129,9 +129,9 @@ fun Activity.uploadImageByUser(
 fun Activity.chooseImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
     MaterialDialog(this).show {
         val choice = listOf(
-                "拍照",
-                "本地相册",
-                "内置图标",
+            "拍照",
+            "本地相册",
+            "内置图标",
 //                "我的在线相册" TODO
         )
         positiveButton(R.string.ok)
@@ -166,21 +166,21 @@ fun Activity.takeOnePhoto(isAvatar: Boolean = true, onSuccess: (String) -> Unit)
         aspect_ratio_y = 2
     }
     IMG.select(PictureSelector.create(this).openCamera(PictureMimeType.ofImage()))
-            .maxSelectNum(1)
-            .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
-            .isGif(false)
-            .isEnableCrop(true)
-            .selectForResult {
-                if (it.isNotEmpty()) {
-                    val media = it[0]
-                    val path = media.savablePath()
-                    if (path == null) {
-                        ToastUtil.e_long("图片路径错误！")
-                    } else {
-                        onSuccess(path)
-                    }
+        .maxSelectNum(1)
+        .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
+        .isGif(false)
+        .isEnableCrop(true)
+        .selectForResult {
+            if (it.isNotEmpty()) {
+                val media = it[0]
+                val path = media.savablePath()
+                if (path == null) {
+                    ToastUtil.e_long("图片路径错误！")
+                } else {
+                    onSuccess(path)
                 }
             }
+        }
 }
 
 fun Activity.selectOneLocalImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
@@ -191,21 +191,21 @@ fun Activity.selectOneLocalImage(isAvatar: Boolean = true, onSuccess: (String) -
         aspect_ratio_y = 2
     }
     IMG.select(PictureSelector.create(this).openGallery(PictureMimeType.ofImage()))
-            .maxSelectNum(1)
-            .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
-            .isGif(false)
-            .isEnableCrop(true)
-            .selectForResult {
-                if (it.isNotEmpty()) {
-                    val media = it[0]
-                    val path = media.savablePath()
-                    if (path == null) {
-                        ToastUtil.e_long("图片路径错误！")
-                    } else {
-                        onSuccess(path)
-                    }
+        .maxSelectNum(1)
+        .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
+        .isGif(false)
+        .isEnableCrop(true)
+        .selectForResult {
+            if (it.isNotEmpty()) {
+                val media = it[0]
+                val path = media.savablePath()
+                if (path == null) {
+                    ToastUtil.e_long("图片路径错误！")
+                } else {
+                    onSuccess(path)
                 }
             }
+        }
 }
 
 fun Activity.selectOneOnlineImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {}

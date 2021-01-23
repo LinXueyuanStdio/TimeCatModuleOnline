@@ -1,12 +1,11 @@
 package com.timecat.module.user.social.app.plugin
 
-import cn.bmob.v3.BmobQuery
-import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.allPluginApp
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.adapter.block.BlockSmallItem
 import com.timecat.module.user.base.BaseEndlessBlockActivity
+import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊
@@ -20,6 +19,6 @@ import com.timecat.module.user.base.BaseEndlessBlockActivity
 @RouterAnno(hostAndPath = RouterHub.PLUGIN_PluginListActivity)
 class PluginListActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "插件中心"
-    override fun query(): BmobQuery<Block> = allPluginApp()
+    override fun query() = allPluginApp()
     override fun block2Item(block: Block) = BlockSmallItem(this, block)
 }

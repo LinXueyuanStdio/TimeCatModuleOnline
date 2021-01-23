@@ -1,7 +1,7 @@
 package com.timecat.module.user.app
 
-import com.timecat.data.bmob.dao.UserDao
 import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.identity.service.PermissionService
 import com.timecat.module.user.permission.MetaPermissionPool.ensureLoaded
 import com.timecat.module.user.permission.PermissionValidator

@@ -12,5 +12,5 @@ import com.xiaojinzi.component.anno.FragmentAnno
  * @usage null
  */
 @FragmentAnno(RouterHub.USER_BagItemDetailFragment)
-class BagItemDetailFragment: BottomSheetDialogFragment() {
+class BagItemDetailFragment : BottomSheetDialogFragment() {
 }

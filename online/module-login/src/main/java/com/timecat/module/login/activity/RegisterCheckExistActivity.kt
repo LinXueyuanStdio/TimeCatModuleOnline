@@ -1,22 +1,24 @@
 package com.timecat.module.login.activity
 
 import android.text.TextUtils
-import cn.bmob.v3.exception.BmobException
-import cn.bmob.v3.listener.FindListener
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
-import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import android.view.View
+import android.widget.CheckBox
+import android.widget.EditText
 import com.timecat.component.commonsdk.utils.string.Check
 import com.timecat.component.commonsdk.utils.string.StringUtil
-import com.timecat.identity.readonly.RouterHub
+import com.timecat.component.router.app.ForwardCallback
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
+import com.timecat.data.bmob.ext.bmob.EasyRequestUserNull
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.login.R
-import com.timecat.module.login.data.UserCheckExist
+import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.android.synthetic.main.login_activity_register_send_phone.*
+import com.xiaojinzi.component.impl.RouterErrorResult
+import com.xiaojinzi.component.impl.RouterRequest
+import com.xiaojinzi.component.impl.RouterResult
 
 /**
  * 注册
@@ -28,6 +30,20 @@ class RegisterCheckExistActivity : BaseToolbarActivity() {
     override fun title(): String = getString(R.string.xiaoxing_login_register)
     override fun layout(): Int = R.layout.login_activity_register_send_phone
     override fun routerInject() = NAV.inject(this)
+
+    lateinit var username_et: EditText
+    lateinit var btn_next: View
+    lateinit var tv_xie_yi: View
+    lateinit var cb: CheckBox
+
+    override fun bindView() {
+        super.bindView()
+        username_et = findViewById(R.id.username_et)
+        btn_next = findViewById(R.id.btn_next)
+        tv_xie_yi = findViewById(R.id.tv_xie_yi)
+        cb = findViewById(R.id.cb)
+    }
+
     override fun initView() {
         btn_next.setShakelessClickListener {
             next()
@@ -57,109 +73,94 @@ class RegisterCheckExistActivity : BaseToolbarActivity() {
     private val textFromEditText: String
         get() = username_et.text?.toString() ?: ""
 
-    private fun generate(
-        list: List<_User>?, e: BmobException?, data: String,
-        onAllow: String, onUsed: String
-    ): UserCheckExist {
-        val userCheckExistEmail = UserCheckExist()
-        userCheckExistEmail.data = data
-        if (e != null) {
-            userCheckExistEmail.code = e.errorCode
-            userCheckExistEmail.msg = e.toString()
-        } else if (list == null || list.isEmpty()) {
-            userCheckExistEmail.code = 200
-            userCheckExistEmail.msg = onAllow
-        } else {
-            LogUtil.e(list.toString())
-            userCheckExistEmail.code = 404
-            userCheckExistEmail.msg = onUsed
-        }
-        return userCheckExistEmail
-    }
-
     private fun userCheckEmail(email: String) {
         mStatefulLayout?.showLoading()
-        UserDao.queryEmail(email, 1, object : FindListener<_User>() {
-            override fun done(list: List<_User>?, e: BmobException?) {
+        UserDao.queryUsersExits(email, EasyRequestUserNull().apply {
+            onError = {
                 mStatefulLayout?.showContent()
-                val msg = generate(list, e, email, "允许使用", "邮箱已被使用")
-                userCheckEmailSuccess(msg)
+                ToastUtil.e_long("${it.message}")
+            }
+            onSuccess = {
+                mStatefulLayout?.showContent()
+                if (it == null) {
+                    ToastUtil.ok("允许使用")
+                    NAV.raw(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterSetPwdActivity)
+                        .withString("type", EMAIL)
+                        .withString("mEmail", email)
+                        .forward(object : ForwardCallback {
+                            override fun onError(errorResult: RouterErrorResult) {
+                            }
+
+                            override fun onCancel(originalRequest: RouterRequest?) {
+                            }
+
+                            override fun onSuccess(result: RouterResult) {
+                                finish()
+                            }
+
+                            override fun onEvent(successResult: RouterResult?, errorResult: RouterErrorResult?) {
+                            }
+                        })
+                } else {
+                    ToastUtil.w_long("邮箱已被使用")
+                }
             }
         })
     }
 
     private fun userCheckphone(phone: String) {
         mStatefulLayout?.showLoading()
-        UserDao.queryPhone(phone, 1, object : FindListener<_User>() {
-            override fun done(list: List<_User>?, e: BmobException?) {
+        UserDao.queryUsersExits(phone, EasyRequestUserNull().apply {
+            onError = {
                 mStatefulLayout?.showContent()
-                val msg = generate(list, e, phone, "允许使用", "号码已被使用")
-                userCheckPhoneSuccess(msg)
+                ToastUtil.e_long("${it.message}")
+            }
+            onSuccess = {
+                mStatefulLayout?.showContent()
+                if (it == null) {
+                    ToastUtil.ok("允许使用")
+                    NAV.goAndFinish(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterVerificationCodeActivity, "mPhone", phone)
+                } else {
+                    ToastUtil.w_long("号码已被使用")
+                }
             }
         })
     }
 
     private fun userCheckUsername(username: String) {
         mStatefulLayout?.showLoading()
-        UserDao.queryUsersExits(username, 1, object : FindListener<_User>() {
-            override fun done(list: List<_User>?, e: BmobException?) {
+        UserDao.queryUsersExits(username, EasyRequestUserNull().apply {
+            onError = {
                 mStatefulLayout?.showContent()
-                val msg = generate(list, e, username, "允许使用", "用户名已被使用")
-                userCheckUsernameSuccess(msg)
+                ToastUtil.e_long("${it.message}")
+            }
+            onSuccess = {
+                mStatefulLayout?.showContent()
+                if (it == null) {
+                    ToastUtil.ok("允许使用")
+                    NAV.raw(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterSetPwdActivity)
+                        .withString("type", USERNAME)
+                        .withString("mUsername", textFromEditText)
+                        .forward(object : ForwardCallback {
+                            override fun onError(errorResult: RouterErrorResult) {
+                            }
+
+                            override fun onCancel(originalRequest: RouterRequest?) {
+                            }
+
+                            override fun onSuccess(result: RouterResult) {
+                                finish()
+                            }
+
+                            override fun onEvent(successResult: RouterResult?, errorResult: RouterErrorResult?) {
+                            }
+                        })
+                } else {
+                    ToastUtil.w_long("用户名已被使用")
+                }
             }
         })
     }
-
-    private fun userCheckUsernameSuccess(userCheckPhoneExist: UserCheckExist) {
-        LogUtil.e(userCheckPhoneExist.toString())
-        if (userCheckPhoneExist.code == 200) {
-            ToastUtil.ok(userCheckPhoneExist.msg)
-            NAV.raw(this, RouterHub.LOGIN_RegisterSetPwdActivity)
-                .withString("type", USERNAME)
-                .withString("mUsername", textFromEditText)
-                .navigation()
-            finish()
-        } else {
-            ToastUtil.w(userCheckPhoneExist.msg)
-        }
-    }
-
-    private fun userCheckPhoneSuccess(userCheckPhoneExist: UserCheckExist) {
-        LogUtil.e(userCheckPhoneExist.toString())
-        if (userCheckPhoneExist.code == 200) {
-            ToastUtil.ok(userCheckPhoneExist.msg)
-            NAV.goAndFinish(this, RouterHub.LOGIN_RegisterVerificationCodeActivity, "mPhone", userCheckPhoneExist.data)
-        } else {
-            ToastUtil.w(userCheckPhoneExist.msg)
-        }
-    }
-
-    private fun userCheckEmailSuccess(userCheckExistEmail: UserCheckExist) {
-        LogUtil.e(userCheckExistEmail.toString())
-        //        if (userCheckExistEmail.getCode() == 200) {
-//            mPresenter.sendVerifyEmail(userCheckExistEmail.getData());
-//        }
-        ToastUtil.w(userCheckExistEmail.msg)
-        if (userCheckExistEmail.code == 200) {
-            NAV.raw(this, RouterHub.LOGIN_RegisterSetPwdActivity)
-                .withString("type", EMAIL)
-                .withString("mEmail", userCheckExistEmail.data)
-                .navigation()
-            finish()
-        }
-    }
-
-    private fun userSendVerifyEmailSuccess(userCheckExistEmail: UserCheckExist) {
-        ToastUtil.w(userCheckExistEmail.msg)
-        if (userCheckExistEmail.code == 200) {
-            NAV.raw(this, RouterHub.LOGIN_RegisterSetPwdActivity)
-                .withString("type", EMAIL)
-                .withString("mEmail", userCheckExistEmail.data)
-                .navigation()
-            finish()
-        }
-    }
-
 
     companion object {
         const val PHONE = "phone"

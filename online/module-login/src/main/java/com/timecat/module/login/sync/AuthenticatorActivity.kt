@@ -7,12 +7,10 @@ import android.content.ContentResolver
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import cn.bmob.v3.exception.BmobException
-import cn.bmob.v3.listener.LogInListener
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
 import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.data.bmob.dao.UserDao
+import com.timecat.data.bmob.ext.bmob.EasyRequestUser
+import com.timecat.element.alert.ToastUtil
 import com.timecat.module.login.R
 import kotlinx.android.synthetic.main.login_activity_authenticator.*
 
@@ -41,19 +39,22 @@ class AuthenticatorActivity : AccountAuthenticatorActivity() {
     }
 
     fun submit() {
-        val userName = accountName.text?.toString()?:""
-        val userPass = accountPassword?.text?.toString()?:""
-        UserDao.login(userName, userPass, object : LogInListener<_User>() {
-                override fun done(s: _User?, e: BmobException?) {
-                    if (e == null) {
-                        ToastUtil.ok("登录成功！")
-                        finishLogin(userName, userPass)
-                    } else {
-                        LogUtil.e(e.toString())
-                        ToastUtil.e("登录失败！")
-                    }
+        val username = accountName.text?.toString() ?: ""
+        val password = accountPassword?.text?.toString() ?: ""
+        UserDao.login(username, password, EasyRequestUser().apply {
+            onSuccess = {
+                //登录成功
+                val user = UserDao.getCurrentUser()
+                if (user != null) {
+                    LogUtil.e("登陆成功")
+                    finishLogin(username, password)
                 }
-            })
+            }
+            onError = {
+                LogUtil.e(it.message)
+                ToastUtil.e_long(it.message)
+            }
+        })
     }
 
     private fun finishLogin(accountName: String, accountPassword: String) {

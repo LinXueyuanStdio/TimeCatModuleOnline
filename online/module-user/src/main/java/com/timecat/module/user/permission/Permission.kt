@@ -1,9 +1,9 @@
 package com.timecat.module.user.permission
 
-import cn.bmob.v3.BmobQuery
+import cn.leancloud.AVQuery
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.net.allMetaPermission
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.middle.block.permission.HunPermission
 import com.timecat.middle.block.permission.MetaPermission
 import com.timecat.middle.block.permission.PermissionCallback
@@ -30,9 +30,9 @@ object MetaPermissionPool {
         pool.clear()
         requestBlock {
             query = allMetaPermission().apply {
-                cachePolicy = BmobQuery.CachePolicy.CACHE_THEN_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_THEN_NETWORK
             }
-            onListSuccess = {
+            onSuccess = {
                 LogUtil.sd(it)
                 it.forEach {
                     pool[it.title] = it.content

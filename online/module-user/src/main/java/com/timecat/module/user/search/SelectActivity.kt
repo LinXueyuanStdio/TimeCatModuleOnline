@@ -3,12 +3,11 @@ package com.timecat.module.user.search
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import com.timecat.component.router.app.NAV
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.page.base.base.lazyload.adapter.FragmentLazyPagerAdapter
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
-
-import com.timecat.page.base.base.lazyload.adapter.FragmentLazyPagerAdapter
-import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import java.io.Serializable
 
 /**

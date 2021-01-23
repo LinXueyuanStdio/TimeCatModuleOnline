@@ -1,11 +1,11 @@
 package com.timecat.module.user.social.tag
 
 import com.timecat.data.bmob.data.common.Block
-import com.xiaojinzi.component.anno.RouterAnno
 import com.timecat.data.bmob.ext.net.allTag
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.adapter.block.BlockSmallItem
 import com.timecat.module.user.base.BaseEndlessBlockActivity
+import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊

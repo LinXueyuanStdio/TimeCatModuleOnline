@@ -1,22 +1,19 @@
 package com.timecat.module.login.activity
 
 import android.text.TextUtils
-import cn.bmob.v3.exception.BmobException
-import cn.bmob.v3.listener.LogInListener
-import cn.bmob.v3.listener.UpdateListener
-import com.xiaojinzi.component.anno.RouterAnno
-
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
-import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
-import com.timecat.page.base.view.MyClickListener
-import com.timecat.identity.readonly.RouterHub
+import android.view.View
+import android.widget.EditText
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
+import com.timecat.data.bmob.ext.bmob.EasyRequest
+import com.timecat.data.bmob.ext.bmob.EasyRequestUser
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.login.R
-import com.timecat.module.login.data.UserRegister
+import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
-import kotlinx.android.synthetic.main.login_activity_register_set_pwd.*
+import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * 设置密码页面
@@ -43,10 +40,20 @@ class RegisterSetPwdActivity : BaseToolbarActivity() {
     override fun layout(): Int = R.layout.login_activity_register_set_pwd
     override fun routerInject() = NAV.inject(this)
 
+    lateinit var btn_ok: View
+    lateinit var new_password_again_et: EditText
+    lateinit var new_password_et: EditText
+    override fun bindView() {
+        super.bindView()
+        btn_ok = findViewById(R.id.btn_ok)
+        new_password_again_et = findViewById(R.id.new_password_again_et)
+        new_password_et = findViewById(R.id.new_password_et)
+    }
+
     override fun initView() {
-        btn_ok.setOnClickListener(MyClickListener {
+        btn_ok.setShakelessClickListener {
             toRegister()
-        })
+        }
     }
 
     private fun toRegister() {
@@ -83,52 +90,36 @@ class RegisterSetPwdActivity : BaseToolbarActivity() {
 
     private fun register(username: String?, password: String?, sendVerifyEmail: Boolean = false) {
         mStatefulLayout?.showLoading()
-        UserDao.register(username, password, object : LogInListener<_User>() {
-            override fun done(o: _User?, e: BmobException?) {
+        UserDao.register(username, password, EasyRequestUser().apply {
+            onError = {
                 mStatefulLayout?.showContent()
-                val userRegister = UserRegister()
-                if (e == null) {
-                    userRegister.code = 200
-                    userRegister.msg = "注册成功"
-                    if (sendVerifyEmail) {
-                        sendVerifyEmail(username)
-                    }
+                ToastUtil.e_long("${it.message}")
+            }
+            onSuccess = {
+                ToastUtil.ok("注册成功")
+                if (sendVerifyEmail) {
+                    sendVerifyEmail(username)
                 } else {
-                    userRegister.code = e.errorCode
-                    userRegister.msg = e.message
+                    mStatefulLayout?.showContent()
+                    finish()
                 }
-                userRegisterSuccess(userRegister)
             }
         })
     }
 
     private fun sendVerifyEmail(email: String?) {
         mStatefulLayout?.showLoading()
-        UserDao.requestEmailVerify(email, object : UpdateListener() {
-            override fun done(e: BmobException?) {
+        UserDao.requestEmailVerify(email, EasyRequest().apply {
+            onError = {
                 mStatefulLayout?.showContent()
-                val userRegister = UserRegister()
-                userRegister.data = email
-                if (e == null) {
-                    userRegister.code = 200
-                    userRegister.msg = "请到邮箱激活账号"
-                } else {
-                    userRegister.code = e.errorCode
-                    userRegister.msg = e.toString()
-                }
-                userRegisterSuccess(userRegister)
+                ToastUtil.e_long("${it.message}")
+            }
+            onSuccess = {
+                mStatefulLayout?.showContent()
+                ToastUtil.ok("请到邮箱激活账号")
+                finish()
             }
         })
     }
 
-    private fun userRegisterSuccess(userRegister: UserRegister) {
-        ToastUtil.ok(userRegister.msg)
-        if (userRegister.code == 200) {
-            finish()
-        }
-    }
-
-    private fun pleaseVerifyEmail(userRegister: UserRegister) {
-        ToastUtil.w_long(userRegister.msg)
-    }
 }

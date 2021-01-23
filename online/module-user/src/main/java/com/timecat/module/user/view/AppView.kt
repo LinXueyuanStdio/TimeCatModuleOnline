@@ -8,20 +8,19 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.focusSum
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlockCount
+import com.timecat.data.bmob.ext.focusSum
 import com.timecat.data.bmob.ext.net.findAllComment
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.block.*
 import com.timecat.identity.service.PluginService
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.ImageAdapter
 import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
-import com.timecat.identity.data.block.*
 import kotlinx.android.synthetic.main.header_app_layout_detail.view.*
 import kotlinx.android.synthetic.main.header_moment_detail.view.userSection
 import kotlinx.android.synthetic.main.user_base_item_comment_header.view.*

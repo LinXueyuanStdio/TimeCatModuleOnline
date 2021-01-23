@@ -1,6 +1,5 @@
 package com.timecat.module.user.social.leaderboard.fragment
 
-import cn.bmob.v3.BmobQuery
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.findAllComment
 import com.timecat.module.user.base.GO
@@ -14,7 +13,7 @@ import com.timecat.module.user.base.GO
  */
 class RecommendListFragment : BaseListFragment() {
     override fun name(): String = "推荐"
-    override fun query(): BmobQuery<Block> = viewModel.board.value!!.findAllComment() //TODO
+    override fun query() = viewModel.board.value!!.findAllComment() //TODO
     override fun addNew(block: Block) {
         GO.addCommentFor(block) // TODO
     }

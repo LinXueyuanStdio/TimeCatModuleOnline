@@ -11,11 +11,11 @@ import cn.bmob.v3.exception.BmobException
 import cn.bmob.v3.listener.UpdateListener
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.timecat.element.alert.ToastUtil
-import com.timecat.data.bmob.data.common.Exec
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.module.user.R
+import com.timecat.data.bmob.data.common.Exec
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.exec.RecommendBlock
+import com.timecat.module.user.R
 
 /**
  * @author 林学渊

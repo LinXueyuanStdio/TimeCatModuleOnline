@@ -1,17 +1,17 @@
 package com.timecat.module.user.social.user
 
 import androidx.recyclerview.widget.RecyclerView
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data._User
 import com.timecat.data.bmob.ext.bmob.requestUserRelation
 import com.timecat.data.bmob.ext.net.fansOf
-import com.timecat.page.base.friend.toolbar.BaseRefreshListActivity
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import com.timecat.module.user.adapter.UserAdapter
 import com.timecat.module.user.adapter.UserAdapter.UserListener
 import com.timecat.module.user.base.GO
+import com.timecat.page.base.friend.toolbar.BaseRefreshListActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 import java.util.*
@@ -55,7 +55,7 @@ class UserFansListActivity : BaseRefreshListActivity() {
                 mStatefulLayout?.showError("没有粉丝") {
                     onRefresh()
                 }
-                ToastUtil.e( "粉丝列表查询失败")
+                ToastUtil.e("粉丝列表查询失败")
                 LogUtil.se(it)
             }
             onEmpty = {
@@ -63,7 +63,7 @@ class UserFansListActivity : BaseRefreshListActivity() {
                 mStatefulLayout?.showError("没有粉丝") {
                     onRefresh()
                 }
-                ToastUtil.e( "当前还未有粉丝，请多造物攒人气吧~")
+                ToastUtil.e("当前还未有粉丝，请多造物攒人气吧~")
             }
             onSuccess = {
                 mRefreshLayout.isRefreshing = false

@@ -1,10 +1,9 @@
 package com.timecat.module.user.base
 
-import cn.bmob.v3.BmobQuery
+
 import com.timecat.data.bmob.data.common.Action
 import com.timecat.data.bmob.ext.bmob.requestAction
 import com.timecat.module.user.adapter.action.ActionItem
-import com.timecat.module.user.adapter.block.BlockItem
 
 /**
  * @author 林学渊
@@ -24,7 +23,7 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback
@@ -54,7 +53,7 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = BmobQuery.CachePolicy.CACHE_ELSE_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback

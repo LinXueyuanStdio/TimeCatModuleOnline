@@ -6,7 +6,8 @@ import android.os.Build
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data._User
 import com.timecat.data.bmob.data.common.Action
@@ -17,8 +18,7 @@ import com.timecat.data.bmob.ext.follow
 import com.timecat.data.bmob.ext.net.allFollow
 import com.timecat.data.bmob.ext.net.allFollowBlock
 import com.timecat.data.bmob.ext.net.allLikeBlock
-import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.component.identity.Attr
+import com.timecat.element.alert.ToastUtil
 import com.timecat.layout.ui.layout.drawable_top
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -193,7 +193,7 @@ fun setupLikeBlockButton(
             query = I.allLikeBlock(block)
             onError = {
                 isEnabled = true
-                drawable_top=R.drawable.user_ic_love
+                drawable_top = R.drawable.user_ic_love
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     compoundDrawableTintList = ColorStateList.valueOf(Attr.getIconColor(context))
                 }
@@ -202,7 +202,7 @@ fun setupLikeBlockButton(
             }
             onEmpty = {
                 isEnabled = true
-                drawable_top=R.drawable.user_ic_love
+                drawable_top = R.drawable.user_ic_love
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     compoundDrawableTintList = ColorStateList.valueOf(Attr.getIconColor(context))
                 }
@@ -212,7 +212,7 @@ fun setupLikeBlockButton(
             onSuccess = {
                 isEnabled = true
                 relation = it
-                drawable_top=R.drawable.user_ic_favorite_24dp
+                drawable_top = R.drawable.user_ic_favorite_24dp
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     compoundDrawableTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
                 }
@@ -222,7 +222,7 @@ fun setupLikeBlockButton(
             onListSuccess = {
                 isEnabled = true
                 relation = it[0]
-                drawable_top=R.drawable.user_ic_favorite_24dp
+                drawable_top = R.drawable.user_ic_favorite_24dp
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     compoundDrawableTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
                 }
@@ -236,7 +236,7 @@ fun setupLikeBlockButton(
                     target = I follow block
                     onSuccess = {
                         needRefresh?.invoke()
-                        drawable_top=R.drawable.user_ic_favorite_24dp
+                        drawable_top = R.drawable.user_ic_favorite_24dp
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             compoundDrawableTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
                         }
@@ -253,7 +253,7 @@ fun setupLikeBlockButton(
                     target = relation!!
                     onSuccess = {
                         needRefresh?.invoke()
-                        drawable_top=R.drawable.user_ic_love
+                        drawable_top = R.drawable.user_ic_love
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             compoundDrawableTintList = ColorStateList.valueOf(Attr.getIconColor(context))
                         }

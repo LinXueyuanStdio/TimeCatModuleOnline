@@ -1,6 +1,6 @@
 package com.timecat.module.user.social.app.fragment
 
-import cn.bmob.v3.BmobQuery
+
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.findAllComment
 import com.timecat.module.user.base.GO
@@ -14,7 +14,7 @@ import com.timecat.module.user.base.GO
  */
 class CommentListFragment : BaseListFragment() {
     override fun name(): String = "讨论"
-    override fun query(): BmobQuery<Block> = viewModel.app.value!!.findAllComment()
+    override fun query() = viewModel.app.value!!.findAllComment()
     override fun addNew(block: Block) {
         GO.addCommentFor(block)
     }

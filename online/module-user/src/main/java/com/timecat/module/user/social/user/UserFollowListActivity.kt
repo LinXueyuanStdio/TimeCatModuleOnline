@@ -1,17 +1,17 @@
 package com.timecat.module.user.social.user
 
 import androidx.recyclerview.widget.RecyclerView
-import com.timecat.element.alert.ToastUtil
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data._User
 import com.timecat.data.bmob.ext.bmob.requestUserRelation
 import com.timecat.data.bmob.ext.net.allFollow
-import com.timecat.page.base.friend.toolbar.BaseRefreshListActivity
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.component.router.app.NAV
 import com.timecat.module.user.adapter.UserAdapter
 import com.timecat.module.user.adapter.UserAdapter.UserListener
 import com.timecat.module.user.base.GO
+import com.timecat.page.base.friend.toolbar.BaseRefreshListActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 import java.util.*
@@ -52,7 +52,7 @@ class UserFollowListActivity : BaseRefreshListActivity() {
             query = _User(id).allFollow()
             onError = {
                 mRefreshLayout.isRefreshing = false
-                ToastUtil.e( "关注列表查询失败")
+                ToastUtil.e("关注列表查询失败")
                 LogUtil.se(it)
                 mStatefulLayout?.showError("没有关注的用户") {
                     onRefresh()
@@ -60,7 +60,7 @@ class UserFollowListActivity : BaseRefreshListActivity() {
             }
             onEmpty = {
                 mRefreshLayout.isRefreshing = false
-                ToastUtil.e( "还没关注任何人哦")
+                ToastUtil.e("还没关注任何人哦")
                 mStatefulLayout?.showError("没有关注的用户") {
                     onRefresh()
                 }
