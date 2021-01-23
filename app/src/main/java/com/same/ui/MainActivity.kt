@@ -25,10 +25,10 @@ class MainActivity : Activity() {
         linearLayout.addView(createButton("添加插件", RouterHub.USER_AddPluginAppActivity))
         linearLayout.addView(createButton("添加动态", RouterHub.USER_AddMomentActivity))
         linearLayout.addView(createButton("背包", RouterHub.USER_BagActivity))
-        val user = UserDao.getCurrentUser()!!
+        val user = UserDao.getCurrentUser()
         linearLayout.addView(createButton("用户") {
             Router.with().hostAndPath(RouterHub.USER_UserDetailActivity)
-                .putString("userId", user.objectId)
+                .putString("userId", user?.objectId)
                 .forward()
         })
         linearLayout.addView(createButton("用户浏览记录") {
@@ -38,7 +38,7 @@ class MainActivity : Activity() {
         })
         linearLayout.addView(createButton("用户浏览记录2") {
             requestAction {
-                query = user.allAction().apply {
+                query = user!!.allAction().apply {
                     order("-createdAt")
                     cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
                 }

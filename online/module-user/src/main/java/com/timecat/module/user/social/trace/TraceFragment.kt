@@ -30,6 +30,4 @@ class TraceFragment : BaseEndlessActionFragment() {
 
     override fun name() = "足迹"
     override fun query() = user?.allAction() ?: I().allAction()
-    override fun initViewAfterLogin() {
-    }
 }
