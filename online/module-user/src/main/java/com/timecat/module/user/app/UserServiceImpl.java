@@ -6,7 +6,6 @@ import com.timecat.identity.service.UserService;
 import com.xiaojinzi.component.anno.ServiceAnno;
 
 import androidx.annotation.NonNull;
-import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * @author 林学渊
@@ -42,14 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getCoverPageUrl() {
         _User user = UserDao.getCurrentUser();
-        if (user == null) {
-            return "";
-        }
-        BmobFile file = user.getCoverPage();
-        if (file == null) {
-            return "";
-        }
-        return file.getFileUrl();
+        return user == null ? "" : user.getCover();
     }
 
     @NonNull
