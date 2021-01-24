@@ -42,6 +42,7 @@ import com.xiaojinzi.component.anno.RouterAnno
 class ShopActivity : BaseDetailCollapseActivity() {
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
+
     lateinit var viewModel: ShopViewModel
     lateinit var card: TopicCard
     override fun routerInject() = NAV.inject(this)

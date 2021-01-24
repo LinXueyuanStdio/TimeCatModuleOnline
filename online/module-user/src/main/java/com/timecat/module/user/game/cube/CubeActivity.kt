@@ -41,6 +41,7 @@ class CubeActivity : BaseDetailCollapseActivity() {
 
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
+
     lateinit var viewModel: CubeViewModel
     lateinit var card: TopicCard
     override fun routerInject() = NAV.inject(this)

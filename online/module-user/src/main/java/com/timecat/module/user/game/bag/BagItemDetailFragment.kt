@@ -1,7 +1,9 @@
 package com.timecat.module.user.game.bag
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.timecat.data.bmob.data.game.item.OwnItem
 import com.timecat.identity.readonly.RouterHub
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.FragmentAnno
 
 /**
@@ -13,4 +15,6 @@ import com.xiaojinzi.component.anno.FragmentAnno
  */
 @FragmentAnno(RouterHub.USER_BagItemDetailFragment)
 class BagItemDetailFragment : BottomSheetDialogFragment() {
+    @AttrValueAutowiredAnno("ownItem")
+    lateinit var ownItem: OwnItem
 }

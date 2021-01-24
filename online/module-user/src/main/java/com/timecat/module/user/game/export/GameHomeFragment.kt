@@ -2,12 +2,24 @@ package com.timecat.module.user.game.export
 
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
+import cn.leancloud.AVOSCloud
+import com.afollestad.materialdialogs.MaterialDialog
+import com.google.android.material.chip.Chip
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.TimerView
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
-import com.timecat.page.base.friend.main.BaseMainFragment
+import com.timecat.module.user.base.login.BaseLoginMainFragment
+import com.timecat.module.user.game.core.Water
+import com.timecat.module.user.game.core.Water.recoverTime
+import com.timecat.page.base.view.BlurringToolbar
 import com.xiaojinzi.component.anno.FragmentAnno
+import io.reactivex.disposables.Disposable
 
 /**
  * @author 林学渊
@@ -17,34 +29,131 @@ import com.xiaojinzi.component.anno.FragmentAnno
  * @usage null
  */
 @FragmentAnno(RouterHub.USER_GameHomeFragment)
-class GameHomeFragment : BaseMainFragment() {
+class GameHomeFragment : BaseLoginMainFragment() {
     override fun layout(): Int = R.layout.user_fragment_game_home
 
-    lateinit var cube: Button
+    lateinit var main: ImageView
     lateinit var card: Button
-    lateinit var shop: Button
+    lateinit var cube: Button
     lateinit var bag: Button
+    lateinit var shop: Button
+
+    lateinit var level: Chip
+    lateinit var star: Chip
+    lateinit var water: Chip
+    lateinit var event_timer: TimerView
+
+    lateinit var currency: Chip
+    lateinit var charge: Chip
 
     override fun bindView(view: View) {
         super.bindView(view)
-        cube = view.findViewById(R.id.cube)
+        val toolbar: BlurringToolbar = view.findViewById(R.id.toolbar)
+        val background: View = view.findViewById(R.id.background)
+        toolbar.setBlurredView(background)
+        toolbar.setPaddingStatusBar(_mActivity)
+
+        main = view.findViewById(R.id.main)
         card = view.findViewById(R.id.card)
-        shop = view.findViewById(R.id.shop)
+        cube = view.findViewById(R.id.cube)
         bag = view.findViewById(R.id.bag)
+        shop = view.findViewById(R.id.shop)
+
+        level = view.findViewById(R.id.level)
+        star = view.findViewById(R.id.star)
+        water = view.findViewById(R.id.water)
+        event_timer = view.findViewById(R.id.event_timer)
+
+        currency = view.findViewById(R.id.currency)
+        charge = view.findViewById(R.id.charge)
     }
 
-    override fun lazyInit() {
-        cube.setShakelessClickListener {
-            NAV.go(RouterHub.USER_CubeActivity)
-        }
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+
+        val user = I()
+        LogUtil.e(user.toJSONString())
+        IconLoader.loadIcon(_mActivity, main, user.avatar)
         card.setShakelessClickListener {
             NAV.go(RouterHub.USER_CardActivity)
         }
-        shop.setShakelessClickListener {
-            NAV.go(RouterHub.USER_ShopActivity)
+        cube.setShakelessClickListener {
+            NAV.go(RouterHub.USER_AllCubeActivity)
         }
         bag.setShakelessClickListener {
             NAV.go(RouterHub.USER_BagActivity)
         }
+        shop.setShakelessClickListener {
+            NAV.go(RouterHub.USER_ShopActivity)
+        }
+
+        level.text = "等级 ${user.level}"
+        level.setShakelessClickListener {
+            ToastUtil.i("当前等级 ${user.level}")
+        }
+        star.text = "星级 ${user.star}"
+        star.setShakelessClickListener {
+            ToastUtil.i("当前星级 ${user.star}")
+        }
+        water.setShakelessClickListener {
+            showWaterDialog()
+        }
+        currency.text = "${user.currency}"
+        currency.setOnCloseIconClickListener {
+            ToastUtil.w("开发喵施工中")
+        }
+        charge.text = "${user.charge}"
+        charge.setOnCloseIconClickListener {
+            ToastUtil.w("开发喵施工中")
+        }
+
+        loadWater()
+    }
+
+    private fun showWaterDialog(): Disposable {
+        return AVOSCloud.getServerDateInBackground().subscribe {
+            val i = I()
+            val currentTime = it.date.time
+            Water.compute(i, currentTime) { trueWater, _, _ ->
+                MaterialDialog(_mActivity).show {
+                    message(text = "体力 $trueWater")
+                }
+            }
+        }
+    }
+
+    private fun loadWater(): Disposable {
+        mStatefulLayout?.showLoading()
+        return AVOSCloud.getServerDateInBackground().subscribe({
+            val i = I()
+            val currentTime = it.date.time
+            Water.compute(i, currentTime) { trueWater, waterLimit, needWaitTime ->
+                var nowWater = trueWater
+                event_timer.apply {
+                    setOnCountdownEndListener {
+                        nowWater++
+                        tryToStartTimer(nowWater, waterLimit, recoverTime, this)
+                    }
+                }
+                tryToStartTimer(nowWater, waterLimit, needWaitTime, event_timer)
+            }
+            mStatefulLayout?.showContent()
+        }, {
+            mStatefulLayout?.showError("发生错误") {
+                loadWater()
+            }
+        })
+    }
+
+    private fun tryToStartTimer(nowWater: Int, waterLimit: Int, recoverTime: Long, timer: TimerView) {
+        notifyWater(nowWater.coerceIn(0, waterLimit), waterLimit)
+        if (nowWater <= waterLimit) {
+            timer.start(recoverTime)
+        }
+    }
+
+    private fun notifyWater(nowWater: Int, waterLimit: Int) {
+        water.text = "${nowWater} / ${waterLimit}"
+        Water.save(nowWater, I())
     }
 }

@@ -22,7 +22,7 @@ ext {
              projectName : ":identity:font",
              projectMaven: "com.timecat.identity:font"
             ],
-            [isLocal     : false,
+            [isLocal     : true,
              projectPath : "../TimeCatIdentity",
              projectName : ":identity:readonly",
              projectMaven: "com.timecat.identity:readonly"

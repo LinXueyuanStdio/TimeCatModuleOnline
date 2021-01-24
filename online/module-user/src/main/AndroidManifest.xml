@@ -198,6 +198,7 @@
         <activity android:name=".game.mail.AllMailActivity" />
         <activity android:name=".game.cube.CubeEditorActivity" />
         <activity android:name=".game.cube.CubeSkillEditorActivity" />
+        <activity android:name=".game.export.GameHomeActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

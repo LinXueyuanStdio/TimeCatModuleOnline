@@ -14,15 +14,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/base_status_bar" />
-
-        <androidx.appcompat.widget.Toolbar
+        <com.timecat.page.base.view.BlurringToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:contentInsetStart="0dp">
-
-        </androidx.appcompat.widget.Toolbar>
+            app:contentInsetStart="12dp" />
 
         <com.gturedi.views.StatefulLayout
             android:id="@+id/ll_stateful"
@@ -36,51 +32,159 @@
 
                 <ImageView
                     android:id="@+id/main"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/home"
+                    android:scaleType="centerInside"
                     android:src="@mipmap/ic_launcher"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBottom_toTopOf="@id/card"
+                    app:layout_constraintEnd_toEndOf="@id/card"
+                    app:layout_constraintStart_toStartOf="@id/card" />
 
-                <Button
-                    android:id="@+id/shop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="商店"
-                    app:layout_constraintBottom_toBottomOf="@+id/main"
-                    app:layout_constraintEnd_toStartOf="@+id/main"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <Button
-                    android:id="@+id/bag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="背包"
-                    app:layout_constraintBottom_toBottomOf="@+id/main"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/main" />
-
-                <Button
-                    android:id="@+id/cube"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="方块"
-                    app:layout_constraintEnd_toEndOf="@+id/main"
-                    app:layout_constraintStart_toStartOf="@+id/main"
-                    app:layout_constraintTop_toBottomOf="@+id/main" />
-
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_small"
                     android:text="召唤"
-                    app:layout_constraintBottom_toTopOf="@+id/main"
-                    app:layout_constraintEnd_toEndOf="@+id/main"
-                    app:layout_constraintStart_toStartOf="@+id/main"
+                    app:icon="@drawable/ic_creation_date"
+                    app:layout_constraintBottom_toTopOf="@+id/cube"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cube"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_small"
+                    android:text="方块"
+                    app:icon="@drawable/ic_cat_special_24dp"
+                    app:layout_constraintBottom_toTopOf="@id/bag"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/bag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_small"
+                    android:text="背包"
+                    app:icon="@drawable/ic_toolbox_24dp"
+                    app:layout_constraintBottom_toTopOf="@id/shop"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/shop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/bottom_bar_height"
+                    android:text="商店"
+                    app:icon="@drawable/ic_home"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:padding="@dimen/margin_small"
+                    android:text="等级 1"
+                    app:chipIcon="@drawable/ic_cat_special_24dp"
+                    app:chipIconTint="@color/master_textColorPrimary"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:padding="@dimen/margin_small"
+                    android:text="星级 1"
+                    app:chipIcon="@drawable/ic_star_filled"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/level" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/water"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:padding="@dimen/margin_small"
+                    android:text="0 / 100"
+                    app:chipIcon="@drawable/ic_home"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/star" />
+
+                <LinearLayout
+                    android:id="@+id/event_timer_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginRight="@dimen/margin_small"
+                    android:gravity="center_vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/water">
+
+                    <com.timecat.layout.ui.business.TimerView
+                        android:id="@+id/event_timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/spacing_little"
+                        android:paddingTop="@dimen/spacing_tiny"
+                        app:isTimeTextBold="true"
+                        app:suffixDay="@string/day"
+                        app:suffixDayRightMargin="@dimen/spacing_tiny"
+                        app:suffixGravity="top"
+                        app:suffixMinute="分"
+                        app:suffixMinuteRightMargin="@dimen/spacing_tiny"
+                        app:suffixSecond="秒"
+                        app:suffixSecondRightMargin="@dimen/spacing_tiny"
+                        app:suffixTextColor="@color/master_textColorPrimary"
+                        app:suffixTextSize="@dimen/font_tiny"
+                        app:timeTextColor="@color/master_textColorPrimary"
+                        app:timeTextSize="@dimen/font_small" />
+
+                    <TextView
+                        android:id="@+id/state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="4dp"
+                        android:text="后恢复 1 体力"
+                        android:textColor="@color/master_textColorPrimary"
+                        android:textSize="@dimen/font_small" />
+
+                </LinearLayout>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:padding="@dimen/margin_small"
+                    android:text="1"
+                    app:chipIcon="@drawable/ic_star_filled"
+                    app:closeIcon="@drawable/ic_add_circle_special_24dp"
+                    app:closeIconEnabled="true"
+                    app:closeIconStartPadding="@dimen/margin_small"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/charge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:padding="@dimen/margin_small"
+                    android:text="1"
+                    app:chipIcon="@drawable/ic_star_filled"
+                    app:closeIcon="@drawable/ic_add_circle_special_24dp"
+                    app:closeIconEnabled="true"
+                    app:closeIconStartPadding="@dimen/margin_small"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/currency" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.gturedi.views.StatefulLayout>

@@ -5,10 +5,7 @@ import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.User
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.module.user.base.BaseBlockListActivity
-import com.timecat.page.base.R
-import com.timecat.page.base.friend.compact.BaseFragmentActivity
-import com.timecat.page.base.friend.compact.BaseToolbarFragmentActivity
+import com.timecat.module.user.base.login.BaseLoginToolbarFragmentActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 import com.xiaojinzi.component.impl.Router
@@ -21,12 +18,14 @@ import com.xiaojinzi.component.impl.Router
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_BagActivity)
-class BagActivity : BaseFragmentActivity() {
+class BagActivity : BaseLoginToolbarFragmentActivity() {
 
     @AttrValueAutowiredAnno("user")
     @JvmField
     var user: User? = null
 
+    override fun title(): String = "背包"
+    override fun routerInject() = NAV.inject(this)
     override fun createFragment(): Fragment {
         return Router.with(RouterHub.USER_BagFragment)
             .putParcelable("user", user)

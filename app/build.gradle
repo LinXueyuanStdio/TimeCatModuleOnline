@@ -69,4 +69,5 @@ dependencies {
     api 'androidx.appcompat:appcompat:1.2.0'
     api project(':online:module-login')
     api project(':online:module-user')
+    api rootProject.ext.timecat["component-CommonSetting"]
 }
