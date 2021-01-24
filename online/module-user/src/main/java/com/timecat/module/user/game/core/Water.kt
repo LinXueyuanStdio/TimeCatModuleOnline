@@ -23,8 +23,8 @@ import kotlin.math.max
 object Water {
 
     // 6 分钟恢复 1 体力
-//    val recoverTime: Long = 6 * 60 * 1000
-    val recoverTime: Long = 6 * 1000
+    val recoverTime: Long = 6 * 60 * 1000
+//    val recoverTime: Long = 6 * 1000
 
     fun save(nowWater: Int, user: User): Disposable {
         return AVOSCloud.getServerDateInBackground().subscribe {

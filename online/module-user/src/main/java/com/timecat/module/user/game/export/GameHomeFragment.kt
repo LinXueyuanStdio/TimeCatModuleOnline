@@ -5,8 +5,10 @@ import android.widget.Button
 import android.widget.ImageView
 import cn.leancloud.AVOSCloud
 import com.afollestad.materialdialogs.MaterialDialog
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 import com.google.android.material.chip.Chip
 import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
@@ -15,6 +17,7 @@ import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.base.login.BaseLoginMainFragment
+import com.timecat.module.user.game.core.Level
 import com.timecat.module.user.game.core.Water
 import com.timecat.module.user.game.core.Water.recoverTime
 import com.timecat.page.base.view.BlurringToolbar
@@ -42,6 +45,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
     lateinit var star: Chip
     lateinit var water: Chip
     lateinit var event_timer: TimerView
+    lateinit var exp_bar: RoundCornerProgressBar
 
     lateinit var currency: Chip
     lateinit var charge: Chip
@@ -54,13 +58,15 @@ class GameHomeFragment : BaseLoginMainFragment() {
         toolbar.setPaddingStatusBar(_mActivity)
 
         main = view.findViewById(R.id.main)
+        exp_bar = view.findViewById(R.id.exp_bar)
+        level = view.findViewById(R.id.level)
         card = view.findViewById(R.id.card)
         cube = view.findViewById(R.id.cube)
+
+        star = view.findViewById(R.id.star)
         bag = view.findViewById(R.id.bag)
         shop = view.findViewById(R.id.shop)
 
-        level = view.findViewById(R.id.level)
-        star = view.findViewById(R.id.star)
         water = view.findViewById(R.id.water)
         event_timer = view.findViewById(R.id.event_timer)
 
@@ -87,7 +93,12 @@ class GameHomeFragment : BaseLoginMainFragment() {
             NAV.go(RouterHub.USER_ShopActivity)
         }
 
-        level.text = "等级 ${user.level}"
+        notifyLevel(user.level, user.exp)
+        exp_bar.progressColor = Attr.getAccentColor(_mActivity)
+        exp_bar.setBackgroundColor(Attr.getBackgroundDarkColor(_mActivity))
+        exp_bar.setShakelessClickListener {
+            ToastUtil.i("当前等级 ${user.level}")
+        }
         level.setShakelessClickListener {
             ToastUtil.i("当前等级 ${user.level}")
         }
@@ -95,6 +106,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
         star.setShakelessClickListener {
             ToastUtil.i("当前星级 ${user.star}")
         }
+        loadWater()
         water.setShakelessClickListener {
             showWaterDialog()
         }
@@ -106,20 +118,24 @@ class GameHomeFragment : BaseLoginMainFragment() {
         charge.setOnCloseIconClickListener {
             ToastUtil.w("开发喵施工中")
         }
-
-        loadWater()
     }
 
     private fun showWaterDialog(): Disposable {
-        return AVOSCloud.getServerDateInBackground().subscribe {
+        mStatefulLayout?.showLoading()
+        return AVOSCloud.getServerDateInBackground().subscribe({
             val i = I()
             val currentTime = it.date.time
             Water.compute(i, currentTime) { trueWater, _, _ ->
+                mStatefulLayout?.showContent()
                 MaterialDialog(_mActivity).show {
                     message(text = "体力 $trueWater")
                 }
             }
-        }
+        }, {
+            mStatefulLayout?.showError("发生错误") {
+                loadWater()
+            }
+        })
     }
 
     private fun loadWater(): Disposable {
@@ -155,5 +171,11 @@ class GameHomeFragment : BaseLoginMainFragment() {
     private fun notifyWater(nowWater: Int, waterLimit: Int) {
         water.text = "${nowWater} / ${waterLimit}"
         Water.save(nowWater, I())
+    }
+
+    private fun notifyLevel(currentLevel: Int, currentExp: Long) {
+        level.text = "等级 ${currentLevel}"
+        exp_bar.max = Level.expLimit(currentLevel).toFloat()
+        exp_bar.progress = currentExp.toFloat()
     }
 }

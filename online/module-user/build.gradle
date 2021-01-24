@@ -17,6 +17,7 @@ dependencies {
     api rootProject.ext.timecat["component-CommonStatic"]
 
     api rootProject.ext.dependencies["roundedimageview"]
+    api rootProject.ext.dependencies["RoundCornerProgressBar"]
 
     api 'com.github.CarGuo.RickText:textUtilsLib:v2.1.5'
     api 'com.github.razerdp:PhotoContents:2.0.1'
