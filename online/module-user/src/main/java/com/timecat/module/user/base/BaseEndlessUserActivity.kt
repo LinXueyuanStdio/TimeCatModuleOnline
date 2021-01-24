@@ -2,7 +2,7 @@ package com.timecat.module.user.base
 
 
 import cn.leancloud.AVQuery
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.ext.bmob.requestUser
 import com.timecat.module.user.adapter.user.UserItem
 
@@ -14,7 +14,7 @@ import com.timecat.module.user.adapter.user.UserItem
  * @usage null
  */
 abstract class BaseEndlessUserActivity : BaseEndlessListActivity() {
-    abstract fun query(): AVQuery<_User>
+    abstract fun query(): AVQuery<User>
 
     override fun loadFirst() {
         requestUser {

@@ -6,6 +6,7 @@ import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.MomentBlock
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.base.BaseComplexEditorActivity
 import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.android.synthetic.main.user_activity_moment_add.*
@@ -25,11 +26,13 @@ class CubeEditorActivity : BaseComplexEditorActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
+        ok.setShakelessClickListener {
+            publish()
+        }
     }
 
     override fun publish(content: String, attachments: AttachmentTail?) {
         val block = Block.forMoment(I(), content)
-        block.privacy = PrivacyScope(isPrivate = true)
         block.structure = MomentBlock(
             mediaScope = attachments,
             atScope = AtScope(emojiEditText.realUserList.map {

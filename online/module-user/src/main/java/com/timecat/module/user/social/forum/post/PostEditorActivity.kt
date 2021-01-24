@@ -37,7 +37,6 @@ class PostEditorActivity : BaseBlockEditorActivity() {
         //TODO infix refactor
         val block = Block.forPost(I(), content)
         block.parent = parent
-        block.privacy = PrivacyScope(isPrivate = true)
         block.structure = PostBlock(
             mediaScope = attachments,
             atScope = AtScope(emojiEditText.realUserList.map {

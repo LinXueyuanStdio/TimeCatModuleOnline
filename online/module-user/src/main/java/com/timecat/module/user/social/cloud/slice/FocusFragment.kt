@@ -2,7 +2,7 @@ package com.timecat.module.user.social.cloud.slice
 
 import cn.leancloud.AVQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestUserRelation
 import com.timecat.data.bmob.ext.net.allFollow
@@ -18,7 +18,7 @@ import java.util.*
  */
 @FragmentAnno(RouterHub.USER_FocusFragment)
 class FocusFragment : BaseEndlessBlockFragment() {
-    var focus_ids: List<_User> = mutableListOf()
+    var focus_ids: List<User> = mutableListOf()
 
     override fun loadData() {
         // 查询关注的所有用户，多对多关联，因此查询的是用户表
@@ -43,7 +43,7 @@ class FocusFragment : BaseEndlessBlockFragment() {
             onSuccess = {
                 mRefreshLayout.isRefreshing = false
                 mStatefulLayout?.showContent()
-                val users: MutableList<_User> = ArrayList()
+                val users: MutableList<User> = ArrayList()
                 for (f in it) {
                     users.add(f.target)
                 }
@@ -62,6 +62,9 @@ class FocusFragment : BaseEndlessBlockFragment() {
             queries.add(user.findAllMoment())
         }
         queries.add(I().findAllMoment())
-        return AVQuery.or(queries).include("user,parent").order("-createdAt")
+        return AVQuery.or(queries)
+            .include("user")
+            .include("parent")
+            .order("-createdAt")
     }
 }

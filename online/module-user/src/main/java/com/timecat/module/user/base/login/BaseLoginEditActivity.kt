@@ -2,7 +2,7 @@ package com.timecat.module.user.base.login
 
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.middle.setting.BaseNewActivity
 
@@ -14,7 +14,7 @@ import com.timecat.middle.setting.BaseNewActivity
  * @usage null
  */
 abstract class BaseLoginEditActivity : BaseNewActivity() {
-    fun I(): _User = UserDao.getCurrentUser() ?: throw Exception("未登录")
+    fun I(): User = UserDao.getCurrentUser() ?: throw Exception("未登录")
 
     override fun initView() {
         val I = UserDao.getCurrentUser()

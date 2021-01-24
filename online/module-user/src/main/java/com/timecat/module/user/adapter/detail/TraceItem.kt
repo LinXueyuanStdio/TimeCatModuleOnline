@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.TextView
 import com.timecat.component.commonsdk.extension.beVisible
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -19,7 +19,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
  * @description 一个作者
  * @usage 可关注作者，点击进入作者个人详情页
  */
-class TraceItem(val activity: Activity, val user: _User) : BaseDetailItem<TraceItem.DetailVH>("浏览记录") {
+class TraceItem(val activity: Activity, val user: User) : BaseDetailItem<TraceItem.DetailVH>("浏览记录") {
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
         val traceEntry: TextView = root.findViewById(R.id.trace_entry)
@@ -44,7 +44,7 @@ class TraceItem(val activity: Activity, val user: _User) : BaseDetailItem<TraceI
             beVisible()
             setShakelessClickListener {
                 NAV.raw(activity, RouterHub.USER_AllTraceActivity)
-                    .putSerializable("user", user)
+                    .putParcelable("user", user)
                     .forward()
             }
         }

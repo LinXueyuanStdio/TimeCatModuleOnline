@@ -3,7 +3,7 @@ package com.timecat.module.user.social.trace
 import androidx.fragment.app.Fragment
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.login.BaseLoginToolbarActivity
 import com.timecat.page.base.R
@@ -22,7 +22,7 @@ import com.xiaojinzi.component.impl.Router
 class AllTraceActivity : BaseLoginToolbarActivity() {
     @AttrValueAutowiredAnno("user")
     @JvmField
-    var user: _User? = null
+    var user: User? = null
 
     override fun title(): String = "足迹"
     override fun routerInject() = NAV.inject(this)
@@ -38,7 +38,7 @@ class AllTraceActivity : BaseLoginToolbarActivity() {
 
     fun createFragment(): Fragment {
         return Router.with(RouterHub.USER_TraceFragment)
-            .putSerializable("user", user)
+            .putParcelable("user", user)
             .navigate() ?: FallBackFragment()
     }
 

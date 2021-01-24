@@ -16,7 +16,7 @@ import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
 import com.timecat.component.commonsdk.extension.beGone
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.system.model.api.GitFileResponse
 import com.timecat.data.system.model.api.GiteeFile
 import com.timecat.data.system.network.WEB
@@ -50,7 +50,7 @@ import java.io.File
  */
 //region 图片上传
 fun Activity.uploadImageByUser(
-    currentUser: _User,
+    currentUser: User,
     filePaths: List<String>,
     isCompress: Boolean,
     onFinish: (List<String>) -> Unit

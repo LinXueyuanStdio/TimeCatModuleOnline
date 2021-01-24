@@ -9,6 +9,7 @@ import com.timecat.data.bmob.ext.bmob.EasyRequest
 import com.timecat.data.bmob.ext.bmob.EasyRequestUser
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.keyboardManager.InputMethodUtils
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.login.R
 import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
@@ -69,6 +70,7 @@ class RegisterSetPwdActivity : BaseToolbarActivity() {
             ToastUtil.w("两次密码输入的不一致，请重新输入")
             return
         }
+        InputMethodUtils.hideKeyboard(new_password_again_et)
         when (type) {
             "phone" -> {
                 register(mPhone, newPassword)
@@ -113,6 +115,7 @@ class RegisterSetPwdActivity : BaseToolbarActivity() {
             onError = {
                 mStatefulLayout?.showContent()
                 ToastUtil.e_long("${it.message}")
+                finish()
             }
             onSuccess = {
                 mStatefulLayout?.showContent()

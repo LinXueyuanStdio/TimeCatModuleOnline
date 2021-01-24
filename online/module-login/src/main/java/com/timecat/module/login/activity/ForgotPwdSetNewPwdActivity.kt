@@ -8,6 +8,7 @@ import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.ext.bmob.EasyRequest
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.keyboardManager.InputMethodUtils
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.login.R
 import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
@@ -60,6 +61,7 @@ class ForgotPwdSetNewPwdActivity : BaseToolbarActivity() {
     }
 
     private fun userSetPasswordByPhone(smsCode: String, new_password: String) {
+        InputMethodUtils.hideKeyboard(new_password_again_et)
         mStatefulLayout?.showLoading()
         UserDao.resetPasswordBySmsCode(smsCode, new_password, EasyRequest().apply {
             onError = {

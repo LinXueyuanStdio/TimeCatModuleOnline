@@ -8,6 +8,7 @@ import com.timecat.data.bmob.ext.isRelays
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.MomentBlock
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.base.BaseComplexEditorActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
@@ -46,12 +47,14 @@ class MomentEditorActivity : BaseComplexEditorActivity() {
             block_herf.bindBlock(it)
             emojiEditText.hint = "转发 @${it.user.nick}"
         }
+        ok.setShakelessClickListener {
+            publish()
+        }
     }
 
     override fun publish(content: String, attachments: AttachmentTail?) {
         val block = Block.forMoment(I(), content)
         block.parent = parent
-        block.privacy = PrivacyScope(isPrivate = true)
         block.structure = MomentBlock(
             mediaScope = attachments,
             atScope = AtScope(emojiEditText.realUserList.map {

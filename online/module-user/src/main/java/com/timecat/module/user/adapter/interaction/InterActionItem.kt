@@ -84,8 +84,8 @@ class InterActionItem(
             root.head_title.setShakelessClickListener {
                 GO.userDetail(user.objectId)
             }
-            if (!TextUtils.isEmpty(user.brief_intro)) {
-                root.head_content.setText("$timeString | ${user.brief_intro}")
+            if (!TextUtils.isEmpty(user.intro)) {
+                root.head_content.setText("$timeString | ${user.intro}")
             } else {
                 root.head_content.setText("$timeString")
             }

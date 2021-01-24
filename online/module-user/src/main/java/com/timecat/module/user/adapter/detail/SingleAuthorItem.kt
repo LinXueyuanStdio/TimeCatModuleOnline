@@ -2,7 +2,7 @@ package com.timecat.module.user.adapter.detail
 
 import android.view.View
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.base.LOAD
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.user_base_item_user_herf.view.*
  * @usage 可关注作者，点击进入作者个人详情页
  */
 class SingleAuthorItem(
-    val author: _User
+    val author: User
 ) : BaseDetailItem<SingleAuthorItem.DetailVH>("作者") {
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
@@ -27,7 +27,7 @@ class SingleAuthorItem(
         /**
          * 必须调用，初始化
          */
-        fun bindBlock(user: _User) {
+        fun bindBlock(user: User) {
             val curUser = UserDao.getCurrentUser()
             if (user.objectId == curUser?.objectId) {
                 root.userSection.focusUser.setOnClickListener(null)

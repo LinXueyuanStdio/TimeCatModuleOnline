@@ -1,5 +1,6 @@
 package com.timecat.module.user.social.user
 
+import android.os.Parcelable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
@@ -9,9 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.ext.bmob.requestOneUser
-import com.timecat.data.bmob.ext.bmob.requestUser
 import com.timecat.data.bmob.ext.net.oneUserOf
 import com.timecat.extend.image.IMG
 import com.timecat.identity.readonly.RouterHub
@@ -25,7 +25,6 @@ import com.timecat.module.user.view.UserCard
 import com.timecat.module.user.view.dsl.setupFollowUserButton
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
-import java.io.Serializable
 
 /**
  * @author 林学渊
@@ -58,12 +57,12 @@ class UserDetailCollapseActivity : BaseDetailCollapseActivity() {
         fetch()
     }
 
-    private fun loadDetail(user: _User) {
+    private fun loadDetail(user: User) {
         // 1. 加载头部卡片
         titleString = user.nickName
         card.apply {
             title = user.nickName
-            desc = user.brief_intro
+            desc = user.intro
             icon = user.avatar
             cover = user.cover
             if (I().objectId == user.objectId) {
@@ -71,7 +70,7 @@ class UserDetailCollapseActivity : BaseDetailCollapseActivity() {
                 buttonColor = Attr.getPrimaryColor(this@UserDetailCollapseActivity)
                 buttonText = "编辑资料"
                 buttonClick = {
-                    NAV.go(RouterHub.USER_UserSettingActivity, "user", user as Serializable)
+                    NAV.go(RouterHub.USER_UserSettingActivity, "user", user as Parcelable)
                 }
             } else {
                 setupFollowUserButton(this@UserDetailCollapseActivity, button, user)

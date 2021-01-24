@@ -3,7 +3,7 @@ package com.timecat.module.user.social.user
 import androidx.recyclerview.widget.RecyclerView
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.ext.bmob.requestUserRelation
 import com.timecat.data.bmob.ext.net.allFollow
 import com.timecat.element.alert.ToastUtil
@@ -39,7 +39,7 @@ class UserFollowListActivity : BaseRefreshListActivity() {
     lateinit var userAdapter: UserAdapter
     override fun getAdapter(): RecyclerView.Adapter<out RecyclerView.ViewHolder?> {
         userAdapter = UserAdapter(this, object : UserListener {
-            override fun onClick(user: _User) {
+            override fun onClick(user: User) {
                 GO.userDetail(user.objectId)
             }
         })
@@ -49,7 +49,7 @@ class UserFollowListActivity : BaseRefreshListActivity() {
     override fun onRefresh() {
         // 查询当前用户的关注列表
         requestUserRelation {
-            query = _User(id).allFollow()
+            query = User(id).allFollow()
             onError = {
                 mRefreshLayout.isRefreshing = false
                 ToastUtil.e("关注列表查询失败")
@@ -68,7 +68,7 @@ class UserFollowListActivity : BaseRefreshListActivity() {
             onSuccess = {
                 mRefreshLayout.isRefreshing = false
                 mStatefulLayout?.showContent()
-                val users: MutableList<_User> = ArrayList()
+                val users: MutableList<User> = ArrayList()
                 for (f in it) {
                     users.add(f.target)
                 }

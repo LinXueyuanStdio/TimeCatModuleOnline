@@ -1,10 +1,10 @@
 package com.timecat.module.user.base;
 
+import android.os.Parcelable;
+
 import com.timecat.component.router.app.NAV;
 import com.timecat.data.bmob.data.common.Block;
 import com.timecat.identity.readonly.RouterHub;
-
-import java.io.Serializable;
 
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_APP;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_COMMENT;
@@ -92,23 +92,23 @@ public class GO {
     }
 
     public static void allTag(Block parent) {
-        NAV.go(RouterHub.USER_AllTagActivity, "parent", (Serializable) parent);
+        NAV.go(RouterHub.USER_AllTagActivity, "parent", (Parcelable) parent);
     }
 
     public static void addRecommendFor(Block parent) {
-        NAV.go(RouterHub.USER_AddRecommendActivity, "parent", (Serializable) parent);
+        NAV.go(RouterHub.USER_AddRecommendActivity, "parent", (Parcelable) parent);
     }
 
     public static void addCommentFor(Block parent) {
-        NAV.go(RouterHub.USER_AddCommentActivity, "parent", (Serializable) parent);
+        NAV.go(RouterHub.USER_AddCommentActivity, "parent", (Parcelable) parent);
     }
 
     public static void addMomentFor(Block parent) {
-        NAV.go(RouterHub.USER_AddMomentActivity, "parent", (Serializable) parent);
+        NAV.go(RouterHub.USER_AddMomentActivity, "parent", (Parcelable) parent);
     }
 
     public static void addPostFor(Block parent) {
-        NAV.go(RouterHub.USER_AddPostActivity, "parent", (Serializable) parent);
+        NAV.go(RouterHub.USER_AddPostActivity, "parent", (Parcelable) parent);
     }
 
     public static void addForum(String name, String content, String icon) {
@@ -136,32 +136,32 @@ public class GO {
     }
 
     public static void addIdentity(Block block) {
-        NAV.go(RouterHub.USER_AddIdentityActivity, "block", (Serializable) block);
+        NAV.go(RouterHub.USER_AddIdentityActivity, "block", (Parcelable) block);
     }
 
     public static void addRole(Block block) {
-        NAV.go(RouterHub.USER_AddRoleActivity, "block", (Serializable) block);
+        NAV.go(RouterHub.USER_AddRoleActivity, "block", (Parcelable) block);
     }
 
     public static void addMetaPermission(Block block) {
-        NAV.go(RouterHub.USER_AddMetaPermissionActivity, "block", (Serializable) block);
+        NAV.go(RouterHub.USER_AddMetaPermissionActivity, "block", (Parcelable) block);
     }
 
     public static void addHunPermission(Block block) {
-        NAV.go(RouterHub.USER_AddHunPermissionActivity, "block", (Serializable) block);
+        NAV.go(RouterHub.USER_AddHunPermissionActivity, "block", (Parcelable) block);
     }
 
     public static void relayMoment(Block parent, Block relay) {
         NAV.raw(RouterHub.USER_AddMomentActivity)
-           .withSerializable("parent", parent)
-           .withSerializable("relay", relay)
+           .withParcelable("parent", parent)
+           .withParcelable("relay", relay)
            .navigation();
     }
 
     public static void relayComment(Block parent, Block relay) {
         NAV.raw(RouterHub.USER_AddCommentActivity)
-           .withSerializable("parent", parent)
-           .withSerializable("relay", relay)
+           .withParcelable("parent", parent)
+           .withParcelable("relay", relay)
            .navigation();
     }
 

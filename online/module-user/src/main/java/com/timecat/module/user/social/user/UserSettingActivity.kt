@@ -6,7 +6,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.ext.bmob.updateUser
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
@@ -29,7 +29,7 @@ class UserSettingActivity : BaseSettingActivity() {
 
     @AttrValueAutowiredAnno("user")
     @JvmField
-    var user: _User? = null
+    var user: User? = null
 
     override fun title(): String = "编辑资料"
     override fun routerInject() = NAV.inject(this)
@@ -44,12 +44,13 @@ class UserSettingActivity : BaseSettingActivity() {
             return
         }
         user?.let { user ->
+            LogUtil.e(user.toJSONString())
             avatarItem = simpleImage(container, "头像", user.avatar) { avatarItem ->
                 chooseImage(isAvatar = true) { path ->
                     uploadImageByUser(user, listOf(path), false) {
                         for (i in it) {
                             val file = AVFile("avatar", i)
-                            user.setheadPortrait(file)
+                            user.headPortrait = file
                             updateUserObject(user) {
                                 ToastUtil.ok("头像更换成功")
                                 avatarItem.setImage(path)
@@ -75,13 +76,13 @@ class UserSettingActivity : BaseSettingActivity() {
             simpleNext(container, "名字", null, user.nickName, null) { item ->
                 editNickname { item.hint = it }
             }
-            simpleNext(container, "简介", null, user.brief_intro, null) { item ->
+            simpleNext(container, "简介", null, user.intro, null) { item ->
                 editBriefIntro { item.hint = it }
             }
         }
     }
 
-    private fun updateUserObject(user: _User, success: () -> Unit) {
+    private fun updateUserObject(user: User, success: () -> Unit) {
         updateUser {
             target = user
             onSuccess = {
@@ -118,10 +119,10 @@ class UserSettingActivity : BaseSettingActivity() {
         user?.let {
             MaterialDialog(this).show {
                 title(text = "简介")
-                input(hint = "一句话介绍一下自己", prefill = it.brief_intro, allowEmpty = false) { _, input: CharSequence? ->
+                input(hint = "一句话介绍一下自己", prefill = it.intro, allowEmpty = false) { _, input: CharSequence? ->
                     if (input != null && input.length <= 20) {
                         val s = input.toString()
-                        it.brief_intro = s
+                        it.intro = s
                         updateUserObject(it) {
                             success(s)
                         }

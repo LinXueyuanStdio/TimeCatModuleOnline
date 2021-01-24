@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.base.LOAD
@@ -63,7 +63,7 @@ class UserHerfView : LinearLayout {
     /**
      * 必须调用，初始化
      */
-    fun bindBlock(user: _User) {
+    fun bindBlock(user: User) {
         val curUser = UserDao.getCurrentUser()
         if (user.objectId == curUser?.objectId) {
             root.userSection.focusUser.setOnClickListener(null)

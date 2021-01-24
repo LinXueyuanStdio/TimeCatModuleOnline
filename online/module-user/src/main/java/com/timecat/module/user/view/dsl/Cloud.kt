@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Action
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.common.User2User
@@ -33,7 +33,7 @@ import com.timecat.module.user.R
 fun setupFollowUserButton(
     context: Context,
     button: Button,
-    user: _User
+    user: User
 ) {
     button.apply {
         text = "关注"

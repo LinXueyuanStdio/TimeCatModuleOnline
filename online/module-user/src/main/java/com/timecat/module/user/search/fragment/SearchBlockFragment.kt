@@ -1,29 +1,34 @@
-package com.timecat.module.user.base
+package com.timecat.module.user.search.fragment
 
-import cn.leancloud.AVQuery
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.module.user.adapter.block.BlockItem
+import android.app.Activity
+import cn.leancloud.search.AVSearchQuery
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.data.bmob.data.User
+import com.timecat.data.bmob.ext.bmob.searchUser
+import com.timecat.data.bmob.ext.bmob.userQuery
+import com.timecat.layout.ui.entity.BaseItem
+import com.timecat.module.user.adapter.user.SearchUserItem
 
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
- * @date 2020/11/27
- * @description 无尽的块，自动分页加载
+ * @date 2020/6/8
+ * @description 搜索 用户名 或 uid
  * @usage null
  */
-abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
+open class SearchBlockFragment : BaseSearchFragment() {
 
-    abstract fun name(): String
-    abstract fun query(): AVQuery<Block>
+    lateinit var userQuery: AVSearchQuery<User>
 
-    override fun loadFirst() {
-        requestBlock {
-            query = query().apply {
+    override fun onSearch(q: String) {
+        LogUtil.se(q)
+        userQuery = userQuery(q)
+        mStatefulLayout.showLoading()
+        searchUser {
+            query = userQuery.apply {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = AVQuery.CachePolicy.NETWORK_ONLY
             }
             onError = errorCallback
             onEmpty = emptyCallback
@@ -32,7 +37,7 @@ abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    BlockItem(activity, it)
+                    transform(activity, it)
                 }
                 adapter.reload(items)
                 mStatefulLayout?.showContent()
@@ -40,13 +45,16 @@ abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
         }
     }
 
+    override fun loadData() {}
+
+    override fun loadFirst() {}
+
     override fun loadMore() {
-        requestBlock {
-            query = query().apply {
+        searchUser {
+            query = userQuery.apply {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = AVQuery.CachePolicy.NETWORK_ONLY
             }
             onError = errorCallback
             onEmpty = emptyCallback
@@ -55,11 +63,15 @@ abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    BlockItem(activity, it)
+                    transform(activity, it)
                 }
                 adapter.onLoadMoreComplete(items)
                 mStatefulLayout?.showContent()
             }
         }
+    }
+
+    open fun transform(activity: Activity, user: User): BaseItem<*> {
+        return SearchUserItem(activity, user)
     }
 }

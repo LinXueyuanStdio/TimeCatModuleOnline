@@ -2,7 +2,7 @@ package com.timecat.module.user.social.user.vm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 
 /**
  * @author 林学渊
@@ -12,5 +12,5 @@ import com.timecat.data.bmob.data._User
  * @usage null
  */
 class UserViewModel : ViewModel() {
-    val user: MutableLiveData<_User?> = MutableLiveData()
+    val user: MutableLiveData<User?> = MutableLiveData()
 }

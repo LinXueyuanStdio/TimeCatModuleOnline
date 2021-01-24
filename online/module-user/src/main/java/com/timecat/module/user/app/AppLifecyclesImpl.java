@@ -20,9 +20,7 @@ import android.content.Context;
 
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.timecat.component.commonsdk.utils.override.LogUtil;
-import com.timecat.data.bmob.dao.UserDao;
 import com.timecat.module.user.permission.MetaPermissionPool;
-import com.timecat.module.user.permission.UserContext;
 
 import androidx.annotation.NonNull;
 
@@ -44,7 +42,7 @@ public class AppLifecyclesImpl implements AppLifecycles {
     public void onCreate(@NonNull Application application) {
         LogUtil.sd("init start");
         MetaPermissionPool.ensureLoaded();
-        UserContext.loadByUser(UserDao.getCurrentUser());
+//        UserContext.loadByUser(UserDao.getCurrentUser());
         LogUtil.sd("init end");
     }
 

@@ -9,6 +9,7 @@ import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.ext.bmob.EasyRequest
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.keyboardManager.InputMethodUtils
 import com.timecat.module.login.R
 import com.timecat.module.login.view.CountDownButton
 import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
@@ -64,6 +65,7 @@ class RegisterVerificationCodeActivity : BaseToolbarActivity() {
     }
 
     private fun sendAndCountdown() {
+        InputMethodUtils.showInputMethod(code_et, 50)
         smsSend(mPhone!!)
         cd_btn.startCountdown()
     }

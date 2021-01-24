@@ -28,7 +28,7 @@ import com.xiaojinzi.component.anno.FragmentAnno
  * @usage null
  */
 @FragmentAnno(RouterHub.SEARCH_SelectHunPermissionFragment)
-class SelectHunPermissionFragment : BaseSearchFragment() {
+class SelectHunPermissionFragment : SearchBlockFragment() {
     private lateinit var searchResultAdapter: SearchResultAdapter
     override fun getAdapter(): RecyclerView.Adapter<*> {
         searchResultAdapter = SearchResultAdapter(requireContext(), ArrayList())

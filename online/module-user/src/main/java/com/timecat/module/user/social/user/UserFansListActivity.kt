@@ -3,7 +3,7 @@ package com.timecat.module.user.social.user
 import androidx.recyclerview.widget.RecyclerView
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.ext.bmob.requestUserRelation
 import com.timecat.data.bmob.ext.net.fansOf
 import com.timecat.element.alert.ToastUtil
@@ -39,7 +39,7 @@ class UserFansListActivity : BaseRefreshListActivity() {
     lateinit var userAdapter: UserAdapter
     override fun getAdapter(): RecyclerView.Adapter<out RecyclerView.ViewHolder?> {
         userAdapter = UserAdapter(this, object : UserListener {
-            override fun onClick(user: _User) {
+            override fun onClick(user: User) {
                 GO.userDetail(user.objectId)
             }
         })
@@ -49,7 +49,7 @@ class UserFansListActivity : BaseRefreshListActivity() {
     override fun onRefresh() {
         // 查询当前用户的关注列表
         requestUserRelation {
-            query = fansOf(_User(id))
+            query = fansOf(User(id))
             onError = {
                 mRefreshLayout.isRefreshing = false
                 mStatefulLayout?.showError("没有粉丝") {
@@ -68,7 +68,7 @@ class UserFansListActivity : BaseRefreshListActivity() {
             onSuccess = {
                 mRefreshLayout.isRefreshing = false
                 mStatefulLayout?.showContent()
-                val users: MutableList<_User> = ArrayList()
+                val users: MutableList<User> = ArrayList()
                 for (f in it) {
                     users.add(f.author)
                 }

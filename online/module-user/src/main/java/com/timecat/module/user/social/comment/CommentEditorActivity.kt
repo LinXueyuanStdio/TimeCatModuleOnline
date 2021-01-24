@@ -51,7 +51,6 @@ class CommentEditorActivity : BaseBlockEditorActivity() {
 
     override fun publish(content: String, attachments: AttachmentTail?) {
         val block = Block.forComment(I(), content)
-        block.privacy = PrivacyScope(isPrivate = true)
         block.structure = CommentBlock(
             COMMENT_SIMPLE,
             SimpleComment(

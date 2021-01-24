@@ -1,21 +1,14 @@
 package com.timecat.module.user.search.fragment
 
-import android.content.Context
-import android.view.View
-import androidx.recyclerview.widget.RecyclerView
-import cn.leancloud.AVQuery
-import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import android.app.Activity
+import cn.leancloud.search.AVSearchQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.data.bmob.data._User
-import com.timecat.data.bmob.ext.bmob.requestUser
-import com.timecat.element.alert.ToastUtil
+import com.timecat.data.bmob.data.User
+import com.timecat.data.bmob.ext.bmob.searchUser
+import com.timecat.data.bmob.ext.bmob.userQuery
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.layout.setShakelessClickListener
-import com.timecat.layout.ui.utils.IconLoader
-import com.timecat.module.user.R
-import com.timecat.module.user.base.GO
-import com.timecat.module.user.view.dsl.setupFollowUserButton
+import com.timecat.layout.ui.entity.BaseItem
+import com.timecat.module.user.adapter.user.SearchUserItem
 import com.xiaojinzi.component.anno.FragmentAnno
 
 /**
@@ -26,51 +19,62 @@ import com.xiaojinzi.component.anno.FragmentAnno
  * @usage null
  */
 @FragmentAnno(RouterHub.SEARCH_SearchUserFragment)
-class SearchUserFragment : BaseSearchFragment() {
-    private lateinit var searchResultAdapter: SearchResultAdapter
-    override fun getAdapter(): RecyclerView.Adapter<*> {
-        searchResultAdapter = SearchResultAdapter(requireContext(), ArrayList())
-        return searchResultAdapter
-    }
+open class SearchUserFragment : BaseSearchFragment() {
+
+    lateinit var userQuery: AVSearchQuery<User>
 
     override fun onSearch(q: String) {
         LogUtil.se(q)
+        userQuery = userQuery(q)
         mStatefulLayout.showLoading()
-        //本来是可以直接使用bmob的模糊查询的，但是要付费，所以只能另辟蹊径
-        requestUser {
-            query = AVQuery.or(mutableListOf(
-                AVQuery<_User>("_User").apply { whereContains("username", q) },
-                AVQuery<_User>("_User").apply { whereContains("objectId", q) }
-            ))
-            onError = {
-                mStatefulLayout.showEmpty()
-                ToastUtil.e("查询失败")
+        searchUser {
+            query = userQuery.apply {
+                setLimit(pageSize)
+                setSkip(offset)
+                order("-createdAt")
             }
-            onEmpty = {
-                mStatefulLayout.showEmpty()
-            }
+            onError = errorCallback
+            onEmpty = emptyCallback
             onSuccess = {
-                mStatefulLayout.showContent()
-                searchResultAdapter.setList(it)
+                offset += it.size
+                mRefreshLayout.isRefreshing = false
+                val activity = requireActivity()
+                val items = it.map {
+                    transform(activity, it)
+                }
+                adapter.reload(items)
+                mStatefulLayout?.showContent()
             }
         }
     }
 
-    inner class SearchResultAdapter(
-        private val mContext: Context,
-        data: MutableList<_User>
-    ) : BaseQuickAdapter<_User, BaseViewHolder>(R.layout.search_item_user, data) {
-        override fun convert(holder: BaseViewHolder, item: _User) {
-            LogUtil.e(item.toString())
-            IconLoader.loadIcon(mContext, holder.getView(R.id.img), item.avatar)
-            holder.setText(R.id.tv_name, "${item.username}\nuid : ${item.objectId}")
-            holder.getView<View>(R.id.img).setShakelessClickListener {
-                GO.userDetail(item.objectId)
+    override fun loadData() {}
+
+    override fun loadFirst() {}
+
+    override fun loadMore() {
+        searchUser {
+            query = userQuery.apply {
+                setLimit(pageSize)
+                setSkip(offset)
+                order("-createdAt")
             }
-            holder.getView<View>(R.id.tv_name).setShakelessClickListener {
-                GO.userDetail(item.objectId)
+            onError = errorCallback
+            onEmpty = emptyCallback
+            onSuccess = {
+                offset += it.size
+                mRefreshLayout.isRefreshing = false
+                val activity = requireActivity()
+                val items = it.map {
+                    transform(activity, it)
+                }
+                adapter.onLoadMoreComplete(items)
+                mStatefulLayout?.showContent()
             }
-            setupFollowUserButton(requireContext(), holder.getView(R.id.follow), item)
         }
+    }
+
+    open fun transform(activity: Activity, user: User): BaseItem<*> {
+        return SearchUserItem(activity, user)
     }
 }

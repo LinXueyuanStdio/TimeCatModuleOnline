@@ -4,7 +4,7 @@ package com.timecat.module.user.permission
 import cn.leancloud.AVQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.common.InterAction
 import com.timecat.data.bmob.ext.bmob.requestBlockRelation
@@ -27,7 +27,7 @@ import com.timecat.middle.block.permission.Why
  */
 object UserContext {
     @JvmStatic
-    var I: _User? = UserDao.getCurrentUser()
+    var I: User? = UserDao.getCurrentUser()
 
     @JvmStatic
     val identity: MutableList<Block> = mutableListOf()
@@ -66,13 +66,13 @@ object UserContext {
     var ownsPermission: MutableList<HunPermission> = mutableListOf()
 
     @JvmStatic
-    fun loadByUser(user: _User?) {
+    fun loadByUser(user: User?) {
         I = user ?: return
         loadInterAction(user)
     }
 
     @JvmStatic
-    fun loadInterAction(user: _User) {
+    fun loadInterAction(user: User) {
         LogUtil.sd(user)
         requestInterAction {
             query = user.allTargetedByAuth().apply {

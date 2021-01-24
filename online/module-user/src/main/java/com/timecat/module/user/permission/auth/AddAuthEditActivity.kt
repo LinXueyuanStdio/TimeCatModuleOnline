@@ -11,7 +11,7 @@ import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.afollestad.vvalidator.form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.auth_Identity
 import com.timecat.data.bmob.ext.auth_Permission
@@ -57,7 +57,7 @@ class AddAuthEditActivity : BaseBlockEditActivity() {
      */
     @AttrValueAutowiredAnno("target")
     @JvmField
-    var target: _User? = null
+    var target: User? = null
 
     override fun routerInject() = NAV.inject(this)
 
@@ -70,7 +70,7 @@ class AddAuthEditActivity : BaseBlockEditActivity() {
         var expireTime: DateTime = DateTime.now(),
     ) {
         lateinit var authBlock: Block
-        lateinit var target: _User
+        lateinit var target: User
     }
 
     /**
@@ -161,7 +161,7 @@ class AddAuthEditActivity : BaseBlockEditActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SEARCH_USER) {
-                val user = data?.getSerializableExtra("data") as _User?
+                val user = data?.getSerializableExtra("data") as User?
                 user?.let {
                     formData.target = it
                     authTarget.text = it.nick ?: ""

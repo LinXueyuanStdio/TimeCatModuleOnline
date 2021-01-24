@@ -3,6 +3,7 @@ package com.timecat.module.user.base
 import android.app.Activity
 import android.content.Intent
 import android.view.View
+import android.widget.Button
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.shuyu.textutillib.EmojiLayout
@@ -54,6 +55,7 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
 
     override fun layout(): Int = R.layout.user_activity_complex_add
 
+    lateinit var ok: Button
     lateinit var at: View
     lateinit var topic: View
     lateinit var block: View
@@ -63,6 +65,7 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
     protected var mHelper: PanelSwitchHelper? = null
     override fun bindView() {
         super.bindView()
+        ok = findViewById(R.id.ok)
         at = findViewById(R.id.at)
         topic = findViewById(R.id.topic)
         block = findViewById(R.id.block)

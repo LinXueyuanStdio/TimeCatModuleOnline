@@ -5,7 +5,7 @@ import android.content.Context;
 import com.timecat.component.commonsdk.utils.override.LogUtil;
 import com.timecat.component.router.app.NavInterceptor;
 import com.timecat.data.bmob.dao.UserDao;
-import com.timecat.data.bmob.data._User;
+import com.timecat.data.bmob.data.User;
 import com.timecat.identity.readonly.RouterHub;
 import com.xiaojinzi.component.anno.InterceptorAnno;
 
@@ -53,7 +53,7 @@ public class PayInterceptor implements NavInterceptor {
     }
 
     private boolean isPay(String path) {
-        _User user = UserDao.getCurrentUser();
+        User user = UserDao.getCurrentUser();
         if (user == null) { return false; }
         return canContinue_assetHasPermission(path, user);
     }
@@ -65,7 +65,7 @@ public class PayInterceptor implements NavInterceptor {
      * @param user 用户
      * @return 有权限:true；无权限:false
      */
-    private boolean canContinue_assetHasPermission(@NonNull String path, @NonNull _User user) {
+    private boolean canContinue_assetHasPermission(@NonNull String path, @NonNull User user) {
         return true;//默认都可以跳转
     }
 

@@ -3,18 +3,12 @@ package com.timecat.module.user.adapter.detail
 import android.app.Activity
 import android.view.View
 import cn.leancloud.AVQuery
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.module.user.R
-import com.timecat.module.user.view.ContributionsDay
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
-import kotlinx.android.synthetic.main.user_base_item_contribution.view.*
-import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.json.JSONArray
-import org.json.JSONException
-import java.util.*
 
 /**
  * @author 林学渊
@@ -25,7 +19,7 @@ import java.util.*
  */
 class ContributionItem(
     val activity: Activity,
-    val user: _User,
+    val user: User,
 ) : BaseDetailItem<ContributionItem.DetailVH>("贡献") {
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter)

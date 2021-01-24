@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import com.timecat.component.commonsdk.extension.beVisible
 import com.timecat.component.commonsdk.utils.LetMeKnow
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.user_base_item_user_head.view.*
  */
 class UserHeaderItem(
     val activity: Activity,
-    val user: _User,
+    val user: User,
     val block: Block
 ) : BaseHeaderItem<UserHeaderItem.DetailVH>(user.objectId) {
 
@@ -59,8 +59,8 @@ class UserHeaderItem(
             root.head_title.setShakelessClickListener {
                 GO.userDetail(user.objectId)
             }
-            if (!TextUtils.isEmpty(user.brief_intro)) {
-                root.head_content.setText("$timeString | ${user.brief_intro}")
+            if (!TextUtils.isEmpty(user.intro)) {
+                root.head_content.setText("$timeString | ${user.intro}")
             } else {
                 root.head_content.setText("$timeString")
             }

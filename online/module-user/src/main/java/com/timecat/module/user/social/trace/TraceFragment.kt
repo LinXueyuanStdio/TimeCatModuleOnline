@@ -2,7 +2,7 @@ package com.timecat.module.user.social.trace
 
 import android.os.Bundle
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.ext.net.allAction
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseEndlessActionFragment
@@ -21,7 +21,7 @@ import com.xiaojinzi.component.anno.FragmentAnno
 class TraceFragment : BaseEndlessActionFragment() {
     @AttrValueAutowiredAnno("user")
     @JvmField
-    var user: _User? = null
+    var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         NAV.inject(this)

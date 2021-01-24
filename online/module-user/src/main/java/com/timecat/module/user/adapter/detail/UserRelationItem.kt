@@ -2,11 +2,9 @@ package com.timecat.module.user.adapter.detail
 
 import android.app.Activity
 import android.view.View
-import cn.leancloud.AVQuery
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data._User
-import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.ext.bmob.requestUserRelationCount
 import com.timecat.data.bmob.ext.net.allFollow
 import com.timecat.data.bmob.ext.net.fansOf
@@ -16,9 +14,6 @@ import com.timecat.module.user.R
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import kotlinx.android.synthetic.main.user_base_item_user_relation.view.*
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 
 /**
  * @author 林学渊
@@ -29,7 +24,7 @@ import org.json.JSONObject
  */
 class UserRelationItem(
     val activity: Activity,
-    var user: _User
+    var user: User
 ) : BaseDetailItem<UserRelationItem.DetailVH>("用户关系") {
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter)

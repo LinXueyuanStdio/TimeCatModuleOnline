@@ -1,6 +1,7 @@
 package com.timecat.module.user.search.fragment
 
 import androidx.lifecycle.ViewModelProvider
+import com.timecat.module.user.base.BaseEndlessListFragment
 import com.timecat.module.user.search.vm.SearchViewModel
 import com.timecat.page.base.friend.list.BaseStatefulListFragment
 
@@ -11,10 +12,9 @@ import com.timecat.page.base.friend.list.BaseStatefulListFragment
  * @description 搜索 用户名 或 uid
  * @usage null
  */
-abstract class BaseSearchFragment : BaseStatefulListFragment() {
+abstract class BaseSearchFragment : BaseEndlessListFragment() {
 
-    private lateinit var searchViewModel: SearchViewModel
-
+    lateinit var searchViewModel: SearchViewModel
     override fun loadData() {
         searchViewModel = ViewModelProvider(requireActivity()).get(SearchViewModel::class.java)
         searchViewModel.searchText.observe(this, {

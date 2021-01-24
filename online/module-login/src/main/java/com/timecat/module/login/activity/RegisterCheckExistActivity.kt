@@ -12,6 +12,7 @@ import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.ext.bmob.EasyRequestUserNull
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.keyboardManager.InputMethodUtils
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.login.R
 import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
@@ -54,6 +55,7 @@ class RegisterCheckExistActivity : BaseToolbarActivity() {
     }
 
     operator fun next() {
+        InputMethodUtils.hideKeyboard(username_et)
         val phoneOrEmail = textFromEditText
         if (TextUtils.isEmpty(phoneOrEmail)) {
             ToastUtil.w("不能为空")
@@ -74,92 +76,127 @@ class RegisterCheckExistActivity : BaseToolbarActivity() {
         get() = username_et.text?.toString() ?: ""
 
     private fun userCheckEmail(email: String) {
-        mStatefulLayout?.showLoading()
-        UserDao.queryUsersExits(email, EasyRequestUserNull().apply {
-            onError = {
-                mStatefulLayout?.showContent()
-                ToastUtil.e_long("${it.message}")
-            }
-            onSuccess = {
-                mStatefulLayout?.showContent()
-                if (it == null) {
-                    ToastUtil.ok("允许使用")
-                    NAV.raw(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterSetPwdActivity)
-                        .withString("type", EMAIL)
-                        .withString("mEmail", email)
-                        .forward(object : ForwardCallback {
-                            override fun onError(errorResult: RouterErrorResult) {
-                            }
-
-                            override fun onCancel(originalRequest: RouterRequest?) {
-                            }
-
-                            override fun onSuccess(result: RouterResult) {
-                                finish()
-                            }
-
-                            override fun onEvent(successResult: RouterResult?, errorResult: RouterErrorResult?) {
-                            }
-                        })
-                } else {
-                    ToastUtil.w_long("邮箱已被使用")
+        NAV.raw(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterSetPwdActivity)
+            .withString("type", EMAIL)
+            .withString("mEmail", email)
+            .forward(object : ForwardCallback {
+                override fun onError(errorResult: RouterErrorResult) {
                 }
-            }
-        })
+
+                override fun onCancel(originalRequest: RouterRequest?) {
+                }
+
+                override fun onSuccess(result: RouterResult) {
+                    finish()
+                }
+
+                override fun onEvent(successResult: RouterResult?, errorResult: RouterErrorResult?) {
+                }
+            })
+//        mStatefulLayout?.showLoading()
+//        UserDao.queryUsersExits(email, EasyRequestUserNull().apply {
+//            onError = {
+//                mStatefulLayout?.showContent()
+//                ToastUtil.e_long("${it.message}")
+//            }
+//            onComplete = {
+//                mStatefulLayout?.showContent()
+//                ToastUtil.ok("允许使用")
+//                NAV.raw(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterSetPwdActivity)
+//                    .withString("type", EMAIL)
+//                    .withString("mEmail", email)
+//                    .forward(object : ForwardCallback {
+//                        override fun onError(errorResult: RouterErrorResult) {
+//                        }
+//
+//                        override fun onCancel(originalRequest: RouterRequest?) {
+//                        }
+//
+//                        override fun onSuccess(result: RouterResult) {
+//                            finish()
+//                        }
+//
+//                        override fun onEvent(successResult: RouterResult?, errorResult: RouterErrorResult?) {
+//                        }
+//                    })
+//            }
+//            onSuccess = {
+//                mStatefulLayout?.showContent()
+//                ToastUtil.w_long("邮箱已被使用")
+//            }
+//        })
     }
 
     private fun userCheckphone(phone: String) {
-        mStatefulLayout?.showLoading()
-        UserDao.queryUsersExits(phone, EasyRequestUserNull().apply {
-            onError = {
-                mStatefulLayout?.showContent()
-                ToastUtil.e_long("${it.message}")
-            }
-            onSuccess = {
-                mStatefulLayout?.showContent()
-                if (it == null) {
-                    ToastUtil.ok("允许使用")
-                    NAV.goAndFinish(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterVerificationCodeActivity, "mPhone", phone)
-                } else {
-                    ToastUtil.w_long("号码已被使用")
-                }
-            }
-        })
+        NAV.goAndFinish(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterVerificationCodeActivity, "mPhone", phone)
+//        mStatefulLayout?.showLoading()
+//        UserDao.queryUsersExits(phone, EasyRequestUserNull().apply {
+//            onError = {
+//                mStatefulLayout?.showContent()
+//                ToastUtil.e_long("${it.message}")
+//            }
+//            onComplete = {
+//                mStatefulLayout?.showContent()
+//                ToastUtil.ok("允许使用")
+//                NAV.goAndFinish(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterVerificationCodeActivity, "mPhone", phone)
+//            }
+//            onSuccess = {
+//                mStatefulLayout?.showContent()
+//                ToastUtil.w_long("号码已被使用")
+//            }
+//        })
     }
 
     private fun userCheckUsername(username: String) {
-        mStatefulLayout?.showLoading()
-        UserDao.queryUsersExits(username, EasyRequestUserNull().apply {
-            onError = {
-                mStatefulLayout?.showContent()
-                ToastUtil.e_long("${it.message}")
-            }
-            onSuccess = {
-                mStatefulLayout?.showContent()
-                if (it == null) {
-                    ToastUtil.ok("允许使用")
-                    NAV.raw(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterSetPwdActivity)
-                        .withString("type", USERNAME)
-                        .withString("mUsername", textFromEditText)
-                        .forward(object : ForwardCallback {
-                            override fun onError(errorResult: RouterErrorResult) {
-                            }
-
-                            override fun onCancel(originalRequest: RouterRequest?) {
-                            }
-
-                            override fun onSuccess(result: RouterResult) {
-                                finish()
-                            }
-
-                            override fun onEvent(successResult: RouterResult?, errorResult: RouterErrorResult?) {
-                            }
-                        })
-                } else {
-                    ToastUtil.w_long("用户名已被使用")
+        NAV.raw(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterSetPwdActivity)
+            .withString("type", USERNAME)
+            .withString("mUsername", textFromEditText)
+            .forward(object : ForwardCallback {
+                override fun onError(errorResult: RouterErrorResult) {
                 }
-            }
-        })
+
+                override fun onCancel(originalRequest: RouterRequest?) {
+                }
+
+                override fun onSuccess(result: RouterResult) {
+                    finish()
+                }
+
+                override fun onEvent(successResult: RouterResult?, errorResult: RouterErrorResult?) {
+                }
+            })
+//        mStatefulLayout?.showLoading()
+//        UserDao.queryUsersExits(username, EasyRequestUserNull().apply {
+//            onError = {
+//                mStatefulLayout?.showContent()
+//                ToastUtil.e_long("${it.message}")
+//            }
+//            onComplete = {
+//                mStatefulLayout?.showContent()
+//                ToastUtil.ok("允许使用")
+//                NAV.raw(this@RegisterCheckExistActivity, RouterHub.LOGIN_RegisterSetPwdActivity)
+//                    .withString("type", USERNAME)
+//                    .withString("mUsername", textFromEditText)
+//                    .forward(object : ForwardCallback {
+//                        override fun onError(errorResult: RouterErrorResult) {
+//                        }
+//
+//                        override fun onCancel(originalRequest: RouterRequest?) {
+//                        }
+//
+//                        override fun onSuccess(result: RouterResult) {
+//                            finish()
+//                        }
+//
+//                        override fun onEvent(successResult: RouterResult?, errorResult: RouterErrorResult?) {
+//                        }
+//                    })
+//            }
+//            onSuccess = {
+//                mStatefulLayout?.showContent()
+//                ToastUtil.w_long("用户名已被使用")
+//            }
+//        })
     }
 
     companion object {

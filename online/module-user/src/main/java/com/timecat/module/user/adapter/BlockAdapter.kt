@@ -397,14 +397,14 @@ class BlockAdapter(
     private fun setHead(helper: BaseViewHolder, block: Block) {
         val who = block.user
         val onClickListener = View.OnClickListener { GO.userDetail(who.objectId) }
-        setHeadImage(helper, R.id.head_image, who.avatar, who.id)
+        setHeadImage(helper, R.id.head_image, who.avatar, who.objectId)
         setHeadText(helper, R.id.head_title, who.nickName, onClickListener)
         val timeString = block.friendlyUpdateTimeText()
         helper.setVisible(R.id.head_content, true)
-        if (!TextUtils.isEmpty(who.brief_intro)) {
-            setHeadText(helper, R.id.head_content, "$timeString ${who.brief_intro}", onClickListener)
+        if (!TextUtils.isEmpty(who.intro)) {
+            setHeadText(helper, R.id.head_content, "$timeString ${who.intro}", onClickListener)
         } else {
-            setHeadText(helper, R.id.head_content, "$timeString", onClickListener)
+            setHeadText(helper, R.id.head_content, "$timeString ", onClickListener)
         }
         helper.getView<View>(R.id.head_more).setShakelessClickListener {
             PopupMenu(activity, it).apply {

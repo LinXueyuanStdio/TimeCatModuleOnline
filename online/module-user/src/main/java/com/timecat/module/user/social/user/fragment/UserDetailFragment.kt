@@ -3,7 +3,7 @@ package com.timecat.module.user.social.user.fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data._User
+import com.timecat.data.bmob.data.User
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.adapter.detail.ContributionItem
@@ -24,10 +24,10 @@ import java.util.*
  */
 class UserDetailFragment : BaseLoginListFragment() {
 
-    private fun loadDetail(user: _User) {
+    private fun loadDetail(user: User) {
         val list = mutableListOf<BaseItem<*>>()
         val activity = requireActivity()
-        list.add(SimpleContentItem(activity, user.brief_intro))
+        list.add(SimpleContentItem(activity, user.intro))
         list.add(UserRelationItem(activity, user))
         list.add(ContributionItem(activity, user))
         if (user.objectId == UserDao.getCurrentUser()?.objectId) {

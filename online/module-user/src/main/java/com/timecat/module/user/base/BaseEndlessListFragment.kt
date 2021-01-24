@@ -88,7 +88,7 @@ abstract class BaseEndlessListFragment : BaseLoginListFragment() {
     var pageSize = 10
     var offset = 0
 
-    fun load() {
+    open fun load() {
         offset = 0
         loadFirst()
     }

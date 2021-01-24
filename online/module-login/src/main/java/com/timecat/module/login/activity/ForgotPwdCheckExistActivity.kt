@@ -73,14 +73,14 @@ class ForgotPwdCheckExistActivity : BaseToolbarActivity() {
                 mStatefulLayout?.showContent()
                 ToastUtil.e_long("${it.msg}")
             }
+            onComplete = {
+                mStatefulLayout?.showContent()
+                ToastUtil.w_long("邮箱不存在！")
+            }
             onSuccess = {
                 mStatefulLayout?.showContent()
-                if (it == null) {
-                    ToastUtil.w_long("邮箱不存在！")
-                } else {
-                    resetPasswordByEmail(email)
-                    ToastUtil.ok("邮箱存在，可以重置密码")
-                }
+                resetPasswordByEmail(email)
+                ToastUtil.ok("邮箱存在，可以重置密码")
             }
         })
     }
@@ -92,14 +92,14 @@ class ForgotPwdCheckExistActivity : BaseToolbarActivity() {
                 mStatefulLayout?.showContent()
                 ToastUtil.e_long("${it.msg}")
             }
+            onComplete = {
+                mStatefulLayout?.showContent()
+                ToastUtil.w_long("此号码未绑定账号!")
+            }
             onSuccess = {
                 mStatefulLayout?.showContent()
-                if (it == null) {
-                    ToastUtil.w_long("此号码未绑定账号!")
-                } else {
-                    NAV.goAndFinish(this@ForgotPwdCheckExistActivity, RouterHub.LOGIN_ForgotPwdVerificationCodeActivity, "mPhone", phone)
-                    ToastUtil.ok("号码存在，可以重置密码")
-                }
+                NAV.goAndFinish(this@ForgotPwdCheckExistActivity, RouterHub.LOGIN_ForgotPwdVerificationCodeActivity, "mPhone", phone)
+                ToastUtil.ok("号码存在，可以重置密码")
             }
         })
     }
