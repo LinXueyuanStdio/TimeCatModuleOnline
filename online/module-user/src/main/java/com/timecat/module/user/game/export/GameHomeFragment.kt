@@ -36,9 +36,12 @@ class GameHomeFragment : BaseLoginMainFragment() {
     override fun layout(): Int = R.layout.user_fragment_game_home
 
     lateinit var main: ImageView
-    lateinit var card: Button
     lateinit var cube: Button
     lateinit var bag: Button
+    lateinit var mail: Button
+
+    lateinit var activity: Button
+    lateinit var card: Button
     lateinit var shop: Button
 
     lateinit var level: Chip
@@ -62,8 +65,10 @@ class GameHomeFragment : BaseLoginMainFragment() {
         level = view.findViewById(R.id.level)
         card = view.findViewById(R.id.card)
         cube = view.findViewById(R.id.cube)
+        mail = view.findViewById(R.id.mail)
 
         star = view.findViewById(R.id.star)
+        activity = view.findViewById(R.id.activity)
         bag = view.findViewById(R.id.bag)
         shop = view.findViewById(R.id.shop)
 
@@ -80,14 +85,20 @@ class GameHomeFragment : BaseLoginMainFragment() {
         val user = I()
         LogUtil.e(user.toJSONString())
         IconLoader.loadIcon(_mActivity, main, user.avatar)
-        card.setShakelessClickListener {
-            NAV.go(RouterHub.USER_CardActivity)
-        }
         cube.setShakelessClickListener {
             NAV.go(RouterHub.USER_AllCubeActivity)
         }
         bag.setShakelessClickListener {
             NAV.go(RouterHub.USER_BagActivity)
+        }
+        mail.setShakelessClickListener {
+            NAV.go(RouterHub.USER_AllMailActivity)
+        }
+        activity.setShakelessClickListener {
+
+        }
+        card.setShakelessClickListener {
+            NAV.go(RouterHub.USER_CardActivity)
         }
         shop.setShakelessClickListener {
             NAV.go(RouterHub.USER_ShopActivity)

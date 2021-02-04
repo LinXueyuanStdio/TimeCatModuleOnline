@@ -13,8 +13,7 @@ import com.xiaojinzi.component.anno.FragmentAnno
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020/10/3
- * @description 足迹
- * Trace 是 log，指向 string 的 target id，持有一个 type 和 target type
+ * @description 邮件
  * @usage null
  */
 @FragmentAnno(RouterHub.USER_MailFragment)
