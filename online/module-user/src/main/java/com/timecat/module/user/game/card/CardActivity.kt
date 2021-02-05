@@ -16,5 +16,8 @@ import com.xiaojinzi.component.anno.RouterAnno
 class CardActivity : BaseLoginToolbarActivity() {
     override fun title(): String = "抽卡"
     override fun routerInject() = NAV.inject(this)
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
 
+    }
 }

@@ -7,3 +7,6 @@ package com.timecat.module.user.ext
  * @description null
  * @usage null
  */
+operator fun String.div(other: String): String {
+    return "$this/$other"
+}

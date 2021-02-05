@@ -1,11 +1,15 @@
 package com.timecat.module.user.game.mail
 
 import android.app.Dialog
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
+import com.timecat.page.base.extension.simpleUIContainer
 import com.xiaojinzi.component.anno.FragmentAnno
 
 /**
@@ -18,10 +22,16 @@ import com.xiaojinzi.component.anno.FragmentAnno
 @FragmentAnno(RouterHub.USER_MailDetailFragment)
 class MailDetailFragment : BottomSheetDialogFragment() {
     override fun setupDialog(dialog: Dialog, style: Int) {
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.base_rv, null)
-        setupViews(view)
+        val view = buildView(dialog.context)
         dialog.setContentView(view)
     }
 
-    private fun setupViews(view: View) {}
+    fun buildView(context: Context): View {
+        val container = simpleUIContainer(context)
+        MaterialForm(context, container).apply{
+
+        }
+        return container
+    }
+
 }

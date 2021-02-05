@@ -37,10 +37,10 @@ import com.timecat.module.user.ext.uploadImageByUser
  */
 abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
     companion object {
-        val REQUEST_USER_CODE_INPUT = 1111
-        val REQUEST_USER_CODE_CLICK = 2222
-        val REQUEST_TOPIC_CODE_INPUT = 3333
-        val REQUEST_TOPIC_CODE_CLICK = 4444
+        const val REQUEST_USER_CODE_INPUT = 1111
+        const val REQUEST_USER_CODE_CLICK = 2222
+        const val REQUEST_TOPIC_CODE_INPUT = 3333
+        const val REQUEST_TOPIC_CODE_CLICK = 4444
     }
 
     /**

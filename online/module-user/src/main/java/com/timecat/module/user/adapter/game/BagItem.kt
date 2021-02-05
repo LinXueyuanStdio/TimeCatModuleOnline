@@ -1,10 +1,16 @@
 package com.timecat.module.user.adapter.game
 
-import android.app.Activity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.timecat.component.router.app.FallBackFragment
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.game.item.OwnItem
+import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -22,7 +28,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
  * @usage null
  */
 class BagItem(
-    val activity: Activity,
+    val activity: FragmentActivity,
     val ownItem: OwnItem,
     val onClick: ((View) -> Unit)? = null
 ) : BaseHeaderItem<BagItem.DetailVH>(ownItem.objectId) {
@@ -31,7 +37,7 @@ class BagItem(
         val tv_name: TextView = root.findViewById(R.id.tv_name)
     }
 
-    override fun getLayoutRes(): Int = R.layout.user_block_small_item
+    override fun getLayoutRes(): Int = R.layout.user_item_bag
 
     override fun createViewHolder(
         view: View,
@@ -47,20 +53,20 @@ class BagItem(
     ) {
         val item = ownItem.item
         val title = item.title
-        val type = item.type
-        LOAD.image("R.drawable.ic_launcher", holder.iv_avatar)
+        holder.tv_name.setText(title)
+
+        val structure = item.structure
+        val head = ItemBlock.fromJson(structure)
+        LOAD.image(head.header.avatar, holder.iv_avatar)
         holder.root.safeClick {
-        }
-
-        val typeStr = when (type) {
-            else -> ""
-        }
-        when (type) {
-
-            else -> {
-                holder.tv_name.setText("$typeStr ${title}")
+            val fragment: Fragment = NAV.rawFragment(RouterHub.USER_ItemDetailFragment)
+                .putParcelable("ownItem", ownItem)
+                .navigate() ?: FallBackFragment()
+            if (fragment is DialogFragment) {
+                fragment.show(activity.supportFragmentManager, ownItem.uuid)
             }
         }
+
     }
 
     private fun View.safeClick(defaultClick: (View) -> Unit) {

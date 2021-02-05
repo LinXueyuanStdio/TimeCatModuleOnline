@@ -199,6 +199,10 @@
         <activity android:name=".game.cube.CubeEditorActivity" />
         <activity android:name=".game.cube.CubeSkillEditorActivity" />
         <activity android:name=".game.export.GameHomeActivity" />
+        <activity android:name=".game.bag.ThingItemEditorActivity" />
+        <activity android:name=".game.bag.DataItemEditorActivity" />
+        <activity android:name=".game.bag.EquipItemEditorActivity" />
+        <activity android:name=".game.bag.BuffItemEditorActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

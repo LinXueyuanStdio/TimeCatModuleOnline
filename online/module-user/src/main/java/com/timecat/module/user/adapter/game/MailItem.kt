@@ -1,10 +1,15 @@
 package com.timecat.module.user.adapter.game
 
-import android.app.Activity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.timecat.component.router.app.FallBackFragment
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.mail.OwnMail
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -22,7 +27,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
  * @usage null
  */
 class MailItem(
-    val activity: Activity,
+    val activity: FragmentActivity,
     val ownMail: OwnMail,
     val onClick: ((View) -> Unit)? = null
 ) : BaseHeaderItem<MailItem.DetailVH>(ownMail.objectId) {
@@ -48,17 +53,14 @@ class MailItem(
         val mail = ownMail.mail
         val title = mail.title
         val type = mail.type
+        holder.tv_name.setText(title)
         LOAD.image("R.drawable.ic_launcher", holder.iv_avatar)
         holder.root.safeClick {
-        }
-
-        val typeStr = when (type) {
-            else -> ""
-        }
-        when (type) {
-
-            else -> {
-                holder.tv_name.setText("$typeStr ${title}")
+            val fragment: Fragment = NAV.rawFragment(RouterHub.USER_MailDetailFragment)
+                .putParcelable("ownMail", ownMail)
+                .navigate() ?: FallBackFragment()
+            if (fragment is DialogFragment) {
+                fragment.show(activity.supportFragmentManager, ownMail.uuid)
             }
         }
     }
