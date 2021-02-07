@@ -6,7 +6,7 @@ import android.view.Gravity
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
-import com.timecat.data.bmob.data.game.item.OwnItem
+import com.timecat.data.bmob.data.game.OwnItem
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener

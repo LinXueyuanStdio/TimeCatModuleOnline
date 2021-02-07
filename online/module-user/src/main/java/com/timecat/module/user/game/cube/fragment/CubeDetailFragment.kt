@@ -2,7 +2,7 @@ package com.timecat.module.user.game.cube.fragment
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.timecat.data.bmob.data.game.agent.OwnCube
+import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.base.login.BaseLoginListFragment

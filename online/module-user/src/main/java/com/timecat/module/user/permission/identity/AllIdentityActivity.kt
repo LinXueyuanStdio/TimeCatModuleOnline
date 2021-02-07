@@ -15,12 +15,12 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020/10/21
- * @description 身份
+ * @description 方块
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AllIdentityActivity)
 class AllIdentityActivity : BaseEndlessBlockActivity() {
-    override fun title(): String = "身份"
+    override fun title(): String = "方块"
     override fun query() = allIdentity()
     override fun block2Item(block: Block) = BlockSmallItem(this, block)
 

@@ -54,7 +54,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
         super.initViewAfterLogin()
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
-                title = "应用图标"
+                title = "图标"
                 setImage(formData.icon)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
@@ -67,7 +67,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
                 container.addView(this, 0)
             }
             titleItem = InputItem(windowContext).apply {
-                hint = "应用名"
+                hint = "名称"
                 text = formData.name
                 onTextChange = {
                     formData.name = it ?: ""
@@ -90,7 +90,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
                 useRealTimeValidation(disableSubmit = true)
 
                 inputLayout(titleItem.inputLayout) {
-                    isNotEmpty().description("请输入应用名!")
+                    isNotEmpty().description("请输入名称!")
                 }
                 inputLayout(urlItem.inputLayout) {
                     isNotEmpty().description("请输入应用下载地址!")
@@ -125,7 +125,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
                 onError = errorCallback
                 onSuccess = { exist ->
                     if (exist) {
-                        ToastUtil.w("已存在，请修改应用名！")
+                        ToastUtil.w("已存在，请修改名称！")
                     } else {
                         save()
                     }

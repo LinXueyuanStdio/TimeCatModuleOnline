@@ -1,4 +1,4 @@
-package com.timecat.module.user.game.bag
+package com.timecat.module.user.game.task.task
 
 import com.timecat.module.user.base.BaseComplexEditorActivity
 
@@ -9,6 +9,6 @@ import com.timecat.module.user.base.BaseComplexEditorActivity
  * @description null
  * @usage null
  */
-abstract class BaseItemAddActivity : BaseComplexEditorActivity() {
+abstract class BaseTaskAddActivity : BaseComplexEditorActivity() {
 
 }

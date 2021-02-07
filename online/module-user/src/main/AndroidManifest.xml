@@ -203,6 +203,12 @@
         <activity android:name=".game.bag.DataItemEditorActivity" />
         <activity android:name=".game.bag.EquipItemEditorActivity" />
         <activity android:name=".game.bag.BuffItemEditorActivity" />
+        <activity android:name=".game.task.AllTaskActivity" />
+        <activity android:name=".game.task.TaskActivity" />
+        <activity android:name=".game.task.activity.UrlActivityEditorActivity" />
+        <activity android:name=".game.task.activity.OneTaskActivityEditorActivity" />
+        <activity android:name=".game.task.activity.TextUrlActivityEditorActivity" />
+        <activity android:name=".game.task.task.DataTaskEditorActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

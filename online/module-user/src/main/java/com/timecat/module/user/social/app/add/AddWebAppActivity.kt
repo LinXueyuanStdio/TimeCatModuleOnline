@@ -47,14 +47,14 @@ class AddWebAppActivity : BaseAddAppActivity() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         MaterialForm(this, container).apply {
-            Image("应用图标") {
+            Image("图标") {
                 chooseImage(isAvatar = true) { path ->
                     uploadImageByUser(I(), listOf(path), false) {
                         formData.icon = it.first()
                     }
                 }
             }
-            val titleItem = OneLineInput("应用名", formData.name) {
+            val titleItem = OneLineInput("名称", formData.name) {
                 formData.name = it ?: ""
             }
             MultiLineInput("下载地址（url）", formData.content) {
@@ -65,7 +65,7 @@ class AddWebAppActivity : BaseAddAppActivity() {
                 useRealTimeValidation(disableSubmit = true)
 
                 inputLayout(titleItem.inputLayout) {
-                    isNotEmpty().description("请输入应用名!")
+                    isNotEmpty().description("请输入名称!")
                 }
 
                 submitWith(R.id.ok) { result ->

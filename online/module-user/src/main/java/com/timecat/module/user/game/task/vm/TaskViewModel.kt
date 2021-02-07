@@ -1,9 +1,9 @@
-package com.timecat.module.user.game.cube.vm
+package com.timecat.module.user.game.task.vm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.data.game.OwnCube
+import com.timecat.data.bmob.data.game.OwnActivity
 
 /**
  * @author 林学渊
@@ -12,16 +12,16 @@ import com.timecat.data.bmob.data.game.OwnCube
  * @description null
  * @usage null
  */
-class CubeViewModel : ViewModel() {
+class TaskViewModel : ViewModel() {
     /**
-     * 所有方块
+     * 所有活动
      */
-    val cubes: MutableLiveData<List<OwnCube>> = MutableLiveData()
+    val activities: MutableLiveData<List<OwnActivity>> = MutableLiveData()
 
     /**
-     * 当前选中的方块
+     * 当前选中的活动
      */
-    val cube: MutableLiveData<OwnCube?> = MutableLiveData()
+    val ownActivity: MutableLiveData<OwnActivity?> = MutableLiveData()
 
     val block: MutableLiveData<Block?> = MutableLiveData()
 }

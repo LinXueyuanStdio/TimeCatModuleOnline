@@ -2,7 +2,7 @@ package com.timecat.module.user.base
 
 
 import cn.leancloud.AVQuery
-import com.timecat.data.bmob.data.game.item.OwnItem
+import com.timecat.data.bmob.data.game.OwnItem
 import com.timecat.data.bmob.ext.bmob.requestOwnItem
 import com.timecat.module.user.adapter.game.BagItem
 

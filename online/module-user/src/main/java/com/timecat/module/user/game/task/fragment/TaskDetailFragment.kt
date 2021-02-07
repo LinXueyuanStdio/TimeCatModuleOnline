@@ -1,12 +1,12 @@
-package com.timecat.module.user.game.cube.fragment
+package com.timecat.module.user.game.task.fragment
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.timecat.data.bmob.data.game.OwnCube
+import com.timecat.data.bmob.data.game.OwnActivity
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.base.login.BaseLoginListFragment
-import com.timecat.module.user.game.cube.vm.CubeViewModel
+import com.timecat.module.user.game.task.vm.TaskViewModel
 import java.util.*
 
 /**
@@ -17,9 +17,9 @@ import java.util.*
  * 创建者，关注，点赞数等
  * @usage null
  */
-class CubeEquipFragment : BaseLoginListFragment() {
+class TaskDetailFragment : BaseLoginListFragment() {
 
-    private fun loadDetail(cube: OwnCube) {
+    private fun loadDetail(task: OwnActivity) {
         val list = mutableListOf<BaseItem<*>>()
 //        list.add(SingleAuthorItem(forum.user))TODO 不要显示创建着
 //        list.add(SimpleContentItem(requireActivity(), cube.content))
@@ -27,11 +27,11 @@ class CubeEquipFragment : BaseLoginListFragment() {
         adapter.reload(list)
     }
 
-    lateinit var viewModel: CubeViewModel
+    lateinit var viewModel: TaskViewModel
     override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
-        viewModel.cube.observe(viewLifecycleOwner, {
-            it?.let{loadDetail(it)}
+        viewModel = ViewModelProvider(requireActivity()).get(TaskViewModel::class.java)
+        viewModel.ownActivity.observe(viewLifecycleOwner, {
+            it?.let { loadDetail(it) }
         })
     }
 
@@ -48,6 +48,6 @@ class CubeEquipFragment : BaseLoginListFragment() {
     }
 
     override fun onRefresh() {
-        viewModel.cube.value?.let { loadDetail(it) }
+        viewModel.ownActivity.value?.let { loadDetail(it) }
     }
 }

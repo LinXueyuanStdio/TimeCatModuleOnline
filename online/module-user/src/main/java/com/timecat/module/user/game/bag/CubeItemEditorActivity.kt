@@ -1,95 +1,69 @@
-package com.timecat.module.user.game.mail
+package com.timecat.module.user.game.bag
 
-import android.text.InputType
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
-import com.afollestad.materialdialogs.list.listItemsMultiChoice
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.App
-import com.timecat.data.bmob.ext.Mail
+import com.timecat.data.bmob.ext.Item
 import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.bmob.requestExistBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
-import com.timecat.data.bmob.ext.net.allItem
-import com.timecat.data.bmob.ext.net.checkLeaderBoardExistByTitle
+import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
+import com.timecat.identity.data.block.type.ITEM_Cube
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.business.setting.NextItem
-import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
-import com.timecat.module.user.base.BaseComplexEditorActivity
-import com.timecat.module.user.base.GO
-import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.uploadImageByUser
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.android.synthetic.main.user_activity_moment_add.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020-02-13
- * @description 编辑邮件
+ * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_MailEditorActivity)
-class MailEditorActivity : BaseComplexEditorActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_CubeItemEditorActivity)
+class CubeItemEditorActivity : BaseItemAddActivity() {
 
-    override fun title(): String = "邮件"
+    override fun title(): String = "方块"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
         var icon: String = "R.drawable.ic_folder",
-        var name: String = "新邮件",
-        var url: String = "",
+        var name: String = "新建方块",
         var content: String = "",
-        var items: List<String> = mutableListOf(),
+        var uuid: String = "",
         var attachments: AttachmentTail? = null
     )
 
     val formData: FormData = FormData()
     lateinit var imageItem: ImageItem
     lateinit var titleItem: InputItem
-    lateinit var packageItem: NextItem
-
+    lateinit var cubeItem: NextItem
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
-                title = "邮件图标"
+                title = "图标"
                 setImage(formData.icon)
-                onClick {
-                    chooseImage(isAvatar = true) { path ->
-                        uploadImageByUser(I(), listOf(path), false) {
-                            formData.icon = it.first()
-                        }
-                    }
-                }
-
                 container.addView(this, 0)
             }
             titleItem = InputItem(windowContext).apply {
-                hint = "邮件标题"
+                hint = "名称"
                 text = formData.name
-                onTextChange = {
-                    formData.name = it ?: ""
-                }
-
+                inputEditText.isEnabled = false
                 container.addView(this, 1)
             }
-            packageItem = Next("礼包",
-                hint = formData.items.toString(),
-                initialText = "${formData.items.size}") {
-                selectItems()
+
+            cubeItem = Next("方块", hint = formData.uuid, initialText = formData.uuid) {
+                chooseCube()
             }
 
             form {
@@ -106,10 +80,10 @@ class MailEditorActivity : BaseComplexEditorActivity() {
         }
     }
 
-    fun selectItems() {
+    fun chooseCube() {
         mStatefulLayout?.showLoading()
         requestBlock {
-            query = allItem()
+            query = allIdentity()
             onError = {
                 mStatefulLayout?.showContent()
                 ToastUtil.e_long(it.msg)
@@ -126,19 +100,20 @@ class MailEditorActivity : BaseComplexEditorActivity() {
                 showSelectDialog(it)
             }
         }
-
     }
 
     fun showSelectDialog(items: List<Block>) {
         MaterialDialog(this, BottomSheet()).show {
-            title(text = "选择物品放入礼包中")
+            title(text = "选择方块")
             positiveButton(R.string.ok)
             val texts = items.map { it.title }
-            listItemsMultiChoice(items = texts) { _, intArr, _ ->
-                val blocks = items.filterIndexed { index, block -> index in intArr }
-                formData.items = blocks.map { it.objectId }
-                packageItem.hint = formData.items.toString()
-                packageItem.text = "${formData.items.size}"
+            listItemsSingleChoice(items = texts) { _, idx, _ ->
+                val cube = items[idx]
+                formData.name = cube.title
+                formData.uuid = cube.objectId
+                formData.content = cube.content
+                titleItem.text = cube.title
+                emojiEditText.setText(cube.content)
             }
         }
     }
@@ -163,11 +138,20 @@ class MailEditorActivity : BaseComplexEditorActivity() {
 
     open fun save() {
         saveBlock {
-            target = I() create Mail {
+            target = I() create Item {
                 title = formData.name
                 content = formData.content
-                subtype = BLOCK_MAIL
-                headerBlock = MailBlock(
+                subtype = ITEM_Cube
+                headerBlock = ItemBlock(
+                    type = ITEM_Cube,
+                    structure = CubeItemBlock(formData.uuid).toJson(),
+                    mediaScope = formData.attachments,
+                    topicScope = TopicScope(emojiEditText.realTopicList.map {
+                        TopicItem(it.topicName, it.topicId)
+                    }.toMutableList()),
+                    atScope = AtScope(emojiEditText.realUserList.map {
+                        AtItem(it.user_name, it.user_id)
+                    }.toMutableList()),
                     header = PageHeader(
                         icon = formData.icon,
                         avatar = formData.icon,
@@ -177,7 +161,6 @@ class MailEditorActivity : BaseComplexEditorActivity() {
             }
             onSuccess = {
                 ToastUtil.ok("创建成功！")
-                GO.appDetail(it.objectId)
                 finish()
             }
             onError = errorCallback

@@ -27,13 +27,13 @@ object MetaPermissionPool {
      * 加载所有的元权限
      */
     private fun load() {
-        pool.clear()
         requestBlock {
             query = allMetaPermission().apply {
                 cachePolicy = AVQuery.CachePolicy.CACHE_THEN_NETWORK
             }
             onSuccess = {
                 LogUtil.sd(it)
+                pool.clear()
                 it.forEach {
                     pool[it.title] = it.content
                 }
