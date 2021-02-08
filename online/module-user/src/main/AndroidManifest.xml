@@ -209,6 +209,7 @@
         <activity android:name=".game.task.activity.OneTaskActivityEditorActivity" />
         <activity android:name=".game.task.activity.TextUrlActivityEditorActivity" />
         <activity android:name=".game.task.task.DataTaskEditorActivity" />
+        <activity android:name=".game.bag.CubeItemEditorActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

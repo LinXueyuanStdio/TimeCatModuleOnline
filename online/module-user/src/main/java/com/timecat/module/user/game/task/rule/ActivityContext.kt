@@ -1,5 +1,10 @@
 package com.timecat.module.user.game.task.rule
 
+import com.timecat.data.bmob.dao.UserDao
+import com.timecat.data.bmob.data.User
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.data.game.OwnActivity
+
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
@@ -10,5 +15,14 @@ package com.timecat.module.user.game.task.rule
  * 拥有3个60级方块 ---|   |---条件3 /---/
  * @usage null
  */
-class ActivityContext {
+object ActivityContext {
+    @JvmStatic
+    var I: User? = UserDao.getCurrentUser()
+
+    @JvmStatic
+    val ownActivity: MutableList<OwnActivity> = mutableListOf()
+
+    @JvmStatic
+    val activity: MutableList<Block> = mutableListOf()
+
 }

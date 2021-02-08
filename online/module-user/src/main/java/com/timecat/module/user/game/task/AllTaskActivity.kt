@@ -1,100 +1,65 @@
 package com.timecat.module.user.game.task
 
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
+import com.alibaba.fastjson.JSONObject
+import com.cheng.channel.Channel
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
+import com.timecat.component.setting.DEF
 import com.timecat.data.bmob.data.game.OwnActivity
 import com.timecat.data.bmob.ext.bmob.requestOwnActivity
 import com.timecat.data.bmob.ext.net.allOwnActivity
+import com.timecat.data.system.model.eventbus.TabReselectedEvent
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.standard.navi.BottomBar
-import com.timecat.layout.ui.standard.navi.BottomBarIvTextTab
+import com.timecat.layout.ui.standard.navi.TabBlockItem
 import com.timecat.module.user.R
-import com.timecat.module.user.base.BaseDetailCollapseActivity
-import com.timecat.module.user.game.task.vm.TaskViewModel
+import com.timecat.module.user.base.login.BaseLoginMainActivity
+import com.timecat.module.user.game.task.channal.TaskChannel
 import com.timecat.module.user.game.task.fragment.*
-import com.timecat.module.user.game.task.fragment.TaskDetailFragment
-import com.timecat.module.user.view.TopicCard
+import com.timecat.module.user.game.task.vm.TaskViewModel
+import com.timecat.module.user.social.cloud.channel.ChannelManager
+import com.timecat.module.user.social.cloud.channel.TabChannel
 import com.xiaojinzi.component.anno.RouterAnno
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import me.yokeyword.eventbusactivityscope.EventBusActivityScope
+import me.yokeyword.fragmentation.ISupportFragment
+import java.util.*
 
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020/10/4
- * @description 方块（人物）
+ * @description 活动、任务
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AllTaskActivity)
-class AllTaskActivity : BaseDetailCollapseActivity() {
+class AllTaskActivity : BaseLoginMainActivity() {
     lateinit var viewModel: TaskViewModel
-    lateinit var card: TopicCard
-    lateinit var mBottomBar: BottomBar
     override fun routerInject() = NAV.inject(this)
-    override fun layout(): Int = R.layout.user_detail_collapse_viewpager_bottombar
-
-    override fun bindView() {
-        super.bindView()
-        mBottomBar = findViewById(R.id.bottomBar)
-    }
-
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
-        viewModel.ownActivity.observe(this, {
-            it?.let { loadDetail(it) }
+        viewModel.channels.observe(this, {
+            refreshChannel(it.map { TabChannel(it.title, getItemByEnum(it)) })
         })
-        viewModel.activities.observe(this, {
-            mBottomBar.removeAllViews()
-            mBottomBar.addHorizonSV()
-            it.forEach {
-                val icon = it.activity.structure
-                val title = it.activity.title
-                val tab = BottomBarIvTextTab(this@AllTaskActivity, icon, title)
-                mBottomBar.addItem(tab)
-            }
-            viewModel.ownActivity.postValue(it[0])
-        })
-        card = TopicCard(this)
-        card.placeholder.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            height = getStatusBarHeightPlusToolbarHeight()
-        }
-        setupHeaderCard(card)
-        setupCollapse()
-        setupViewPager()
-
-        mBottomBar.setOnTabSelectedListener(object : BottomBar.OnTabSelectedListener {
-            override fun onTabSelected(position: Int, prePosition: Int) {
-                LogUtil.sd("select $position, $prePosition")
-                //选中时触发
-                val cube = viewModel.activities.value!![position]
-                viewModel.ownActivity.postValue(cube)
-            }
-
-            override fun onTabUnselected(position: Int) {}
-            override fun onTabLongSelected(position: Int) {}
-            override fun onTabReselected(position: Int) {}
-        })
+        initBottomBar()
         fetch()
     }
 
-    private fun loadDetail(ownActivity: OwnActivity) {
-        val task = ownActivity.activity
-        // 1. 加载头部卡片
-        titleString = task.title
-        card.apply {
-            title = task.title
-            desc = task.content
-            icon = "R.drawable.ic_launcher"
-        }
+    fun getItemByEnum(channel: TaskChannel): TabBlockItem {
+        return TabBlockItem(
+            0, channel.title,
+            channel.imagePath,
+            channel.fragmentRouterPath,
+            channel.actionRouterPath
+        )
     }
 
-    override fun fetch() {
+    fun fetch() {
         requestOwnActivity {
             query = I().allOwnActivity()
             onSuccess = {
@@ -108,33 +73,138 @@ class AllTaskActivity : BaseDetailCollapseActivity() {
         }
     }
 
-    override fun getAdapter(): FragmentStatePagerAdapter {
-        return DetailAdapter(supportFragmentManager)
+    //region bottom bar
+    private fun initBottomBar() {
+        val start = System.currentTimeMillis()
+        LogUtil.sd("开始加载 view $start ms")
+        mBottomBar.addHorizonSV()
+        mBottomBar.setOnTabSelectedListener(object : BottomBar.OnTabSelectedListener {
+            override fun onTabSelected(position: Int, prePosition: Int) {
+                LogUtil.sd("select $position, $prePosition")
+                //选中时触发
+                destroyActionMode()
+                val tab = mBottomBar.getItem(position)
+                LogUtil.sd("$tab")
+                LogUtil.sd("${tab?.item}")
+                if (tab != null && tab.item != null) {
+                    val item = tab.item
+                    showByTabBlockItem(item)
+                }
+            }
+
+            override fun onTabUnselected(position: Int) {}
+            override fun onTabLongSelected(position: Int) {
+                destroyActionMode()
+            }
+
+            override fun onTabReselected(position: Int) {
+                EventBusActivityScope.getDefault(this@AllTaskActivity).post(TabReselectedEvent(position))
+            }
+        })
+        val end = System.currentTimeMillis()
+        LogUtil.sd("结束加载 view $end ms")
+        LogUtil.sd("总耗时 " + (end - start) + " ms")
     }
 
-    class DetailAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getCount(): Int {
-            return 4
+    private fun showByTabBlockItem(item: TabBlockItem) {
+        val selected = fragmentByTabBlockItem(item) ?: return
+        for (i in mFragments) {
+            LogUtil.sd("${i.key} -> ${i.value}")
         }
+        LogUtil.sd("* ${item.key} -> ${selected}")
+        showHideFragment(selected)
+    }
 
-        override fun getItem(position: Int): Fragment {
-            return when (position) {
-                0 -> TaskDetailFragment()
-                1 -> CommentListFragment()
-                2 -> PostListFragment()
-                3 -> MomentListFragment()
-                else -> FallBackFragment()
+    private fun fragmentByTabBlockItem(item: TabBlockItem): ISupportFragment? {
+        var selected = mFragments[item.key]
+        report(item.title)
+        if (selected == null) {
+            LogUtil.sd("${item.fragmentRouterPath}")
+            val a: Any = NAV.fragment(item.fragmentRouterPath)
+            LogUtil.sd(a)
+            if (a is ISupportFragment) {
+                selected = a
+                mFragments[item.key] = selected
             }
         }
+        return selected
+    }
 
-        override fun getPageTitle(position: Int): CharSequence? {
-            return when (position) {
-                0 -> "详情"
-                1 -> "讨论"
-                2 -> "帖子"
-                3 -> "动态"
-                else -> super.getPageTitle(position)
+    protected fun report(title: String) {}
+
+    private fun destroyActionMode() {}
+
+    /**
+     * 刷新 除固定的tab以外的 自定义tab
+     *
+     * @param list
+     */
+    private fun refreshCustom(list: List<Channel>?) {
+        if (list != null && list.size > 1) {
+            mBottomBar.clearContainer()
+            for (i in 1 until list.size) {
+                val c = list[i]
+                val obj = c.obj
+                if (obj is TabBlockItem) {
+                    addTabBlockItem(obj)
+                } else if (obj is JSONObject) {
+                    val item = obj.toJavaObject(TabBlockItem::class.java)
+                    addTabBlockItem(item)
+                }
             }
         }
     }
+
+    private fun addTabBlockItem(item: TabBlockItem): Any? {
+        mBottomBar.addItem(item.createTabView(this))
+        return mFragments[item.key] ?: addToFragmentMap(item.key, item.fragmentRouterPath)
+    }
+
+    private fun addToFragmentMap(key: String, path: String): Any? {
+        val f = NAV.fragment(path)
+        if (f is ISupportFragment) {
+            mFragments[key] = f as ISupportFragment
+        }
+        return f
+    }
+
+    private fun refreshStatic() {
+        addToFragmentMap(getKey(TaskChannel.Home), TaskChannel.Home.fragmentRouterPath)
+    }
+
+    private fun getKey(k: TaskChannel): String {
+        return getItemByEnum(k).key
+    }
+
+    private fun refreshChannel(list: List<Channel>) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val keysBefore: Set<String> = HashSet(mFragments.keys)
+            val primaryKey = getKey(TaskChannel.Home)
+            if (!keysBefore.contains(primaryKey)) {
+                refreshStatic()
+            }
+            withContext(Dispatchers.Main) {
+                refreshCustom(list)
+            }
+            val keysAfter: MutableSet<String> = HashSet(mFragments.keys)
+            keysAfter.removeAll(keysBefore)
+            val supportFragmentList: ArrayList<ISupportFragment?> = ArrayList()
+            if (keysAfter.contains(primaryKey)) {
+                supportFragmentList.add(0, mFragments[primaryKey])
+                keysAfter.remove(primaryKey)
+            }
+            for (s in keysAfter) {
+                supportFragmentList.add(mFragments[s])
+            }
+            LogUtil.sd(keysAfter)
+            val obj: Array<ISupportFragment> = supportFragmentList.toArray(arrayOfNulls<ISupportFragment>(0))
+            if (obj.isNotEmpty()) {
+                withContext(Dispatchers.Main) {
+                    loadMultipleRootFragment(R.id.container, -1, *obj)
+                }
+            }
+        }
+    }
+    //endregion
+
 }
