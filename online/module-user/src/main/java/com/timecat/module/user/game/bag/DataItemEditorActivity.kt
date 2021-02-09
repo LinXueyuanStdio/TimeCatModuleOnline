@@ -56,6 +56,7 @@ class DataItemEditorActivity : BaseItemAddActivity() {
                     chooseImage(isAvatar = true) { path ->
                         receieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
+                            imageItem.setImage(formData.icon)
                         }
                     }
                 }

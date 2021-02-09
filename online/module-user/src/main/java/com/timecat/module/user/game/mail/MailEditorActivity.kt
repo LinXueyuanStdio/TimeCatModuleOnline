@@ -1,20 +1,16 @@
 package com.timecat.module.user.game.mail
 
-import android.text.InputType
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.App
 import com.timecat.data.bmob.ext.Mail
 import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.bmob.requestExistBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allItem
-import com.timecat.data.bmob.ext.net.checkLeaderBoardExistByTitle
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
@@ -22,7 +18,6 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.business.setting.NextItem
-import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseComplexEditorActivity
@@ -30,10 +25,6 @@ import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.android.synthetic.main.user_activity_moment_add.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * @author 林学渊
@@ -71,6 +62,7 @@ class MailEditorActivity : BaseComplexEditorActivity() {
                     chooseImage(isAvatar = true) { path ->
                         receieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
+                            imageItem.setImage(formData.icon)
                         }
                     }
                 }

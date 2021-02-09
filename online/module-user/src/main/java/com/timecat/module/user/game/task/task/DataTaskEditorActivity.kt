@@ -54,6 +54,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
                     chooseImage(isAvatar = true) { path ->
                         receieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
+                            imageItem.setImage(formData.icon)
                         }
                     }
                 }
@@ -67,6 +68,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
                     chooseImage(isAvatar = true) { path ->
                         receieveImage(I(), listOf(path), false) {
                             formData.cover = it.first()
+                            coverItem.setImage(formData.cover)
                         }
                     }
                 }

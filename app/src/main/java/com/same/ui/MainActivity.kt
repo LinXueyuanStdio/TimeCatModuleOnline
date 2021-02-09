@@ -8,15 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import cn.leancloud.AVLogger
 import cn.leancloud.AVOSCloud
 import cn.leancloud.AVQuery
+import com.google.android.material.button.MaterialButton
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.ext.bmob.requestAction
 import com.timecat.data.bmob.ext.net.allAction
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.layout_height
+import com.timecat.layout.ui.layout.layout_width
+import com.timecat.layout.ui.layout.match_parent
 import com.xiaojinzi.component.impl.*
 
 class MainActivity : Activity() {
@@ -60,7 +65,9 @@ class MainActivity : Activity() {
                 .putParcelable("user", user)
                 .forward()
         })
-        setContentView(linearLayout)
+        val sv = ScrollView(this)
+        sv.addView(linearLayout)
+        setContentView(sv)
     }
 
     private fun createButton(name: String, path: String): Button {
@@ -76,11 +83,12 @@ class MainActivity : Activity() {
     }
 
     private fun createButton(name: String): Button {
-        val button = Button(this)
+        val button = MaterialButton(this)
         button.text = name
         val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         button.layoutParams = layoutParams
         button.gravity = Gravity.CENTER
+        button.isAllCaps = false
         return button
     }
 

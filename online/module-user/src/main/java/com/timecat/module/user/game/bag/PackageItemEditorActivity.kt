@@ -21,11 +21,9 @@ import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
-import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.android.synthetic.main.user_activity_moment_add.*
 
 /**
  * @author 林学渊
@@ -63,6 +61,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                     chooseImage(isAvatar = true) { path ->
                         receieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
+                            imageItem.setImage(formData.icon)
                         }
                     }
                 }

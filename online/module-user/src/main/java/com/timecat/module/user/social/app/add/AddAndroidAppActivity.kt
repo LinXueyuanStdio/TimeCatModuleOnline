@@ -59,6 +59,7 @@ class AddAndroidAppActivity : BaseAddAppActivity() {
                     chooseImage(isAvatar = true) { path ->
                         receieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
+                            setImage(formData.icon)
                         }
                     }
                 }

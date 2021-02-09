@@ -15,9 +15,7 @@ import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.ActivityBlock
 import com.timecat.identity.data.block.ActivityOneTaskBlock
-import com.timecat.identity.data.block.ActivityUrlBlock
 import com.timecat.identity.data.block.type.ACTIVITY_One_task
-import com.timecat.identity.data.block.type.ACTIVITY_Url
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.business.setting.NextItem
@@ -61,6 +59,7 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
                     chooseImage(isAvatar = true) { path ->
                         receieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
+                            imageItem.setImage(formData.icon)
                         }
                     }
                 }
@@ -74,6 +73,7 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
                     chooseImage(isAvatar = true) { path ->
                         receieveImage(I(), listOf(path), false) {
                             formData.cover = it.first()
+                            coverItem.setImage(formData.cover)
                         }
                     }
                 }

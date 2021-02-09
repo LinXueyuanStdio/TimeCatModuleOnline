@@ -47,10 +47,11 @@ class AddWebAppActivity : BaseAddAppActivity() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         MaterialForm(this, container).apply {
-            Image("图标") {
+            Image("图标") { imageItem ->
                 chooseImage(isAvatar = true) { path ->
                     receieveImage(I(), listOf(path), false) {
                         formData.icon = it.first()
+                        imageItem.setImage(formData.icon)
                     }
                 }
             }
