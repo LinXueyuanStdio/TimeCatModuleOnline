@@ -17,6 +17,7 @@ import com.timecat.module.user.R
 import com.timecat.module.user.base.login.BaseLoginMainActivity
 import com.timecat.module.user.game.task.channal.TaskChannel
 import com.timecat.module.user.game.task.fragment.*
+import com.timecat.module.user.game.task.rule.ActivityContext
 import com.timecat.module.user.game.task.vm.TaskViewModel
 import com.timecat.module.user.social.cloud.channel.ChannelManager
 import com.timecat.module.user.social.cloud.channel.TabChannel
@@ -42,35 +43,9 @@ class AllTaskActivity : BaseLoginMainActivity() {
     override fun routerInject() = NAV.inject(this)
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
-        viewModel.channels.observe(this, {
-            refreshChannel(it.map { TabChannel(it.title, getItemByEnum(it)) })
-        })
+
         initBottomBar()
-        fetch()
-    }
-
-    fun getItemByEnum(channel: TaskChannel): TabBlockItem {
-        return TabBlockItem(
-            0, channel.title,
-            channel.imagePath,
-            channel.fragmentRouterPath,
-            channel.actionRouterPath
-        )
-    }
-
-    fun fetch() {
-        requestOwnActivity {
-            query = I().allOwnActivity()
-            onSuccess = {
-                viewModel.activities.postValue(it)
-            }
-            onError = {
-                mStatefulLayout?.showError("出错啦") {
-                    fetch()
-                }
-            }
-        }
+        refreshChannel(ActivityContext.channels)
     }
 
     //region bottom bar
@@ -169,17 +144,13 @@ class AllTaskActivity : BaseLoginMainActivity() {
     }
 
     private fun refreshStatic() {
-        addToFragmentMap(getKey(TaskChannel.Home), TaskChannel.Home.fragmentRouterPath)
-    }
-
-    private fun getKey(k: TaskChannel): String {
-        return getItemByEnum(k).key
+        addToFragmentMap(TaskChannel.Home.getKey(), TaskChannel.Home.fragmentRouterPath)
     }
 
     private fun refreshChannel(list: List<Channel>) {
         GlobalScope.launch(Dispatchers.IO) {
             val keysBefore: Set<String> = HashSet(mFragments.keys)
-            val primaryKey = getKey(TaskChannel.Home)
+            val primaryKey = TaskChannel.Home.getKey()
             if (!keysBefore.contains(primaryKey)) {
                 refreshStatic()
             }

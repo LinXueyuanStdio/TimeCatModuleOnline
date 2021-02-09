@@ -2,6 +2,7 @@ package com.timecat.module.user.game.task.fragment.achieve
 
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.login.BaseLoginMainFragment
+import com.timecat.module.user.game.task.fragment.BaseActivityFragment
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -12,7 +13,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_ActivityAchieveFragment)
-class ActivityAchieveFragment : BaseLoginMainFragment() {
+class ActivityAchieveFragment : BaseActivityFragment() {
     override fun layout(): Int {
         return super.layout()
     }

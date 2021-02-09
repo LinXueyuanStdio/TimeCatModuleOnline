@@ -57,7 +57,7 @@ object UserContext {
     }
 
     @JvmStatic
-    fun loadInterAction(user: User) {
+    private fun loadInterAction(user: User) {
         LogUtil.sd(user)
         requestOwnCube {
             query = user.allOwnCube().apply {
@@ -66,7 +66,6 @@ object UserContext {
             onEmpty = {
                 LogUtil.sd("empty")
                 clearInterAction()
-                loadRole()
             }
             onSuccess = {
                 LogUtil.d(it)
@@ -90,10 +89,9 @@ object UserContext {
     }
 
     @JvmStatic
-    fun loadRole() {
+    private fun loadRole() {
         LogUtil.sd(identity)
         if (identity.isEmpty()) {
-            loadHunPermission()
             return
         }
         requestBlockRelation {
@@ -103,7 +101,6 @@ object UserContext {
             onEmpty = {
                 LogUtil.sd("empty")
                 roleOfIdentity.clear()
-                loadHunPermission()
             }
             onSuccess = {
                 LogUtil.d(it)
@@ -115,13 +112,11 @@ object UserContext {
     }
 
     @JvmStatic
-    fun loadHunPermission() {
+    private fun loadHunPermission() {
         role.clear()
         role.addAll(roleOfIdentity)
-        LogUtil.d(roleOfIdentity)
         LogUtil.d(role)
         if (role.isEmpty()) {
-            loadOwnsPermission()
             return
         }
         requestBlockRelation {
@@ -131,7 +126,6 @@ object UserContext {
             onEmpty = {
                 LogUtil.sd("empty")
                 hunPermissionOfRole.clear()
-                loadOwnsPermission()
             }
             onSuccess = {
                 LogUtil.d(it)
@@ -143,7 +137,7 @@ object UserContext {
     }
 
     @JvmStatic
-    fun loadOwnsPermission() {
+    private fun loadOwnsPermission() {
         hunPermission.clear()
         hunPermission.addAll(hunPermissionOfRole)
         LogUtil.d(hunPermissionOfRole)

@@ -1,6 +1,5 @@
 package com.timecat.module.user.view
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -9,6 +8,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.AttrRes
+import androidx.annotation.StyleRes
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -24,29 +25,15 @@ import com.timecat.module.user.view.dsl.setupFollowBlockButton
  * @description null
  * @usage null
  */
-class BlockHerfView : LinearLayout {
+class BlockHerfView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    @AttrRes defStyleAttr: Int = 0,
+    @StyleRes defStyleRes: Int = 0
+) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     lateinit var root: View
 
-    constructor(context: Context) : super(context) {
-        init(context)
-    }
-
-    constructor(context: Context, layout: Int) : super(context) {
-        init(context, layout)
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int)
-        : super(context, attrs, defStyleAttr) {
-        init(context)
-    }
-
-    @TargetApi(21)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int)
-        : super(context, attrs, defStyleAttr, defStyleRes) {
+    init {
         init(context)
     }
 

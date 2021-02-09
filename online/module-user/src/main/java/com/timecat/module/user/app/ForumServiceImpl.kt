@@ -38,6 +38,9 @@ class ForumServiceImpl : ForumService {
         }
         requestOneBlock {
             query = allForum().whereEqualTo("title", name)
+            onError = {
+
+            }
             onSuccess = {
                 if (it == null) {
                     //当前用户创建论坛

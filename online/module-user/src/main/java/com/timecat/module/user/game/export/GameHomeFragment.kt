@@ -59,6 +59,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
         val background: View = view.findViewById(R.id.background)
         toolbar.setBlurredView(background)
         toolbar.setPaddingStatusBar(_mActivity)
+        toolbar.setTitle("游戏化")
 
         main = view.findViewById(R.id.main)
         exp_bar = view.findViewById(R.id.exp_bar)
@@ -95,7 +96,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
             NAV.go(RouterHub.USER_AllMailActivity)
         }
         activity.setShakelessClickListener {
-
+            NAV.go(RouterHub.USER_AllTaskActivity)
         }
         card.setShakelessClickListener {
             NAV.go(RouterHub.USER_CardActivity)

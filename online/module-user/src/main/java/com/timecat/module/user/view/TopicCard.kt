@@ -21,8 +21,11 @@ import com.timecat.module.user.R
  * @description 话题的卡片视图
  * @usage null
  */
-class TopicCard @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    ConstraintLayout(context, attrs, defStyleAttr) {
+class TopicCard @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     lateinit var iconView: ImageView
     lateinit var titleView: TextView

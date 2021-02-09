@@ -3,9 +3,9 @@ package com.timecat.module.user.app
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.identity.service.PermissionService
-import com.timecat.module.user.permission.MetaPermissionPool.ensureLoaded
+import com.timecat.module.user.permission.MetaPermissionPool
 import com.timecat.module.user.permission.PermissionValidator
-import com.timecat.module.user.permission.UserContext.loadByUser
+import com.timecat.module.user.permission.UserContext
 import com.xiaojinzi.component.anno.ServiceAnno
 
 /**
@@ -27,8 +27,8 @@ class PermissionServiceImpl : PermissionService {
 
     override fun initPermission() {
         LogUtil.sd("init start")
-        ensureLoaded()
-        loadByUser(UserDao.getCurrentUser())
+        MetaPermissionPool.ensureLoaded()
+        UserContext.loadByUser(UserDao.getCurrentUser())
         LogUtil.sd("init end")
     }
 }

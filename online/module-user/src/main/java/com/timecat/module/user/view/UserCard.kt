@@ -24,8 +24,11 @@ import com.timecat.module.user.view.widget.UserCircleImageView
  * @description 用户的卡片视图
  * @usage null
  */
-class UserCard @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    ConstraintLayout(context, attrs, defStyleAttr) {
+class UserCard @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr)  {
 
     lateinit var iconView: UserCircleImageView
     lateinit var coverView: ImageView
