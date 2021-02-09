@@ -19,6 +19,7 @@ import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
  */
 class ShareBottomSheet : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("block")
+    @JvmField
     var block: Block? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         NAV.inject(this)

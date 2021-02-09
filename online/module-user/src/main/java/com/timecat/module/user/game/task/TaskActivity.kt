@@ -34,18 +34,4 @@ class TaskActivity : BaseLoginToolbarFragmentActivity() {
         TODO("Not yet implemented")
     }
 
-    fun fetch() {
-        requestOneBlock {
-            query = oneBlockOf(blockId)
-            onSuccess = {
-                viewModel.block.postValue(it)
-            }
-            onError = {
-                mStatefulLayout?.showError("出错啦") {
-                    fetch()
-                }
-            }
-        }
-    }
-
 }

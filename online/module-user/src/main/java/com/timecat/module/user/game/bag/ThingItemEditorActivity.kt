@@ -16,6 +16,7 @@ import com.timecat.identity.data.block.type.ITEM_Thing
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
@@ -57,6 +58,7 @@ class ThingItemEditorActivity : BaseItemAddActivity() {
                 setImage(formData.icon)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
+                        if (path.startsWith(IconLoader.AVATAR_SCHEME))
                         uploadImageByUser(I(), listOf(path), false) {
                             formData.icon = it.first()
                         }
