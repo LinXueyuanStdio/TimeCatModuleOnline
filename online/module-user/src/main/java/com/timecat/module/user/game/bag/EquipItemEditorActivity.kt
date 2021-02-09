@@ -21,7 +21,7 @@ import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.recieveImage
+import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.android.synthetic.main.user_activity_moment_add.*
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +58,7 @@ class EquipItemEditorActivity : BaseItemAddActivity() {
                 setImage(formData.icon)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
-                        recieveImage(I(), listOf(path), false) {
+                        receieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
                         }
                     }

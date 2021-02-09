@@ -13,7 +13,7 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.middle.setting.BaseSettingActivity
 import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.recieveImage
+import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -47,7 +47,7 @@ class UserSettingActivity : BaseSettingActivity() {
             LogUtil.e(user.toJSONString())
             avatarItem = simpleImage(container, "头像", user.avatar) { avatarItem ->
                 chooseImage(isAvatar = true) { path ->
-                    recieveImage(user, listOf(path), false) {
+                    receieveImage(user, listOf(path), false) {
                         for (i in it) {
                             val file = AVFile("avatar", i)
                             user.headPortrait = file
@@ -61,7 +61,7 @@ class UserSettingActivity : BaseSettingActivity() {
             }
             coverItem = simpleImage(container, "封面", user.cover) { coverItem ->
                 chooseImage(isAvatar = false) { path ->
-                    recieveImage(user, listOf(path), false) {
+                    receieveImage(user, listOf(path), false) {
                         for (i in it) {
                             val file = AVFile("cover", i)
                             user.coverPage = file
