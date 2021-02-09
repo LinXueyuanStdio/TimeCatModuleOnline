@@ -4,7 +4,7 @@ import android.app.Activity
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.identity.service.ImageUploadService
 import com.timecat.identity.service.ImageUploadService.UploadCallback
-import com.timecat.module.user.ext.uploadImageByUser
+import com.timecat.module.user.ext.recieveImage
 import com.xiaojinzi.component.anno.ServiceAnno
 
 /**
@@ -22,7 +22,7 @@ class ImageUploadServiceImpl : ImageUploadService {
             uploadCallback?.onFail("未登录")
             return
         }
-        activity.uploadImageByUser(user, listOf(path), false) {
+        activity.recieveImage(user, listOf(path), false) {
             for (i in it) {
                 uploadCallback?.onSuccess(i)
             }

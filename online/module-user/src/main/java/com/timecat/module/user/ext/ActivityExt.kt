@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import java.io.File
+import java.util.*
 
 /**
  * @author 林学渊
@@ -214,8 +215,9 @@ fun Activity.selectOneLocalImage(isAvatar: Boolean = true, onSuccess: (String) -
 }
 
 fun Activity.selectOneRandomImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
-    return IconLoader.loadFontAwesome()
+    onSuccess(IconLoader.randomAvatar(UUID.randomUUID().toString()))
 }
+
 fun Activity.selectOneOnlineImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {}
 
 class FontAwesomeGridItem(val context: Context, val font: Typeface, val iconRes: Int) : GridItem {
@@ -277,3 +279,30 @@ fun Activity.selectOneLocalIcon(isAvatar: Boolean = true, onSuccess: (String) ->
     }
 }
 //endregion
+
+//region 图像保存逻辑
+fun Activity.recieveImage(
+    currentUser: User,
+    filePaths: List<String>,
+    isCompress: Boolean,
+    onFinish: (List<String>) -> Unit
+) {
+    val needUpload = mutableListOf<String>()
+    val ans = mutableListOf<String>()
+    for (path in filePaths) {
+        if (path.startsWith(IconLoader.AVATAR_SCHEME) ||
+            path.startsWith(IconLoader.FONTAWESOME_SCHEME) ||
+            path.startsWith(IconLoader.APP_SCHEME) ||
+            path.startsWith(IconLoader.BUILDIN_DRAWABLE_SCHEME) ||
+            path.startsWith(IconLoader.BUILDIN_MIPMAP_SCHEME)) {
+            ans.add(path)
+        } else {
+            needUpload.add(path)
+        }
+    }
+    uploadImageByUser(currentUser, needUpload, isCompress) {
+        ans.addAll(it)
+        onFinish(all)
+    }
+}
+

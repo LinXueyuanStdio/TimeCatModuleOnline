@@ -2,16 +2,13 @@ package com.timecat.module.user.game.bag
 
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Item
-import com.timecat.data.bmob.ext.bmob.requestExistBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
-import com.timecat.data.bmob.ext.net.checkItemExistByTitle
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.*
-import com.timecat.identity.data.block.type.BLOCK_ITEM
+import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.ThingItemBlock
 import com.timecat.identity.data.block.type.ITEM_Thing
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
@@ -19,14 +16,10 @@ import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
-import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.uploadImageByUser
+import com.timecat.module.user.ext.recieveImage
+import com.timecat.module.user.ext.recieveImage
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.android.synthetic.main.user_activity_moment_add.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * @author 林学渊
@@ -58,8 +51,7 @@ class ThingItemEditorActivity : BaseItemAddActivity() {
                 setImage(formData.icon)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
-                        if (path.startsWith(IconLoader.AVATAR_SCHEME))
-                        uploadImageByUser(I(), listOf(path), false) {
+                       recieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
                         }
                     }
@@ -116,7 +108,7 @@ class ThingItemEditorActivity : BaseItemAddActivity() {
                 content = formData.content
                 subtype = ITEM_Thing
                 headerBlock = ItemBlock(
-                    type= ITEM_Thing,
+                    type = ITEM_Thing,
                     structure = ThingItemBlock().toJson(),
                     mediaScope = formData.attachments,
                     topicScope = TopicScope(emojiEditText.realTopicList.map {

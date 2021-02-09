@@ -24,7 +24,7 @@ import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.uploadImageByUser
+import com.timecat.module.user.ext.recieveImage
 
 /**
  * @author 林学渊
@@ -59,7 +59,7 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
                 setImage(formData.icon)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
-                        uploadImageByUser(I(), listOf(path), false) {
+                        recieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
                         }
                     }
@@ -72,7 +72,7 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
                 setImage(formData.cover)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
-                        uploadImageByUser(I(), listOf(path), false) {
+                        recieveImage(I(), listOf(path), false) {
                             formData.cover = it.first()
                         }
                     }

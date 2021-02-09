@@ -18,7 +18,7 @@ import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.uploadImageByUser
+import com.timecat.module.user.ext.recieveImage
 import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -49,7 +49,7 @@ class AddWebAppActivity : BaseAddAppActivity() {
         MaterialForm(this, container).apply {
             Image("图标") {
                 chooseImage(isAvatar = true) { path ->
-                    uploadImageByUser(I(), listOf(path), false) {
+                    recieveImage(I(), listOf(path), false) {
                         formData.icon = it.first()
                     }
                 }

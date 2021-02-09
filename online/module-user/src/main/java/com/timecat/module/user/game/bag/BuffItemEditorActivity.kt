@@ -2,18 +2,14 @@ package com.timecat.module.user.game.bag
 
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Item
-import com.timecat.data.bmob.ext.bmob.requestExistBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
-import com.timecat.data.bmob.ext.net.checkItemExistByTitle
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.*
-import com.timecat.identity.data.block.type.BLOCK_ITEM
+import com.timecat.identity.data.block.BuffItemBlock
+import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.type.ITEM_Buff
-import com.timecat.identity.data.block.type.ITEM_Thing
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
@@ -21,12 +17,8 @@ import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.uploadImageByUser
+import com.timecat.module.user.ext.recieveImage
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.android.synthetic.main.user_activity_moment_add.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * @author 林学渊
@@ -58,7 +50,7 @@ class BuffItemEditorActivity : BaseItemAddActivity() {
                 setImage(formData.icon)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
-                        uploadImageByUser(I(), listOf(path), false) {
+                        recieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
                         }
                     }
@@ -115,7 +107,7 @@ class BuffItemEditorActivity : BaseItemAddActivity() {
                 content = formData.content
                 subtype = ITEM_Buff
                 headerBlock = ItemBlock(
-                    type= ITEM_Buff,
+                    type = ITEM_Buff,
                     structure = BuffItemBlock().toJson(),
                     mediaScope = formData.attachments,
                     topicScope = TopicScope(emojiEditText.realTopicList.map {

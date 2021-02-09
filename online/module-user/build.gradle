@@ -15,6 +15,7 @@ dependencies {
 
     api rootProject.ext.timecat["component-CommonBmob"]
     api rootProject.ext.timecat["component-CommonStatic"]
+    api rootProject.ext.timecat["component-CommonUI"]
 
     api rootProject.ext.dependencies["roundedimageview"]
     api rootProject.ext.dependencies["RoundCornerProgressBar"]
