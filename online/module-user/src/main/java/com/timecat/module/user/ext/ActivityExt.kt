@@ -132,6 +132,7 @@ fun Activity.chooseImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) 
             "拍照",
             "本地相册",
             "内置图标",
+            "随机图标",
 //                "我的在线相册" TODO
         )
         positiveButton(R.string.ok)
@@ -150,6 +151,10 @@ fun Activity.chooseImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) 
                     selectOneLocalIcon(isAvatar, onSuccess)
                 }
                 3 -> {
+                    //随机图标
+                    selectOneRandomImage(isAvatar, onSuccess)
+                }
+                4 -> {
                     //我的在线相册
                     selectOneOnlineImage(isAvatar, onSuccess)
                 }
@@ -208,6 +213,9 @@ fun Activity.selectOneLocalImage(isAvatar: Boolean = true, onSuccess: (String) -
         }
 }
 
+fun Activity.selectOneRandomImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
+    return IconLoader.loadFontAwesome()
+}
 fun Activity.selectOneOnlineImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {}
 
 class FontAwesomeGridItem(val context: Context, val font: Typeface, val iconRes: Int) : GridItem {
