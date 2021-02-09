@@ -37,7 +37,7 @@ class MainActivity : Activity() {
         linearLayout.addView(createButton("添加插件", RouterHub.USER_AddPluginAppActivity))
         linearLayout.addView(createButton("添加动态", RouterHub.USER_AddMomentActivity))
         linearLayout.addView(createButton("背包", RouterHub.USER_BagActivity))
-        linearLayout.addView(createButton(RouterHub.USER_AllTaskActivity, RouterHub.USER_AllTaskActivity))
+
         linearLayout.addView(createButton(RouterHub.USER_ItemEditorActivity, RouterHub.USER_ItemEditorActivity))
         linearLayout.addView(createButton(RouterHub.USER_ThingItemEditorActivity, RouterHub.USER_ThingItemEditorActivity))
         linearLayout.addView(createButton(RouterHub.USER_PackageItemEditorActivity, RouterHub.USER_PackageItemEditorActivity))
@@ -45,11 +45,18 @@ class MainActivity : Activity() {
         linearLayout.addView(createButton(RouterHub.USER_EquipItemEditorActivity, RouterHub.USER_EquipItemEditorActivity))
         linearLayout.addView(createButton(RouterHub.USER_BuffItemEditorActivity, RouterHub.USER_BuffItemEditorActivity))
         linearLayout.addView(createButton(RouterHub.USER_CubeItemEditorActivity, RouterHub.USER_CubeItemEditorActivity))
-        linearLayout.addView(createButton(RouterHub.USER_CubeItemEditorActivity, RouterHub.USER_CubeItemEditorActivity))
+
+        linearLayout.addView(createButton(RouterHub.USER_MailEditorActivity, RouterHub.USER_MailEditorActivity))
+        linearLayout.addView(createButton(RouterHub.USER_CubeEditorActivity, RouterHub.USER_CubeEditorActivity))
+        linearLayout.addView(createButton(RouterHub.USER_CubeSkillEditorActivity, RouterHub.USER_CubeSkillEditorActivity))
+        linearLayout.addView(createButton(RouterHub.USER_CubeStarEditorActivity, RouterHub.USER_CubeStarEditorActivity))
+        linearLayout.addView(createButton(RouterHub.USER_Activity, RouterHub.USER_CubeStarEditorActivity))
+
         linearLayout.addView(createButton(RouterHub.USER_AllLeaderBoardActivity, RouterHub.USER_AllLeaderBoardActivity))
         linearLayout.addView(createButton(RouterHub.USER_AllRecommendActivity, RouterHub.USER_AllRecommendActivity))
         linearLayout.addView(createButton(RouterHub.USER_AllAppActivity, RouterHub.USER_AllAppActivity))
         linearLayout.addView(createButton(RouterHub.USER_AllTraceActivity, RouterHub.USER_AllTraceActivity))
+        linearLayout.addView(createButton(RouterHub.USER_AllTaskActivity, RouterHub.USER_AllTaskActivity))
         linearLayout.addView(createButton(RouterHub.USER_AllCubeActivity, RouterHub.USER_AllCubeActivity))
         linearLayout.addView(createButton(RouterHub.USER_AllMailActivity, RouterHub.USER_AllMailActivity))
         linearLayout.addView(createButton("game", RouterHub.USER_MailEditorActivity))

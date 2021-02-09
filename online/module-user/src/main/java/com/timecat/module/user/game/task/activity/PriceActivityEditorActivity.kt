@@ -9,7 +9,7 @@ import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.ActivityBlock
 import com.timecat.identity.data.block.ActivityUrlBlock
-import com.timecat.identity.data.block.type.ACTIVITY_Text_url
+import com.timecat.identity.data.block.type.ACTIVITY_Url
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
@@ -26,10 +26,10 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_TextUrlActivityEditorActivity)
-class TextUrlActivityEditorActivity : BaseActivityAddActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_PriceActivityEditorActivity)
+class PriceActivityEditorActivity : BaseActivityAddActivity() {
 
-    override fun title(): String = "文本活动"
+    override fun title(): String = "外部链接活动"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
         var icon: String = "R.drawable.ic_folder",
@@ -136,9 +136,9 @@ class TextUrlActivityEditorActivity : BaseActivityAddActivity() {
             target = I() create Activity {
                 title = formData.name
                 content = formData.content
-                subtype = ACTIVITY_Text_url
+                subtype = ACTIVITY_Url
                 headerBlock = ActivityBlock(
-                    type = ACTIVITY_Text_url,
+                    type = ACTIVITY_Url,
                     structure = ActivityUrlBlock(formData.url).toJson(),
                     mediaScope = formData.attachments,
                     topicScope = TopicScope(emojiEditText.realTopicList.map {

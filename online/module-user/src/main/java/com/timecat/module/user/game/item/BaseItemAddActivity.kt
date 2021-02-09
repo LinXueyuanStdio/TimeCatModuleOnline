@@ -1,4 +1,4 @@
-package com.timecat.module.user.game.bag
+package com.timecat.module.user.game.item
 
 import com.timecat.module.user.base.BaseComplexEditorActivity
 

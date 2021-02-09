@@ -1,23 +1,26 @@
-package com.timecat.module.user.game.bag
+package com.timecat.module.user.game.item
 
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Item
+import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
+import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.BuffItemBlock
-import com.timecat.identity.data.block.ItemBlock
-import com.timecat.identity.data.block.type.ITEM_Buff
+import com.timecat.identity.data.block.*
+import com.timecat.identity.data.block.type.ITEM_Cube
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
+import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
-import com.timecat.module.user.base.GO
-import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -27,46 +30,40 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_BuffItemEditorActivity)
-class BuffItemEditorActivity : BaseItemAddActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_CubeItemEditorActivity)
+class CubeItemEditorActivity : BaseItemAddActivity() {
 
-    override fun title(): String = "Buff"
+    override fun title(): String = "方块"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
         var icon: String = "R.drawable.ic_folder",
-        var name: String = "新建Buff",
+        var name: String = "新建方块",
         var content: String = "",
+        var uuid: String = "",
         var attachments: AttachmentTail? = null
     )
 
     val formData: FormData = FormData()
     lateinit var imageItem: ImageItem
     lateinit var titleItem: InputItem
+    lateinit var cubeItem: NextItem
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "图标"
                 setImage(formData.icon)
-                onClick {
-                    chooseImage(isAvatar = true) { path ->
-                        receieveImage(I(), listOf(path), false) {
-                            formData.icon = it.first()
-                            imageItem.setImage(formData.icon)
-                        }
-                    }
-                }
-
                 container.addView(this, 0)
             }
             titleItem = InputItem(windowContext).apply {
                 hint = "名称"
                 text = formData.name
-                onTextChange = {
-                    formData.name = it ?: ""
-                }
-
+                inputEditText.isEnabled = false
                 container.addView(this, 1)
+            }
+
+            cubeItem = Next("方块", hint = formData.uuid, initialText = formData.uuid) {
+                chooseCube()
             }
 
             form {
@@ -79,6 +76,44 @@ class BuffItemEditorActivity : BaseItemAddActivity() {
                 submitWith(R.id.ok) { result ->
                     publish()
                 }
+            }
+        }
+    }
+
+    fun chooseCube() {
+        mStatefulLayout?.showLoading()
+        requestBlock {
+            query = allIdentity()
+            onError = {
+                mStatefulLayout?.showContent()
+                ToastUtil.e_long(it.msg)
+            }
+            onEmpty = {
+                mStatefulLayout?.showContent()
+                ToastUtil.w("空")
+            }
+            onComplete = {
+                mStatefulLayout?.showContent()
+            }
+            onSuccess = {
+                mStatefulLayout?.showContent()
+                showSelectDialog(it)
+            }
+        }
+    }
+
+    fun showSelectDialog(items: List<Block>) {
+        MaterialDialog(this, BottomSheet()).show {
+            title(text = "选择方块")
+            positiveButton(R.string.ok)
+            val texts = items.map { it.title }
+            listItemsSingleChoice(items = texts) { _, idx, _ ->
+                val cube = items[idx]
+                formData.name = cube.title
+                formData.uuid = cube.objectId
+                formData.content = cube.content
+                titleItem.text = cube.title
+                emojiEditText.setText(cube.content)
             }
         }
     }
@@ -106,10 +141,10 @@ class BuffItemEditorActivity : BaseItemAddActivity() {
             target = I() create Item {
                 title = formData.name
                 content = formData.content
-                subtype = ITEM_Buff
+                subtype = ITEM_Cube
                 headerBlock = ItemBlock(
-                    type = ITEM_Buff,
-                    structure = BuffItemBlock().toJson(),
+                    type = ITEM_Cube,
+                    structure = CubeItemBlock(formData.uuid).toJson(),
                     mediaScope = formData.attachments,
                     topicScope = TopicScope(emojiEditText.realTopicList.map {
                         TopicItem(it.topicName, it.topicId)
@@ -126,7 +161,6 @@ class BuffItemEditorActivity : BaseItemAddActivity() {
             }
             onSuccess = {
                 ToastUtil.ok("创建成功！")
-                GO.appDetail(it.objectId)
                 finish()
             }
             onError = errorCallback

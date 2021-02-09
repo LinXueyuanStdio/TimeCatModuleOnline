@@ -31,7 +31,7 @@ class ForumServiceImpl : ForumService {
      * 创建页面和详情页面根据权限分状态
      * @param name 论坛名
      */
-    override fun gotoForum(name: String, content: String, icon: String) {
+    fun gotoForum(name: String, content: String, icon: String) {
         if (!isLogin) {
             NAV.go(RouterHub.LOGIN_LoginActivity)
             return
@@ -58,4 +58,15 @@ class ForumServiceImpl : ForumService {
     }
 
     private val isLogin: Boolean = UserDao.getCurrentUser() != null
+    override fun exist(name: String?, existCallback: ForumService.ExistCallback) {
+        requestOneBlock {
+            query = allForum().whereEqualTo("title", name)
+            onComplete = {
+                existCallback.notFound()
+            }
+            onSuccess = {
+                existCallback.onExist(it.objectId)
+            }
+        }
+    }
 }

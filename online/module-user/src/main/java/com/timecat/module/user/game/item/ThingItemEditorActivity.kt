@@ -1,4 +1,4 @@
-package com.timecat.module.user.game.bag
+package com.timecat.module.user.game.item
 
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV

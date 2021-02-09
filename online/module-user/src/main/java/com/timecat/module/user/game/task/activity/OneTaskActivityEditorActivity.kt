@@ -16,6 +16,7 @@ import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.ActivityBlock
 import com.timecat.identity.data.block.ActivityOneTaskBlock
 import com.timecat.identity.data.block.type.ACTIVITY_One_task
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.business.setting.NextItem
@@ -23,6 +24,7 @@ import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
+import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊
@@ -31,6 +33,7 @@ import com.timecat.module.user.ext.receieveImage
  * @description null
  * @usage null
  */
+@RouterAnno(hostAndPath = RouterHub.USER_OneTaskActivityEditorActivity)
 class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
 
     override fun title(): String = "一个任务活动"

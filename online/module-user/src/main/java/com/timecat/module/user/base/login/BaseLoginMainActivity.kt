@@ -1,32 +1,12 @@
 package com.timecat.module.user.base.login
 
-import com.alibaba.fastjson.JSONObject
-import com.cheng.channel.Channel
 import com.gturedi.views.StatefulLayout
-import com.timecat.component.commonsdk.helper.HERF
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
-import com.timecat.component.setting.DEF
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.User
-import com.timecat.data.system.model.eventbus.TabReselectedEvent
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.layout.setShakelessClickListener
-import com.timecat.layout.ui.standard.navi.BottomBar
-import com.timecat.layout.ui.standard.navi.BottomBarTab
-import com.timecat.layout.ui.standard.navi.TabBlockItem
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseMainActivity
-import com.timecat.module.user.social.cloud.channel.ChannelListEvent
-import com.timecat.module.user.social.cloud.channel.ChannelManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import me.yokeyword.eventbusactivityscope.EventBusActivityScope
-import me.yokeyword.fragmentation.ISupportFragment
-import org.greenrobot.eventbus.Subscribe
-import java.util.*
 
 /**
  * @author 林学渊

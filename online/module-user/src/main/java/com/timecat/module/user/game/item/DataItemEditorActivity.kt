@@ -1,15 +1,16 @@
-package com.timecat.module.user.game.task.activity
+package com.timecat.module.user.game.item
 
+import android.text.InputType
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.ext.Activity
+import com.timecat.data.bmob.ext.Item
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.ActivityBlock
-import com.timecat.identity.data.block.ActivityUrlBlock
-import com.timecat.identity.data.block.type.ACTIVITY_Text_url
+import com.timecat.identity.data.block.DataItemBlock
+import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.type.ITEM_Data
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
@@ -22,29 +23,29 @@ import com.xiaojinzi.component.anno.RouterAnno
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
- * @date 2021/2/7
+ * @date 2020-02-13
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_TextUrlActivityEditorActivity)
-class TextUrlActivityEditorActivity : BaseActivityAddActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_DataItemEditorActivity)
+class DataItemEditorActivity : BaseItemAddActivity() {
 
-    override fun title(): String = "文本活动"
+    override fun title(): String = "数据"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
         var icon: String = "R.drawable.ic_folder",
-        var cover: String = "R.drawable.ic_folder",
-        var name: String = "新建活动",
+        var name: String = "新建数据",
         var content: String = "",
-        var url: String = "",
+        var where: String = "",
+        var num: Long = 0,
         var attachments: AttachmentTail? = null
     )
 
     val formData: FormData = FormData()
     lateinit var imageItem: ImageItem
-    lateinit var coverItem: ImageItem
     lateinit var titleItem: InputItem
-    lateinit var urlItem: InputItem
+    lateinit var whereItem: InputItem
+    lateinit var numItem: InputItem
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         MaterialForm(this, container).apply {
@@ -62,20 +63,6 @@ class TextUrlActivityEditorActivity : BaseActivityAddActivity() {
 
                 container.addView(this, 0)
             }
-            coverItem = ImageItem(windowContext).apply {
-                title = "背景图"
-                setImage(formData.cover)
-                onClick {
-                    chooseImage(isAvatar = true) { path ->
-                        receieveImage(I(), listOf(path), false) {
-                            formData.cover = it.first()
-                            coverItem.setImage(formData.cover)
-                        }
-                    }
-                }
-
-                container.addView(this, 1)
-            }
             titleItem = InputItem(windowContext).apply {
                 hint = "名称"
                 text = formData.name
@@ -83,14 +70,24 @@ class TextUrlActivityEditorActivity : BaseActivityAddActivity() {
                     formData.name = it ?: ""
                 }
 
+                container.addView(this, 1)
+            }
+            whereItem = InputItem(windowContext).apply {
+                hint = "字段名称"
+                text = formData.where
+                onTextChange = {
+                    formData.where = it ?: ""
+                }
+
                 container.addView(this, 2)
             }
-            urlItem = InputItem(windowContext).apply {
-                hint = "url"
-                text = formData.url
+            numItem = InputItem(windowContext).apply {
+                hint = "数量"
+                text = "${formData.num}"
                 onTextChange = {
-                    formData.url = it ?: ""
+                    formData.num = it?.toLong() ?: 0
                 }
+                inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
 
                 container.addView(this, 3)
             }
@@ -101,8 +98,11 @@ class TextUrlActivityEditorActivity : BaseActivityAddActivity() {
                 inputLayout(titleItem.inputLayout) {
                     isNotEmpty().description("请输入名称!")
                 }
-                inputLayout(urlItem.inputLayout) {
-                    isNotEmpty().description("请输入url!")
+                inputLayout(whereItem.inputLayout) {
+                    isNotEmpty().description("请输入字段名称!")
+                }
+                inputLayout(numItem.inputLayout) {
+                    isNotEmpty().description("请输入数量!")
                 }
 
                 submitWith(R.id.ok) { result ->
@@ -115,8 +115,9 @@ class TextUrlActivityEditorActivity : BaseActivityAddActivity() {
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return when {
             titleItem.inputEditText.hasFocus() -> imageItem.height
-            urlItem.inputEditText.hasFocus() -> imageItem.height + titleItem.height
-            emojiEditText.hasFocus() -> imageItem.height + titleItem.height + urlItem.height
+            whereItem.inputEditText.hasFocus() -> imageItem.height + titleItem.height
+            numItem.inputEditText.hasFocus() -> imageItem.height + titleItem.height + whereItem.height
+            emojiEditText.hasFocus() -> imageItem.height + titleItem.height + whereItem.height + numItem.height
             else -> 0
         }
     }
@@ -133,13 +134,16 @@ class TextUrlActivityEditorActivity : BaseActivityAddActivity() {
 
     open fun save() {
         saveBlock {
-            target = I() create Activity {
+            target = I() create Item {
                 title = formData.name
                 content = formData.content
-                subtype = ACTIVITY_Text_url
-                headerBlock = ActivityBlock(
-                    type = ACTIVITY_Text_url,
-                    structure = ActivityUrlBlock(formData.url).toJson(),
+                subtype = ITEM_Data
+                headerBlock = ItemBlock(
+                    type = ITEM_Data,
+                    structure = DataItemBlock(
+                        where = formData.where,
+                        num = formData.num
+                    ).toJson(),
                     mediaScope = formData.attachments,
                     topicScope = TopicScope(emojiEditText.realTopicList.map {
                         TopicItem(it.topicName, it.topicId)
@@ -150,7 +154,7 @@ class TextUrlActivityEditorActivity : BaseActivityAddActivity() {
                     header = PageHeader(
                         icon = formData.icon,
                         avatar = formData.icon,
-                        cover = formData.cover,
+                        cover = formData.icon,
                     )
                 )
             }

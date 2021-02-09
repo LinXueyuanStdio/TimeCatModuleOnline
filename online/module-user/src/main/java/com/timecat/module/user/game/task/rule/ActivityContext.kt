@@ -17,7 +17,6 @@ import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.*
 import com.timecat.module.user.game.task.channal.ChannelState
 import com.timecat.module.user.game.task.channal.TaskChannel
-import com.timecat.module.user.permission.UserContext
 import com.timecat.module.user.social.cloud.channel.TabChannel
 
 /**
@@ -60,7 +59,7 @@ object ActivityContext {
 
     @JvmStatic
     fun loadByUser(user: User?) {
-        UserContext.I = user ?: return
+        I = user ?: return
         loadOwnActivity(user)
     }
 

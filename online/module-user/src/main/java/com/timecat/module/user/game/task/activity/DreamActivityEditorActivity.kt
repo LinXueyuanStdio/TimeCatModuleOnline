@@ -1,69 +1,98 @@
-package com.timecat.module.user.game.bag
+package com.timecat.module.user.game.task.activity
 
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.bottomsheets.BottomSheet
-import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.Item
-import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.Activity
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
-import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.*
-import com.timecat.identity.data.block.type.ITEM_Cube
+import com.timecat.identity.data.block.ActivityBlock
+import com.timecat.identity.data.block.ActivityUrlBlock
+import com.timecat.identity.data.block.type.ACTIVITY_Url
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
-import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
+import com.timecat.module.user.ext.chooseImage
+import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
- * @date 2020-02-13
+ * @date 2021/2/7
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_CubeItemEditorActivity)
-class CubeItemEditorActivity : BaseItemAddActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_DreamActivityEditorActivity)
+class DreamActivityEditorActivity : BaseActivityAddActivity() {
 
-    override fun title(): String = "方块"
+    override fun title(): String = "外部链接活动"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
         var icon: String = "R.drawable.ic_folder",
-        var name: String = "新建方块",
+        var cover: String = "R.drawable.ic_folder",
+        var name: String = "新建活动",
         var content: String = "",
-        var uuid: String = "",
+        var url: String = "",
         var attachments: AttachmentTail? = null
     )
 
     val formData: FormData = FormData()
     lateinit var imageItem: ImageItem
+    lateinit var coverItem: ImageItem
     lateinit var titleItem: InputItem
-    lateinit var cubeItem: NextItem
+    lateinit var urlItem: InputItem
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "图标"
                 setImage(formData.icon)
+                onClick {
+                    chooseImage(isAvatar = true) { path ->
+                        receieveImage(I(), listOf(path), false) {
+                            formData.icon = it.first()
+                            imageItem.setImage(formData.icon)
+                        }
+                    }
+                }
+
                 container.addView(this, 0)
+            }
+            coverItem = ImageItem(windowContext).apply {
+                title = "背景图"
+                setImage(formData.cover)
+                onClick {
+                    chooseImage(isAvatar = true) { path ->
+                        receieveImage(I(), listOf(path), false) {
+                            formData.cover = it.first()
+                            coverItem.setImage(formData.cover)
+                        }
+                    }
+                }
+
+                container.addView(this, 1)
             }
             titleItem = InputItem(windowContext).apply {
                 hint = "名称"
                 text = formData.name
-                inputEditText.isEnabled = false
-                container.addView(this, 1)
-            }
+                onTextChange = {
+                    formData.name = it ?: ""
+                }
 
-            cubeItem = Next("方块", hint = formData.uuid, initialText = formData.uuid) {
-                chooseCube()
+                container.addView(this, 2)
+            }
+            urlItem = InputItem(windowContext).apply {
+                hint = "url"
+                text = formData.url
+                onTextChange = {
+                    formData.url = it ?: ""
+                }
+
+                container.addView(this, 3)
             }
 
             form {
@@ -71,6 +100,9 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
 
                 inputLayout(titleItem.inputLayout) {
                     isNotEmpty().description("请输入名称!")
+                }
+                inputLayout(urlItem.inputLayout) {
+                    isNotEmpty().description("请输入url!")
                 }
 
                 submitWith(R.id.ok) { result ->
@@ -80,48 +112,11 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
         }
     }
 
-    fun chooseCube() {
-        mStatefulLayout?.showLoading()
-        requestBlock {
-            query = allIdentity()
-            onError = {
-                mStatefulLayout?.showContent()
-                ToastUtil.e_long(it.msg)
-            }
-            onEmpty = {
-                mStatefulLayout?.showContent()
-                ToastUtil.w("空")
-            }
-            onComplete = {
-                mStatefulLayout?.showContent()
-            }
-            onSuccess = {
-                mStatefulLayout?.showContent()
-                showSelectDialog(it)
-            }
-        }
-    }
-
-    fun showSelectDialog(items: List<Block>) {
-        MaterialDialog(this, BottomSheet()).show {
-            title(text = "选择方块")
-            positiveButton(R.string.ok)
-            val texts = items.map { it.title }
-            listItemsSingleChoice(items = texts) { _, idx, _ ->
-                val cube = items[idx]
-                formData.name = cube.title
-                formData.uuid = cube.objectId
-                formData.content = cube.content
-                titleItem.text = cube.title
-                emojiEditText.setText(cube.content)
-            }
-        }
-    }
-
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return when {
             titleItem.inputEditText.hasFocus() -> imageItem.height
-            emojiEditText.hasFocus() -> imageItem.height + titleItem.height
+            urlItem.inputEditText.hasFocus() -> imageItem.height + titleItem.height
+            emojiEditText.hasFocus() -> imageItem.height + titleItem.height + urlItem.height
             else -> 0
         }
     }
@@ -138,13 +133,13 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
 
     open fun save() {
         saveBlock {
-            target = I() create Item {
+            target = I() create Activity {
                 title = formData.name
                 content = formData.content
-                subtype = ITEM_Cube
-                headerBlock = ItemBlock(
-                    type = ITEM_Cube,
-                    structure = CubeItemBlock(formData.uuid).toJson(),
+                subtype = ACTIVITY_Url
+                headerBlock = ActivityBlock(
+                    type = ACTIVITY_Url,
+                    structure = ActivityUrlBlock(formData.url).toJson(),
                     mediaScope = formData.attachments,
                     topicScope = TopicScope(emojiEditText.realTopicList.map {
                         TopicItem(it.topicName, it.topicId)
@@ -155,7 +150,7 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
                     header = PageHeader(
                         icon = formData.icon,
                         avatar = formData.icon,
-                        cover = formData.icon,
+                        cover = formData.cover,
                     )
                 )
             }

@@ -1,6 +1,5 @@
-package com.timecat.module.user.game.bag
+package com.timecat.module.user.game.item
 
-import android.text.InputType
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.ext.Item
@@ -8,14 +7,15 @@ import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.DataItemBlock
+import com.timecat.identity.data.block.BuffItemBlock
 import com.timecat.identity.data.block.ItemBlock
-import com.timecat.identity.data.block.type.ITEM_Data
+import com.timecat.identity.data.block.type.ITEM_Buff
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
+import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.RouterAnno
@@ -27,25 +27,21 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_DataItemEditorActivity)
-class DataItemEditorActivity : BaseItemAddActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_BuffItemEditorActivity)
+class BuffItemEditorActivity : BaseItemAddActivity() {
 
-    override fun title(): String = "数据"
+    override fun title(): String = "Buff"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
         var icon: String = "R.drawable.ic_folder",
-        var name: String = "新建数据",
+        var name: String = "新建Buff",
         var content: String = "",
-        var where: String = "",
-        var num: Long = 0,
         var attachments: AttachmentTail? = null
     )
 
     val formData: FormData = FormData()
     lateinit var imageItem: ImageItem
     lateinit var titleItem: InputItem
-    lateinit var whereItem: InputItem
-    lateinit var numItem: InputItem
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         MaterialForm(this, container).apply {
@@ -72,37 +68,12 @@ class DataItemEditorActivity : BaseItemAddActivity() {
 
                 container.addView(this, 1)
             }
-            whereItem = InputItem(windowContext).apply {
-                hint = "字段名称"
-                text = formData.where
-                onTextChange = {
-                    formData.where = it ?: ""
-                }
-
-                container.addView(this, 2)
-            }
-            numItem = InputItem(windowContext).apply {
-                hint = "数量"
-                text = "${formData.num}"
-                onTextChange = {
-                    formData.num = it?.toLong() ?: 0
-                }
-                inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
-
-                container.addView(this, 3)
-            }
 
             form {
                 useRealTimeValidation(disableSubmit = true)
 
                 inputLayout(titleItem.inputLayout) {
                     isNotEmpty().description("请输入名称!")
-                }
-                inputLayout(whereItem.inputLayout) {
-                    isNotEmpty().description("请输入字段名称!")
-                }
-                inputLayout(numItem.inputLayout) {
-                    isNotEmpty().description("请输入数量!")
                 }
 
                 submitWith(R.id.ok) { result ->
@@ -115,9 +86,7 @@ class DataItemEditorActivity : BaseItemAddActivity() {
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return when {
             titleItem.inputEditText.hasFocus() -> imageItem.height
-            whereItem.inputEditText.hasFocus() -> imageItem.height + titleItem.height
-            numItem.inputEditText.hasFocus() -> imageItem.height + titleItem.height + whereItem.height
-            emojiEditText.hasFocus() -> imageItem.height + titleItem.height + whereItem.height + numItem.height
+            emojiEditText.hasFocus() -> imageItem.height + titleItem.height
             else -> 0
         }
     }
@@ -137,13 +106,10 @@ class DataItemEditorActivity : BaseItemAddActivity() {
             target = I() create Item {
                 title = formData.name
                 content = formData.content
-                subtype = ITEM_Data
+                subtype = ITEM_Buff
                 headerBlock = ItemBlock(
-                    type = ITEM_Data,
-                    structure = DataItemBlock(
-                        where = formData.where,
-                        num = formData.num
-                    ).toJson(),
+                    type = ITEM_Buff,
+                    structure = BuffItemBlock().toJson(),
                     mediaScope = formData.attachments,
                     topicScope = TopicScope(emojiEditText.realTopicList.map {
                         TopicItem(it.topicName, it.topicId)
@@ -160,6 +126,7 @@ class DataItemEditorActivity : BaseItemAddActivity() {
             }
             onSuccess = {
                 ToastUtil.ok("创建成功！")
+                GO.appDetail(it.objectId)
                 finish()
             }
             onError = errorCallback

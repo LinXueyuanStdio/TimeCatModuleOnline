@@ -57,23 +57,14 @@ abstract class BaseMainActivity : BaseSupportActivity() {
             mini.background = Attr.getMiniBackground(this)
     }
 
-    private val WAIT_TIME = 2000L
-    private var TOUCH_TIME: Long = 0
-
     override fun onBackPressedSupport() {
         when {
             mBottomBar.currentItemPosition != 0 -> {
                 mBottomBar.setCurrentItem(0)
                 //返回首页，消耗掉事件
             }
-            System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME -> {
-                //这里的事件处理完了
-                super.onBackPressedSupport()
-            }
             else -> {
-                TOUCH_TIME = System.currentTimeMillis()
-                ToastUtil.i(R.string.press_again_to_exit)
-                //阻止误点击，消耗掉事件
+                super.onBackPressedSupport()
             }
         }
     }
