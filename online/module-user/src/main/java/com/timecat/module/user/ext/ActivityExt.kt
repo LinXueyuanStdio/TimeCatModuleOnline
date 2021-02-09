@@ -281,7 +281,7 @@ fun Activity.selectOneLocalIcon(isAvatar: Boolean = true, onSuccess: (String) ->
 //endregion
 
 //region 图像保存逻辑
-fun Activity.recieveImage(
+fun Activity.receieveImage(
     currentUser: User,
     filePaths: List<String>,
     isCompress: Boolean,
@@ -302,7 +302,7 @@ fun Activity.recieveImage(
     }
     uploadImageByUser(currentUser, needUpload, isCompress) {
         ans.addAll(it)
-        onFinish(all)
+        onFinish(ans)
     }
 }
 

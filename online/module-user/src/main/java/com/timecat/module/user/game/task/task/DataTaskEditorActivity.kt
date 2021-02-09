@@ -15,7 +15,7 @@ import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.recieveImage
+import com.timecat.module.user.ext.receieveImage
 
 /**
  * @author 林学渊
@@ -52,7 +52,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
                 setImage(formData.icon)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
-                        recieveImage(I(), listOf(path), false) {
+                        receieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
                         }
                     }
@@ -65,7 +65,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
                 setImage(formData.cover)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
-                        recieveImage(I(), listOf(path), false) {
+                        receieveImage(I(), listOf(path), false) {
                             formData.cover = it.first()
                         }
                     }

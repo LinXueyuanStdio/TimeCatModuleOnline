@@ -24,7 +24,7 @@ import com.timecat.identity.data.service.DataError
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.util.KeyboardUtil
 import com.timecat.module.user.R
-import com.timecat.module.user.ext.recieveImage
+import com.timecat.module.user.ext.receieveImage
 
 
 /**
@@ -228,7 +228,7 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
         if (originImgs.isEmpty()) {
             publish(content, null)
         } else {
-            recieveImage(I(), originImgs, false) { origins ->
+            receieveImage(I(), originImgs, false) { origins ->
                 val photoList = origins.map { AttachmentItem(AIT_PHOTO, it) }.toMutableList()
                 publish(content, AttachmentTail(photoList))
             }
