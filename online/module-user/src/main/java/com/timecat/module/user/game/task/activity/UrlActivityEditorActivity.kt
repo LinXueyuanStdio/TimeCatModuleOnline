@@ -66,7 +66,7 @@ class UrlActivityEditorActivity : BaseActivityAddActivity() {
                 title = "背景图"
                 setImage(formData.cover)
                 onClick {
-                    chooseImage(isAvatar = true) { path ->
+                    chooseImage(isAvatar = false) { path ->
                         receieveImage(I(), listOf(path), false) {
                             formData.cover = it.first()
                             coverItem.setImage(formData.cover)
@@ -114,9 +114,9 @@ class UrlActivityEditorActivity : BaseActivityAddActivity() {
 
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return when {
-            titleItem.inputEditText.hasFocus() -> imageItem.height
-            urlItem.inputEditText.hasFocus() -> imageItem.height + titleItem.height
-            emojiEditText.hasFocus() -> imageItem.height + titleItem.height + urlItem.height
+            titleItem.inputEditText.hasFocus() -> imageItem.height + coverItem.height
+            urlItem.inputEditText.hasFocus() -> imageItem.height + coverItem.height + titleItem.height
+            emojiEditText.hasFocus() -> imageItem.height + coverItem.height + titleItem.height + urlItem.height
             else -> 0
         }
     }

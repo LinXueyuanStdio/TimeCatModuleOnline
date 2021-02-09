@@ -149,8 +149,8 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
     }
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return when {
-            titleItem.inputEditText.hasFocus() -> imageItem.height
-            emojiEditText.hasFocus() -> imageItem.height + titleItem.height
+            titleItem.inputEditText.hasFocus() -> imageItem.height + coverItem.height
+            emojiEditText.hasFocus() -> imageItem.height + coverItem.height + titleItem.height
             else -> 0
         }
     }

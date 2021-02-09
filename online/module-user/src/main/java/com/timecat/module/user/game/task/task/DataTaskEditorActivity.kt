@@ -1,21 +1,30 @@
 package com.timecat.module.user.game.task.task
 
 import android.text.InputType
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Task
+import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
+import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.TASK_Data
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
+import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
+import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊
@@ -24,6 +33,7 @@ import com.timecat.module.user.ext.receieveImage
  * @description null
  * @usage null
  */
+@RouterAnno(hostAndPath = RouterHub.USER_DataTaskEditorActivity)
 class DataTaskEditorActivity : BaseTaskAddActivity() {
 
     override fun title(): String = "数据任务"
@@ -35,6 +45,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
         var content: String = "",
         var where: String = "",
         var targetNum: Long = 0,
+        var rewards: List<Reward> = mutableListOf(),
         var attachments: AttachmentTail? = null
     )
 
@@ -44,6 +55,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
     lateinit var titleItem: InputItem
     lateinit var whereItem: InputItem
     lateinit var numItem: InputItem
+    lateinit var rewardsItem: NextItem
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         MaterialForm(this, container).apply {
@@ -103,7 +115,11 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
 
                 container.addView(this, 3)
             }
-
+            rewardsItem = Next("奖励",
+                hint = formData.rewards.toString(),
+                initialText = "${formData.rewards.size}") {
+                selectItems()
+            }
             form {
                 useRealTimeValidation(disableSubmit = true)
 
@@ -124,12 +140,49 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
         }
     }
 
+    fun selectItems() {
+        mStatefulLayout?.showLoading()
+        requestBlock {
+            query = allItem()
+            onError = {
+                mStatefulLayout?.showContent()
+                ToastUtil.e_long(it.msg)
+            }
+            onEmpty = {
+                mStatefulLayout?.showContent()
+                ToastUtil.w("空")
+            }
+            onComplete = {
+                mStatefulLayout?.showContent()
+            }
+            onSuccess = {
+                mStatefulLayout?.showContent()
+                showSelectDialog(it)
+            }
+        }
+
+    }
+
+    fun showSelectDialog(items: List<Block>) {
+        MaterialDialog(this, BottomSheet()).show {
+            title(text = "选择物品放入礼包中")
+            positiveButton(R.string.ok)
+            val texts = items.map { it.title }
+            listItemsMultiChoice(items = texts) { _, intArr, _ ->
+                val blocks = items.filterIndexed { index, block -> index in intArr }
+                formData.rewards = blocks.map { Reward(it.objectId, 1) }
+                rewardsItem.hint = formData.rewards.toString()
+                rewardsItem.text = "${formData.rewards.size}"
+            }
+        }
+    }
+
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return when {
-            titleItem.inputEditText.hasFocus() -> imageItem.height
-            whereItem.inputEditText.hasFocus() -> imageItem.height + titleItem.height
-            numItem.inputEditText.hasFocus() -> imageItem.height + titleItem.height + whereItem.height
-            emojiEditText.hasFocus() -> imageItem.height + titleItem.height + whereItem.height+ numItem.height
+            titleItem.inputEditText.hasFocus() -> imageItem.height + coverItem.height
+            whereItem.inputEditText.hasFocus() -> imageItem.height + coverItem.height + titleItem.height
+            numItem.inputEditText.hasFocus() -> imageItem.height + coverItem.height + titleItem.height + whereItem.height
+            emojiEditText.hasFocus() -> imageItem.height + coverItem.height + titleItem.height + whereItem.height + numItem.height
             else -> 0
         }
     }

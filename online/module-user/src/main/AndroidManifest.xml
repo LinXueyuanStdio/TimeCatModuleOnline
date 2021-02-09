@@ -212,6 +212,15 @@
         <activity android:name=".game.item.CubeItemEditorActivity" />
         <activity android:name=".game.item.PackageItemEditorActivity" />
         <activity android:name=".game.item.AllItemActivity" />
+        <activity android:name=".game.task.activity.PriceActivityEditorActivity" />
+        <activity android:name=".game.task.activity.AchievementActivityEditorActivity" />
+        <activity android:name=".game.task.activity.CardActivityEditorActivity" />
+        <activity android:name=".game.task.activity.DoubleActivityEditorActivity" />
+        <activity android:name=".game.task.activity.DreamActivityEditorActivity" />
+        <activity android:name=".game.task.activity.EveryDayMainActivityEditorActivity" />
+        <activity android:name=".game.task.activity.GetBackActivityEditorActivity" />
+        <activity android:name=".game.task.activity.LifeActivityEditorActivity" />
+        <activity android:name=".game.task.activity.SevenDaySignActivityEditorActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"
