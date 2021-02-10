@@ -5,21 +5,22 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.core.view.updateLayoutParams
-import cn.leancloud.AVCloud
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.button.MaterialButton
+import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data.game.OwnItem
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.PackageItemBlock
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.CenterIconItem
 import com.timecat.layout.ui.layout.dp
-import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.setting.MaterialForm
+import com.timecat.module.user.game.item.BigTitle
+import com.timecat.module.user.game.item.RewardList
+import com.timecat.module.user.game.item.buildRewardListItem
 import com.timecat.page.base.extension.simpleUIContainer
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.FragmentAnno
@@ -32,9 +33,10 @@ import com.xiaojinzi.component.anno.FragmentAnno
  * @usage null
  */
 @FragmentAnno(RouterHub.USER_ItemDetailFragment)
-class ItemDetailFragment : BottomSheetDialogFragment() {
-    @AttrValueAutowiredAnno("ownItem")
-    lateinit var ownItem: OwnItem
+open class ItemDetailFragment : BottomSheetDialogFragment() {
+    @AttrValueAutowiredAnno("item")
+    @JvmField
+    var item: Block? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         NAV.inject(this)
@@ -46,117 +48,74 @@ class ItemDetailFragment : BottomSheetDialogFragment() {
         dialog.setContentView(view)
     }
 
-    fun buildView(context: Context): View {
+    open fun buildView(context: Context): View {
         val container = simpleUIContainer(context)
-        val apply = when (ownItem.item.subtype) {
-            ITEM_Thing -> thing()
-            ITEM_Package -> pack()
-            ITEM_Data -> data()
-            ITEM_Equip -> equip()
-            ITEM_Buff -> buff()
-            else -> thing()
+        val structure = item!!.structure
+        val head = ItemBlock.fromJson(structure)
+        val apply = when (item!!.subtype) {
+            ITEM_Thing -> thing(head)
+            ITEM_Package -> pack(head)
+            ITEM_Data -> data(head)
+            ITEM_Equip -> equip(head)
+            ITEM_Buff -> buff(head)
+            else -> thing(head)
         }
         MaterialForm(context, container).apply(apply)
         return container
     }
 
-    fun thing(): MaterialForm.() -> Unit = {
-        Icon()
+    open fun thing(head: ItemBlock): MaterialForm.() -> Unit = {
+        Icon(head)
         Title()
         Content()
     }
 
-    fun pack(): MaterialForm.() -> Unit = {
-        Icon()
+    open fun pack(head: ItemBlock): MaterialForm.() -> Unit = {
+        Icon(head)
         Title()
         Content()
 
-        val button = MaterialButton(windowContext)
-        button.setText("使用")
-        button.setShakelessClickListener {
-
-        }
-        container.addView(button)
+        val head2 = PackageItemBlock.fromJson(head.structure)
+        val items = head2.items
+        RewardList(requireActivity(), items)
     }
 
-    fun data(): MaterialForm.() -> Unit = {
-        Icon()
+    open fun data(head: ItemBlock): MaterialForm.() -> Unit = {
+        Icon(head)
         Title()
         Content()
-
-        val button = MaterialButton(windowContext)
-        button.setText("使用")
-        button.setShakelessClickListener {
-//            val item = ownItem.item
-//            val head = ItemBlock.fromJson(item.structure)
-//            val head2 = DataItemBlock.fromJson(head.structure)
-//            when (head2.where) {
-//                DataItemBlock.WHERE_UserExp -> {
-//                    val I = UserDao.getCurrentUser() ?: return@setShakelessClickListener
-//                    I.exp += head2.num
-//                    I.saveEventually()
-//                }
-//            }
-            val I = UserDao.getCurrentUser() ?: return@setShakelessClickListener
-            I.exp
-            val params = mutableMapOf<String, Any>()
-            params["ownItemId"] = ownItem.objectId
-            params["count"] = "1"
-            AVCloud.callFunctionInBackground<String>("useItem", params).subscribe({
-
-            }, {
-
-            })
-        }
-        container.addView(button)
     }
 
-    fun equip(): MaterialForm.() -> Unit = {
-        Icon()
+    open fun equip(head: ItemBlock): MaterialForm.() -> Unit = {
+        Icon(head)
         Title()
         Content()
-
-        val button = MaterialButton(windowContext)
-        button.setText("使用")
-        button.setShakelessClickListener {
-
-        }
-        container.addView(button)
     }
 
-    fun buff(): MaterialForm.() -> Unit = {
-        Icon()
+    open fun buff(head: ItemBlock): MaterialForm.() -> Unit = {
+        Icon(head)
         Title()
         Content()
-
-        val button = MaterialButton(windowContext)
-        button.setText("使用")
-        button.setShakelessClickListener {
-
-        }
-        container.addView(button)
     }
 
-    private fun MaterialForm.Icon() {
+    open fun MaterialForm.Icon(head: ItemBlock) {
         val iconItem = CenterIconItem(windowContext)
-        val structure = ownItem.item.structure
-        val head = ItemBlock.fromJson(structure)
         iconItem.setImage(head.header.avatar)
-        iconItem.imageView.updateLayoutParams<LinearLayout.LayoutParams> {
-            width = 48.dp
-            height = 48.dp
+        iconItem.imageView.updateLayoutParams<RelativeLayout.LayoutParams> {
+            width = 50.dp
+            height = 50.dp
         }
         container.addView(iconItem)
     }
 
-    private fun MaterialForm.Title() {
-        H2(ownItem.item.title).apply {
-            gravity = Gravity.CENTER
-        }
-    }
-    private fun MaterialForm.Content() {
-        Body(ownItem.item.content)
-        Body("拥有 ${ownItem.count}")
+    open fun MaterialForm.Title() {
+        BigTitle(item!!.title)
     }
 
+    open fun MaterialForm.Content() {
+        val content = item!!.content
+        if (content.isNotEmpty()) {
+            Body(content)
+        }
+    }
 }

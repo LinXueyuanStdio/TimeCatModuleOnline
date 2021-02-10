@@ -22,11 +22,12 @@
         android:src="@drawable/ic_artifact" />
 
     <TextView
-        android:id="@+id/tv_count"
+        android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="@dimen/spacing_micro"
         android:textColor="@color/master_textColorPrimary"
         android:textSize="@dimen/text_size_small"
-        tools:text="10" />
+        tools:text="物品" />
 </LinearLayout>

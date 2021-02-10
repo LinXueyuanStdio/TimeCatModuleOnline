@@ -9,11 +9,14 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Item
 import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
+import com.timecat.data.bmob.ext.bmob.updateBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.*
+import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.PackageItemBlock
+import com.timecat.identity.data.block.Reward
 import com.timecat.identity.data.block.type.ITEM_Package
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
@@ -23,6 +26,7 @@ import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -35,6 +39,9 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_PackageItemEditorActivity)
 class PackageItemEditorActivity : BaseItemAddActivity() {
 
+    @AttrValueAutowiredAnno("block")
+    @JvmField
+    var item: Block? = null
     override fun title(): String = "礼包"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
@@ -52,7 +59,15 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-
+        item?.let {
+            formData.name = it.title
+            formData.content = it.content
+            val head = ItemBlock.fromJson(it.structure)
+            formData.attachments = head.mediaScope
+            formData.icon = head.header.avatar
+            val head2 = PackageItemBlock.fromJson(head.structure)
+            formData.items = head2.items
+        }
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "图标"
@@ -149,7 +164,49 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
     }
 
     protected fun ok() {
-        save()
+        if (item == null) {
+            save()
+        } else {
+            update()
+        }
+    }
+
+    fun subtype() = ITEM_Package
+    fun getItemBlock(): ItemBlock = ItemBlock(
+        type = subtype(),
+        structure = PackageItemBlock(
+            formData.items
+        ).toJson(),
+        mediaScope = formData.attachments,
+        topicScope = TopicScope(emojiEditText.realTopicList.map {
+            TopicItem(it.topicName, it.topicId)
+        }.toMutableList()),
+        atScope = AtScope(emojiEditText.realUserList.map {
+            AtItem(it.user_name, it.user_id)
+        }.toMutableList()),
+        header = PageHeader(
+            icon = formData.icon,
+            avatar = formData.icon,
+            cover = formData.icon,
+        )
+    )
+
+    fun update() {
+        item?.let {
+            updateBlock {
+                target = it.apply {
+                    title = formData.name
+                    content = formData.content
+                    subtype = ITEM_Package
+                    structure = getItemBlock().toJson()
+                }
+                onSuccess = {
+                    ToastUtil.ok("更新成功！")
+                    finish()
+                }
+                onError = errorCallback
+            }
+        }
     }
 
     open fun save() {
@@ -157,25 +214,8 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
             target = I() create Item {
                 title = formData.name
                 content = formData.content
-                subtype = ITEM_Package
-                headerBlock = ItemBlock(
-                    type = ITEM_Package,
-                    structure = PackageItemBlock(
-                        formData.items
-                    ).toJson(),
-                    mediaScope = formData.attachments,
-                    topicScope = TopicScope(emojiEditText.realTopicList.map {
-                        TopicItem(it.topicName, it.topicId)
-                    }.toMutableList()),
-                    atScope = AtScope(emojiEditText.realUserList.map {
-                        AtItem(it.user_name, it.user_id)
-                    }.toMutableList()),
-                    header = PageHeader(
-                        icon = formData.icon,
-                        avatar = formData.icon,
-                        cover = formData.icon,
-                    )
-                )
+                subtype = subtype()
+                headerBlock = getItemBlock()
             }
             onSuccess = {
                 ToastUtil.ok("创建成功！")

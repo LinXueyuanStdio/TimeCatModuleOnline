@@ -60,7 +60,7 @@ class BagItem(
         LOAD.image(head.header.avatar, holder.iv_avatar)
         holder.tv_count.setText("${ownItem.count}")
         holder.root.safeClick {
-            val fragment: Fragment = NAV.rawFragment(RouterHub.USER_ItemDetailFragment)
+            val fragment: Fragment = NAV.rawFragment(RouterHub.USER_OwnItemDetailFragment)
                 .putParcelable("ownItem", ownItem)
                 .navigate() ?: FallBackFragment()
             if (fragment is DialogFragment) {

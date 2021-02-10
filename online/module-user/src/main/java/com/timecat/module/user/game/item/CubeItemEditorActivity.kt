@@ -21,6 +21,7 @@ import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -33,6 +34,9 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_CubeItemEditorActivity)
 class CubeItemEditorActivity : BaseItemAddActivity() {
 
+    @AttrValueAutowiredAnno("block")
+    @JvmField
+    var item: Block? = null
     override fun title(): String = "方块"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
@@ -49,6 +53,13 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
     lateinit var cubeItem: NextItem
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
+        item?.let {
+            formData.name = it.title
+            formData.content = it.content
+            val head = ItemBlock.fromJson(it.structure)
+            formData.attachments = head.mediaScope
+            formData.icon = head.header.avatar
+        }
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "图标"

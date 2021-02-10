@@ -2,12 +2,14 @@ package com.timecat.module.user.game.item
 
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Item
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.PackageItemBlock
 import com.timecat.identity.data.block.ThingItemBlock
 import com.timecat.identity.data.block.type.ITEM_Thing
 import com.timecat.identity.readonly.RouterHub
@@ -17,6 +19,7 @@ import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -28,6 +31,10 @@ import com.xiaojinzi.component.anno.RouterAnno
  */
 @RouterAnno(hostAndPath = RouterHub.USER_ThingItemEditorActivity)
 class ThingItemEditorActivity : BaseItemAddActivity() {
+
+    @AttrValueAutowiredAnno("block")
+    @JvmField
+    var item: Block? = null
 
     override fun title(): String = "物产"
     override fun routerInject() = NAV.inject(this)
@@ -43,16 +50,23 @@ class ThingItemEditorActivity : BaseItemAddActivity() {
     lateinit var titleItem: InputItem
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
+        item?.let {
+            formData.name = it.title
+            formData.content = it.content
+            val head = ItemBlock.fromJson(it.structure)
+            formData.attachments = head.mediaScope
+            formData.icon = head.header.avatar
+        }
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "图标"
                 setImage(formData.icon)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
-                       receieveImage(I(), listOf(path), false) {
+                        receieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
-                           imageItem.setImage(formData.icon)
-                       }
+                            imageItem.setImage(formData.icon)
+                        }
                     }
                 }
 

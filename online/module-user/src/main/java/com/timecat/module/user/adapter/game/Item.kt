@@ -3,15 +3,11 @@ package com.timecat.module.user.adapter.game
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.alibaba.fastjson.JSON
-import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
@@ -60,6 +56,16 @@ class Item(
         val head = ItemBlock.fromJson(structure)
         LOAD.image(head.header.avatar, holder.iv_avatar)
         holder.root.safeClick {
+            val path = when (item.subtype) {
+                ITEM_Thing -> RouterHub.USER_ThingItemEditorActivity
+                ITEM_Package -> RouterHub.USER_PackageItemEditorActivity
+                ITEM_Data -> RouterHub.USER_DataItemEditorActivity
+                ITEM_Equip -> RouterHub.USER_EquipItemEditorActivity
+                ITEM_Buff -> RouterHub.USER_BuffItemEditorActivity
+                ITEM_Cube -> RouterHub.USER_CubeItemEditorActivity
+                else -> RouterHub.USER_ThingItemEditorActivity
+            }
+            NAV.go(path, "block", item)
         }
 
     }

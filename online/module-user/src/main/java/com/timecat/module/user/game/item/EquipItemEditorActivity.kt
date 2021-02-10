@@ -2,6 +2,7 @@ package com.timecat.module.user.game.item
 
 import com.afollestad.vvalidator.form
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Item
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
@@ -16,6 +17,7 @@ import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -28,6 +30,9 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_EquipItemEditorActivity)
 class EquipItemEditorActivity : BaseItemAddActivity() {
 
+    @AttrValueAutowiredAnno("block")
+    @JvmField
+    var item: Block? = null
     override fun title(): String = "装备"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
@@ -42,6 +47,13 @@ class EquipItemEditorActivity : BaseItemAddActivity() {
     lateinit var titleItem: InputItem
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
+        item?.let {
+            formData.name = it.title
+            formData.content = it.content
+            val head = ItemBlock.fromJson(it.structure)
+            formData.attachments = head.mediaScope
+            formData.icon = head.header.avatar
+        }
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "图标"
