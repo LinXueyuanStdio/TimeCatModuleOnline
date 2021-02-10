@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import cn.leancloud.AVQuery
 import com.google.android.material.button.MaterialButton
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
@@ -23,9 +22,7 @@ import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.view.item.RewardItem
 import com.timecat.module.user.view.item.RewardListItem
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.timecat.module.user.view.item.StepSliderItem
 
 /**
  * @author 林学渊
@@ -95,5 +92,29 @@ fun MaterialForm.Button(text: String, onClick: (View) -> Unit): Button {
     button.setText(text)
     button.setShakelessClickListener(800, onClick)
     container.addView(button)
+    return button
+}
+
+fun MaterialForm.StepSliderButton(
+    maxCount: Int = 1,
+    text: String,
+    onClick: (View, count: Int) -> Unit
+): Button {
+    if (maxCount <= 1) {
+        return Button(text) { onClick(it, 1) }
+    }
+    val stepSliderItem = StepSliderItem(windowContext).apply {
+        value = 1f
+        valueFrom = 1f
+        valueTo = maxCount.toFloat()
+        stepSize = 1f
+    }
+    container.addView(stepSliderItem)
+    val button = Button("${text} 1") {
+        onClick(it, stepSliderItem.value.toInt())
+    }
+    stepSliderItem.onSlide {
+        button.text = "${text} ${it.toInt()}"
+    }
     return button
 }

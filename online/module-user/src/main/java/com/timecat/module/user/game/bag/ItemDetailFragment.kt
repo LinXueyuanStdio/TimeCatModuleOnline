@@ -104,6 +104,7 @@ open class ItemDetailFragment : BottomSheetDialogFragment() {
         iconItem.imageView.updateLayoutParams<RelativeLayout.LayoutParams> {
             width = 50.dp
             height = 50.dp
+            topMargin = 10.dp
         }
         container.addView(iconItem)
     }

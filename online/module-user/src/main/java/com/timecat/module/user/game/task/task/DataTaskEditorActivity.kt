@@ -103,7 +103,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
                     formData.where = it ?: ""
                 }
 
-                container.addView(this, 2)
+                container.addView(this, 3)
             }
             numItem = InputItem(windowContext).apply {
                 hint = "数量"
@@ -113,7 +113,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
                 }
                 inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
 
-                container.addView(this, 3)
+                container.addView(this, 4)
             }
             rewardsItem = Next("奖励",
                 hint = formData.rewards.toString(),

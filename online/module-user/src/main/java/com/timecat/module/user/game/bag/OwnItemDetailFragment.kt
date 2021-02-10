@@ -9,6 +9,7 @@ import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.game.item.Button
+import com.timecat.module.user.game.item.StepSliderButton
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.FragmentAnno
 
@@ -32,19 +33,28 @@ class OwnItemDetailFragment : ItemDetailFragment() {
 
     override fun pack(head: ItemBlock): MaterialForm.() -> Unit = {
         apply(super.pack(head))
-        Body("拥有 ${ownItem.count}")
-        Button("使用") {
+        val count = ownItem.count
+        Body("拥有 $count")
+        StepSliderButton(count, "使用") { _, value ->
+            val params = mutableMapOf<String, Any>()
+            params["ownItemId"] = ownItem.objectId
+            params["count"] = value
+            AVCloud.callFunctionInBackground<String>("useItem", params).subscribe({
 
+            }, {
+                errUsingItem(it)
+            })
         }
     }
 
     override fun data(head: ItemBlock): MaterialForm.() -> Unit = {
         apply(super.data(head))
-        Body("拥有 ${ownItem.count}")
-        Button("使用") {
+        val count = ownItem.count
+        Body("拥有 $count")
+        StepSliderButton(count, "使用") { _, value ->
             val params = mutableMapOf<String, Any>()
             params["ownItemId"] = ownItem.objectId
-            params["count"] = 1
+            params["count"] = value
             AVCloud.callFunctionInBackground<String>("useItem", params).subscribe({
 
             }, {
@@ -55,17 +65,33 @@ class OwnItemDetailFragment : ItemDetailFragment() {
 
     override fun equip(head: ItemBlock): MaterialForm.() -> Unit = {
         apply(super.equip(head))
-        Body("拥有 ${ownItem.count}")
-        Button("使用") {
+        val count = ownItem.count
+        Body("拥有 $count")
+        StepSliderButton(count, "使用") { _, value ->
+            val params = mutableMapOf<String, Any>()
+            params["ownItemId"] = ownItem.objectId
+            params["count"] = value
+            AVCloud.callFunctionInBackground<String>("useItem", params).subscribe({
 
+            }, {
+                errUsingItem(it)
+            })
         }
     }
 
     override fun buff(head: ItemBlock): MaterialForm.() -> Unit = {
         apply(super.buff(head))
-        Body("拥有 ${ownItem.count}")
-        Button("使用") {
+        val count = ownItem.count
+        Body("拥有 $count")
+        StepSliderButton(count, "使用") { _, value ->
+            val params = mutableMapOf<String, Any>()
+            params["ownItemId"] = ownItem.objectId
+            params["count"] = value
+            AVCloud.callFunctionInBackground<String>("useItem", params).subscribe({
 
+            }, {
+                errUsingItem(it)
+            })
         }
     }
 
