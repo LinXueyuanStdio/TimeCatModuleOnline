@@ -34,6 +34,7 @@ class BagItem(
 ) : BaseHeaderItem<BagItem.DetailVH>(ownItem.objectId) {
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
         val iv_avatar: ImageView = root.findViewById(R.id.iv_avatar)
+        val tv_count: TextView = root.findViewById(R.id.tv_count)
         val tv_name: TextView = root.findViewById(R.id.tv_name)
     }
 
@@ -54,10 +55,10 @@ class BagItem(
         val item = ownItem.item
         val title = item.title
         holder.tv_name.setText(title)
-
         val structure = item.structure
         val head = ItemBlock.fromJson(structure)
         LOAD.image(head.header.avatar, holder.iv_avatar)
+        holder.tv_count.setText("${ownItem.count}")
         holder.root.safeClick {
             val fragment: Fragment = NAV.rawFragment(RouterHub.USER_ItemDetailFragment)
                 .putParcelable("ownItem", ownItem)

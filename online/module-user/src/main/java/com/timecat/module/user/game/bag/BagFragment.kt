@@ -1,6 +1,8 @@
 package com.timecat.module.user.game.bag
 
 import android.os.Bundle
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.ext.net.allOwnItem
@@ -30,6 +32,9 @@ class BagFragment : BaseEndlessOwnItemFragment() {
 
     override fun name() = "足迹"
     override fun query() = user?.allOwnItem() ?: I().allOwnItem()
+    override fun getLayoutManager(): RecyclerView.LayoutManager {
+        return GridLayoutManager(context, 4)
+    }
     override fun initViewAfterLogin() {
     }
 }

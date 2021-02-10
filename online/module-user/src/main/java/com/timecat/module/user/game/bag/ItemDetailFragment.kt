@@ -2,16 +2,22 @@ package com.timecat.module.user.game.bag
 
 import android.app.Dialog
 import android.content.Context
+import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.widget.LinearLayout
+import androidx.core.view.updateLayoutParams
+import cn.leancloud.AVCloud
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.game.OwnItem
-import com.timecat.identity.data.block.DataItemBlock
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.setting.CenterIconItem
+import com.timecat.layout.ui.layout.dp
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.page.base.extension.simpleUIContainer
@@ -29,6 +35,11 @@ import com.xiaojinzi.component.anno.FragmentAnno
 class ItemDetailFragment : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("ownItem")
     lateinit var ownItem: OwnItem
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        NAV.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun setupDialog(dialog: Dialog, style: Int) {
         val view = buildView(dialog.context)
@@ -50,57 +61,60 @@ class ItemDetailFragment : BottomSheetDialogFragment() {
     }
 
     fun thing(): MaterialForm.() -> Unit = {
-        H2(ownItem.item.title).apply {
-            gravity = Gravity.CENTER
-        }
-        Body(ownItem.item.content)
-        Body("拥有 ${ownItem.count}")
+        Icon()
+        Title()
+        Content()
     }
 
     fun pack(): MaterialForm.() -> Unit = {
-        H2(ownItem.item.title).apply {
-            gravity = Gravity.CENTER
-        }
-        Body(ownItem.item.content)
-        Body("拥有 ${ownItem.count}")
+        Icon()
+        Title()
+        Content()
 
         val button = MaterialButton(windowContext)
         button.setText("使用")
         button.setShakelessClickListener {
 
         }
+        container.addView(button)
     }
 
     fun data(): MaterialForm.() -> Unit = {
-        H2(ownItem.item.title).apply {
-            gravity = Gravity.CENTER
-        }
-        Body(ownItem.item.content)
-        Body("拥有 ${ownItem.count}")
+        Icon()
+        Title()
+        Content()
 
         val button = MaterialButton(windowContext)
         button.setText("使用")
         button.setShakelessClickListener {
-            val item = ownItem.item
-            val head = ItemBlock.fromJson(item.structure)
-            val head2 = DataItemBlock.fromJson(head.structure)
-            when (head2.where) {
-                DataItemBlock.WHERE_UserExp -> {
-                    val I = UserDao.getCurrentUser() ?: return@setShakelessClickListener
-                    I.exp += head2.num
-                    I.saveEventually()
-                }
-            }
+//            val item = ownItem.item
+//            val head = ItemBlock.fromJson(item.structure)
+//            val head2 = DataItemBlock.fromJson(head.structure)
+//            when (head2.where) {
+//                DataItemBlock.WHERE_UserExp -> {
+//                    val I = UserDao.getCurrentUser() ?: return@setShakelessClickListener
+//                    I.exp += head2.num
+//                    I.saveEventually()
+//                }
+//            }
+            val I = UserDao.getCurrentUser() ?: return@setShakelessClickListener
+            I.exp
+            val params = mutableMapOf<String, Any>()
+            params["ownItemId"] = ownItem.objectId
+            params["count"] = "1"
+            AVCloud.callFunctionInBackground<String>("useItem", params).subscribe({
+
+            }, {
+
+            })
         }
         container.addView(button)
     }
 
     fun equip(): MaterialForm.() -> Unit = {
-        H2(ownItem.item.title).apply {
-            gravity = Gravity.CENTER
-        }
-        Body(ownItem.item.content)
-        Body("拥有 ${ownItem.count}")
+        Icon()
+        Title()
+        Content()
 
         val button = MaterialButton(windowContext)
         button.setText("使用")
@@ -111,11 +125,9 @@ class ItemDetailFragment : BottomSheetDialogFragment() {
     }
 
     fun buff(): MaterialForm.() -> Unit = {
-        H2(ownItem.item.title).apply {
-            gravity = Gravity.CENTER
-        }
-        Body(ownItem.item.content)
-        Body("拥有 ${ownItem.count}")
+        Icon()
+        Title()
+        Content()
 
         val button = MaterialButton(windowContext)
         button.setText("使用")
@@ -123,6 +135,28 @@ class ItemDetailFragment : BottomSheetDialogFragment() {
 
         }
         container.addView(button)
+    }
+
+    private fun MaterialForm.Icon() {
+        val iconItem = CenterIconItem(windowContext)
+        val structure = ownItem.item.structure
+        val head = ItemBlock.fromJson(structure)
+        iconItem.setImage(head.header.avatar)
+        iconItem.imageView.updateLayoutParams<LinearLayout.LayoutParams> {
+            width = 48.dp
+            height = 48.dp
+        }
+        container.addView(iconItem)
+    }
+
+    private fun MaterialForm.Title() {
+        H2(ownItem.item.title).apply {
+            gravity = Gravity.CENTER
+        }
+    }
+    private fun MaterialForm.Content() {
+        Body(ownItem.item.content)
+        Body("拥有 ${ownItem.count}")
     }
 
 }

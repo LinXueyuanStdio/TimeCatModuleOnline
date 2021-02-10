@@ -164,12 +164,12 @@ class MailEditorActivity : BaseComplexEditorActivity() {
                         icon = formData.icon,
                         avatar = formData.icon,
                         cover = formData.icon,
-                    )
+                    ),
+                    rewards = formData.items.map { Reward(it, 1) }
                 )
             }
             onSuccess = {
                 ToastUtil.ok("创建成功！")
-                GO.appDetail(it.objectId)
                 finish()
             }
             onError = errorCallback

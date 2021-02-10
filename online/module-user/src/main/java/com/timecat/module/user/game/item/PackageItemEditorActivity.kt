@@ -41,7 +41,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
         var icon: String = "R.drawable.ic_folder",
         var name: String = "新建礼包",
         var content: String = "",
-        var items: List<String> = mutableListOf(),
+        var items: List<Reward> = mutableListOf(),
         var attachments: AttachmentTail? = null
     )
 
@@ -127,7 +127,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
             val texts = items.map { it.title }
             listItemsMultiChoice(items = texts) { _, intArr, _ ->
                 val blocks = items.filterIndexed { index, block -> index in intArr }
-                formData.items = blocks.map { it.objectId }
+                formData.items = blocks.map { Reward(it.objectId, 1) }
                 packageItem.hint = formData.items.toString()
                 packageItem.text = "${formData.items.size}"
             }

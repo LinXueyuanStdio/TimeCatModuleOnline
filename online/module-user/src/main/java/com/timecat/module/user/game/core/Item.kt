@@ -17,4 +17,6 @@ open class UserExpItem : ExpItem()
 
 open class Equipment:Item()
 
+object ItemUsage {
 
+}

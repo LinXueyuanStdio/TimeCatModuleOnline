@@ -1,7 +1,8 @@
 package com.timecat.module.user.game.item
 
 import android.view.Menu
-import android.view.MenuItem
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.allItem
@@ -9,7 +10,6 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.game.Item
 import com.timecat.module.user.base.BaseEndlessBlockActivity
-import com.timecat.module.user.base.GO
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -24,7 +24,9 @@ class AllItemActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "物品"
     override fun query() = allItem()
     override fun block2Item(block: Block) = Item(this, block)
-
+    override fun getLayoutManager(): RecyclerView.LayoutManager {
+        return GridLayoutManager(context, 4)
+    }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_add, menu)
         menu?.apply {

@@ -2,14 +2,25 @@ package com.timecat.module.user.game.mail
 
 import android.app.Dialog
 import android.content.Context
-import android.view.LayoutInflater
+import android.os.Bundle
 import android.view.View
+import cn.leancloud.AVCloud
+import com.alibaba.fastjson.JSON
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.timecat.identity.data.block.type.*
+import com.google.android.material.button.MaterialButton
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
+import com.timecat.data.bmob.data.mail.OwnMail
+import com.timecat.data.bmob.ext.bmob.deleteBlockRelation
+import com.timecat.data.bmob.ext.bmob.deleteOwnMail
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.block.MailBlock
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.setting.MaterialForm
-import com.timecat.module.user.R
 import com.timecat.page.base.extension.simpleUIContainer
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.FragmentAnno
 
 /**
@@ -21,6 +32,14 @@ import com.xiaojinzi.component.anno.FragmentAnno
  */
 @FragmentAnno(RouterHub.USER_MailDetailFragment)
 class MailDetailFragment : BottomSheetDialogFragment() {
+    @AttrValueAutowiredAnno("ownMail")
+    lateinit var ownMail: OwnMail
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        NAV.inject(this)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun setupDialog(dialog: Dialog, style: Int) {
         val view = buildView(dialog.context)
         dialog.setContentView(view)
@@ -28,8 +47,45 @@ class MailDetailFragment : BottomSheetDialogFragment() {
 
     fun buildView(context: Context): View {
         val container = simpleUIContainer(context)
-        MaterialForm(context, container).apply{
+        MaterialForm(context, container).apply {
+            LogUtil.e(ownMail)
+            val mail = ownMail.mail
+            LogUtil.e(mail)
+            LogUtil.e(mail.structure)
+            LogUtil.e(JSON.parseObject(mail.structure))
+            H2(mail.title)
+            Body(mail.content)
 
+            val head = MailBlock.fromJson(mail.structure)
+            if (head.rewards.isEmpty()) {
+                val button = MaterialButton(windowContext)
+                button.setText("删除")
+                button.setShakelessClickListener {
+                    deleteOwnMail {
+                        target = ownMail
+                        onSuccess = {
+                            dismiss()
+                        }
+                        onError = {
+                            ToastUtil.e_long("删除失败 ${it.msg}")
+                        }
+                    }
+                }
+                container.addView(button)
+            } else {
+                val button = MaterialButton(windowContext)
+                button.setText("使用")
+                button.setShakelessClickListener {
+                    val params = mutableMapOf<String, Any>()
+                    params["ownItemId"] = ownMail.objectId
+                    AVCloud.callFunctionInBackground<String>("readMail", params).subscribe({
+
+                    }, {
+
+                    })
+                }
+                container.addView(button)
+            }
         }
         return container
     }

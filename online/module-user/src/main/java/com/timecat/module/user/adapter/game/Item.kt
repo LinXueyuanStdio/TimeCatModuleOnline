@@ -6,6 +6,8 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.alibaba.fastjson.JSON
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
@@ -37,7 +39,7 @@ class Item(
         val tv_name: TextView = root.findViewById(R.id.tv_name)
     }
 
-    override fun getLayoutRes(): Int = R.layout.user_item_bag
+    override fun getLayoutRes(): Int = R.layout.user_item_item
 
     override fun createViewHolder(
         view: View,

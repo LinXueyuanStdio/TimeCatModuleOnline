@@ -23,7 +23,7 @@ abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_THEN_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback
@@ -49,7 +49,7 @@ abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
-                cachePolicy = AVQuery.CachePolicy.CACHE_ELSE_NETWORK
+                cachePolicy = AVQuery.CachePolicy.CACHE_THEN_NETWORK
             }
             onError = errorCallback
             onEmpty = emptyCallback
