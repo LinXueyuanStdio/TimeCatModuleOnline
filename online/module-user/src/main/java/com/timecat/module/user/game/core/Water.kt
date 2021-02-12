@@ -20,6 +20,7 @@ import kotlin.math.max
  * @description null
  * @usage null
  */
+class WaterModified
 object Water {
 
     // 6 分钟恢复 1 体力

@@ -4,27 +4,26 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import cn.leancloud.AVOSCloud
-import com.afollestad.materialdialogs.MaterialDialog
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 import com.google.android.material.chip.Chip
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.font.FontAwesome
+import com.timecat.identity.font.FontDrawable
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.TimerView
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.base.login.BaseLoginMainFragment
-import com.timecat.module.user.game.core.Level
-import com.timecat.module.user.game.core.Water
+import com.timecat.module.user.game.core.*
 import com.timecat.module.user.game.core.Water.recoverTime
-import com.timecat.module.user.game.core.expLimit
-import com.timecat.module.user.game.core.level
 import com.timecat.page.base.view.BlurringToolbar
 import com.xiaojinzi.component.anno.FragmentAnno
 import io.reactivex.disposables.Disposable
+import org.greenrobot.eventbus.Subscribe
 
 /**
  * @author 林学渊
@@ -35,6 +34,7 @@ import io.reactivex.disposables.Disposable
  */
 @FragmentAnno(RouterHub.USER_GameHomeFragment)
 class GameHomeFragment : BaseLoginMainFragment() {
+    override fun needEventBus(): Boolean = true
     override fun layout(): Int = R.layout.user_fragment_game_home
 
     lateinit var main: ImageView
@@ -121,14 +121,18 @@ class GameHomeFragment : BaseLoginMainFragment() {
             ToastUtil.i("当前星级 ${user.star}")
         }
         loadWater()
+        val tf = FontAwesome.getFontAwesomeSolid(context)
+        water.checkedIcon = FontDrawable(context, tf, R.string.fa_fire_solid)
         water.setShakelessClickListener {
             showWaterDialog()
         }
+        currency.checkedIcon = FontDrawable(context, tf, R.string.fa_dice_d6_solid)
         currency.text = "${user.currency}"
         currency.setOnCloseIconClickListener {
             ToastUtil.w("开发喵施工中")
         }
-        charge.text = "${user.charge}"
+        charge.checkedIcon = FontDrawable(context, tf, R.string.fa_globe_europe_solid)
+        charge.text = "${user.allCharge}"
         charge.setOnCloseIconClickListener {
             ToastUtil.w("开发喵施工中")
         }
@@ -141,9 +145,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
             val currentTime = it.date.time
             Water.compute(i, currentTime) { trueWater, _, _ ->
                 mStatefulLayout?.showContent()
-                MaterialDialog(_mActivity).show {
-                    message(text = "体力 $trueWater")
-                }
+                ToastUtil.i("体力 $trueWater")
             }
         }, {
             mStatefulLayout?.showError("发生错误") {
@@ -177,7 +179,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
 
     private fun tryToStartTimer(nowWater: Int, waterLimit: Int, recoverTime: Long, timer: TimerView) {
         notifyWater(nowWater.coerceIn(0, waterLimit), waterLimit)
-        if (nowWater <= waterLimit) {
+        if (nowWater < waterLimit) {
             timer.start(recoverTime)
         }
     }
@@ -191,5 +193,11 @@ class GameHomeFragment : BaseLoginMainFragment() {
         level.text = "等级 ${currentLevel}"
         exp_bar.max = Level.expLimit(currentLevel).toFloat()
         exp_bar.progress = currentExp.toFloat()
+    }
+
+
+    @Subscribe
+    fun onEvent(e: WaterModified?) {
+        loadWater()
     }
 }

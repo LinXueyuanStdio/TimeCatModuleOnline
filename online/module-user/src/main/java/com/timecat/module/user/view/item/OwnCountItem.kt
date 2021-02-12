@@ -1,17 +1,12 @@
 package com.timecat.module.user.view.item
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
-import com.timecat.component.identity.Attr
 import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.layout.*
 import com.timecat.layout.ui.utils.IconLoader
-import com.timecat.module.user.R
 
 /**
  * @author 林学渊
@@ -45,14 +40,14 @@ class OwnCountItem @JvmOverloads constructor(
             isClickable = false
             weight = 1f
         }
-        left = InputItem(context).apply{
+        left = InputItem(context).apply {
             weight = 4f
-        }.also{
+        }.also {
             addView(it)
         }
-        right = InputItem(context).apply{
+        right = InputItem(context).apply {
             weight = 4f
-        }.also{
+        }.also {
             addView(it)
         }
         closeView = ImageView {
@@ -75,18 +70,23 @@ class OwnCountItem @JvmOverloads constructor(
             IconLoader.loadIcon(context, imageView, value)
             field = value
         }
-    var left_field: InputItem.()->Unit = {}
+    var left_field: InputItem.() -> Unit = {}
         set(value) {
             left.apply(value)
         }
-    var right_field: InputItem.()->Unit = {}
+    var right_field: InputItem.() -> Unit = {}
         set(value) {
             right.apply(value)
         }
 
-    fun onClick(onClick: (item: OwnCountItem) -> Unit) {
-        setShakelessClickListener {
-            onClick(this@OwnCountItem)
+    fun onIconClick(onClick: (item: ImageView) -> Unit) {
+        imageView.setShakelessClickListener {
+            onClick(imageView)
+        }
+    }
+    fun onCloseIconClick(onClick: (item: ImageView) -> Unit) {
+        closeView.setShakelessClickListener {
+            onClick(closeView)
         }
     }
 

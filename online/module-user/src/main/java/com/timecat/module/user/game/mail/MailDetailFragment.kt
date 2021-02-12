@@ -4,7 +4,10 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.setPadding
 import cn.leancloud.AVCloud
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.alibaba.fastjson.JSON
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
@@ -17,9 +20,12 @@ import com.timecat.data.bmob.ext.bmob.deleteOwnMail
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.MailBlock
 import com.timecat.identity.data.block.PackageItemBlock
+import com.timecat.identity.data.block.Reward
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.dp
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.setting.MaterialForm
+import com.timecat.module.user.R
 import com.timecat.module.user.game.item.BigTitle
 import com.timecat.module.user.game.item.RewardList
 import com.timecat.module.user.game.item.buildRewardListItem
@@ -79,12 +85,21 @@ class MailDetailFragment : BottomSheetDialogFragment() {
                 val button = MaterialButton(windowContext)
                 button.setText("使用")
                 button.setShakelessClickListener {
+                    button.isEnabled = false
                     val params = mutableMapOf<String, Any>()
                     params["ownMailId"] = ownMail.objectId
                     AVCloud.callFunctionInBackground<Any?>("readMail", params).subscribe({
-
+                        MaterialDialog(requireActivity()).show {
+                            title(text = "获得了")
+                            val view = buildRewardListItem(requireActivity(), items)
+                            view.setPadding(10.dp)
+                            customView(view = view)
+                            positiveButton(R.string.ok)
+                            this@MailDetailFragment.dismiss()
+                        }
                     }, {
-
+                        button.isEnabled = true
+                        errUsingItem(it)
                     })
                 }
                 container.addView(button)
@@ -93,4 +108,7 @@ class MailDetailFragment : BottomSheetDialogFragment() {
         return container
     }
 
+    private fun errUsingItem(err: Throwable) {
+        ToastUtil.e_long("出现错误：$err")
+    }
 }

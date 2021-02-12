@@ -57,12 +57,7 @@ fun buildRewardListItem(activity: FragmentActivity, items: List<Reward>): Reward
                 val id = reward.uuid
                 val block = blockMap[id]
                 if (block != null) {
-                    val fragment: Fragment = NAV.rawFragment(RouterHub.USER_ItemDetailFragment)
-                        .putParcelable("item", block)
-                        .navigate() ?: FallBackFragment()
-                    if (fragment is DialogFragment) {
-                        fragment.show(activity.supportFragmentManager, id)
-                    }
+                    activity.showItemDialog(block)
                 }
             }
 
@@ -117,4 +112,13 @@ fun MaterialForm.StepSliderButton(
         button.text = "${text} ${it.toInt()}"
     }
     return button
+}
+
+fun FragmentActivity.showItemDialog(item:Block) {
+    val fragment: Fragment = NAV.rawFragment(RouterHub.USER_ItemDetailFragment)
+        .putParcelable("item", item)
+        .navigate() ?: FallBackFragment()
+    if (fragment is DialogFragment) {
+        fragment.show(supportFragmentManager, item.objectId)
+    }
 }

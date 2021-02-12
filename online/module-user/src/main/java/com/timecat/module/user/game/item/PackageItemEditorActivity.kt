@@ -1,5 +1,6 @@
 package com.timecat.module.user.game.item
 
+import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
@@ -26,6 +27,8 @@ import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
+import com.timecat.module.user.view.item.OwnCountItem
+import com.timecat.page.base.extension.simpleUIContainer
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -48,14 +51,25 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
         var icon: String = "R.drawable.ic_folder",
         var name: String = "新建礼包",
         var content: String = "",
-        var items: List<Reward> = mutableListOf(),
+        var items: MutableMap<String, Long> = mutableMapOf(),
         var attachments: AttachmentTail? = null
-    )
+    ) {
+        fun setRewardListItems(items: List<Reward>) {
+            this.items = mutableMapOf(*items.map {
+                it.uuid to it.count
+            }.toTypedArray())
+        }
+
+        fun getRewardListItems(): MutableList<Reward> {
+            return items.toList().map { Reward(it.first, it.second) }.toMutableList()
+        }
+    }
 
     val formData: FormData = FormData()
     lateinit var imageItem: ImageItem
     lateinit var titleItem: InputItem
     lateinit var packageItem: NextItem
+    lateinit var packageDetailContainer: ViewGroup
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
@@ -66,7 +80,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
             formData.attachments = head.mediaScope
             formData.icon = head.header.avatar
             val head2 = PackageItemBlock.fromJson(head.structure)
-            formData.items = head2.items
+            formData.setRewardListItems(head2.items)
         }
         emojiEditText.setText(formData.content)
         MaterialForm(this, container).apply {
@@ -98,6 +112,8 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                 initialText = "${formData.items.size}") {
                 selectItems()
             }
+            packageDetailContainer = simpleUIContainer(windowContext).also { container.addView(it) }
+            setItems()
 
             form {
                 useRealTimeValidation(disableSubmit = true)
@@ -110,6 +126,47 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                     publish()
                 }
             }
+        }
+    }
+
+    fun setItems() {
+        requestBlock {
+            query = allItem().whereContainedIn("objectId", formData.items.keys)
+            onSuccess = {
+                setBlockItems(it)
+            }
+        }
+    }
+
+    fun setBlockItems(items: List<Block>) {
+        packageDetailContainer.removeAllViews()
+        for (block in items) {
+            val head = ItemBlock.fromJson(block.structure)
+            val itemView = OwnCountItem(this@PackageItemEditorActivity).apply {
+                icon = head.header.icon
+                left_field = {
+                    hint = "物品"
+                    text = block.title
+                    isEnabled = false
+                }
+                right_field = {
+                    hint = "数量"
+                    text = "${formData.items[block.objectId]}"
+                    onTextChange = {
+                        val count = it?.toLong() ?: 0L
+                        formData.items[block.objectId] = count
+                    }
+                }
+                closeIcon = "R.drawable.ic_close"
+                onIconClick {
+                    showItemDialog(block)
+                }
+                onCloseIconClick {
+                    formData.items.remove(block.objectId)
+                    packageDetailContainer.removeView(this)
+                }
+            }
+            packageDetailContainer.addView(itemView)
         }
     }
 
@@ -143,7 +200,8 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
             val texts = items.map { it.title }
             listItemsMultiChoice(items = texts) { _, intArr, _ ->
                 val blocks = items.filterIndexed { index, block -> index in intArr }
-                formData.items = blocks.map { Reward(it.objectId, 1) }
+                formData.setRewardListItems(blocks.map { Reward(it.objectId, 1) })
+                setBlockItems(blocks)
                 packageItem.hint = formData.items.toString()
                 packageItem.text = "${formData.items.size}"
             }
@@ -183,7 +241,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
         return ItemBlock(
             type = subtype(),
             structure = PackageItemBlock(
-                formData.items
+                formData.getRewardListItems()
             ).toJson(),
             mediaScope = formData.attachments,
             topicScope = topicScope,
