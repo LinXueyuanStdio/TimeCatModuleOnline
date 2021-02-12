@@ -68,6 +68,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
             val head2 = PackageItemBlock.fromJson(head.structure)
             formData.items = head2.items
         }
+        emojiEditText.setText(formData.content)
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "图标"

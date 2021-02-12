@@ -63,6 +63,7 @@ class DataItemEditorActivity : BaseItemAddActivity() {
             formData.attachments = head.mediaScope
             formData.icon = head.header.avatar
         }
+        emojiEditText.setText(formData.content)
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "图标"
