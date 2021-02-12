@@ -80,8 +80,8 @@ class MailDetailFragment : BottomSheetDialogFragment() {
                 button.setText("使用")
                 button.setShakelessClickListener {
                     val params = mutableMapOf<String, Any>()
-                    params["ownItemId"] = ownMail.objectId
-                    AVCloud.callFunctionInBackground<String>("readMail", params).subscribe({
+                    params["ownMailId"] = ownMail.objectId
+                    AVCloud.callFunctionInBackground<Any?>("readMail", params).subscribe({
 
                     }, {
 

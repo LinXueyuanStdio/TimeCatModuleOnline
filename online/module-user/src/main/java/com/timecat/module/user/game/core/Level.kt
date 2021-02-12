@@ -1,5 +1,7 @@
 package com.timecat.module.user.game.core
 
+import com.timecat.data.bmob.data.User
+
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
@@ -7,12 +9,22 @@ package com.timecat.module.user.game.core
  * @description null
  * @usage null
  */
+
+val User.level: Int
+    get() = Level.getLevel(exp).first
+
+val User.expLimit: Long
+    get() = Level.expLimit(level)
+
+val User.waterLimit: Int
+    get() = Level.waterLimit(water)
+
 object Level {
 
     /**
      * 等级为 level 时的最大经验值限制
      */
-    fun expLimit(level: Int): Int = when (level) {
+    fun expLimit(level: Int): Long = when (level) {
         0 -> 0
         1 -> 24
         in 2..5 -> 8
@@ -66,10 +78,22 @@ object Level {
         else -> 4425
     }
 
+    fun getLevel(exp: Long): Pair<Int, Long> {
+        var curExp = exp
+        var level = 0
+        var maxExp = expLimit(level)
+        while (maxExp < curExp) {
+            level++
+            curExp -= maxExp
+            maxExp = expLimit(level);
+        }
+        return level to curExp
+    }
+
     /**
      * 等级为 level 时的最大累计经验值限制
      */
-    fun expAccLimit(level: Int): Int {
+    fun expAccLimit(level: Int): Long {
         return (0..level).map { expLimit(it) }.sum()
     }
 

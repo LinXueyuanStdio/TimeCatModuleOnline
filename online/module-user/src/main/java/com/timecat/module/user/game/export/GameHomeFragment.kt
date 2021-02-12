@@ -20,6 +20,8 @@ import com.timecat.module.user.base.login.BaseLoginMainFragment
 import com.timecat.module.user.game.core.Level
 import com.timecat.module.user.game.core.Water
 import com.timecat.module.user.game.core.Water.recoverTime
+import com.timecat.module.user.game.core.expLimit
+import com.timecat.module.user.game.core.level
 import com.timecat.page.base.view.BlurringToolbar
 import com.xiaojinzi.component.anno.FragmentAnno
 import io.reactivex.disposables.Disposable
@@ -82,8 +84,8 @@ class GameHomeFragment : BaseLoginMainFragment() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-
         val user = I()
+        user.fetchInBackground()
         LogUtil.e(user.toJSONString())
         IconLoader.loadIcon(_mActivity, main, user.avatar)
         cube.setShakelessClickListener {
@@ -109,7 +111,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
         exp_bar.progressColor = Attr.getAccentColor(_mActivity)
         exp_bar.setBackgroundColor(Attr.getBackgroundDarkColor(_mActivity))
         exp_bar.setShakelessClickListener {
-            ToastUtil.i("当前等级 ${user.level}")
+            ToastUtil.i("当前经验 ${user.exp} / ${user.expLimit}")
         }
         level.setShakelessClickListener {
             ToastUtil.i("当前等级 ${user.level}")

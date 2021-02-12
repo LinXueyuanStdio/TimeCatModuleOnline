@@ -2,14 +2,18 @@ package com.timecat.module.user.game.bag
 
 import android.os.Bundle
 import cn.leancloud.AVCloud
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.game.OwnItem
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.PackageItemBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.middle.setting.MaterialForm
-import com.timecat.module.user.game.item.Button
+import com.timecat.module.user.R
 import com.timecat.module.user.game.item.StepSliderButton
+import com.timecat.module.user.game.item.buildRewardListItem
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.FragmentAnno
 
@@ -35,13 +39,23 @@ class OwnItemDetailFragment : ItemDetailFragment() {
         apply(super.pack(head))
         val count = ownItem.count
         Body("拥有 $count")
-        StepSliderButton(count, "使用") { _, value ->
+        StepSliderButton(count, "使用") { button, value ->
+            button.isEnabled = false
             val params = mutableMapOf<String, Any>()
             params["ownItemId"] = ownItem.objectId
             params["count"] = value
-            AVCloud.callFunctionInBackground<String>("useItem", params).subscribe({
-
+            AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
+                MaterialDialog(requireActivity()).show {
+                    title(text = "获得了")
+                    val head2 = PackageItemBlock.fromJson(head.structure)
+                    val items = head2.items
+                    val view = buildRewardListItem(requireActivity(), items)
+                    customView(view = view)
+                    positiveButton(R.string.ok)
+                    this@OwnItemDetailFragment.dismiss()
+                }
             }, {
+                button.isEnabled = true
                 errUsingItem(it)
             })
         }
@@ -55,7 +69,7 @@ class OwnItemDetailFragment : ItemDetailFragment() {
             val params = mutableMapOf<String, Any>()
             params["ownItemId"] = ownItem.objectId
             params["count"] = value
-            AVCloud.callFunctionInBackground<String>("useItem", params).subscribe({
+            AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
 
             }, {
                 errUsingItem(it)
@@ -71,7 +85,7 @@ class OwnItemDetailFragment : ItemDetailFragment() {
             val params = mutableMapOf<String, Any>()
             params["ownItemId"] = ownItem.objectId
             params["count"] = value
-            AVCloud.callFunctionInBackground<String>("useItem", params).subscribe({
+            AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
 
             }, {
                 errUsingItem(it)
@@ -87,7 +101,7 @@ class OwnItemDetailFragment : ItemDetailFragment() {
             val params = mutableMapOf<String, Any>()
             params["ownItemId"] = ownItem.objectId
             params["count"] = value
-            AVCloud.callFunctionInBackground<String>("useItem", params).subscribe({
+            AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
 
             }, {
                 errUsingItem(it)
