@@ -3,12 +3,16 @@ package com.timecat.module.user.game.export
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import cn.leancloud.AVOSCloud
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 import com.google.android.material.chip.Chip
+import com.timecat.component.commonsdk.extension.beGone
+import com.timecat.component.commonsdk.extension.beVisible
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.User
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.font.FontAwesome
 import com.timecat.identity.font.FontDrawable
@@ -18,8 +22,11 @@ import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.base.login.BaseLoginMainFragment
-import com.timecat.module.user.game.core.*
+import com.timecat.module.user.game.core.Level
+import com.timecat.module.user.game.core.Water
 import com.timecat.module.user.game.core.Water.recoverTime
+import com.timecat.module.user.game.core.WaterModified
+import com.timecat.module.user.game.core.allCharge
 import com.timecat.page.base.view.BlurringToolbar
 import com.xiaojinzi.component.anno.FragmentAnno
 import io.reactivex.disposables.Disposable
@@ -50,6 +57,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
     lateinit var star: Chip
     lateinit var water: Chip
     lateinit var event_timer: TimerView
+    lateinit var state: TextView
     lateinit var exp_bar: RoundCornerProgressBar
 
     lateinit var currency: Chip
@@ -77,6 +85,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
 
         water = view.findViewById(R.id.water)
         event_timer = view.findViewById(R.id.event_timer)
+        state = view.findViewById(R.id.state)
 
         currency = view.findViewById(R.id.currency)
         charge = view.findViewById(R.id.charge)
@@ -84,10 +93,6 @@ class GameHomeFragment : BaseLoginMainFragment() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        val user = I()
-        user.fetchInBackground()
-        LogUtil.e(user.toJSONString())
-        IconLoader.loadIcon(_mActivity, main, user.avatar)
         cube.setShakelessClickListener {
             NAV.go(RouterHub.USER_AllCubeActivity)
         }
@@ -106,32 +111,54 @@ class GameHomeFragment : BaseLoginMainFragment() {
         shop.setShakelessClickListener {
             NAV.go(RouterHub.USER_ShopActivity)
         }
-
-        notifyLevel(user.level, user.exp)
         exp_bar.progressColor = Attr.getAccentColor(_mActivity)
         exp_bar.setBackgroundColor(Attr.getBackgroundDarkColor(_mActivity))
+        val tf = FontAwesome.getFontAwesomeSolid(context)
+        water.chipIcon = FontDrawable(context, tf, R.string.fa_fire_solid).apply { textSize = 24f }
+        currency.chipIcon = FontDrawable(context, tf, R.string.fa_dice_d6_solid).apply { textSize = 24f }
+        charge.chipIcon = FontDrawable(context, tf, R.string.fa_globe_europe_solid).apply { textSize = 24f }
+
+        val user = I()
+        loadGameData(user)
+    }
+
+    private fun loadGameData(user: User) {
+        mStatefulLayout?.showLoading()
+        user.fetchInBackground().subscribe({
+            mStatefulLayout?.showContent()
+            loadGameView(I())
+        }, {
+            mStatefulLayout?.showError {
+                loadGameData(user)
+            }
+        })
+    }
+
+    private fun loadGameView(user: User) {
+        LogUtil.e(user.toJSONString())
+        IconLoader.loadIcon(_mActivity, main, user.avatar)
+        val (currentLevel, currentExp) = Level.getLevel(user.exp)
+        notifyLevel(currentLevel, currentExp)
+
         exp_bar.setShakelessClickListener {
-            ToastUtil.i("当前经验 ${user.exp} / ${user.expLimit}")
+            ToastUtil.i("当前经验 $currentExp / ${Level.expLimit(currentLevel)}")
         }
         level.setShakelessClickListener {
-            ToastUtil.i("当前等级 ${user.level}")
+            ToastUtil.i("当前等级 $currentLevel")
         }
         star.text = "星级 ${user.star}"
         star.setShakelessClickListener {
             ToastUtil.i("当前星级 ${user.star}")
         }
         loadWater()
-        val tf = FontAwesome.getFontAwesomeSolid(context)
-        water.checkedIcon = FontDrawable(context, tf, R.string.fa_fire_solid)
+
         water.setShakelessClickListener {
             showWaterDialog()
         }
-        currency.checkedIcon = FontDrawable(context, tf, R.string.fa_dice_d6_solid)
         currency.text = "${user.currency}"
         currency.setOnCloseIconClickListener {
             ToastUtil.w("开发喵施工中")
         }
-        charge.checkedIcon = FontDrawable(context, tf, R.string.fa_globe_europe_solid)
         charge.text = "${user.allCharge}"
         charge.setOnCloseIconClickListener {
             ToastUtil.w("开发喵施工中")
@@ -180,7 +207,12 @@ class GameHomeFragment : BaseLoginMainFragment() {
     private fun tryToStartTimer(nowWater: Int, waterLimit: Int, recoverTime: Long, timer: TimerView) {
         notifyWater(nowWater.coerceIn(0, waterLimit), waterLimit)
         if (nowWater < waterLimit) {
+            timer.beVisible()
+            state.setText("后恢复 1 体力")
             timer.start(recoverTime)
+        } else {
+            timer.beGone()
+            state.setText("体力已满")
         }
     }
 

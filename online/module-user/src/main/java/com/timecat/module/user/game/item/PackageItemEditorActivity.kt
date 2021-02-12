@@ -1,10 +1,11 @@
 package com.timecat.module.user.game.item
 
-import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.afollestad.vvalidator.form
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Item
@@ -69,7 +70,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
     lateinit var imageItem: ImageItem
     lateinit var titleItem: InputItem
     lateinit var packageItem: NextItem
-    lateinit var packageDetailContainer: ViewGroup
+    lateinit var packageDetailContainer: LinearLayout
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
@@ -112,7 +113,8 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                 initialText = "${formData.items.size}") {
                 selectItems()
             }
-            packageDetailContainer = simpleUIContainer(windowContext).also { container.addView(it) }
+            packageDetailContainer = simpleUIContainer(windowContext)
+            container.addView(packageDetailContainer)
             setItems()
 
             form {
@@ -139,6 +141,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
     }
 
     fun setBlockItems(items: List<Block>) {
+        LogUtil.e(items)
         packageDetailContainer.removeAllViews()
         for (block in items) {
             val head = ItemBlock.fromJson(block.structure)
@@ -147,13 +150,13 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                 left_field = {
                     hint = "物品"
                     text = block.title
-                    isEnabled = false
+                    inputEditText.isEnabled = false
                 }
                 right_field = {
                     hint = "数量"
                     text = "${formData.items[block.objectId]}"
                     onTextChange = {
-                        val count = it?.toLong() ?: 0L
+                        val count = it?.toLongOrNull() ?: 0L
                         formData.items[block.objectId] = count
                     }
                 }

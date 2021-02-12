@@ -30,33 +30,35 @@ class OwnCountItem @JvmOverloads constructor(
         orientation = HORIZONTAL
         layout_width = match_parent
         layout_height = wrap_content
-        padding = 4
-        margin = 4
         imageView = ImageView {
-            layout_width = 24
-            layout_height = 24
+            layout_width = 36
+            layout_height = 36
             margin = 4
-            layout_gravity = gravity_center
-            isClickable = false
-            weight = 1f
+            padding = 4
+            layout_gravity = gravity_center_vertical
         }
         left = InputItem(context).apply {
+            layout_width = wrap_content
+            layout_height = wrap_content
             weight = 4f
+            padding = 4
         }.also {
             addView(it)
         }
         right = InputItem(context).apply {
+            layout_width = wrap_content
+            layout_height = wrap_content
             weight = 4f
+            padding = 4
         }.also {
             addView(it)
         }
         closeView = ImageView {
-            layout_width = 24
-            layout_height = 24
+            layout_width = 36
+            layout_height = 36
             margin = 4
-            layout_gravity = gravity_center
-            isClickable = false
-            weight = 1f
+            padding = 4
+            layout_gravity = gravity_center_vertical
         }
     }
 

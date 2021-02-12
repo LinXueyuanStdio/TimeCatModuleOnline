@@ -1,5 +1,6 @@
 package com.timecat.module.user.game.core
 
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.User
 
 /**
@@ -79,6 +80,7 @@ object Level {
     }
 
     fun getLevel(exp: Long): Pair<Int, Long> {
+        LogUtil.se("exp: $exp")
         var curExp = exp
         var level = 0
         var maxExp = expLimit(level)
