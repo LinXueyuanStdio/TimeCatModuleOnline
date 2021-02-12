@@ -172,24 +172,28 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
     }
 
     fun subtype() = ITEM_Package
-    fun getItemBlock(): ItemBlock = ItemBlock(
-        type = subtype(),
-        structure = PackageItemBlock(
-            formData.items
-        ).toJson(),
-        mediaScope = formData.attachments,
-        topicScope = TopicScope(emojiEditText.realTopicList.map {
+    fun getItemBlock(): ItemBlock {
+        val topicScope = emojiEditText.realTopicList.map {
             TopicItem(it.topicName, it.topicId)
-        }.toMutableList()),
-        atScope = AtScope(emojiEditText.realUserList.map {
+        }.ifEmpty { null }?.let { TopicScope(it.toMutableList()) }
+        val atScope = emojiEditText.realUserList.map {
             AtItem(it.user_name, it.user_id)
-        }.toMutableList()),
-        header = PageHeader(
-            icon = formData.icon,
-            avatar = formData.icon,
-            cover = formData.icon,
+        }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
+        return ItemBlock(
+            type = subtype(),
+            structure = PackageItemBlock(
+                formData.items
+            ).toJson(),
+            mediaScope = formData.attachments,
+            topicScope = topicScope,
+            atScope = atScope,
+            header = PageHeader(
+                icon = formData.icon,
+                avatar = formData.icon,
+                cover = formData.icon,
+            )
         )
-    )
+    }
 
     fun update() {
         item?.let {
@@ -197,7 +201,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                 target = it.apply {
                     title = formData.name
                     content = formData.content
-                    subtype = ITEM_Package
+                    subtype = subtype()
                     structure = getItemBlock().toJson()
                 }
                 onSuccess = {

@@ -5,6 +5,7 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Item
 import com.timecat.data.bmob.ext.bmob.saveBlock
+import com.timecat.data.bmob.ext.bmob.updateBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
@@ -16,7 +17,6 @@ import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
-import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -110,7 +110,51 @@ class BuffItemEditorActivity : BaseItemAddActivity() {
     }
 
     protected fun ok() {
-        save()
+        if (item == null) {
+            save()
+        } else {
+            update()
+        }
+    }
+
+    fun subtype() = ITEM_Buff
+    fun getItemBlock(): ItemBlock {
+        val topicScope = emojiEditText.realTopicList.map {
+            TopicItem(it.topicName, it.topicId)
+        }.ifEmpty { null }?.let { TopicScope(it.toMutableList()) }
+        val atScope = emojiEditText.realUserList.map {
+            AtItem(it.user_name, it.user_id)
+        }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
+        return ItemBlock(
+            type = subtype(),
+            structure = BuffItemBlock().toJson(),
+            mediaScope = formData.attachments,
+            topicScope = topicScope,
+            atScope = atScope,
+            header = PageHeader(
+                icon = formData.icon,
+                avatar = formData.icon,
+                cover = formData.icon,
+            )
+        )
+    }
+
+    fun update() {
+        item?.let {
+            updateBlock {
+                target = it.apply {
+                    title = formData.name
+                    content = formData.content
+                    subtype = subtype()
+                    structure = getItemBlock().toJson()
+                }
+                onSuccess = {
+                    ToastUtil.ok("更新成功！")
+                    finish()
+                }
+                onError = errorCallback
+            }
+        }
     }
 
     open fun save() {
@@ -118,23 +162,8 @@ class BuffItemEditorActivity : BaseItemAddActivity() {
             target = I() create Item {
                 title = formData.name
                 content = formData.content
-                subtype = ITEM_Buff
-                headerBlock = ItemBlock(
-                    type = ITEM_Buff,
-                    structure = BuffItemBlock().toJson(),
-                    mediaScope = formData.attachments,
-                    topicScope = TopicScope(emojiEditText.realTopicList.map {
-                        TopicItem(it.topicName, it.topicId)
-                    }.toMutableList()),
-                    atScope = AtScope(emojiEditText.realUserList.map {
-                        AtItem(it.user_name, it.user_id)
-                    }.toMutableList()),
-                    header = PageHeader(
-                        icon = formData.icon,
-                        avatar = formData.icon,
-                        cover = formData.icon,
-                    )
-                )
+                subtype = subtype()
+                headerBlock = getItemBlock()
             }
             onSuccess = {
                 ToastUtil.ok("创建成功！")
