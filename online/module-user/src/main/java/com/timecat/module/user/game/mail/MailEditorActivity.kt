@@ -1,19 +1,26 @@
 package com.timecat.module.user.game.mail
 
+import android.text.InputType
+import android.widget.LinearLayout
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.afollestad.vvalidator.form
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Mail
 import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
+import com.timecat.data.bmob.ext.bmob.updateBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.*
+import com.timecat.identity.data.block.BLOCK_MAIL
+import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.MailBlock
+import com.timecat.identity.data.block.Reward
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
@@ -21,9 +28,12 @@ import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseComplexEditorActivity
-import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
+import com.timecat.module.user.game.item.showItemDialog
+import com.timecat.module.user.view.item.OwnCountItem
+import com.timecat.page.base.extension.simpleUIContainer
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -36,24 +46,46 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_MailEditorActivity)
 class MailEditorActivity : BaseComplexEditorActivity() {
 
+    @AttrValueAutowiredAnno("block")
+    @JvmField
+    var mail: Block? = null
     override fun title(): String = "邮件"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
         var icon: String = "R.drawable.ic_folder",
         var name: String = "新邮件",
-        var url: String = "",
         var content: String = "",
-        var items: List<String> = mutableListOf(),
+        var items: MutableMap<String, Long> = mutableMapOf(),
         var attachments: AttachmentTail? = null
-    )
+    ) {
+        fun setRewardListItems(items: List<Reward>) {
+            this.items = mutableMapOf(*items.map {
+                it.uuid to it.count
+            }.toTypedArray())
+        }
+
+        fun getRewardListItems(): MutableList<Reward> {
+            return items.toList().map { Reward(it.first, it.second) }.toMutableList()
+        }
+    }
 
     val formData: FormData = FormData()
     lateinit var imageItem: ImageItem
     lateinit var titleItem: InputItem
     lateinit var packageItem: NextItem
+    lateinit var packageDetailContainer: LinearLayout
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
+        mail?.let {
+            formData.name = it.title
+            formData.content = it.content
+            val head = MailBlock.fromJson(it.structure)
+            formData.attachments = head.mediaScope
+            formData.icon = head.header.avatar
+            formData.setRewardListItems(head.rewards)
+        }
+        emojiEditText.setText(formData.content)
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "邮件图标"
@@ -83,6 +115,9 @@ class MailEditorActivity : BaseComplexEditorActivity() {
                 initialText = "${formData.items.size}") {
                 selectItems()
             }
+            packageDetailContainer = simpleUIContainer(windowContext)
+            container.addView(packageDetailContainer)
+            setItems()
 
             form {
                 useRealTimeValidation(disableSubmit = true)
@@ -95,6 +130,49 @@ class MailEditorActivity : BaseComplexEditorActivity() {
                     publish()
                 }
             }
+        }
+    }
+
+    fun setItems() {
+        requestBlock {
+            query = allItem().whereContainedIn("objectId", formData.items.keys)
+            onSuccess = {
+                setBlockItems(it)
+            }
+        }
+    }
+
+    fun setBlockItems(items: List<Block>) {
+        LogUtil.e(items)
+        packageDetailContainer.removeAllViews()
+        for (block in items) {
+            val head = ItemBlock.fromJson(block.structure)
+            val itemView = OwnCountItem(this).apply {
+                icon = head.header.icon
+                left_field = {
+                    hint = "物品"
+                    text = block.title
+                    inputEditText.isEnabled = false
+                }
+                right_field = {
+                    hint = "数量"
+                    text = "${formData.items[block.objectId]}"
+                    inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
+                    onTextChange = {
+                        val count = it?.toLongOrNull() ?: 0L
+                        formData.items[block.objectId] = count
+                    }
+                }
+                closeIcon = "R.drawable.ic_close"
+                onIconClick {
+                    showItemDialog(block)
+                }
+                onCloseIconClick {
+                    formData.items.remove(block.objectId)
+                    packageDetailContainer.removeView(this)
+                }
+            }
+            packageDetailContainer.addView(itemView)
         }
     }
 
@@ -123,12 +201,13 @@ class MailEditorActivity : BaseComplexEditorActivity() {
 
     fun showSelectDialog(items: List<Block>) {
         MaterialDialog(this, BottomSheet()).show {
-            title(text = "选择物品放入礼包中")
+            title(text = "选择物品")
             positiveButton(R.string.ok)
             val texts = items.map { it.title }
             listItemsMultiChoice(items = texts) { _, intArr, _ ->
                 val blocks = items.filterIndexed { index, block -> index in intArr }
-                formData.items = blocks.map { it.objectId }
+                formData.setRewardListItems(blocks.map { Reward(it.objectId, 1) })
+                setBlockItems(blocks)
                 packageItem.hint = formData.items.toString()
                 packageItem.text = "${formData.items.size}"
             }
@@ -150,7 +229,50 @@ class MailEditorActivity : BaseComplexEditorActivity() {
     }
 
     protected fun ok() {
-        save()
+        if (mail == null) {
+            save()
+        } else {
+            update()
+        }
+    }
+
+    fun subtype() = BLOCK_MAIL
+    fun getHeadBlock(): MailBlock {
+        val topicScope = emojiEditText.realTopicList.map {
+            TopicItem(it.topicName, it.topicId)
+        }.ifEmpty { null }?.let { TopicScope(it.toMutableList()) }
+        val atScope = emojiEditText.realUserList.map {
+            AtItem(it.user_name, it.user_id)
+        }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
+        return MailBlock(
+            header = PageHeader(
+                icon = formData.icon,
+                avatar = formData.icon,
+                cover = formData.icon,
+            ),
+            topicScope = topicScope,
+            atScope = atScope,
+            mediaScope = formData.attachments,
+            rewards = formData.getRewardListItems()
+        )
+    }
+
+    fun update() {
+        mail?.let {
+            updateBlock {
+                target = it.apply {
+                    title = formData.name
+                    content = formData.content
+                    subtype = subtype()
+                    structure = getHeadBlock().toJson()
+                }
+                onSuccess = {
+                    ToastUtil.ok("更新成功！")
+                    finish()
+                }
+                onError = errorCallback
+            }
+        }
     }
 
     open fun save() {
@@ -158,15 +280,8 @@ class MailEditorActivity : BaseComplexEditorActivity() {
             target = I() create Mail {
                 title = formData.name
                 content = formData.content
-                subtype = BLOCK_MAIL
-                headerBlock = MailBlock(
-                    header = PageHeader(
-                        icon = formData.icon,
-                        avatar = formData.icon,
-                        cover = formData.icon,
-                    ),
-                    rewards = formData.items.map { Reward(it, 1) }
-                )
+                subtype = subtype()
+                headerBlock = getHeadBlock()
             }
             onSuccess = {
                 ToastUtil.ok("创建成功！")

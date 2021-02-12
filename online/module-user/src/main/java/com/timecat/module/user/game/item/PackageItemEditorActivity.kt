@@ -1,5 +1,6 @@
 package com.timecat.module.user.game.item
 
+import android.text.InputType
 import android.widget.LinearLayout
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
@@ -155,6 +156,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                 right_field = {
                     hint = "数量"
                     text = "${formData.items[block.objectId]}"
+                    inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
                     onTextChange = {
                         val count = it?.toLongOrNull() ?: 0L
                         formData.items[block.objectId] = count

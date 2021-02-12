@@ -79,7 +79,6 @@ class MainActivity : Activity() {
         linearLayout.addView(createButton(RouterHub.USER_AllCubeActivity, RouterHub.USER_AllCubeActivity))
         linearLayout.addView(createButton(RouterHub.USER_AllMailActivity, RouterHub.USER_AllMailActivity))
         linearLayout.addView(createButton(RouterHub.USER_AllItemActivity, RouterHub.USER_AllItemActivity))
-        linearLayout.addView(createButton("game", RouterHub.USER_MailEditorActivity))
         linearLayout.addView(createButton("用户") {
             val user = UserDao.getCurrentUser()
             Router.with().hostAndPath(RouterHub.USER_UserDetailActivity)
