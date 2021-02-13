@@ -49,6 +49,13 @@ class AllCubeActivity : BaseDetailCollapseActivity() {
             it?.let { loadDetail(it) }
         })
         viewModel.cubes.observe(this, {
+            if (it.isEmpty()) {
+                LogUtil.e("没有持有任何方块!")
+                mStatefulLayout?.showEmpty("没有持有任何方块！")
+                return@observe
+            } else {
+                mStatefulLayout?.showContent()
+            }
             mBottomBar.removeAllViews()
             mBottomBar.addHorizonSV()
             it.forEach {

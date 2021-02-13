@@ -65,7 +65,7 @@ class CommentEditorActivity : BaseBlockEditorActivity() {
                 relayScope = relay?.let {
                     RelayScope(it.objectId)
                 }
-            ).toJson()
+            ).toJsonObject()
         ).toJson()
         block.type = BLOCK_COMMENT
         block.user = I()

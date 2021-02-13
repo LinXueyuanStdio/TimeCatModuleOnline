@@ -139,7 +139,7 @@ class DreamActivityEditorActivity : BaseActivityAddActivity() {
                 subtype = ACTIVITY_Url
                 headerBlock = ActivityBlock(
                     type = ACTIVITY_Url,
-                    structure = ActivityUrlBlock(formData.url).toJson(),
+                    structure = ActivityUrlBlock(formData.url).toJsonObject(),
                     mediaScope = formData.attachments,
                     topicScope = TopicScope(emojiEditText.realTopicList.map {
                         TopicItem(it.topicName, it.topicId)
@@ -155,7 +155,7 @@ class DreamActivityEditorActivity : BaseActivityAddActivity() {
                 )
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 finish()
             }
             onError = errorCallback

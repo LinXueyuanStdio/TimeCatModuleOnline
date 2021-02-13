@@ -114,7 +114,7 @@ open class AddLeaderBoardActivity : BaseBlockEditActivity() {
                 )
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 GO.leaderBoardDetail(it.objectId)
                 finish()
             }

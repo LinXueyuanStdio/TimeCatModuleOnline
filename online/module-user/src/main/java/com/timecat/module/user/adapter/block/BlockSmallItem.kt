@@ -25,7 +25,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
  * @description null
  * @usage null
  */
-class BlockSmallItem(
+open class BlockSmallItem(
     val activity: Activity,
     val block: Block,
     val onClick: ((View) -> Unit)? = null
@@ -129,7 +129,7 @@ class BlockSmallItem(
         }
     }
 
-    private fun View.safeClick(defaultClick: (View) -> Unit) {
+    protected fun View.safeClick(defaultClick: (View) -> Unit) {
         setShakelessClickListener(onClick = onClick ?: defaultClick)
     }
 

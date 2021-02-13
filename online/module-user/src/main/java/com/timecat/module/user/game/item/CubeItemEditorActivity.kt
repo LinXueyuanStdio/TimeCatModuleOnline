@@ -14,9 +14,9 @@ import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.*
+import com.timecat.identity.data.block.CubeItemBlock
+import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.type.ITEM_Cube
-import com.timecat.identity.data.block.type.ITEM_Package
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
@@ -153,6 +153,7 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
             update()
         }
     }
+
     fun subtype() = ITEM_Cube
     fun getItemBlock(): ItemBlock {
         val topicScope = emojiEditText.realTopicList.map {
@@ -163,7 +164,7 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
         }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
         return ItemBlock(
             type = subtype(),
-            structure =CubeItemBlock(formData.uuid).toJson(),
+            structure = CubeItemBlock(formData.uuid).toJsonObject(),
             mediaScope = formData.attachments,
             topicScope = topicScope,
             atScope = atScope,
@@ -202,7 +203,7 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
                 headerBlock = getItemBlock()
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 finish()
             }
             onError = errorCallback

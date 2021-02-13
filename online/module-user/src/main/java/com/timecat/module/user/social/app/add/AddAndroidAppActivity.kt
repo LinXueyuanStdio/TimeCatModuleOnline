@@ -135,7 +135,7 @@ class AddAndroidAppActivity : BaseAddAppActivity() {
                     structure = AndroidApp(
                         formData.url,
                         show = formData.attachments?.getAllPath() ?: mutableListOf()
-                    ).toJson(),
+                    ).toJsonObject(),
                     header = PageHeader(
                         icon = formData.icon,
                         avatar = formData.icon,
@@ -144,7 +144,7 @@ class AddAndroidAppActivity : BaseAddAppActivity() {
                 )
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 GO.appDetail(it.objectId)
                 finish()
             }

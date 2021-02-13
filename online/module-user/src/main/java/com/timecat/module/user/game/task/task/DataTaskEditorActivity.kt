@@ -71,13 +71,13 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
         }
 
         fun setRuleListItems(items: List<TaskRule>) {
-            this.items = mutableMapOf(*items.map {
+            this.rules = mutableMapOf(*items.map {
                 it.where to it.targetCount
             }.toTypedArray())
         }
 
         fun getRuleListItems(): MutableList<TaskRule> {
-            return items.toList().map { TaskRule(it.first, it.second) }.toMutableList()
+            return rules.toList().map { TaskRule(it.first, it.second) }.toMutableList()
         }
     }
 
@@ -213,7 +213,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
             positiveButton(R.string.ok)
             val texts = allTaskRules()
             listItemsMultiChoice(items = texts) { _, intArr, _ ->
-                val blocks = texts.filterIndexed { index, block -> index in intArr }
+                val blocks = texts.filterIndexed { index, _ -> index in intArr }
                 val rules = blocks.map { TaskRule(it, 1) }
                 formData.setRuleListItems(rules)
                 setTaskRulesItems(rules)
@@ -341,7 +341,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
             type = TASK_Data,
             structure = TaskDataBlock(
                 formData.getRuleListItems()
-            ).toJson(),
+            ).toJsonObject(),
             rewards = formData.getRewardListItems(),
             topicScope = topicScope,
             atScope = atScope,
@@ -381,7 +381,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
                 headerBlock = getHeadBlock()
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 finish()
             }
             onError = errorCallback

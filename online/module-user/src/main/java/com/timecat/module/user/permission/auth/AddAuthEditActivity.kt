@@ -285,7 +285,7 @@ class AddAuthEditActivity : BaseBlockEditActivity() {
                 expireDateTime = formData.expireTime
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 finish()
             }
             onError = {

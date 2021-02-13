@@ -108,7 +108,7 @@ class AddiOSAppActivity : BaseAddAppActivity() {
                     structure = iOSApp(
                         formData.content,
                         formData.attachments?.getAllPath() ?: mutableListOf()
-                    ).toJson(),
+                    ).toJsonObject(),
                     header = PageHeader(
                         icon = formData.icon,
                         avatar = formData.icon,
@@ -117,7 +117,7 @@ class AddiOSAppActivity : BaseAddAppActivity() {
                 )
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 GO.appDetail(it.objectId)
                 finish()
             }

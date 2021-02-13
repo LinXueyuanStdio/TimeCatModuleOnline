@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020/10/21
- * @description 创建身份
+ * @description 创建身份==创建方块
  * 主要是身份和一个或多个默认角色绑定
  * 身份还可以额外挂接多个临时角色
  * @usage null
@@ -46,10 +46,10 @@ class AddIdentityActivity : BaseBlockEditActivity() {
 
     override fun routerInject() = NAV.inject(this)
 
-    override fun title(): String = "创建身份"
+    override fun title(): String = "创建方块"
 
     data class FormData(
-        var name: String = "身份名",
+        var name: String = "名称",
         var content: String = "",
         var roles: MutableList<Block> = ArrayList()
     )
@@ -94,10 +94,10 @@ class AddIdentityActivity : BaseBlockEditActivity() {
             loadRole(it)
         }
         MaterialForm(this, container).apply {
-            val titleItem = OneLineInput("身份名", formData.name) {
+            val titleItem = OneLineInput("名称", formData.name) {
                 formData.name = it ?: ""
             }
-            MultiLineInput("身份描述", formData.content) {
+            MultiLineInput("描述", formData.content) {
                 formData.content = it ?: ""
             }
 
@@ -187,7 +187,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
                         content = formData.content
                     }
                     onSuccess = {
-                        ToastUtil.ok("创建成功！")
+                        ToastUtil.ok("成功！")
                         finish()
                     }
                     onError = {
@@ -207,7 +207,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
                     onSuccess = { exist ->
                         if (exist) {
                             btnOk.isEnabled = true
-                            ToastUtil.w("已存在，请修改身份名 ！")
+                            ToastUtil.w("已存在，请修改名称 ！")
                         } else {
                             save()
                         }
@@ -229,7 +229,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
                         I() let_Identity_has_role (it to role)
                     }
                     onSuccess = {
-                        ToastUtil.ok("创建成功！")
+                        ToastUtil.ok("成功！")
                         finish()
                     }
                     onError = {

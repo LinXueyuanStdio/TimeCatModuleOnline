@@ -118,7 +118,7 @@ open class AddForumActivity : BaseLoginEditActivity() {
                 )
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 GO.forumDetail(it.objectId)
                 finish()
             }

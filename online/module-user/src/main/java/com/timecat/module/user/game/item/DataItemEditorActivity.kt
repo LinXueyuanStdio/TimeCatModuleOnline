@@ -164,7 +164,7 @@ class DataItemEditorActivity : BaseItemAddActivity() {
             structure = DataItemBlock(
                 where = formData.where,
                 num = formData.num
-            ).toJson(),
+            ).toJsonObject(),
             mediaScope = formData.attachments,
             topicScope = topicScope,
             atScope = atScope,
@@ -203,7 +203,7 @@ class DataItemEditorActivity : BaseItemAddActivity() {
                 headerBlock = getItemBlock()
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 finish()
             }
             onError = errorCallback

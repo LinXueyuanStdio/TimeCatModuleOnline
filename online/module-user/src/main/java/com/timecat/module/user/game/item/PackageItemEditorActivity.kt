@@ -247,7 +247,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
             type = subtype(),
             structure = PackageItemBlock(
                 formData.getRewardListItems()
-            ).toJson(),
+            ).toJsonObject(),
             mediaScope = formData.attachments,
             topicScope = topicScope,
             atScope = atScope,
@@ -286,7 +286,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                 headerBlock = getItemBlock()
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 finish()
             }
             onError = errorCallback

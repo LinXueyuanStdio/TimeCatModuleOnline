@@ -235,7 +235,7 @@ class AddRoleActivity : BaseBlockEditActivity() {
                 I() let_Role_has_permission (role to permission)
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 finish()
             }
             onError = {

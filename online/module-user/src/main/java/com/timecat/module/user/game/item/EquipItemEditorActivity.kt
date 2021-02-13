@@ -128,7 +128,7 @@ class EquipItemEditorActivity : BaseItemAddActivity() {
         }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
         return ItemBlock(
             type = subtype(),
-            structure = EquipItemBlock().toJson(),
+            structure = EquipItemBlock().toJsonObject(),
             mediaScope = formData.attachments,
             topicScope = topicScope,
             atScope = atScope,
@@ -167,7 +167,7 @@ class EquipItemEditorActivity : BaseItemAddActivity() {
                 headerBlock = getItemBlock()
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 finish()
             }
             onError = errorCallback

@@ -145,7 +145,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
                     structure = PluginApp(
                         formData.content,
                         preview_urls = formData.attachments?.getAllPath() ?: mutableListOf()
-                    ).toJson(),
+                    ).toJsonObject(),
                     header = PageHeader(
                         icon = formData.icon,
                         avatar = formData.icon,
@@ -154,7 +154,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
                 )
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 GO.appDetail(it.objectId)
                 finish()
             }

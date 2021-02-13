@@ -83,7 +83,7 @@ class MailDetailFragment : BottomSheetDialogFragment() {
                 RewardList(requireActivity(), items)
 
                 val button = MaterialButton(windowContext)
-                button.setText("使用")
+                button.setText("领取")
                 button.setShakelessClickListener {
                     button.isEnabled = false
                     val params = mutableMapOf<String, Any>()

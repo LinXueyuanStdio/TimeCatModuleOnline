@@ -11,6 +11,7 @@ import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allIdentity
+import com.timecat.data.bmob.ext.net.allTask
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.ActivityBlock
@@ -102,6 +103,8 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
                 inputLayout(titleItem.inputLayout) {
                     isNotEmpty().description("请输入名称!")
                 }
+//                next(taskItem) {
+//                }
 
                 submitWith(R.id.ok) { result ->
                     publish()
@@ -113,7 +116,7 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
     fun chooseTask() {
         mStatefulLayout?.showLoading()
         requestBlock {
-            query = allIdentity()
+            query = allTask()
             onError = {
                 mStatefulLayout?.showContent()
                 ToastUtil.e_long(it.msg)
@@ -173,7 +176,7 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
                 subtype = ACTIVITY_One_task
                 headerBlock = ActivityBlock(
                     type = ACTIVITY_One_task,
-                    structure = ActivityOneTaskBlock(formData.taskId).toJson(),
+                    structure = ActivityOneTaskBlock(formData.taskId).toJsonObject(),
                     mediaScope = formData.attachments,
                     topicScope = TopicScope(emojiEditText.realTopicList.map {
                         TopicItem(it.topicName, it.topicId)
@@ -189,7 +192,7 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
                 )
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 finish()
             }
             onError = errorCallback

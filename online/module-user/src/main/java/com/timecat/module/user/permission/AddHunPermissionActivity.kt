@@ -87,7 +87,7 @@ class AddHunPermissionActivity : BaseBlockEditActivity() {
                         content = formData.content
                     }
                     onSuccess = {
-                        ToastUtil.ok("创建成功！")
+                        ToastUtil.ok("成功！")
                         finish()
                     }
                     onError = {
@@ -124,7 +124,7 @@ class AddHunPermissionActivity : BaseBlockEditActivity() {
                 content = formData.content
             }
             onSuccess = {
-                ToastUtil.ok("创建成功！")
+                ToastUtil.ok("成功！")
                 finish()
             }
             onError = {
