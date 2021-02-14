@@ -1,14 +1,9 @@
 package com.timecat.module.user.game.task
 
-import androidx.lifecycle.ViewModelProvider
 import com.alibaba.fastjson.JSONObject
 import com.cheng.channel.Channel
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
-import com.timecat.component.setting.DEF
-import com.timecat.data.bmob.data.game.OwnActivity
-import com.timecat.data.bmob.ext.bmob.requestOwnActivity
-import com.timecat.data.bmob.ext.net.allOwnActivity
 import com.timecat.data.system.model.eventbus.TabReselectedEvent
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.standard.navi.BottomBar
@@ -19,8 +14,6 @@ import com.timecat.module.user.game.task.channal.TaskChannel
 import com.timecat.module.user.game.task.fragment.*
 import com.timecat.module.user.game.task.rule.ActivityContext
 import com.timecat.module.user.game.task.vm.TaskViewModel
-import com.timecat.module.user.social.cloud.channel.ChannelManager
-import com.timecat.module.user.social.cloud.channel.TabChannel
 import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
