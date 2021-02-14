@@ -1,12 +1,12 @@
 package com.timecat.module.user.social.topic
 
 import android.view.ViewGroup
-import com.afollestad.vvalidator.form
+import com.afollestad.vvalidator.form.Form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Topic
 import com.timecat.data.bmob.ext.bmob.requestExistBlock
-import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.checkTopicExistByTitle
 import com.timecat.element.alert.ToastUtil
@@ -14,16 +14,14 @@ import com.timecat.identity.data.base.NoteBody
 import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.TopicBlock
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.middle.setting.MaterialForm
-import com.timecat.module.user.R
-import com.timecat.module.user.base.GO
-import com.timecat.module.user.base.login.BaseLoginEditActivity
-import com.timecat.module.user.view.item.MaterialForm
+import com.timecat.layout.ui.business.form.Image
+import com.timecat.layout.ui.business.form.OneLineInput
+import com.timecat.layout.ui.business.form.add
+import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.timecat.module.user.ext.chooseImage
+import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * @author 林学渊
@@ -33,60 +31,73 @@ import kotlinx.coroutines.launch
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddTopicActivity)
-open class AddTopicActivity : BaseLoginEditActivity() {
-    @AttrValueAutowiredAnno("name")
-    @JvmField
-    var name: String? = null
+open class AddTopicActivity : BaseBlockEditorActivity() {
 
-    @AttrValueAutowiredAnno("content")
+    @AttrValueAutowiredAnno("block")
     @JvmField
-    var content: String? = null
-
-    @AttrValueAutowiredAnno("icon")
-    @JvmField
-    var icon: String? = null
-
-    override fun routerInject() = NAV.inject(this)
+    var item: Block? = null
 
     override fun title(): String = "创建话题"
+    override fun routerInject() = NAV.inject(this)
+    override fun loadFromExistingBlock(): Block.() -> Unit = {
+        formData.title = title
+        formData.content = content
+    }
 
-    data class FormData(
-        var name: String = "新建话题",
-        var content: String = "",
-        var icon: String = "R.drawable.ic_folder"
-    )
-
-    val formData: FormData = FormData()
-
-    override fun addSettingItems(container: ViewGroup) {
-        name?.let { formData.title = it }
-        content?.let { formData.content = it }
-        icon?.let { formData.icon = it }
-
-        container.apply {
-            val formData.titleItem = OneLineInput("话题名", formData.title) {
-                formData.title = it ?: ""
-            }
-            MultiLineInput("备注", formData.content) {
-                formData.content = it ?: ""
-            }
-
-            form {
-                useRealTimeValidation(disableSubmit = true)
-
-                inputLayout(formData.titleItem.inputLayout) {
-                    isNotEmpty().description("请输入话题名!")
-                }
-
-                submitWith(R.id.ok) { result ->
-                    ok()
+    override fun initFormView(): ViewGroup.() -> Unit = {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
+            chooseImage(isAvatar = true) { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.icon = it.first()
                 }
             }
         }
+        formData.titleItem = OneLineInput("标题", "新建物产", autoAdd = false)
+
+        add(
+            formData.iconItem to 0,
+            formData.titleItem to 1,
+        )
     }
 
+    override fun validator(): Form.() -> Unit = {
+        inputLayout(formData.titleItem.inputLayout) {
+            isNotEmpty().description("请输入名称!")
+        }
+    }
+
+    override fun currentBlock(): Block? = item
+
+    override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
+        var h = formData.iconItem.height
+        if (formData.titleItem.inputEditText.hasFocus()) return h
+        h += formData.titleItem.height
+        if (emojiEditText.hasFocus()) return h
+        return 0
+    }
+
+    override fun savableBlock(): Block = I() create Topic {
+        title = formData.title
+        content = formData.content
+        headerBlock = TopicBlock(
+            content = NoteBody(),
+            header = PageHeader(
+                icon = formData.icon,
+                avatar = formData.icon,
+                cover = formData.icon,
+            )
+        )
+    }
+
+    override fun updatableBlock(): Block.() -> Unit = {
+        title = formData.title
+        content = formData.content
+    }
+
+    override fun subtype() = 0
+
     override fun ok() {
-        GlobalScope.launch(Dispatchers.IO) {
+        if (currentBlock() == null) {
             requestExistBlock {
                 query = checkTopicExistByTitle(formData.title)
                 onError = {
@@ -101,32 +112,8 @@ open class AddTopicActivity : BaseLoginEditActivity() {
                     }
                 }
             }
-        }
-    }
-
-    open fun save() {
-        saveBlock {
-            target = I() create Topic {
-                title = formData.title
-                content = formData.content
-                headerBlock = TopicBlock(
-                    content = NoteBody(),
-                    header = PageHeader(
-                        icon = formData.icon,
-                        avatar = formData.icon,
-                        cover = formData.icon,
-                    )
-                )
-            }
-            onSuccess = {
-                ToastUtil.ok("成功！")
-                GO.topicDetail(it.objectId)
-                finish()
-            }
-            onError = {
-                ToastUtil.e("创建失败！${it.msg}")
-                LogUtil.e("创建失败！${it.msg}")
-            }
+        } else {
+            update()
         }
     }
 }

@@ -16,6 +16,7 @@ import com.timecat.identity.data.block.ForumBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
+import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.base.login.BaseLoginEditActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -32,7 +33,7 @@ import kotlinx.coroutines.launch
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddForumActivity)
-open class AddForumActivity : BaseLoginEditActivity() {
+open class AddForumActivity : BaseBlockEditorActivity() {
     @AttrValueAutowiredAnno("name")
     @JvmField
     var name: String? = null

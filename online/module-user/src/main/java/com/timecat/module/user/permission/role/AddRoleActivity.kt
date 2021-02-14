@@ -6,6 +6,7 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.afollestad.vvalidator.form
+import com.afollestad.vvalidator.form.Form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
@@ -19,15 +20,13 @@ import com.timecat.data.bmob.ext.net.checkRoleExistByTitle
 import com.timecat.data.bmob.ext.net.findAllHunPermission
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.*
 import com.timecat.layout.ui.business.setting.ContainerItem
-import com.timecat.middle.setting.MaterialForm
+import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.module.user.R
-import com.timecat.module.user.base.BaseBlockEditActivity
+import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * @author 林学渊
@@ -38,11 +37,11 @@ import kotlinx.coroutines.launch
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddRoleActivity)
-class AddRoleActivity : BaseBlockEditActivity() {
+class AddRoleActivity : BaseBlockEditorActivity() {
 
     @AttrValueAutowiredAnno("block")
     @JvmField
-    var block: Block? = null
+    var role: Block? = null
 
     override fun routerInject() = NAV.inject(this)
 
@@ -54,8 +53,8 @@ class AddRoleActivity : BaseBlockEditActivity() {
         var permissions: MutableList<Block> = ArrayList()
     )
 
-    val formData: FormData = FormData()
-    lateinit var c: ContainerItem
+    lateinit var linkContainer: ContainerItem
+    lateinit var linkItem: NextItem
     lateinit var permissions: List<Block2Block>
 
     private fun loadPermission(block: Block) {
@@ -80,52 +79,35 @@ class AddRoleActivity : BaseBlockEditActivity() {
 
     private fun setPermission(blocks: List<Block>) {
         LogUtil.e(blocks)
-        c.removeAllViews()
-        formData.permissions.clear()
+        linkContainer.removeAllViews()
+        formData.blocks.clear()
         for (i in blocks) {
-            simplePermission(c, i)
-            formData.permissions.add(i)
+            simplePermission(linkContainer, i)
+            formData.blocks.add(i)
         }
     }
 
-    override fun addSettingItems(container: ViewGroup) {
-        block?.let {
-            setTitle("编辑权限角色")
-            formData.title = it.title
-            formData.content = it.content
-            mStatefulLayout?.showLoading()
-            loadPermission(it)
+    override fun initFormView(): ViewGroup.() -> Unit ={
+        formData.titleItem = OneLineInput("权限角色名", "", autoAdd = false)
+        val d1 = Divider(autoAdd = false)
+        linkItem= Next("关联混权限", autoAdd = false) {
+            addPermission()
         }
-        container.apply {
-            val formData.titleItem = OneLineInput("权限角色名", formData.title) {
-                formData.title = it ?: ""
-            }
-            MultiLineInput("描述", formData.content) {
-                formData.content = it ?: ""
-            }
-
-            Divider()
-            Next("关联混权限") {
-                addPermission()
-            }
-            c = simpleContainer(container)
-            Divider()
-
-            form {
-                useRealTimeValidation(disableSubmit = true)
-
-                inputLayout(formData.titleItem.inputLayout) {
-                    isNotEmpty().description("权限角色名")
-                }
-
-                submitWith(R.id.ok) {
-                    btnOk.isEnabled = false
-                    ok()
-                }
-            }
+        linkContainer = VerticalContainer{}
+        val d2 = Divider(autoAdd = false)
+        add(
+            formData.titleItem to 0,
+            d1 to 1,
+            linkItem to 2,
+            linkContainer to 3,
+            d2 to 4,
+        )
+    }
+    override fun validator(): Form.() -> Unit ={
+        inputLayout(formData.titleItem.inputLayout) {
+            isNotEmpty().description("权限角色名")
         }
     }
-
     private fun addPermission() {
         MaterialDialog(this).show {
             message(R.string.load_dialog_wait)
@@ -153,7 +135,7 @@ class AddRoleActivity : BaseBlockEditActivity() {
 
             val initSelection = ArrayList<Int>()
             for (i in permissions) {
-                for (j in formData.permissions) {
+                for (j in formData.blocks) {
                     if (i.eq(j)) {
                         initSelection.add(permissions.indexOf(i))
                     }
@@ -170,96 +152,82 @@ class AddRoleActivity : BaseBlockEditActivity() {
     }
 
     private fun simplePermission(viewGroup: ViewGroup, permission: Block) {
-        simpleNext(viewGroup, permission.title, permission.content, null) {
+        viewGroup.Next(permission.title, permission.content, null) {
             val info = "${permission.title}\n由 ${permission.user.nick} 创建"
             ToastUtil.i(info)
         }
     }
 
+    override fun loadFromExistingBlock(): Block.() -> Unit ={
+        setTitle("编辑权限角色")
+        formData.title = title
+        formData.content = content
+        mStatefulLayout?.showLoading()
+        loadPermission(this)
+    }
     override fun ok() {
-        GlobalScope.launch(Dispatchers.IO) {
-            if (block != null) {
-                updateBlock {
-                    target = block!!.apply {
-                        title = formData.title
-                        content = formData.content
-                    }
-                    onSuccess = { role ->
-                        if (::permissions.isInitialized) {
-                            deleteBatch {
-                                target = permissions
-                                onSuccess = {
-                                    savePermissionsOfRole(role)
-                                }
-                                onError = {
-                                    btnOk.isEnabled = true
-                                    ToastUtil.e("创建失败！${it.msg}")
-                                    LogUtil.e("创建失败！${it.msg}")
-                                }
-                            }
-                        } else {
-                            savePermissionsOfRole(role)
-                        }
-                    }
-                    onError = {
-                        btnOk.isEnabled = true
-                        ToastUtil.e("创建失败！${it.msg}")
-                        LogUtil.e("创建失败！${it.msg}")
-                    }
-                }
-            } else {
-                requestExistBlock {
-                    query = checkRoleExistByTitle(formData.title)
-                    onError = {
-                        btnOk.isEnabled = true
-                        ToastUtil.e("创建失败！${it.msg}")
-                        LogUtil.e("创建失败！${it.msg}")
-                    }
-                    onSuccess = { exist ->
-                        if (exist) {
-                            btnOk.isEnabled = true
-                            ToastUtil.w("已存在，请修改权限角色名 ！")
-                        } else {
-                            save()
-                        }
+        if (currentBlock() == null) {
+            requestExistBlock {
+                query = checkRoleExistByTitle(formData.title)
+                onError = errorCallback
+                onSuccess = { exist ->
+                    if (exist) {
+                        unlockEverythingWhenPublish()
+                        ToastUtil.w("已存在，请修改权限角色名 ！")
+                    } else {
+                        save()
                     }
                 }
             }
+        } else {
+            update()
+        }
+    }
+
+    override fun currentBlock(): Block? = role
+
+    override fun subtype(): Int = 0
+
+    override fun savableBlock(): Block = I() create Role {
+        title = formData.title
+        content = formData.content
+    }
+
+    override fun onSaveSuccess(it: Block) {
+        savePermissionsOfRole(it)
+    }
+
+    override fun updatableBlock(): Block.() -> Unit = {
+        title = formData.title
+        content = formData.content
+    }
+
+    override fun onUpdateSuccess(it: Block) {
+        if (::permissions.isInitialized) {
+            deleteBatch {
+                target = permissions
+                onSuccess = { _ ->
+                    savePermissionsOfRole(it)
+                }
+                onError = errorCallback
+            }
+        } else {
+            savePermissionsOfRole(it)
         }
     }
 
     private fun savePermissionsOfRole(role: Block) {
-        LogUtil.e(formData.permissions)
+        LogUtil.e(formData.blocks)
         saveBatch {
-            target = formData.permissions.map { permission ->
+            target = formData.blocks.map { permission ->
                 I() let_Role_has_permission (role to permission)
             }
             onSuccess = {
                 ToastUtil.ok("成功！")
                 finish()
             }
-            onError = {
-                btnOk.isEnabled = true
-                ToastUtil.e("创建失败！${it.msg}")
-                LogUtil.e("创建失败！${it.msg}")
-            }
+            onError = errorCallback
         }
     }
 
-    open fun save() {
-        saveBlock {
-            target = I() create Role {
-                title = formData.title
-                content = formData.content
-            }
-            onSuccess = {
-                savePermissionsOfRole(it)
-            }
-            onError = {
-                btnOk.isEnabled = true
-                ToastUtil.e("创建失败！${it.msg}")
-                LogUtil.e("创建失败！${it.msg}")
-            }
-        }
-    }
 }

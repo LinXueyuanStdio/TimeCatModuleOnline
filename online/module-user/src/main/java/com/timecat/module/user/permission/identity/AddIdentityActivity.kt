@@ -5,32 +5,23 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
-import com.afollestad.vvalidator.form
+import com.afollestad.vvalidator.form.Form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.common.Block2Block
-import com.timecat.data.bmob.ext.Identity
+import com.timecat.data.bmob.ext.*
 import com.timecat.data.bmob.ext.bmob.*
-import com.timecat.data.bmob.ext.create
-import com.timecat.data.bmob.ext.let_Identity_has_role
-import com.timecat.data.bmob.ext.net.allRole
-import com.timecat.data.bmob.ext.net.checkIdentityExistByTitle
-import com.timecat.data.bmob.ext.net.findAllRole
+import com.timecat.data.bmob.ext.net.*
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.business.form.MultiLineInput
-import com.timecat.layout.ui.business.form.Next
-import com.timecat.layout.ui.business.form.OneLineInput
-import com.timecat.layout.ui.business.form.addDivider
+import com.timecat.layout.ui.business.form.*
 import com.timecat.layout.ui.business.setting.ContainerItem
+import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.module.user.R
-import com.timecat.module.user.base.BaseBlockEditActivity
+import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * @author 林学渊
@@ -42,87 +33,142 @@ import kotlinx.coroutines.launch
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddIdentityActivity)
-class AddIdentityActivity : BaseBlockEditActivity() {
+class AddIdentityActivity : BaseBlockEditorActivity() {
+
     @AttrValueAutowiredAnno("block")
     @JvmField
-    var block: Block? = null
-
-    override fun routerInject() = NAV.inject(this)
+    var identity: Block? = null
 
     override fun title(): String = "创建方块"
+    override fun routerInject() = NAV.inject(this)
 
-    data class FormData(
-        var title: String = "名称",
-        var content: String = "",
-        var roles: MutableList<Block> = ArrayList()
-    )
+    lateinit var linkContainer: ContainerItem
+    lateinit var linkItem: NextItem
+    lateinit var roles: List<Block2Block>
 
-    val formData: FormData = FormData()
-    lateinit var c: ContainerItem
-    var roles: List<Block2Block> = ArrayList()
-        get() = field
-        set(value) {
-            c.removeAllViews()
-            formData.roles.clear()
-            for (i in value) {
-                simpleRole(c, i.to)
-                formData.roles.add(i.to)
-            }
-            field = value
-        }
-
-    private fun loadRole(block: Block) {
+    private fun loadRoles(block: Block) {
         requestBlockRelation {
             query = block.findAllRole()
             onError = {
                 mStatefulLayout?.showError {
-                    loadRole(block)
+                    loadRoles(block)
                 }
             }
             onEmpty = {
+                LogUtil.e("empty")
                 mStatefulLayout?.showContent()
             }
             onSuccess = {
+                setRole(it.map { it.to })
                 roles = it
                 mStatefulLayout?.showContent()
             }
         }
     }
 
-    override fun addSettingItems(container: ViewGroup) {
-        block?.let {
-            formData.title = it.title
-            formData.content = it.content
-            mStatefulLayout?.showLoading()
-            loadRole(it)
+    private fun setRole(blocks: List<Block>) {
+        LogUtil.e(blocks)
+        linkContainer.removeAllViews()
+        formData.blocks.clear()
+        for (i in blocks) {
+            simpleRole(linkContainer, i)
+            formData.blocks.add(i)
         }
-        container.apply {
-            val titleItem = OneLineInput("名称", formData.title) {
-                formData.title = it ?: ""
-            }
-            MultiLineInput("描述", formData.content) {
-                formData.content = it ?: ""
-            }
+    }
 
-            addDivider()
-            Next("关联角色") {
-                addRole()
-            }
-            c = ContainerItem(context)
-            addDivider()
+    override fun initFormView(): ViewGroup.() -> Unit = {
+        formData.titleItem = OneLineInput("名称", "", autoAdd = false)
+        val d1 = Divider(autoAdd = false)
+        linkItem = Next("关联角色", autoAdd = false) {
+            addRole()
+        }
+        linkContainer = VerticalContainer {}
+        val d2 = Divider(autoAdd = false)
+        add(
+            formData.titleItem to 0,
+            d1 to 1,
+            linkItem to 2,
+            linkContainer to 3,
+            d2 to 4,
+        )
+    }
 
-            form {
-                useRealTimeValidation(disableSubmit = true)
+    override fun validator(): Form.() -> Unit = {
+        inputLayout(formData.titleItem.inputLayout) {
+            isNotEmpty().description("权限角色名")
+        }
+    }
 
-                inputLayout(titleItem.inputLayout) {
-                    isNotEmpty().description("身份名")
+    override fun loadFromExistingBlock(): Block.() -> Unit = {
+        setTitle("编辑方块")
+        formData.title = title
+        formData.content = content
+        mStatefulLayout?.showLoading()
+        loadRoles(this)
+    }
+
+    override fun ok() {
+        if (currentBlock() == null) {
+            requestExistBlock {
+                query = checkIdentityExistByTitle(formData.title)
+                onError = errorCallback
+                onSuccess = { exist ->
+                    if (exist) {
+                        unlockEverythingWhenPublish()
+                        ToastUtil.w("已存在，请修改权限角色名 ！")
+                    } else {
+                        save()
+                    }
                 }
-
-                submitWith(R.id.ok) { result ->
-                    btnOk.isEnabled = false
-                    ok()
-                }
             }
+        } else {
+            update()
+        }
+    }
+
+    override fun currentBlock(): Block? = identity
+
+    override fun subtype(): Int = 0
+
+    override fun savableBlock(): Block = I() create Role {
+        title = formData.title
+        content = formData.content
+    }
+
+    override fun onSaveSuccess(it: Block) {
+        saveRoleOfIdentity(it)
+    }
+
+    override fun updatableBlock(): Block.() -> Unit = {
+        title = formData.title
+        content = formData.content
+    }
+
+    override fun onUpdateSuccess(it: Block) {
+        if (::roles.isInitialized) {
+            deleteBatch {
+                target = roles
+                onSuccess = { _ ->
+                    saveRoleOfIdentity(it)
+                }
+                onError = errorCallback
+            }
+        } else {
+            saveRoleOfIdentity(it)
+        }
+    }
+
+    private fun saveRoleOfIdentity(identity: Block) {
+        LogUtil.e(formData.blocks)
+        saveBatch {
+            target = formData.blocks.map { role ->
+                I() let_Identity_has_role (identity to role)
+            }
+            onSuccess = {
+                ToastUtil.ok("成功！")
+                finish()
+            }
+            onError = errorCallback
         }
     }
 
@@ -153,7 +199,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
 
             val initSelection = ArrayList<Int>()
             for (i in roles) {
-                for (j in formData.roles) {
+                for (j in formData.blocks) {
                     if (i.eq(j)) {
                         initSelection.add(roles.indexOf(i))
                     }
@@ -164,89 +210,20 @@ class AddIdentityActivity : BaseBlockEditActivity() {
                 items = roles.map { "${it.title}\n描述: ${it.content}" },
                 initialSelection = initSelection.toTypedArray().toIntArray()
             ) { dialog, indexs, titles ->
-                formData.roles.clear()
-                c.removeAllViews()
+                formData.blocks.clear()
+                linkContainer.removeAllViews()
                 for (i in indexs) {
                     val p = roles[i]
-                    formData.roles.add(p)
-                    simpleRole(c, p)
+                    formData.blocks.add(p)
+                    simpleRole(linkContainer, p)
                 }
             }
         }
     }
 
     private fun simpleRole(viewGroup: ViewGroup, role: Block) {
-        viewGroup.Next(role.title, role.content, "") {
+        viewGroup.Next(role.title, role.content) {
             NAV.go(this, RouterHub.USER_AddRoleActivity, "block", role)
-        }
-    }
-
-    override fun ok() {
-        GlobalScope.launch(Dispatchers.IO) {
-            if (block != null) {
-                updateBlock {
-                    target = block!!.apply {
-                        title = formData.title
-                        content = formData.content
-                    }
-                    onSuccess = {
-                        ToastUtil.ok("成功！")
-                        finish()
-                    }
-                    onError = {
-                        btnOk.isEnabled = true
-                        ToastUtil.e("创建失败！${it.msg}")
-                        LogUtil.e("创建失败！${it.msg}")
-                    }
-                }
-            } else {
-                requestExistBlock {
-                    query = checkIdentityExistByTitle(formData.title)
-                    onError = {
-                        btnOk.isEnabled = true
-                        ToastUtil.e("创建失败！${it.msg}")
-                        LogUtil.e("创建失败！${it.msg}")
-                    }
-                    onSuccess = { exist ->
-                        if (exist) {
-                            btnOk.isEnabled = true
-                            ToastUtil.w("已存在，请修改名称 ！")
-                        } else {
-                            save()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    open fun save() {
-        saveBlock {
-            target = I() create Identity {
-                title = formData.title
-                content = formData.content
-            }
-            onSuccess = {
-                saveBatch {
-                    target = formData.roles.map { role ->
-                        I() let_Identity_has_role (it to role)
-                    }
-                    onSuccess = {
-                        ToastUtil.ok("成功！")
-                        finish()
-                    }
-                    onError = {
-                        btnOk.isEnabled = true
-                        ToastUtil.e("创建失败！${it.msg}")
-                        LogUtil.e("创建失败！${it.msg}")
-                    }
-                }
-            }
-            onError = {
-                btnOk.isEnabled = true
-                ToastUtil.e("创建失败！${it.msg}")
-                LogUtil.e("创建失败！${it.msg}")
-            }
         }
     }
 }

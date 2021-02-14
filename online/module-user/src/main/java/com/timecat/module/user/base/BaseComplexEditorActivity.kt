@@ -219,16 +219,18 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
     protected fun lockEverythingForPublish() {
         KeyboardUtil.hideKeyboard(emojiEditText)
         mStatefulLayout?.showLoading()
+        ok.isEnabled = false
     }
 
     var errorCallback: (DataError) -> Unit = {
         ToastUtil.e("创建失败！${it.msg}")
         LogUtil.e("创建失败！${it.msg}")
-        unlockEverythingWhenPublishInFailure()
+        unlockEverythingWhenPublish()
     }
 
-    protected fun unlockEverythingWhenPublishInFailure() {
+    protected fun unlockEverythingWhenPublish() {
         mStatefulLayout?.showContent()
+        ok.isEnabled = true
     }
 
     protected fun publish() {

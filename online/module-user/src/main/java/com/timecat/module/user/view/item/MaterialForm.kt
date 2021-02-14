@@ -1,6 +1,7 @@
 package com.timecat.module.user.view.item
 
 import com.shuyu.textutillib.RichEditText
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.base.*
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
@@ -102,4 +103,6 @@ class MaterialForm {
     //endregion
 
     var attachments: AttachmentTail? = null
+    var blocks: MutableList<Block> = ArrayList()
+
 }
