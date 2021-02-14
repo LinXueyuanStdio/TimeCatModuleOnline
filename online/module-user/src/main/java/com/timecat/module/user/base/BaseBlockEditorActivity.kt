@@ -1,7 +1,9 @@
 package com.timecat.module.user.base
 
-import android.view.View
-import com.timecat.module.user.R
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.saveBlock
+import com.timecat.data.bmob.ext.bmob.updateBlock
+import com.timecat.element.alert.ToastUtil
 
 /**
  * @author 林学渊
@@ -12,32 +14,52 @@ import com.timecat.module.user.R
  */
 abstract class BaseBlockEditorActivity : BaseComplexEditorActivity() {
 
-    override fun layout(): Int = R.layout.user_activity_moment_add
-
-    lateinit var add_pos: View
-    lateinit var privacy: View
-    lateinit var photo: View
-
-    override fun bindView() {
-        super.bindView()
-        add_pos = findViewById(R.id.add_pos)
-        privacy = findViewById(R.id.privacy)
-        photo = findViewById(R.id.photo)
+    override fun release() {
+        ok()
     }
 
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
-        add_pos.setOnClickListener {
-
-        }
-
-        privacy.setOnClickListener {
-
-        }
-
-        photo.setOnClickListener {
-            onAddImage()
+    protected fun ok() {
+        if (currentBlock() == null) {
+            save()
+        } else {
+            update()
         }
     }
 
+    abstract fun currentBlock(): Block?
+    abstract fun subtype(): Int
+    abstract fun savableBlock(): Block
+    abstract fun updatableBlock(): Block.() -> Unit
+
+    open fun onUpdateSuccess(it: Block) {
+        ToastUtil.ok("更新成功！")
+        finish()
+    }
+
+    open fun update() {
+        currentBlock()?.let {
+            updateBlock {
+                target = it.apply(updatableBlock())
+                onSuccess = {
+                    onUpdateSuccess(it)
+                }
+                onError = errorCallback
+            }
+        }
+    }
+
+    open fun onSaveSuccess(it: Block) {
+        ToastUtil.ok("成功！")
+        finish()
+    }
+
+    open fun save() {
+        saveBlock {
+            target = savableBlock()
+            onSuccess = {
+                onSaveSuccess(it)
+            }
+            onError = errorCallback
+        }
+    }
 }

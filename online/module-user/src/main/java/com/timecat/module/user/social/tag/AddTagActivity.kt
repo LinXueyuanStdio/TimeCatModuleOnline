@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import com.afollestad.vvalidator.form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Tag
 import com.timecat.data.bmob.ext.bmob.requestExistBlock
 import com.timecat.data.bmob.ext.bmob.saveBlock
@@ -33,20 +34,12 @@ import kotlinx.coroutines.launch
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddTagActivity)
 open class AddTagActivity : BaseLoginEditActivity() {
-    @AttrValueAutowiredAnno("name")
-    @JvmField
-    var name: String? = null
 
-    @AttrValueAutowiredAnno("content")
+    @AttrValueAutowiredAnno("block")
     @JvmField
-    var content: String? = null
-
-    @AttrValueAutowiredAnno("icon")
-    @JvmField
-    var icon: String? = null
+    var block: Block? = null
 
     override fun routerInject() = NAV.inject(this)
-
     override fun title(): String = "创建标签"
 
     data class FormData(
@@ -58,9 +51,12 @@ open class AddTagActivity : BaseLoginEditActivity() {
     val formData: FormData = FormData()
 
     override fun addSettingItems(container: ViewGroup) {
-        name?.let { formData.name = it }
-        content?.let { formData.content = it }
-        icon?.let { formData.icon = it }
+        block?.let {
+            formData.name = it.title
+            formData.content = it.content
+            val head = TagBlock.fromJson(it.structure)
+            formData.icon = head.header?.icon ?: "R.drawable.ic_folder"
+        }
 
         MaterialForm(this, container).apply {
             val titleItem = OneLineInput("标签名", formData.name) {

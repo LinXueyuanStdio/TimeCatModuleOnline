@@ -76,7 +76,7 @@ class AddWindowsAppActivity : BaseAddAppActivity() {
         }
     }
 
-    override fun publish(content: String, attachments: AttachmentTail?) {
+    override fun release() {
         formData.content = content
         formData.attachments = attachments
         ok()

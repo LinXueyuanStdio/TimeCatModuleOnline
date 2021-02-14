@@ -17,9 +17,7 @@ import com.timecat.component.commonsdk.extension.hideKeyboard
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.image.savablePath
-import com.timecat.identity.data.base.AIT_PHOTO
-import com.timecat.identity.data.base.AttachmentItem
-import com.timecat.identity.data.base.AttachmentTail
+import com.timecat.identity.data.base.*
 import com.timecat.identity.data.service.DataError
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.util.KeyboardUtil
@@ -53,6 +51,22 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
      */
     private val nameList = ArrayList<UserModel>()
 
+    val formTopicScope: TopicScope?
+        get() = emojiEditText.realTopicList.map {
+            TopicItem(it.topicName, it.topicId)
+        }.ifEmpty { null }?.let { TopicScope(it.toMutableList()) }
+    val formAtScope: AtScope?
+        get() = emojiEditText.realUserList.map {
+            AtItem(it.user_name, it.user_id)
+        }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
+
+    var formContent: String
+        get() = emojiEditText.realText
+        set(value) {
+            emojiEditText.setText(value)
+        }
+    var formAttachments: AttachmentTail? = null
+
     override fun layout(): Int = R.layout.user_activity_complex_add
 
     lateinit var ok: Button
@@ -63,15 +77,18 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
     lateinit var keyboard: View
     lateinit var emojiEditText: RichEditText
     protected var mHelper: PanelSwitchHelper? = null
+
     override fun bindView() {
         super.bindView()
         ok = findViewById(R.id.ok)
+
+        emojiEditText = findViewById(R.id.emojiEditText)
+
         at = findViewById(R.id.at)
         topic = findViewById(R.id.topic)
         block = findViewById(R.id.block)
         more = findViewById(R.id.more)
         keyboard = findViewById(R.id.keyboard)
-        emojiEditText = findViewById(R.id.emojiEditText)
     }
 
     override fun onStart() {
@@ -223,19 +240,20 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
 
     protected fun publish() {
         lockEverythingForPublish()
-        val content = emojiEditText.realText
         val originImgs = imageAdapter.data.map { it.savablePath() }.filterNotNull()
         if (originImgs.isEmpty()) {
-            publish(content, null)
+            formAttachments = null
+            release()
         } else {
             receieveImage(I(), originImgs, false) { origins ->
                 val photoList = origins.map { AttachmentItem(AIT_PHOTO, it) }.toMutableList()
-                publish(content, AttachmentTail(photoList))
+                formAttachments = AttachmentTail(photoList)
+                release()
             }
         }
     }
 
-    abstract fun publish(content: String, attachments: AttachmentTail?)
+    abstract fun release()
 
     /**
      * 处理自己的表情

@@ -11,8 +11,6 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Mail
 import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.bmob.saveBlock
-import com.timecat.data.bmob.ext.bmob.updateBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.element.alert.ToastUtil
@@ -27,7 +25,7 @@ import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
-import com.timecat.module.user.base.BaseComplexEditorActivity
+import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.timecat.module.user.game.item.showItemDialog
@@ -44,19 +42,18 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_MailEditorActivity)
-class MailEditorActivity : BaseComplexEditorActivity() {
+class MailEditorActivity : BaseBlockEditorActivity() {
 
     @AttrValueAutowiredAnno("block")
     @JvmField
     var mail: Block? = null
+
     override fun title(): String = "邮件"
     override fun routerInject() = NAV.inject(this)
     data class FormData(
         var icon: String = "R.drawable.ic_folder",
         var name: String = "新邮件",
-        var content: String = "",
         var items: MutableMap<String, Long> = mutableMapOf(),
-        var attachments: AttachmentTail? = null
     ) {
         fun setRewardListItems(items: List<Reward>) {
             this.items = mutableMapOf(*items.map {
@@ -79,13 +76,12 @@ class MailEditorActivity : BaseComplexEditorActivity() {
         super.initViewAfterLogin()
         mail?.let {
             formData.name = it.title
-            formData.content = it.content
+            formContent = it.content
             val head = MailBlock.fromJson(it.structure)
-            formData.attachments = head.mediaScope
+            formAttachments = head.mediaScope
             formData.icon = head.header.avatar
             formData.setRewardListItems(head.rewards)
         }
-        emojiEditText.setText(formData.content)
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "邮件图标"
@@ -222,72 +218,33 @@ class MailEditorActivity : BaseComplexEditorActivity() {
         }
     }
 
-    override fun publish(content: String, attachments: AttachmentTail?) {
-        formData.content = content
-        formData.attachments = attachments
-        ok()
+    override fun currentBlock(): Block? = mail
+    override fun subtype() = BLOCK_MAIL
+    override fun savableBlock(): Block = I() create Mail {
+        title = formData.name
+        content = formContent
+        subtype = subtype()
+        headerBlock = getHeadBlock()
     }
 
-    protected fun ok() {
-        if (mail == null) {
-            save()
-        } else {
-            update()
-        }
+    override fun updatableBlock(): Block.() -> Unit = {
+        title = formData.name
+        content = formContent
+        subtype = subtype()
+        structure = getHeadBlock().toJson()
     }
 
-    fun subtype() = BLOCK_MAIL
     fun getHeadBlock(): MailBlock {
-        val topicScope = emojiEditText.realTopicList.map {
-            TopicItem(it.topicName, it.topicId)
-        }.ifEmpty { null }?.let { TopicScope(it.toMutableList()) }
-        val atScope = emojiEditText.realUserList.map {
-            AtItem(it.user_name, it.user_id)
-        }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
         return MailBlock(
             header = PageHeader(
                 icon = formData.icon,
                 avatar = formData.icon,
                 cover = formData.icon,
             ),
-            topicScope = topicScope,
-            atScope = atScope,
-            mediaScope = formData.attachments,
+            topicScope = formTopicScope,
+            atScope = formAtScope,
+            mediaScope = formAttachments,
             rewards = formData.getRewardListItems()
         )
-    }
-
-    fun update() {
-        mail?.let {
-            updateBlock {
-                target = it.apply {
-                    title = formData.name
-                    content = formData.content
-                    subtype = subtype()
-                    structure = getHeadBlock().toJson()
-                }
-                onSuccess = {
-                    ToastUtil.ok("更新成功！")
-                    finish()
-                }
-                onError = errorCallback
-            }
-        }
-    }
-
-    open fun save() {
-        saveBlock {
-            target = I() create Mail {
-                title = formData.name
-                content = formData.content
-                subtype = subtype()
-                headerBlock = getHeadBlock()
-            }
-            onSuccess = {
-                ToastUtil.ok("成功！")
-                finish()
-            }
-            onError = errorCallback
-        }
     }
 }

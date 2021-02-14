@@ -21,6 +21,7 @@ class CommentDetailBottomSheet : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("block")
     @JvmField
     var block: Block? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         NAV.inject(this)
         super.onCreate(savedInstanceState)

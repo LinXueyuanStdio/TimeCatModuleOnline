@@ -202,7 +202,7 @@ class BlockAdapter(
                     GO.commentDetail(block.objectId)
                 }
             }
-            COMMENT_LONG -> {
+            COMMENT_SCORE -> {
 
             }
             COMMENT_TEXT -> {

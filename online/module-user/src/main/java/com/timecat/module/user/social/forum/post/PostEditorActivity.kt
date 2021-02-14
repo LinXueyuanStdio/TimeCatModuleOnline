@@ -26,6 +26,13 @@ class PostEditorActivity : BaseBlockEditorActivity() {
     @JvmField
     var parent: Block? = null
 
+    /**
+     * 更新
+     */
+    @AttrValueAutowiredAnno("block")
+    @JvmField
+    var post: Block? = null
+
     override fun title(): String = "帖子"
     override fun routerInject() = NAV.inject(this)
 
@@ -33,7 +40,7 @@ class PostEditorActivity : BaseBlockEditorActivity() {
         super.initViewAfterLogin()
     }
 
-    override fun publish(content: String, attachments: AttachmentTail?) {
+    override fun release() {
         //TODO infix refactor
         val block = Block.forPost(I(), content)
         block.parent = parent

@@ -31,7 +31,7 @@ class CubeStarEditorActivity : BaseComplexEditorActivity() {
         }
     }
 
-    override fun publish(content: String, attachments: AttachmentTail?) {
+    override fun release() {
         val block = Block.forMoment(I(), content)
         block.structure = MomentBlock(
             mediaScope = attachments,

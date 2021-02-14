@@ -68,7 +68,7 @@ class CommentView @JvmOverloads constructor(
                 setRelayScope(root, sc.relayScope)
                 setPosScope(root, sc.posScope)
             }
-            COMMENT_LONG -> {
+            COMMENT_SCORE -> {
 
             }
             COMMENT_TEXT -> {

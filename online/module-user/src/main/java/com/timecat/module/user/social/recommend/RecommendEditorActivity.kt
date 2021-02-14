@@ -49,7 +49,7 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
         }
     }
 
-    override fun publish(content: String, attachments: AttachmentTail?) {
+    override fun release() {
         val block = Block.forComment(I(), content)
         block.structure = CommentBlock(
             COMMENT_SIMPLE,
