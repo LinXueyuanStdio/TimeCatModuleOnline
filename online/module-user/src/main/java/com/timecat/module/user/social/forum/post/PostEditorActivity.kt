@@ -2,7 +2,9 @@ package com.timecat.module.user.social.forum.post
 
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.Post
 import com.timecat.data.bmob.ext.bmob.saveBlock
+import com.timecat.data.bmob.ext.create
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.PostBlock
 import com.timecat.identity.readonly.RouterHub
@@ -60,5 +62,19 @@ class PostEditorActivity : BaseBlockEditorActivity() {
             }
             onError = errorCallback
         }
+    }
+
+    override fun currentBlock(): Block? {
+        TODO("Not yet implemented")
+    }
+
+    override fun subtype(): Int =0
+
+    override fun savableBlock(): Block = I() create Post {
+
+    }
+
+    override fun updatableBlock(): Block.() -> Unit = {
+
     }
 }

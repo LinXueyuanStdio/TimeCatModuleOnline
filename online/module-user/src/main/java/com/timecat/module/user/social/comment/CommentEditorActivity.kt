@@ -49,11 +49,7 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     @JvmField
     var comment: Block? = null
 
-    data class FormData(
-        var replyBlockId: String = "",
-    )
-
-    val formData: FormData = FormData()
+    var replyBlockId: String = ""
 
     override fun title(): String = "评论"
     override fun routerInject() = NAV.inject(this)
@@ -71,30 +67,24 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     }
 
     override fun savableBlock(): Block = I() create Comment {
-        this.subtype = subtype()
         this.parent = this@CommentEditorActivity.parent
+        this.subtype = subtype()
         this.headerBlock = getHeadBlock()
     }
 
     override fun updatableBlock(): Block.() -> Unit = {
-        title = formData.replyBlockId
+        title = replyBlockId
         content = formContent
         //更新评论后应该保持parent不变
         structure = getHeadBlock().toJson()
     }
 
     fun getHeadBlock(): CommentBlock {
-        val topicScope = emojiEditText.realTopicList.map {
-            TopicItem(it.topicName, it.topicId)
-        }.ifEmpty { null }?.let { TopicScope(it.toMutableList()) }
-        val atScope = emojiEditText.realUserList.map {
-            AtItem(it.user_name, it.user_id)
-        }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
         return CommentBlock(
             content = NoteBody(),
             mediaScope = formAttachments,
-            atScope = atScope,
-            topicScope = topicScope,
+            atScope = formAtScope,
+            topicScope = formTopicScope,
             structure = SimpleComment().toJsonObject()
         )
     }
@@ -107,7 +97,7 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
             emojiEditText.hint = relay?.let { "转发 @${it.user.nick}" } ?: "回复 @${it.user.nick}"
         }
         comment?.let {
-            formData.replyBlockId = it.title
+            replyBlockId = it.title
             formContent = it.content
             val head = CommentBlock.fromJson(it.structure)
             formAttachments = head.mediaScope

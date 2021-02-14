@@ -50,23 +50,21 @@ class MailEditorActivity : BaseBlockEditorActivity() {
 
     override fun title(): String = "邮件"
     override fun routerInject() = NAV.inject(this)
-    data class FormData(
-        var icon: String = "R.drawable.ic_folder",
-        var name: String = "新邮件",
-        var items: MutableMap<String, Long> = mutableMapOf(),
-    ) {
-        fun setRewardListItems(items: List<Reward>) {
-            this.items = mutableMapOf(*items.map {
+    var formIcon: String
+    get() = imageItem
+    set(value) {
+        imageItem.setImage(value)
+    }
+    var formTitle: String = "新邮件"
+    var formItems: MutableMap<String, Long> = mutableMapOf()
+    var formRewardListItems: List<Reward>
+        get() = formItems.toList().map { Reward(it.first, it.second) }
+        set(value) {
+            formItems = mutableMapOf(*value.map {
                 it.uuid to it.count
             }.toTypedArray())
         }
 
-        fun getRewardListItems(): MutableList<Reward> {
-            return items.toList().map { Reward(it.first, it.second) }.toMutableList()
-        }
-    }
-
-    val formData: FormData = FormData()
     lateinit var imageItem: ImageItem
     lateinit var titleItem: InputItem
     lateinit var packageItem: NextItem
@@ -75,22 +73,21 @@ class MailEditorActivity : BaseBlockEditorActivity() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         mail?.let {
-            formData.name = it.title
+            formTitle = it.title
             formContent = it.content
             val head = MailBlock.fromJson(it.structure)
             formAttachments = head.mediaScope
-            formData.icon = head.header.avatar
-            formData.setRewardListItems(head.rewards)
+            formIcon = head.header.avatar
+            formRewardListItems = head.rewards
         }
         MaterialForm(this, container).apply {
             imageItem = ImageItem(windowContext).apply {
                 title = "邮件图标"
-                setImage(formData.icon)
+                setImage("R.drawable.ic_folder")
                 onClick {
                     chooseImage(isAvatar = true) { path ->
                         receieveImage(I(), listOf(path), false) {
-                            formData.icon = it.first()
-                            imageItem.setImage(formData.icon)
+                            formIcon = it.first()
                         }
                     }
                 }
@@ -107,8 +104,8 @@ class MailEditorActivity : BaseBlockEditorActivity() {
                 container.addView(this, 1)
             }
             packageItem = Next("礼包",
-                hint = formData.items.toString(),
-                initialText = "${formData.items.size}") {
+                hint = formItems.toString(),
+                initialText = "${formItems.size}") {
                 selectItems()
             }
             packageDetailContainer = simpleUIContainer(windowContext)
@@ -131,7 +128,7 @@ class MailEditorActivity : BaseBlockEditorActivity() {
 
     fun setItems() {
         requestBlock {
-            query = allItem().whereContainedIn("objectId", formData.items.keys)
+            query = allItem().whereContainedIn("objectId", formItems.keys)
             onSuccess = {
                 setBlockItems(it)
             }
@@ -152,11 +149,11 @@ class MailEditorActivity : BaseBlockEditorActivity() {
                 }
                 right_field = {
                     hint = "数量"
-                    text = "${formData.items[block.objectId]}"
+                    text = "${formItems[block.objectId]}"
                     inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
                     onTextChange = {
                         val count = it?.toLongOrNull() ?: 0L
-                        formData.items[block.objectId] = count
+                        formItems[block.objectId] = count
                     }
                 }
                 closeIcon = "R.drawable.ic_close"
@@ -164,7 +161,7 @@ class MailEditorActivity : BaseBlockEditorActivity() {
                     showItemDialog(block)
                 }
                 onCloseIconClick {
-                    formData.items.remove(block.objectId)
+                    formItems.remove(block.objectId)
                     packageDetailContainer.removeView(this)
                 }
             }
