@@ -18,6 +18,7 @@ import com.timecat.data.bmob.ext.net.findAllComment
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.*
 import com.timecat.identity.service.PluginService
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.ImageAdapter
 import com.timecat.module.user.base.LOAD
@@ -63,7 +64,7 @@ class AppView @JvmOverloads constructor(
         initFocusButton(root, block)
         root.introDetail.setText(block.content)
         val app = AppBlock.fromJson(block.structure)
-        initByAppBlock(root, app, onInit)
+        initByAppBlock(root, block.subtype, app, onInit)
         root.userSection.bindBlock(block.user)
     }
 
@@ -98,47 +99,82 @@ class AppView @JvmOverloads constructor(
         root.downloadSum.text = "${block.usedBy} 浏览"
     }
 
-    private fun initByAppBlock(root: View, app: AppBlock, onInit: (InitItem) -> Unit) {
-        when (app.type) {
+    private fun initByAppBlock(root: View, subtype: Int, app: AppBlock, onInit: (InitItem) -> Unit) {
+        app.mediaScope?.let {
+            root.preface.adapter = ImageAdapter(it.getPhoto())
+        }
+        when (subtype) {
             APP_AndroidApp -> {
                 val androidApp = AndroidApp.fromJson(app.structure)
                 onInit(InitItem("Android 应用"))
                 initByAndroidApp(root, androidApp)
+                root.download.text = "下载"
+                root.download.setShakelessClickListener {
+                    ToastUtil.w("暂不可用")
+                }
             }
             APP_WebApp -> {
                 val webApp = WebApp.fromJson(app.structure)
                 onInit(InitItem("网页"))
                 initByWebApp(root, webApp)
+                root.download.text = "访问"
+                root.download.setShakelessClickListener {
+                    HERF.gotoUrl(context, app.url)
+                }
             }
             APP_iOS -> {
                 val iOSApp = iOSApp.fromJson(app.structure)
                 onInit(InitItem("iOS 应用"))
                 initByiOSApp(root, iOSApp)
+                root.download.text = "下载"
+                root.download.setShakelessClickListener {
+                    ToastUtil.w("暂不可用")
+                }
             }
             APP_Mac -> {
                 val macApp = MacApp.fromJson(app.structure)
                 onInit(InitItem("Mac 应用"))
                 initByMacApp(root, macApp)
+                root.download.text = "下载"
+                root.download.setShakelessClickListener {
+                    ToastUtil.w("暂不可用")
+                }
             }
             APP_Linux -> {
                 val linuxApp = LinuxApp.fromJson(app.structure)
                 onInit(InitItem("Linux 应用"))
                 initByLinuxApp(root, linuxApp)
+                root.download.text = "下载"
+                root.download.setShakelessClickListener {
+                    ToastUtil.w("暂不可用")
+                }
             }
             APP_Windows -> {
                 val windowsApp = WindowsApp.fromJson(app.structure)
                 onInit(InitItem("Windows 应用"))
                 initByWindowsApp(root, windowsApp)
+                root.download.text = "下载"
+                root.download.setShakelessClickListener {
+                    ToastUtil.w("暂不可用")
+                }
             }
             APP_PluginManager -> {
                 val pluginApp = PluginApp.fromJson(app.structure)
                 onInit(InitItem("插件管理器"))
                 initByPluginApp(root, pluginApp, false)
+                root.download.text = "下载"
+                root.download.setShakelessClickListener {
+                    ToastUtil.w("暂不可用")
+                }
             }
             APP_Plugin -> {
                 val pluginApp = PluginApp.fromJson(app.structure)
                 onInit(InitItem("云插件"))
                 initByPluginApp(root, pluginApp, true)
+                root.download.text = "下载"
+                root.download.setShakelessClickListener {
+                    ToastUtil.w("暂不可用")
+                }
             }
         }
 
@@ -147,13 +183,7 @@ class AppView @JvmOverloads constructor(
     private fun initByAndroidApp(root: View, androidApp: AndroidApp) {
         root.version.text = androidApp.latestVersion
         root.rom.text = androidApp.minROM
-        root.preface.adapter = ImageAdapter(androidApp.show!!)
         root.updateDetail.setText(androidApp.updateInfo!!)
-
-        root.download.text = "下载"
-        root.download.setOnClickListener {
-            ToastUtil.w("暂不可用")
-        }
     }
 
     private fun initByWebApp(root: View, webApp: WebApp) {
@@ -162,11 +192,6 @@ class AppView @JvmOverloads constructor(
         root.updateInfo.visibility = View.GONE
         root.updateDetail.visibility = View.GONE
         root.preface.visibility = View.GONE
-        root.download.text = "进入"
-        root.download.setOnClickListener {
-            val url = webApp.appUrl
-            HERF.gotoUrl(context, url)
-        }
     }
 
     private fun initByiOSApp(root: View, iOSApp: iOSApp) {
@@ -176,10 +201,6 @@ class AppView @JvmOverloads constructor(
         root.updateInfo.visibility = View.GONE
         root.updateDetail.visibility = View.GONE
         root.preface.visibility = View.GONE
-        root.download.text = "下载"
-        root.download.setOnClickListener {
-            ToastUtil.w("暂不可用")
-        }
     }
 
     private fun initByMacApp(root: View, macApp: MacApp) {
@@ -188,11 +209,6 @@ class AppView @JvmOverloads constructor(
         root.updateInfo.visibility = View.GONE
         root.updateDetail.visibility = View.GONE
         root.preface.visibility = View.GONE
-
-        root.download.text = "下载"
-        root.download.setOnClickListener {
-            ToastUtil.w("暂不可用")
-        }
     }
 
     private fun initByLinuxApp(root: View, linuxApp: LinuxApp) {
@@ -201,11 +217,6 @@ class AppView @JvmOverloads constructor(
         root.updateInfo.visibility = View.GONE
         root.updateDetail.visibility = View.GONE
         root.preface.visibility = View.GONE
-
-        root.download.text = "下载"
-        root.download.setOnClickListener {
-            ToastUtil.w("暂不可用")
-        }
     }
 
     private fun initByWindowsApp(root: View, windowsApp: WindowsApp) {
@@ -214,11 +225,6 @@ class AppView @JvmOverloads constructor(
         root.updateInfo.visibility = View.GONE
         root.updateDetail.visibility = View.GONE
         root.preface.visibility = View.GONE
-
-        root.download.text = "下载"
-        root.download.setOnClickListener {
-            ToastUtil.w("暂不可用")
-        }
     }
 
     private fun initByPluginApp(root: View, pluginApp: PluginApp, isPlugin: Boolean) {

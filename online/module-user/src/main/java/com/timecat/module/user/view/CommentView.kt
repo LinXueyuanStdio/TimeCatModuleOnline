@@ -59,14 +59,16 @@ class CommentView @JvmOverloads constructor(
         this.activity = activity
         root.userSection.bindBlock(block.user)
         setCommentSum(block.comments)
-        val cb = CommentBlock.fromJson(block.structure)
-        when (cb.type) {
+        val head = CommentBlock.fromJson(block.structure)
+        setRichTextView(root, block.content, head.atScope, head.topicScope)
+        setMediaScope(root, head.mediaScope)
+        setPosScope(root, head.posScope)
+        when (block.subtype) {
             COMMENT_SIMPLE -> {
-                val sc = SimpleComment.fromJson(cb.structure)
-                setRichTextView(root, block.content, sc.atScope, sc.topicScope)
-                setMediaScope(root, sc.mediaScope)
-                setRelayScope(root, sc.relayScope)
-                setPosScope(root, sc.posScope)
+                val sc = SimpleComment.fromJson(head.structure)
+            }
+            COMMENT_REPLY -> {
+
             }
             COMMENT_SCORE -> {
 
