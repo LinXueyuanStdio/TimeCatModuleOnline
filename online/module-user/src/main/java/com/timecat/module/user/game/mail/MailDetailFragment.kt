@@ -8,28 +8,22 @@ import androidx.core.view.setPadding
 import cn.leancloud.AVCloud
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
-import com.alibaba.fastjson.JSON
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.mail.OwnMail
-import com.timecat.data.bmob.ext.bmob.deleteBlockRelation
 import com.timecat.data.bmob.ext.bmob.deleteOwnMail
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.MailBlock
-import com.timecat.identity.data.block.PackageItemBlock
-import com.timecat.identity.data.block.Reward
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.Body
+import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.layout.dp
 import com.timecat.layout.ui.layout.setShakelessClickListener
-import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.game.item.BigTitle
 import com.timecat.module.user.game.item.RewardList
 import com.timecat.module.user.game.item.buildRewardListItem
-import com.timecat.page.base.extension.simpleUIContainer
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.FragmentAnno
 
@@ -56,8 +50,8 @@ class MailDetailFragment : BottomSheetDialogFragment() {
     }
 
     fun buildView(context: Context): View {
-        val container = simpleUIContainer(context)
-        MaterialForm(context, container).apply {
+        val container = ContainerItem(context)
+        container.apply {
             val mail = ownMail.mail
             BigTitle(mail.title)
             Body(mail.content)

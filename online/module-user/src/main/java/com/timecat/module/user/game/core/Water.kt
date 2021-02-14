@@ -1,15 +1,7 @@
 package com.timecat.module.user.game.core
 
-import android.content.Context
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import cn.iwgang.countdownview.DynamicConfig
 import cn.leancloud.AVOSCloud
-import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.data.User
-import com.timecat.layout.ui.business.TimerView
-import com.timecat.middle.setting.MaterialForm
 import io.reactivex.disposables.Disposable
 import kotlin.math.max
 
@@ -60,40 +52,5 @@ object Water {
         val waterLimit = Level.waterLimit(currentLevel)
         val trueWater = currentWater.coerceIn(0, waterLimit)
         onNext(trueWater, waterLimit, needWaitTime)
-    }
-
-    fun timerView(context: Context, trueWater: Int, needWaitTime: Long): ViewGroup {
-        val container = LinearLayout(context)
-        container.orientation = LinearLayout.VERTICAL
-        MaterialForm(context, container).apply {
-            val textView = Body("体力：${trueWater}").apply {
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                gravity = Gravity.CENTER
-                setTextColor(Attr.getPrimaryTextColor(context))
-                setTextSize(16f)
-            }
-            val timer = TimerView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                val dynamicConfigBuilder = DynamicConfig.Builder()
-                dynamicConfigBuilder
-                    .setTimeTextColor(Attr.getPrimaryTextColor(context))
-                    .setSuffixTextColor(Attr.getSecondaryTextColor(context))
-                    .setShowSecond(true)
-                    .setShowMinute(true)
-                    .setSuffixMinute("分")
-                    .setSuffixSecond("秒")
-                    .setTimeTextBold(true)
-                dynamicShow(dynamicConfigBuilder.build())
-                start(needWaitTime)
-                var water = trueWater
-                setOnCountdownEndListener {
-                    water++
-                    textView.text = "体力：${water}"
-                    it.start(6 * 60 * 1000)
-                }
-            }
-            container.addView(timer)
-        }
-        return container
     }
 }

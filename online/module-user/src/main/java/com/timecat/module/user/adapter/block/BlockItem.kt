@@ -245,26 +245,35 @@ class BlockItem(
     }
 
     private fun setCommentContent(holder: DetailVH, block: Block) {
-        val b = CommentBlock.fromJson(block.structure)
-        when (b.type) {
+        val head = CommentBlock.fromJson(block.structure)
+        setRichTextView(holder, block.content, head.atScope, head.topicScope)
+        setMediaScope(holder, block, head.mediaScope)
+        setPosScope(holder, block, head.posScope)
+        when (block.subtype) {
             COMMENT_SIMPLE -> {
-                val sc = SimpleComment.fromJson(b.structure)
-                setRichTextView(holder, block.content, sc.atScope, sc.topicScope)
-                setMediaScope(holder, block, sc.mediaScope)
-                setRelayScope(holder, block, sc.relayScope)
-                setPosScope(holder, block, sc.posScope)
+                setOnItemClick(holder) {
+                    GO.commentDetail(block.objectId)
+                }
+            }
+            COMMENT_REPLY -> {
                 setOnItemClick(holder) {
                     GO.commentDetail(block.objectId)
                 }
             }
             COMMENT_SCORE -> {
-
+                setOnItemClick(holder) {
+                    GO.commentDetail(block.objectId)
+                }
             }
             COMMENT_TEXT -> {
-
+                setOnItemClick(holder) {
+                    GO.commentDetail(block.objectId)
+                }
             }
             COMMENT_VIDEO -> {
-
+                setOnItemClick(holder) {
+                    GO.commentDetail(block.objectId)
+                }
             }
         }
     }
