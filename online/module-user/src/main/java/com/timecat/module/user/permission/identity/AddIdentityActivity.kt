@@ -19,8 +19,11 @@ import com.timecat.data.bmob.ext.net.checkIdentityExistByTitle
 import com.timecat.data.bmob.ext.net.findAllRole
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.MultiLineInput
+import com.timecat.layout.ui.business.form.Next
+import com.timecat.layout.ui.business.form.OneLineInput
+import com.timecat.layout.ui.business.form.addDivider
 import com.timecat.layout.ui.business.setting.ContainerItem
-import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -49,7 +52,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
     override fun title(): String = "创建方块"
 
     data class FormData(
-        var name: String = "名称",
+        var title: String = "名称",
         var content: String = "",
         var roles: MutableList<Block> = ArrayList()
     )
@@ -88,25 +91,25 @@ class AddIdentityActivity : BaseBlockEditActivity() {
 
     override fun addSettingItems(container: ViewGroup) {
         block?.let {
-            formData.name = it.title
+            formData.title = it.title
             formData.content = it.content
             mStatefulLayout?.showLoading()
             loadRole(it)
         }
-        MaterialForm(this, container).apply {
-            val titleItem = OneLineInput("名称", formData.name) {
-                formData.name = it ?: ""
+        container.apply {
+            val titleItem = OneLineInput("名称", formData.title) {
+                formData.title = it ?: ""
             }
             MultiLineInput("描述", formData.content) {
                 formData.content = it ?: ""
             }
 
-            Divider()
+            addDivider()
             Next("关联角色") {
                 addRole()
             }
-            c = simpleContainer(container)
-            Divider()
+            c = ContainerItem(context)
+            addDivider()
 
             form {
                 useRealTimeValidation(disableSubmit = true)
@@ -173,7 +176,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
     }
 
     private fun simpleRole(viewGroup: ViewGroup, role: Block) {
-        simpleNext(viewGroup, role.title, role.content, null) {
+        viewGroup.Next(role.title, role.content, "") {
             NAV.go(this, RouterHub.USER_AddRoleActivity, "block", role)
         }
     }
@@ -183,7 +186,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
             if (block != null) {
                 updateBlock {
                     target = block!!.apply {
-                        title = formData.name
+                        title = formData.title
                         content = formData.content
                     }
                     onSuccess = {
@@ -198,7 +201,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
                 }
             } else {
                 requestExistBlock {
-                    query = checkIdentityExistByTitle(formData.name)
+                    query = checkIdentityExistByTitle(formData.title)
                     onError = {
                         btnOk.isEnabled = true
                         ToastUtil.e("创建失败！${it.msg}")
@@ -220,7 +223,7 @@ class AddIdentityActivity : BaseBlockEditActivity() {
     open fun save() {
         saveBlock {
             target = I() create Identity {
-                title = formData.name
+                title = formData.title
                 content = formData.content
             }
             onSuccess = {

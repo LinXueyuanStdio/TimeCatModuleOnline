@@ -1,16 +1,14 @@
 package com.timecat.module.user.game.item
 
+import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.afollestad.vvalidator.form
+import com.afollestad.vvalidator.form.Form
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.Item
 import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.bmob.saveBlock
-import com.timecat.data.bmob.ext.bmob.updateBlock
-import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
@@ -18,11 +16,17 @@ import com.timecat.identity.data.block.CubeItemBlock
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.type.ITEM_Cube
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.Image
+import com.timecat.layout.ui.business.form.Next
+import com.timecat.layout.ui.business.form.OneLineInput
+import com.timecat.layout.ui.business.form.add
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.business.setting.NextItem
-import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
+import com.timecat.module.user.ext.chooseImage
+import com.timecat.module.user.ext.receieveImage
+import com.timecat.module.user.view.item.MaterialForm
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -41,56 +45,46 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
     var item: Block? = null
     override fun title(): String = "方块"
     override fun routerInject() = NAV.inject(this)
-    data class FormData(
-        var icon: String = "R.drawable.ic_folder",
-        var name: String = "新建方块",
-        var content: String = "",
-        var uuid: String = "",
-        var attachments: AttachmentTail? = null
-    )
+    override fun loadFromExistingBlock(): Block.() -> Unit = {
+        formData.title = title
+        formData.content = content
+        val head = ItemBlock.fromJson(structure)
+        formData.attachments = head.mediaScope
+        formData.icon = head.header.avatar
+    }
 
-    val formData: FormData = FormData()
-    lateinit var imageItem: ImageItem
-    lateinit var titleItem: InputItem
-    lateinit var cubeItem: NextItem
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
-        item?.let {
-            formData.name = it.title
-            formData.content = it.content
-            val head = ItemBlock.fromJson(it.structure)
-            formData.attachments = head.mediaScope
-            formData.icon = head.header.avatar
+    override fun initFormView(): ViewGroup.() -> Unit = {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder") {
+            chooseImage(isAvatar = true) { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.icon = it.first()
+                }
+            }
         }
-        emojiEditText.setText(formData.content)
-        MaterialForm(this, container).apply {
-            imageItem = ImageItem(windowContext).apply {
-                title = "图标"
-                setImage(formData.icon)
-                container.addView(this, 0)
-            }
-            titleItem = InputItem(windowContext).apply {
-                hint = "名称"
-                text = formData.name
-                inputEditText.isEnabled = false
-                container.addView(this, 1)
-            }
+        formData.titleItem = OneLineInput("标题", "新建方块")
+        formData.blockItem = Next("方块") {
+            chooseCube()
+        }
+        add(
+            formData.iconItem to 0,
+            formData.titleItem to 1,
+            formData.blockItem  to 2,
+        )
+    }
 
-            cubeItem = Next("方块", hint = formData.uuid, initialText = formData.uuid) {
-                chooseCube()
-            }
+    override fun validator(): Form.() -> Unit = {
+        inputLayout(formData.titleItem.inputLayout) {
+            isNotEmpty().description("请输入名称!")
+        }
+    }
 
-            form {
-                useRealTimeValidation(disableSubmit = true)
+    override fun currentBlock(): Block? = item
 
-                inputLayout(titleItem.inputLayout) {
-                    isNotEmpty().description("请输入名称!")
-                }
-
-                submitWith(R.id.ok) { result ->
-                    publish()
-                }
-            }
+    override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
+        return when {
+            formData.titleItem.inputEditText.hasFocus() -> formData.iconItem.height
+            emojiEditText.hasFocus() -> formData.iconItem.height + formData.titleItem.height
+            else -> 0
         }
     }
 
@@ -123,51 +117,21 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
             val texts = items.map { it.title }
             listItemsSingleChoice(items = texts) { _, idx, _ ->
                 val cube = items[idx]
-                formData.name = cube.title
+                formData.title = cube.title
                 formData.uuid = cube.objectId
                 formData.content = cube.content
-                titleItem.text = cube.title
-                emojiEditText.setText(cube.content)
             }
         }
     }
 
-    override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
-        return when {
-            titleItem.inputEditText.hasFocus() -> imageItem.height
-            emojiEditText.hasFocus() -> imageItem.height + titleItem.height
-            else -> 0
-        }
-    }
-
-    override fun release() {
-        formData.content = content
-        formData.attachments = attachments
-        ok()
-    }
-
-    protected fun ok() {
-        if (item == null) {
-            save()
-        } else {
-            update()
-        }
-    }
-
-    fun subtype() = ITEM_Cube
-    fun getItemBlock(): ItemBlock {
-        val topicScope = emojiEditText.realTopicList.map {
-            TopicItem(it.topicName, it.topicId)
-        }.ifEmpty { null }?.let { TopicScope(it.toMutableList()) }
-        val atScope = emojiEditText.realUserList.map {
-            AtItem(it.user_name, it.user_id)
-        }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
+    override fun subtype() = ITEM_Cube
+    override fun getItemBlock(): ItemBlock {
         return ItemBlock(
             type = subtype(),
             structure = CubeItemBlock(formData.uuid).toJsonObject(),
             mediaScope = formData.attachments,
-            topicScope = topicScope,
-            atScope = atScope,
+            topicScope = formData.topicScope,
+            atScope = formData.atScope,
             header = PageHeader(
                 icon = formData.icon,
                 avatar = formData.icon,
@@ -176,37 +140,4 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
         )
     }
 
-    fun update() {
-        item?.let {
-            updateBlock {
-                target = it.apply {
-                    title = formData.name
-                    content = formData.content
-                    subtype = subtype()
-                    structure = getItemBlock().toJson()
-                }
-                onSuccess = {
-                    ToastUtil.ok("更新成功！")
-                    finish()
-                }
-                onError = errorCallback
-            }
-        }
-    }
-
-    open fun save() {
-        saveBlock {
-            target = I() create Item {
-                title = formData.name
-                content = formData.content
-                subtype = subtype()
-                headerBlock = getItemBlock()
-            }
-            onSuccess = {
-                ToastUtil.ok("成功！")
-                finish()
-            }
-            onError = errorCallback
-        }
-    }
 }

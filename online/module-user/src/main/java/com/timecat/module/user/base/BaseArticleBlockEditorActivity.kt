@@ -10,6 +10,7 @@ import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.BLOCK_MAIL
 import com.timecat.identity.data.block.MailBlock
 import com.timecat.module.user.R
+import com.timecat.module.user.view.BlockHerfView
 
 /**
  * @author 林学渊
@@ -24,13 +25,13 @@ abstract class BaseArticleBlockEditorActivity : BaseBlockEditorActivity() {
 
     lateinit var add_pos: View
     lateinit var privacy: View
-    lateinit var photo: View
+    lateinit var block_herf: BlockHerfView
 
     override fun bindView() {
         super.bindView()
         add_pos = findViewById(R.id.add_pos)
         privacy = findViewById(R.id.privacy)
-        photo = findViewById(R.id.photo)
+        block_herf = findViewById(R.id.block_herf)
     }
 
     override fun initViewAfterLogin() {
@@ -41,10 +42,6 @@ abstract class BaseArticleBlockEditorActivity : BaseBlockEditorActivity() {
 
         privacy.setOnClickListener {
 
-        }
-
-        photo.setOnClickListener {
-            onAddImage()
         }
     }
 }

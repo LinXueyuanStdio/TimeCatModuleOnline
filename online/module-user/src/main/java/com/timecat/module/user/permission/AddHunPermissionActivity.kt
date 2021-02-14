@@ -13,7 +13,8 @@ import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.checkHunPermExistByTitle
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.middle.setting.MaterialForm
+import com.timecat.layout.ui.business.form.MultiLineInput
+import com.timecat.layout.ui.business.form.OneLineInput
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -40,7 +41,7 @@ class AddHunPermissionActivity : BaseBlockEditActivity() {
     override fun title(): String = "创建混权限"
 
     data class FormData(
-        var name: String = "权限描述",
+        var title: String = "权限描述",
         var content: String = "权限正则表达式"
     )
 
@@ -49,12 +50,12 @@ class AddHunPermissionActivity : BaseBlockEditActivity() {
     override fun addSettingItems(container: ViewGroup) {
         block?.let {
             setTitle("编辑混权限")
-            formData.name = it.title
+            formData.title = it.title
             formData.content = it.content
         }
-        MaterialForm(this, container).apply {
-            val titleItem = OneLineInput("权限描述", formData.name) {
-                formData.name = it ?: ""
+        container.apply {
+            val titleItem = OneLineInput("权限描述", formData.title) {
+                formData.title = it ?: ""
             }
             val contentItem = MultiLineInput("权限正则表达式", formData.content) {
                 formData.content = it ?: ""
@@ -83,7 +84,7 @@ class AddHunPermissionActivity : BaseBlockEditActivity() {
             if (block != null) {
                 updateBlock {
                     target = block!!.apply {
-                        title = formData.name
+                        title = formData.title
                         content = formData.content
                     }
                     onSuccess = {
@@ -98,7 +99,7 @@ class AddHunPermissionActivity : BaseBlockEditActivity() {
                 }
             } else {
                 requestExistBlock {
-                    query = checkHunPermExistByTitle(formData.name)
+                    query = checkHunPermExistByTitle(formData.title)
                     onError = {
                         btnOk.isEnabled = true
                         ToastUtil.e("创建失败！${it.msg}")
@@ -120,7 +121,7 @@ class AddHunPermissionActivity : BaseBlockEditActivity() {
     open fun save() {
         saveBlock {
             target = I() create HunPermission {
-                title = formData.name
+                title = formData.title
                 content = formData.content
             }
             onSuccess = {

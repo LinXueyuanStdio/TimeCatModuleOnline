@@ -51,8 +51,8 @@ class AddAndroidAppActivity : BaseAddAppActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        MaterialForm(this, container).apply {
-            ImageItem(windowContext).apply {
+        container.apply {
+            ImageItem(context).apply {
                 title = "图标"
                 setImage(formData.icon)
                 onClick {
@@ -66,16 +66,16 @@ class AddAndroidAppActivity : BaseAddAppActivity() {
 
                 container.addView(this, 0)
             }
-            val titleItem = InputItem(windowContext).apply {
+            val formData.titleItem = InputItem(context).apply {
                 hint = "名称"
-                text = formData.name
+                text = formData.title
                 onTextChange = {
-                    formData.name = it ?: ""
+                    formData.title = it ?: ""
                 }
 
                 container.addView(this, 1)
             }
-            val urlItem = InputItem(windowContext).apply {
+            val urlItem = InputItem(context).apply {
                 hint = "下载地址（url）"
                 text = formData.content
                 onTextChange = {
@@ -89,7 +89,7 @@ class AddAndroidAppActivity : BaseAddAppActivity() {
             form {
                 useRealTimeValidation(disableSubmit = true)
 
-                inputLayout(titleItem.inputLayout) {
+                inputLayout(formData.titleItem.inputLayout) {
                     isNotEmpty().description("请输入名称!")
                 }
                 inputLayout(urlItem.inputLayout) {
@@ -112,7 +112,7 @@ class AddAndroidAppActivity : BaseAddAppActivity() {
     protected fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
             requestExistBlock {
-                query = checkLeaderBoardExistByTitle(formData.name)
+                query = checkLeaderBoardExistByTitle(formData.title)
                 onError = errorCallback
                 onSuccess = { exist ->
                     if (exist) {
@@ -128,7 +128,7 @@ class AddAndroidAppActivity : BaseAddAppActivity() {
     open fun save() {
         saveBlock {
             target = I() create App {
-                title = formData.name
+                title = formData.title
                 content = formData.url
                 headerBlock = AppBlock(
                     type = APP_AndroidApp,

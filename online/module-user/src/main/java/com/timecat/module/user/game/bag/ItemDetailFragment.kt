@@ -3,25 +3,24 @@ package com.timecat.module.user.game.bag
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.core.view.updateLayoutParams
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.PackageItemBlock
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.Body
+import com.timecat.layout.ui.business.form.add
 import com.timecat.layout.ui.business.setting.CenterIconItem
+import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.layout.dp
-import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.game.item.BigTitle
 import com.timecat.module.user.game.item.RewardList
-import com.timecat.module.user.game.item.buildRewardListItem
-import com.timecat.page.base.extension.simpleUIContainer
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.FragmentAnno
 
@@ -49,7 +48,7 @@ open class ItemDetailFragment : BottomSheetDialogFragment() {
     }
 
     open fun buildView(context: Context): View {
-        val container = simpleUIContainer(context)
+        val container = ContainerItem(context)
         val structure = item!!.structure
         val head = ItemBlock.fromJson(structure)
         val apply = when (item!!.subtype) {
@@ -60,17 +59,17 @@ open class ItemDetailFragment : BottomSheetDialogFragment() {
             ITEM_Buff -> buff(head)
             else -> thing(head)
         }
-        MaterialForm(context, container).apply(apply)
+        container.apply(apply)
         return container
     }
 
-    open fun thing(head: ItemBlock): MaterialForm.() -> Unit = {
+    open fun thing(head: ItemBlock): ViewGroup.() -> Unit = {
         Icon(head)
         Title()
         Content()
     }
 
-    open fun pack(head: ItemBlock): MaterialForm.() -> Unit = {
+    open fun pack(head: ItemBlock): ViewGroup.() -> Unit = {
         Icon(head)
         Title()
         Content()
@@ -80,43 +79,44 @@ open class ItemDetailFragment : BottomSheetDialogFragment() {
         RewardList(requireActivity(), items)
     }
 
-    open fun data(head: ItemBlock): MaterialForm.() -> Unit = {
+    open fun data(head: ItemBlock): ViewGroup.() -> Unit = {
         Icon(head)
         Title()
         Content()
     }
 
-    open fun equip(head: ItemBlock): MaterialForm.() -> Unit = {
+    open fun equip(head: ItemBlock): ViewGroup.() -> Unit = {
         Icon(head)
         Title()
         Content()
     }
 
-    open fun buff(head: ItemBlock): MaterialForm.() -> Unit = {
+    open fun buff(head: ItemBlock): ViewGroup.() -> Unit = {
         Icon(head)
         Title()
         Content()
     }
 
-    open fun MaterialForm.Icon(head: ItemBlock) {
-        val iconItem = CenterIconItem(windowContext)
-        iconItem.setImage(head.header.avatar)
-        iconItem.imageView.updateLayoutParams<RelativeLayout.LayoutParams> {
-            width = 50.dp
-            height = 50.dp
-            topMargin = 10.dp
+    open fun ViewGroup.Icon(head: ItemBlock) {
+        val iconItem = CenterIconItem(context).apply {
+            icon = head.header.avatar
+            imageView.updateLayoutParams<RelativeLayout.LayoutParams> {
+                width = 50.dp
+                height = 50.dp
+                topMargin = 10.dp
+            }
         }
-        container.addView(iconItem)
+        addView(iconItem)
     }
 
-    open fun MaterialForm.Title() {
+    open fun ViewGroup.Title() {
         BigTitle(item!!.title)
     }
 
-    open fun MaterialForm.Content() {
+    open fun ViewGroup.Content() {
         val content = item!!.content
         if (content.isNotEmpty()) {
-            Body(content)
+            add { Body(content) }
         }
     }
 }

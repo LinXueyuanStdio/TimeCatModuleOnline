@@ -13,7 +13,8 @@ import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.checkMetaPermExistByTitle
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.middle.setting.MaterialForm
+import com.timecat.layout.ui.business.form.MultiLineInput
+import com.timecat.layout.ui.business.form.OneLineInput
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -40,7 +41,7 @@ class AddMetaPermissionActivity : BaseBlockEditActivity() {
     override fun title(): String = "创建元权限"
 
     data class FormData(
-        var name: String = "id",
+        var title: String = "id",
         var content: String = ""
     )
 
@@ -49,12 +50,12 @@ class AddMetaPermissionActivity : BaseBlockEditActivity() {
     override fun addSettingItems(container: ViewGroup) {
         block?.let {
             setTitle("编辑元权限")
-            formData.name = it.title
+            formData.title = it.title
             formData.content = it.content
         }
-        MaterialForm(this, container).apply {
-            val titleItem = OneLineInput("UI Id / API Id / Route Id", formData.name) {
-                formData.name = it ?: ""
+        container.apply {
+            val titleItem = OneLineInput("UI Id / API Id / Route Id", formData.title) {
+                formData.title = it ?: ""
             }
             val contentItem = MultiLineInput("权限 id", formData.content) {
                 formData.content = it ?: ""
@@ -83,7 +84,7 @@ class AddMetaPermissionActivity : BaseBlockEditActivity() {
             if (block != null) {
                 updateBlock {
                     target = block!!.apply {
-                        title = formData.name
+                        title = formData.title
                         content = formData.content
                     }
                     onSuccess = {
@@ -98,7 +99,7 @@ class AddMetaPermissionActivity : BaseBlockEditActivity() {
                 }
             } else {
                 requestExistBlock {
-                    query = checkMetaPermExistByTitle(formData.name)
+                    query = checkMetaPermExistByTitle(formData.title)
                     onError = {
                         btnOk.isEnabled = true
                         ToastUtil.e("创建失败！${it.msg}")
@@ -120,7 +121,7 @@ class AddMetaPermissionActivity : BaseBlockEditActivity() {
     open fun save() {
         saveBlock {
             target = I() create MetaPermission {
-                title = formData.name
+                title = formData.title
                 content = formData.content
             }
             onSuccess = {

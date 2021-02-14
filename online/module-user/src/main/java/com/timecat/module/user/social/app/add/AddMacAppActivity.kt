@@ -46,17 +46,17 @@ class AddMacAppActivity : BaseAddAppActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        MaterialForm(this, container).apply {
-            Image("图标") { imageItem ->
+        container.apply {
+            Image("图标") { formData.iconItem ->
                 chooseImage(isAvatar = true) { path ->
                     receieveImage(I(), listOf(path), false) {
                         formData.icon = it.first()
-                        imageItem.setImage(formData.icon)
+                        formData.iconItem.setImage(formData.icon)
                     }
                 }
             }
-            val titleItem = OneLineInput("名称", formData.name) {
-                formData.name = it ?: ""
+            val formData.titleItem = OneLineInput("名称", formData.title) {
+                formData.title = it ?: ""
             }
             MultiLineInput("下载地址（url）", formData.content) {
                 formData.content = it ?: ""
@@ -65,7 +65,7 @@ class AddMacAppActivity : BaseAddAppActivity() {
             form {
                 useRealTimeValidation(disableSubmit = true)
 
-                inputLayout(titleItem.inputLayout) {
+                inputLayout(formData.titleItem.inputLayout) {
                     isNotEmpty().description("请输入名称!")
                 }
 
@@ -85,7 +85,7 @@ class AddMacAppActivity : BaseAddAppActivity() {
     protected fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
             requestExistBlock {
-                query = checkLeaderBoardExistByTitle(formData.name)
+                query = checkLeaderBoardExistByTitle(formData.title)
                 onError = errorCallback
                 onSuccess = { exist ->
                     if (exist) {
@@ -101,7 +101,7 @@ class AddMacAppActivity : BaseAddAppActivity() {
     open fun save() {
         saveBlock {
             target = I() create App {
-                title = formData.name
+                title = formData.title
                 content = formData.content
                 headerBlock = AppBlock(
                     type = APP_Mac,

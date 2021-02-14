@@ -74,7 +74,7 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
 
     override fun updatableBlock(): Block.() -> Unit = {
         title = replyBlockId
-        content = formContent
+        content = formData.content
         //更新评论后应该保持parent不变
         structure = getHeadBlock().toJson()
     }
@@ -82,9 +82,9 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     fun getHeadBlock(): CommentBlock {
         return CommentBlock(
             content = NoteBody(),
-            mediaScope = formAttachments,
-            atScope = formAtScope,
-            topicScope = formTopicScope,
+            mediaScope = formData.attachments,
+            atScope = formData.atScope,
+            topicScope = formData.topicScope,
             structure = SimpleComment().toJsonObject()
         )
     }
@@ -98,9 +98,9 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
         }
         comment?.let {
             replyBlockId = it.title
-            formContent = it.content
+            formData.content = it.content
             val head = CommentBlock.fromJson(it.structure)
-            formAttachments = head.mediaScope
+            formData.attachments = head.mediaScope
         }
     }
 

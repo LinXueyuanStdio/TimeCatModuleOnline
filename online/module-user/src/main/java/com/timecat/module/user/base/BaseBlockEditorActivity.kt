@@ -1,9 +1,13 @@
 package com.timecat.module.user.base
 
+import android.view.ViewGroup
+import com.afollestad.vvalidator.form
+import com.afollestad.vvalidator.form.Form
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.bmob.updateBlock
 import com.timecat.element.alert.ToastUtil
+import com.timecat.module.user.R
 
 /**
  * @author 林学渊
@@ -13,6 +17,27 @@ import com.timecat.element.alert.ToastUtil
  * @usage 简化添加 社区 block 流程
  */
 abstract class BaseBlockEditorActivity : BaseComplexEditorActivity() {
+
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        container.apply(initFormView())
+        validateForm()
+        currentBlock()?.apply(loadFromExistingBlock())
+    }
+
+    protected open fun loadFromExistingBlock(): Block.() -> Unit = {}
+    protected open fun initFormView(): ViewGroup.() -> Unit = {}
+    protected open fun validator(): Form.() -> Unit = {}
+
+    protected open fun validateForm() {
+        form {
+            useRealTimeValidation(disableSubmit = true)
+            apply(validator())
+            submitWith(R.id.ok) {
+                publish()
+            }
+        }
+    }
 
     override fun release() {
         ok()

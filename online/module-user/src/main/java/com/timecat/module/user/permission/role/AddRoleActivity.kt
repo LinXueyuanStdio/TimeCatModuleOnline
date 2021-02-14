@@ -91,14 +91,14 @@ class AddRoleActivity : BaseBlockEditActivity() {
     override fun addSettingItems(container: ViewGroup) {
         block?.let {
             setTitle("编辑权限角色")
-            formData.name = it.title
+            formData.title = it.title
             formData.content = it.content
             mStatefulLayout?.showLoading()
             loadPermission(it)
         }
-        MaterialForm(this, container).apply {
-            val titleItem = OneLineInput("权限角色名", formData.name) {
-                formData.name = it ?: ""
+        container.apply {
+            val formData.titleItem = OneLineInput("权限角色名", formData.title) {
+                formData.title = it ?: ""
             }
             MultiLineInput("描述", formData.content) {
                 formData.content = it ?: ""
@@ -114,7 +114,7 @@ class AddRoleActivity : BaseBlockEditActivity() {
             form {
                 useRealTimeValidation(disableSubmit = true)
 
-                inputLayout(titleItem.inputLayout) {
+                inputLayout(formData.titleItem.inputLayout) {
                     isNotEmpty().description("权限角色名")
                 }
 
@@ -181,7 +181,7 @@ class AddRoleActivity : BaseBlockEditActivity() {
             if (block != null) {
                 updateBlock {
                     target = block!!.apply {
-                        title = formData.name
+                        title = formData.title
                         content = formData.content
                     }
                     onSuccess = { role ->
@@ -209,7 +209,7 @@ class AddRoleActivity : BaseBlockEditActivity() {
                 }
             } else {
                 requestExistBlock {
-                    query = checkRoleExistByTitle(formData.name)
+                    query = checkRoleExistByTitle(formData.title)
                     onError = {
                         btnOk.isEnabled = true
                         ToastUtil.e("创建失败！${it.msg}")
@@ -249,7 +249,7 @@ class AddRoleActivity : BaseBlockEditActivity() {
     open fun save() {
         saveBlock {
             target = I() create Role {
-                title = formData.name
+                title = formData.title
                 content = formData.content
             }
             onSuccess = {

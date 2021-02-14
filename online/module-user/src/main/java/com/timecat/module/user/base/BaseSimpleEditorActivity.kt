@@ -4,6 +4,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.timecat.module.user.R
 import com.timecat.module.user.base.login.BaseLoginEditorActivity
+import com.timecat.module.user.view.item.MaterialForm
 
 /**
  * @author 林学渊
@@ -18,11 +19,12 @@ abstract class BaseSimpleEditorActivity : BaseLoginEditorActivity() {
 
     lateinit var titleTv: TextView
     lateinit var container: LinearLayout
-
+    lateinit var formData : MaterialForm
     override fun bindView() {
         super.bindView()
         titleTv = findViewById(R.id.title_tv)
         container = findViewById(R.id.container)
+        formData = MaterialForm()
     }
 
     override fun initViewAfterLogin() {

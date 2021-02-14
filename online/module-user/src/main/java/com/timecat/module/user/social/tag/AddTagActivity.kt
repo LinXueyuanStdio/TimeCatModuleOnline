@@ -52,15 +52,15 @@ open class AddTagActivity : BaseLoginEditActivity() {
 
     override fun addSettingItems(container: ViewGroup) {
         block?.let {
-            formData.name = it.title
+            formData.title = it.title
             formData.content = it.content
             val head = TagBlock.fromJson(it.structure)
             formData.icon = head.header?.icon ?: "R.drawable.ic_folder"
         }
 
-        MaterialForm(this, container).apply {
-            val titleItem = OneLineInput("标签名", formData.name) {
-                formData.name = it ?: ""
+        container.apply {
+            val titleItem = OneLineInput("标签名", formData.title) {
+                formData.title = it ?: ""
             }
             MultiLineInput("备注", formData.content) {
                 formData.content = it ?: ""
@@ -83,7 +83,7 @@ open class AddTagActivity : BaseLoginEditActivity() {
     override fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
             requestExistBlock {
-                query = checkTagExistByTitle(formData.name)
+                query = checkTagExistByTitle(formData.title)
                 onError = {
                     ToastUtil.e("创建失败！${it.msg}")
                     LogUtil.e("创建失败！${it.msg}")
@@ -102,7 +102,7 @@ open class AddTagActivity : BaseLoginEditActivity() {
     open fun save() {
         saveBlock {
             target = I() create Tag {
-                title = formData.name
+                title = formData.title
                 content = formData.content
                 headerBlock = TagBlock(
                     content = NoteBody(),

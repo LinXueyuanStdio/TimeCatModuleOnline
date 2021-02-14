@@ -47,36 +47,36 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
     )
 
     val formData: FormData = FormData()
-    lateinit var imageItem: ImageItem
-    lateinit var titleItem: InputItem
+    lateinit var formData.iconItem: ImageItem
+    lateinit var formData.titleItem: InputItem
     lateinit var urlItem: InputItem
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        MaterialForm(this, container).apply {
-            imageItem = ImageItem(windowContext).apply {
+        container.apply {
+            formData.iconItem = ImageItem(context).apply {
                 title = "图标"
                 setImage(formData.icon)
                 onClick {
                     chooseImage(isAvatar = true) { path ->
                         receieveImage(I(), listOf(path), false) {
                             formData.icon = it.first()
-                            imageItem.setImage(formData.icon)
+                            formData.iconItem.setImage(formData.icon)
                         }
                     }
                 }
 
                 container.addView(this, 0)
             }
-            titleItem = InputItem(windowContext).apply {
+            formData.titleItem = InputItem(context).apply {
                 hint = "名称"
-                text = formData.name
+                text = formData.title
                 onTextChange = {
-                    formData.name = it ?: ""
+                    formData.title = it ?: ""
                 }
 
                 container.addView(this, 1)
             }
-            urlItem = InputItem(windowContext).apply {
+            urlItem = InputItem(context).apply {
                 hint = "下载地址（url）"
                 text = formData.content
                 onTextChange = {
@@ -90,7 +90,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
             form {
                 useRealTimeValidation(disableSubmit = true)
 
-                inputLayout(titleItem.inputLayout) {
+                inputLayout(formData.titleItem.inputLayout) {
                     isNotEmpty().description("请输入名称!")
                 }
                 inputLayout(urlItem.inputLayout) {
@@ -106,9 +106,9 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
 
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return when {
-            titleItem.inputEditText.hasFocus() -> imageItem.height
-            urlItem.inputEditText.hasFocus() -> imageItem.height + titleItem.height
-            emojiEditText.hasFocus() -> imageItem.height + titleItem.height + urlItem.height
+            formData.titleItem.inputEditText.hasFocus() -> formData.iconItem.height
+            urlItem.inputEditText.hasFocus() -> formData.iconItem.height + formData.titleItem.height
+            emojiEditText.hasFocus() -> formData.iconItem.height + formData.titleItem.height + urlItem.height
             else -> 0
         }
     }
@@ -122,7 +122,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
     protected fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
             requestExistBlock {
-                query = checkLeaderBoardExistByTitle(formData.name)
+                query = checkLeaderBoardExistByTitle(formData.title)
                 onError = errorCallback
                 onSuccess = { exist ->
                     if (exist) {
@@ -138,7 +138,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
     open fun save() {
         saveBlock {
             target = I() create App {
-                title = formData.name
+                title = formData.title
                 content = formData.content
                 headerBlock = AppBlock(
                     type = APP_Plugin,

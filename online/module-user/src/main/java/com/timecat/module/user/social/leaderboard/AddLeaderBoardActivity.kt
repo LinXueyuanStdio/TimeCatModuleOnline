@@ -55,12 +55,12 @@ open class AddLeaderBoardActivity : BaseBlockEditActivity() {
     val formData: FormData = FormData()
 
     override fun addSettingItems(container: ViewGroup) {
-        formData.name = name
+        formData.title = name
         formData.content = content
         formData.icon = icon
-        MaterialForm(this, container).apply {
-            val titleItem = OneLineInput("排行榜名", formData.name) {
-                formData.name = it ?: ""
+        container.apply {
+            val formData.titleItem = OneLineInput("排行榜名", formData.title) {
+                formData.title = it ?: ""
             }
             MultiLineInput("备注", formData.content) {
                 formData.content = it ?: ""
@@ -69,7 +69,7 @@ open class AddLeaderBoardActivity : BaseBlockEditActivity() {
             form {
                 useRealTimeValidation(disableSubmit = true)
 
-                inputLayout(titleItem.inputLayout) {
+                inputLayout(formData.titleItem.inputLayout) {
                     isNotEmpty().description("请输入排行榜名!")
                 }
 
@@ -83,7 +83,7 @@ open class AddLeaderBoardActivity : BaseBlockEditActivity() {
     override fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
             requestExistBlock {
-                query = checkLeaderBoardExistByTitle(formData.name)
+                query = checkLeaderBoardExistByTitle(formData.title)
                 onError = {
                     ToastUtil.e("创建失败！${it.msg}")
                     LogUtil.e("创建失败！${it.msg}")
@@ -102,7 +102,7 @@ open class AddLeaderBoardActivity : BaseBlockEditActivity() {
     open fun save() {
         saveBlock {
             target = I() create LeaderBoard {
-                title = formData.name
+                title = formData.title
                 content = formData.content
                 headerBlock = LeaderBoardBlock(
                     content = NoteBody(),

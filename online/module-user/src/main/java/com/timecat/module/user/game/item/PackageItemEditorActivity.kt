@@ -1,18 +1,17 @@
 package com.timecat.module.user.game.item
 
 import android.text.InputType
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
-import com.afollestad.vvalidator.form
+import com.afollestad.vvalidator.form.Form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Item
 import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.bmob.saveBlock
-import com.timecat.data.bmob.ext.bmob.updateBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.element.alert.ToastUtil
@@ -22,15 +21,14 @@ import com.timecat.identity.data.block.PackageItemBlock
 import com.timecat.identity.data.block.Reward
 import com.timecat.identity.data.block.type.ITEM_Package
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.business.setting.ImageItem
-import com.timecat.layout.ui.business.setting.InputItem
-import com.timecat.layout.ui.business.setting.NextItem
-import com.timecat.middle.setting.MaterialForm
+import com.timecat.layout.ui.business.form.Image
+import com.timecat.layout.ui.business.form.Next
+import com.timecat.layout.ui.business.form.OneLineInput
+import com.timecat.layout.ui.business.form.add
+import com.timecat.layout.ui.business.setting.*
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
-import com.timecat.module.user.view.item.OwnCountItem
-import com.timecat.page.base.extension.simpleUIContainer
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -49,92 +47,63 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
     var item: Block? = null
     override fun title(): String = "礼包"
     override fun routerInject() = NAV.inject(this)
-    data class FormData(
-        var icon: String = "R.drawable.ic_folder",
-        var name: String = "新建礼包",
-        var content: String = "",
-        var items: MutableMap<String, Long> = mutableMapOf(),
-        var attachments: AttachmentTail? = null
-    ) {
-        fun setRewardListItems(items: List<Reward>) {
-            this.items = mutableMapOf(*items.map {
+
+    var formItems: MutableMap<String, Long> = mutableMapOf()
+    var formRewardListItems: List<Reward>
+        get() = formItems.toList().map { Reward(it.first, it.second) }
+        set(value) {
+            formItems = mutableMapOf(*value.map {
                 it.uuid to it.count
             }.toTypedArray())
         }
 
-        fun getRewardListItems(): MutableList<Reward> {
-            return items.toList().map { Reward(it.first, it.second) }.toMutableList()
-        }
-    }
-
-    val formData: FormData = FormData()
-    lateinit var imageItem: ImageItem
-    lateinit var titleItem: InputItem
     lateinit var packageItem: NextItem
     lateinit var packageDetailContainer: LinearLayout
 
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
-        item?.let {
-            formData.name = it.title
-            formData.content = it.content
-            val head = ItemBlock.fromJson(it.structure)
-            formData.attachments = head.mediaScope
-            formData.icon = head.header.avatar
-            val head2 = PackageItemBlock.fromJson(head.structure)
-            formData.setRewardListItems(head2.items)
+    override fun loadFromExistingBlock(): Block.() -> Unit = {
+        formData.title = title
+        formData.content = content
+        val head = ItemBlock.fromJson(structure)
+        formData.attachments = head.mediaScope
+        formData.icon = head.header.avatar
+        val head2 = PackageItemBlock.fromJson(head.structure)
+        formRewardListItems = head2.items
+    }
+
+    override fun initFormView(): ViewGroup.() -> Unit = {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder") {
+            chooseImage(isAvatar = true) { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.icon = it.first()
+                }
+            }
         }
-        emojiEditText.setText(formData.content)
-        MaterialForm(this, container).apply {
-            imageItem = ImageItem(windowContext).apply {
-                title = "图标"
-                setImage(formData.icon)
-                onClick {
-                    chooseImage(isAvatar = true) { path ->
-                        receieveImage(I(), listOf(path), false) {
-                            formData.icon = it.first()
-                            imageItem.setImage(formData.icon)
-                        }
-                    }
-                }
+        formData.titleItem = OneLineInput("标题", "新建礼包")
+        packageItem = Next("礼包",
+            hint = formItems.toString(),
+            initialText = "${formItems.size}") {
+            selectItems()
+        }
+        packageDetailContainer = ContainerItem(context)
 
-                container.addView(this, 0)
-            }
-            titleItem = InputItem(windowContext).apply {
-                hint = "名称"
-                text = formData.name
-                onTextChange = {
-                    formData.name = it ?: ""
-                }
+        add(
+            formData.iconItem to 0,
+            formData.titleItem to 1,
+            packageItem to 2,
+            packageDetailContainer to 3,
+        )
+        setItems()
+    }
 
-                container.addView(this, 1)
-            }
-            packageItem = Next("礼包",
-                hint = formData.items.toString(),
-                initialText = "${formData.items.size}") {
-                selectItems()
-            }
-            packageDetailContainer = simpleUIContainer(windowContext)
-            container.addView(packageDetailContainer)
-            setItems()
-
-            form {
-                useRealTimeValidation(disableSubmit = true)
-
-                inputLayout(titleItem.inputLayout) {
-                    isNotEmpty().description("请输入名称!")
-                }
-
-                submitWith(R.id.ok) { result ->
-                    publish()
-                }
-            }
+    override fun validator(): Form.() -> Unit = {
+        inputLayout(formData.titleItem.inputLayout) {
+            isNotEmpty().description("请输入名称!")
         }
     }
 
     fun setItems() {
         requestBlock {
-            query = allItem().whereContainedIn("objectId", formData.items.keys)
+            query = allItem().whereContainedIn("objectId", formItems.keys)
             onSuccess = {
                 setBlockItems(it)
             }
@@ -155,11 +124,11 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                 }
                 right_field = {
                     hint = "数量"
-                    text = "${formData.items[block.objectId]}"
+                    text = "${formItems[block.objectId]}"
                     inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
                     onTextChange = {
                         val count = it?.toLongOrNull() ?: 0L
-                        formData.items[block.objectId] = count
+                        formItems[block.objectId] = count
                     }
                 }
                 closeIcon = "R.drawable.ic_close"
@@ -167,7 +136,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                     showItemDialog(block)
                 }
                 onCloseIconClick {
-                    formData.items.remove(block.objectId)
+                    formItems.remove(block.objectId)
                     packageDetailContainer.removeView(this)
                 }
             }
@@ -205,91 +174,39 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
             val texts = items.map { it.title }
             listItemsMultiChoice(items = texts) { _, intArr, _ ->
                 val blocks = items.filterIndexed { index, block -> index in intArr }
-                formData.setRewardListItems(blocks.map { Reward(it.objectId, 1) })
+                formRewardListItems = blocks.map { Reward(it.objectId, 1) }
                 setBlockItems(blocks)
-                packageItem.hint = formData.items.toString()
-                packageItem.text = "${formData.items.size}"
+                packageItem.hint = formItems.toString()
+                packageItem.text = "${formItems.size}"
             }
         }
     }
 
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return when {
-            titleItem.inputEditText.hasFocus() -> imageItem.height
-            emojiEditText.hasFocus() -> imageItem.height + titleItem.height
+            formData.titleItem.inputEditText.hasFocus() -> formData.iconItem.height
+            emojiEditText.hasFocus() -> formData.iconItem.height + formData.titleItem.height
             else -> 0
         }
     }
 
-    override fun release() {
-        formData.content = content
-        formData.attachments = attachments
-        ok()
-    }
+    override fun currentBlock(): Block? = item
+    override fun subtype() = ITEM_Package
 
-    protected fun ok() {
-        if (item == null) {
-            save()
-        } else {
-            update()
-        }
-    }
-
-    fun subtype() = ITEM_Package
-    fun getItemBlock(): ItemBlock {
-        val topicScope = emojiEditText.realTopicList.map {
-            TopicItem(it.topicName, it.topicId)
-        }.ifEmpty { null }?.let { TopicScope(it.toMutableList()) }
-        val atScope = emojiEditText.realUserList.map {
-            AtItem(it.user_name, it.user_id)
-        }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
+   override fun getItemBlock(): ItemBlock {
         return ItemBlock(
             type = subtype(),
             structure = PackageItemBlock(
-                formData.getRewardListItems()
+                formRewardListItems
             ).toJsonObject(),
             mediaScope = formData.attachments,
-            topicScope = topicScope,
-            atScope = atScope,
+            topicScope = formData.topicScope,
+            atScope = formData.atScope,
             header = PageHeader(
                 icon = formData.icon,
                 avatar = formData.icon,
                 cover = formData.icon,
             )
         )
-    }
-
-    fun update() {
-        item?.let {
-            updateBlock {
-                target = it.apply {
-                    title = formData.name
-                    content = formData.content
-                    subtype = subtype()
-                    structure = getItemBlock().toJson()
-                }
-                onSuccess = {
-                    ToastUtil.ok("更新成功！")
-                    finish()
-                }
-                onError = errorCallback
-            }
-        }
-    }
-
-    open fun save() {
-        saveBlock {
-            target = I() create Item {
-                title = formData.name
-                content = formData.content
-                subtype = subtype()
-                headerBlock = getItemBlock()
-            }
-            onSuccess = {
-                ToastUtil.ok("成功！")
-                finish()
-            }
-            onError = errorCallback
-        }
     }
 }

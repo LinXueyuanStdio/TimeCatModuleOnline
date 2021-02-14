@@ -64,7 +64,7 @@ class MailDetailFragment : BottomSheetDialogFragment() {
 
             val head = MailBlock.fromJson(mail.structure)
             if (head.rewards.isEmpty()) {
-                val button = MaterialButton(windowContext)
+                val button = MaterialButton(context)
                 button.setText("删除")
                 button.setShakelessClickListener {
                     deleteOwnMail {
@@ -82,7 +82,7 @@ class MailDetailFragment : BottomSheetDialogFragment() {
                 val items = head.rewards
                 RewardList(requireActivity(), items)
 
-                val button = MaterialButton(windowContext)
+                val button = MaterialButton(context)
                 button.setText("领取")
                 button.setShakelessClickListener {
                     button.isEnabled = false

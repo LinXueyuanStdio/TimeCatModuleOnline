@@ -58,13 +58,13 @@ open class AddForumActivity : BaseLoginEditActivity() {
     val formData: FormData = FormData()
 
     override fun addSettingItems(container: ViewGroup) {
-        name?.let { formData.name = it }
+        name?.let { formData.title = it }
         content?.let { formData.content = it }
         icon?.let { formData.icon = it }
 
-        MaterialForm(this, container).apply {
-            val titleItem = OneLineInput("论坛名", formData.name) {
-                formData.name = it ?: ""
+        container.apply {
+            val titleItem = OneLineInput("论坛名", formData.title) {
+                formData.title = it ?: ""
             }
             MultiLineInput("备注", formData.content) {
                 formData.content = it ?: ""
@@ -87,7 +87,7 @@ open class AddForumActivity : BaseLoginEditActivity() {
     override fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
             requestExistBlock {
-                query = checkForumExistByTitle(formData.name)
+                query = checkForumExistByTitle(formData.title)
                 onError = {
                     ToastUtil.e("创建失败！${it.msg}")
                     LogUtil.e("创建失败！${it.msg}")
@@ -106,7 +106,7 @@ open class AddForumActivity : BaseLoginEditActivity() {
     open fun save() {
         saveBlock {
             target = I() create Forum {
-                title = formData.name
+                title = formData.title
                 content = formData.content
                 headerBlock = ForumBlock(
                     content = NoteBody(),

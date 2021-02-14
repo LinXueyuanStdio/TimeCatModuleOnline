@@ -18,6 +18,7 @@ import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.base.login.BaseLoginEditActivity
+import com.timecat.module.user.view.item.MaterialForm
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.coroutines.Dispatchers
@@ -58,13 +59,13 @@ open class AddTopicActivity : BaseLoginEditActivity() {
     val formData: FormData = FormData()
 
     override fun addSettingItems(container: ViewGroup) {
-        name?.let { formData.name = it }
+        name?.let { formData.title = it }
         content?.let { formData.content = it }
         icon?.let { formData.icon = it }
 
-        MaterialForm(this, container).apply {
-            val titleItem = OneLineInput("话题名", formData.name) {
-                formData.name = it ?: ""
+        container.apply {
+            val formData.titleItem = OneLineInput("话题名", formData.title) {
+                formData.title = it ?: ""
             }
             MultiLineInput("备注", formData.content) {
                 formData.content = it ?: ""
@@ -73,7 +74,7 @@ open class AddTopicActivity : BaseLoginEditActivity() {
             form {
                 useRealTimeValidation(disableSubmit = true)
 
-                inputLayout(titleItem.inputLayout) {
+                inputLayout(formData.titleItem.inputLayout) {
                     isNotEmpty().description("请输入话题名!")
                 }
 
@@ -87,7 +88,7 @@ open class AddTopicActivity : BaseLoginEditActivity() {
     override fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
             requestExistBlock {
-                query = checkTopicExistByTitle(formData.name)
+                query = checkTopicExistByTitle(formData.title)
                 onError = {
                     ToastUtil.e("创建失败！${it.msg}")
                     LogUtil.e("创建失败！${it.msg}")
@@ -106,7 +107,7 @@ open class AddTopicActivity : BaseLoginEditActivity() {
     open fun save() {
         saveBlock {
             target = I() create Topic {
-                title = formData.name
+                title = formData.title
                 content = formData.content
                 headerBlock = TopicBlock(
                     content = NoteBody(),

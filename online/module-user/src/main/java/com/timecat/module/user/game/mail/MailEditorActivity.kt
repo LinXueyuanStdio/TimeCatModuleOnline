@@ -1,11 +1,12 @@
 package com.timecat.module.user.game.mail
 
 import android.text.InputType
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
-import com.afollestad.vvalidator.form
+import com.afollestad.vvalidator.form.Form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
@@ -14,23 +15,24 @@ import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.data.base.*
+import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.BLOCK_MAIL
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.MailBlock
 import com.timecat.identity.data.block.Reward
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.business.setting.ImageItem
-import com.timecat.layout.ui.business.setting.InputItem
+import com.timecat.layout.ui.business.form.Image
+import com.timecat.layout.ui.business.form.Next
+import com.timecat.layout.ui.business.form.OneLineInput
+import com.timecat.layout.ui.business.form.add
+import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.business.setting.NextItem
-import com.timecat.middle.setting.MaterialForm
+import com.timecat.layout.ui.business.setting.OwnCountItem
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.timecat.module.user.game.item.showItemDialog
-import com.timecat.module.user.view.item.OwnCountItem
-import com.timecat.page.base.extension.simpleUIContainer
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -50,12 +52,7 @@ class MailEditorActivity : BaseBlockEditorActivity() {
 
     override fun title(): String = "邮件"
     override fun routerInject() = NAV.inject(this)
-    var formIcon: String
-    get() = imageItem
-    set(value) {
-        imageItem.setImage(value)
-    }
-    var formTitle: String = "新邮件"
+
     var formItems: MutableMap<String, Long> = mutableMapOf()
     var formRewardListItems: List<Reward>
         get() = formItems.toList().map { Reward(it.first, it.second) }
@@ -65,64 +62,46 @@ class MailEditorActivity : BaseBlockEditorActivity() {
             }.toTypedArray())
         }
 
-    lateinit var imageItem: ImageItem
-    lateinit var titleItem: InputItem
     lateinit var packageItem: NextItem
     lateinit var packageDetailContainer: LinearLayout
 
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
-        mail?.let {
-            formTitle = it.title
-            formContent = it.content
-            val head = MailBlock.fromJson(it.structure)
-            formAttachments = head.mediaScope
-            formIcon = head.header.avatar
-            formRewardListItems = head.rewards
+    override fun loadFromExistingBlock(): Block.() -> Unit = {
+        formData.title = title
+        formData.content = content
+        val head = MailBlock.fromJson(structure)
+        formData.attachments = head.mediaScope
+        formData.icon = head.header.avatar
+        formRewardListItems = head.rewards
+    }
+
+    override fun initFormView(): ViewGroup.() -> Unit = {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder") {
+            chooseImage(isAvatar = true) { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.icon = it.first()
+                }
+            }
         }
-        MaterialForm(this, container).apply {
-            imageItem = ImageItem(windowContext).apply {
-                title = "邮件图标"
-                setImage("R.drawable.ic_folder")
-                onClick {
-                    chooseImage(isAvatar = true) { path ->
-                        receieveImage(I(), listOf(path), false) {
-                            formIcon = it.first()
-                        }
-                    }
-                }
+        formData.titleItem = OneLineInput("标题", "新邮件")
+        packageItem = Next("礼包",
+            hint = formItems.toString(),
+            initialText = "${formItems.size}") {
+            selectItems()
+        }
+        packageDetailContainer = ContainerItem(context)
 
-                container.addView(this, 0)
-            }
-            titleItem = InputItem(windowContext).apply {
-                hint = "邮件标题"
-                text = formData.name
-                onTextChange = {
-                    formData.name = it ?: ""
-                }
+        add(
+            formData.iconItem to 0,
+            formData.titleItem to 1,
+            packageItem to 2,
+            packageDetailContainer to 3,
+        )
+        setItems()
+    }
 
-                container.addView(this, 1)
-            }
-            packageItem = Next("礼包",
-                hint = formItems.toString(),
-                initialText = "${formItems.size}") {
-                selectItems()
-            }
-            packageDetailContainer = simpleUIContainer(windowContext)
-            container.addView(packageDetailContainer)
-            setItems()
-
-            form {
-                useRealTimeValidation(disableSubmit = true)
-
-                inputLayout(titleItem.inputLayout) {
-                    isNotEmpty().description("请输入名称!")
-                }
-
-                submitWith(R.id.ok) { result ->
-                    publish()
-                }
-            }
+    override fun validator(): Form.() -> Unit = {
+        inputLayout(formData.titleItem.inputLayout) {
+            isNotEmpty().description("请输入名称!")
         }
     }
 
@@ -199,18 +178,18 @@ class MailEditorActivity : BaseBlockEditorActivity() {
             val texts = items.map { it.title }
             listItemsMultiChoice(items = texts) { _, intArr, _ ->
                 val blocks = items.filterIndexed { index, block -> index in intArr }
-                formData.setRewardListItems(blocks.map { Reward(it.objectId, 1) })
+                formRewardListItems = blocks.map { Reward(it.objectId, 1) }
                 setBlockItems(blocks)
-                packageItem.hint = formData.items.toString()
-                packageItem.text = "${formData.items.size}"
+                packageItem.hint = formItems.toString()
+                packageItem.text = "${formItems.size}"
             }
         }
     }
 
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return when {
-            titleItem.inputEditText.hasFocus() -> imageItem.height
-            emojiEditText.hasFocus() -> imageItem.height + titleItem.height
+            formData.titleItem.inputEditText.hasFocus() -> formData.iconItem.height
+            formData.emojiEditText.hasFocus() -> formData.iconItem.height + formData.titleItem.height
             else -> 0
         }
     }
@@ -218,15 +197,15 @@ class MailEditorActivity : BaseBlockEditorActivity() {
     override fun currentBlock(): Block? = mail
     override fun subtype() = BLOCK_MAIL
     override fun savableBlock(): Block = I() create Mail {
-        title = formData.name
-        content = formContent
+        title = formData.title
+        content = formData.content
         subtype = subtype()
         headerBlock = getHeadBlock()
     }
 
     override fun updatableBlock(): Block.() -> Unit = {
-        title = formData.name
-        content = formContent
+        title = formData.title
+        content = formData.content
         subtype = subtype()
         structure = getHeadBlock().toJson()
     }
@@ -238,10 +217,10 @@ class MailEditorActivity : BaseBlockEditorActivity() {
                 avatar = formData.icon,
                 cover = formData.icon,
             ),
-            topicScope = formTopicScope,
-            atScope = formAtScope,
-            mediaScope = formAttachments,
-            rewards = formData.getRewardListItems()
+            topicScope = formData.topicScope,
+            atScope = formData.atScope,
+            mediaScope = formData.attachments,
+            rewards = formRewardListItems
         )
     }
 }

@@ -17,7 +17,9 @@ import com.timecat.component.commonsdk.extension.hideKeyboard
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.image.savablePath
-import com.timecat.identity.data.base.*
+import com.timecat.identity.data.base.AIT_PHOTO
+import com.timecat.identity.data.base.AttachmentItem
+import com.timecat.identity.data.base.AttachmentTail
 import com.timecat.identity.data.service.DataError
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.util.KeyboardUtil
@@ -51,31 +53,18 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
      */
     private val nameList = ArrayList<UserModel>()
 
-    val formTopicScope: TopicScope?
-        get() = emojiEditText.realTopicList.map {
-            TopicItem(it.topicName, it.topicId)
-        }.ifEmpty { null }?.let { TopicScope(it.toMutableList()) }
-    val formAtScope: AtScope?
-        get() = emojiEditText.realUserList.map {
-            AtItem(it.user_name, it.user_id)
-        }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
-
-    var formContent: String
-        get() = emojiEditText.realText
-        set(value) {
-            emojiEditText.setText(value)
-        }
-    var formAttachments: AttachmentTail? = null
-
     override fun layout(): Int = R.layout.user_activity_complex_add
 
     lateinit var ok: Button
+
+    lateinit var emojiEditText: RichEditText
+
+    lateinit var photo: View
     lateinit var at: View
     lateinit var topic: View
     lateinit var block: View
     lateinit var more: View
     lateinit var keyboard: View
-    lateinit var emojiEditText: RichEditText
     protected var mHelper: PanelSwitchHelper? = null
 
     override fun bindView() {
@@ -83,7 +72,9 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
         ok = findViewById(R.id.ok)
 
         emojiEditText = findViewById(R.id.emojiEditText)
+        formData.emojiEditText = emojiEditText
 
+        photo = findViewById(R.id.photo)
         at = findViewById(R.id.at)
         topic = findViewById(R.id.topic)
         block = findViewById(R.id.block)
@@ -170,7 +161,9 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-
+        photo.setShakelessClickListener {
+            onAddImage()
+        }
         at.setShakelessClickListener {
             val intent = Intent(this, UserListBlockActivity::class.java)
             startActivityForResult(intent, REQUEST_USER_CODE_CLICK)
@@ -242,12 +235,12 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
         lockEverythingForPublish()
         val originImgs = imageAdapter.data.map { it.savablePath() }.filterNotNull()
         if (originImgs.isEmpty()) {
-            formAttachments = null
+            formData.attachments = null
             release()
         } else {
             receieveImage(I(), originImgs, false) { origins ->
                 val photoList = origins.map { AttachmentItem(AIT_PHOTO, it) }.toMutableList()
-                formAttachments = AttachmentTail(photoList)
+                formData.attachments = AttachmentTail(photoList)
                 release()
             }
         }

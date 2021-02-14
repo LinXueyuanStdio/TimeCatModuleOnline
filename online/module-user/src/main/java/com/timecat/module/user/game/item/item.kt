@@ -3,6 +3,7 @@ package com.timecat.module.user.game.item
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -18,11 +19,12 @@ import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.Reward
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.H1
+import com.timecat.layout.ui.business.form.add
+import com.timecat.layout.ui.business.setting.RewardItem
+import com.timecat.layout.ui.business.setting.RewardListItem
+import com.timecat.layout.ui.business.setting.StepSliderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
-import com.timecat.middle.setting.MaterialForm
-import com.timecat.module.user.view.item.RewardItem
-import com.timecat.module.user.view.item.RewardListItem
-import com.timecat.module.user.view.item.StepSliderItem
 
 /**
  * @author 林学渊
@@ -67,30 +69,32 @@ fun buildRewardListItem(activity: FragmentActivity, items: List<Reward>): Reward
     return rewardListItem
 }
 
-fun MaterialForm.RewardList(activity: FragmentActivity, rewardList: List<Reward>) {
+fun ViewGroup.RewardList(activity: FragmentActivity, rewardList: List<Reward>) {
     val rewardListItem = buildRewardListItem(activity, rewardList)
-    container.addView(rewardListItem)
+    addView(rewardListItem)
 }
 
-fun MaterialForm.BigTitle(title: String) {
-    H1(title).apply {
-        gravity = Gravity.CENTER
-        setTextColor(Attr.getPrimaryTextColor(context))
-        setTextSize(20f)
-        maxLines = 1
-        ellipsize = TextUtils.TruncateAt.MIDDLE
+fun ViewGroup.BigTitle(title: String) {
+    add {
+        H1(title).apply {
+            gravity = Gravity.CENTER
+            setTextColor(Attr.getPrimaryTextColor(context))
+            setTextSize(20f)
+            maxLines = 1
+            ellipsize = TextUtils.TruncateAt.MIDDLE
+        }
     }
 }
 
-fun MaterialForm.Button(text: String, onClick: (View) -> Unit): Button {
-    val button = MaterialButton(windowContext)
+fun ViewGroup.Button(text: String, onClick: (View) -> Unit): Button {
+    val button = MaterialButton(context)
     button.setText(text)
     button.setShakelessClickListener(800, onClick)
-    container.addView(button)
+    addView(button)
     return button
 }
 
-fun MaterialForm.StepSliderButton(
+fun ViewGroup.StepSliderButton(
     maxCount: Int = 1,
     text: String,
     onClick: (View, count: Int) -> Unit
@@ -98,13 +102,13 @@ fun MaterialForm.StepSliderButton(
     if (maxCount <= 1) {
         return Button(text) { onClick(it, 1) }
     }
-    val stepSliderItem = StepSliderItem(windowContext).apply {
+    val stepSliderItem = StepSliderItem(context).apply {
         value = 1f
         valueFrom = 1f
         valueTo = maxCount.toFloat()
         stepSize = 1f
     }
-    container.addView(stepSliderItem)
+    addView(stepSliderItem)
     val button = Button("${text} 1") {
         onClick(it, stepSliderItem.value.toInt())
     }
@@ -114,7 +118,7 @@ fun MaterialForm.StepSliderButton(
     return button
 }
 
-fun FragmentActivity.showItemDialog(item:Block) {
+fun FragmentActivity.showItemDialog(item: Block) {
     val fragment: Fragment = NAV.rawFragment(RouterHub.USER_ItemDetailFragment)
         .putParcelable("item", item)
         .navigate() ?: FallBackFragment()

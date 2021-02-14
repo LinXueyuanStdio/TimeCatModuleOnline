@@ -23,8 +23,9 @@ import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.data.bmob.ext.net.allRole
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.Next
+import com.timecat.layout.ui.business.form.Spinner
 import com.timecat.layout.ui.business.setting.NextItem
-import com.timecat.middle.setting.MaterialForm
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditActivity
 import com.timecat.module.user.base.GO
@@ -91,7 +92,7 @@ class AddAuthEditActivity : BaseBlockEditActivity() {
     override fun addSettingItems(container: ViewGroup) {
         val I = I()
         target?.let { formData.target = it }
-        MaterialForm(this, container).apply {
+        container.apply {
             Next("我是", I.nickName) {
                 ToastUtil.i("当前授权的发起者为 ${I.nickName}")
                 GO.userDetail(I.objectId)
@@ -103,7 +104,7 @@ class AddAuthEditActivity : BaseBlockEditActivity() {
                 changeAuthTarget(it)
             }
             val spinnerData = listOf(AuthType.AuthIdentity, AuthType.AuthRole, AuthType.AuthPermission)
-            val spinner = addSpinner("以下", spinnerData) { data, index ->
+            val spinner = Spinner("以下", spinnerData) { data, index ->
                 formData.authType = data
                 authThing.title = data.id
             }
@@ -256,7 +257,7 @@ class AddAuthEditActivity : BaseBlockEditActivity() {
     override fun ok() {
         GlobalScope.launch(Dispatchers.IO) {
 //            requestInterActionExist {
-//                query = checkTopicExistByTitle(formData.name)
+//                query = checkTopicExistByTitle(formData.title)
 //                onError = {
 //                    ToastUtil.e("创建失败！${it.msg}")
 //                    LogUtil.e("创建失败！${it.msg}")

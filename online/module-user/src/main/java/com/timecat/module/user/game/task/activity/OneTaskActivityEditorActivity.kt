@@ -1,30 +1,26 @@
 package com.timecat.module.user.game.task.activity
 
+import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
-import com.afollestad.vvalidator.form
+import com.afollestad.vvalidator.form.Form
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.Activity
 import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.bmob.saveBlock
-import com.timecat.data.bmob.ext.create
-import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.data.bmob.ext.net.allTask
 import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.data.base.*
+import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.ActivityBlock
 import com.timecat.identity.data.block.ActivityOneTaskBlock
+import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.type.ACTIVITY_One_task
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.business.setting.ImageItem
-import com.timecat.layout.ui.business.setting.InputItem
-import com.timecat.layout.ui.business.setting.NextItem
-import com.timecat.middle.setting.MaterialForm
+import com.timecat.layout.ui.business.form.*
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -37,80 +33,46 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_OneTaskActivityEditorActivity)
 class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
 
+    @AttrValueAutowiredAnno("block")
+    @JvmField
+    var task: Block? = null
     override fun title(): String = "一个任务活动"
     override fun routerInject() = NAV.inject(this)
-    data class FormData(
-        var icon: String = "R.drawable.ic_folder",
-        var cover: String = "R.drawable.ic_folder",
-        var name: String = "新建活动",
-        var content: String = "",
-        var taskId: String = "",
-        var attachments: AttachmentTail? = null
-    )
 
-    val formData: FormData = FormData()
-    lateinit var imageItem: ImageItem
-    lateinit var coverItem: ImageItem
-    lateinit var titleItem: InputItem
-    lateinit var taskItem: NextItem
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
-        MaterialForm(this, container).apply {
-            imageItem = ImageItem(windowContext).apply {
-                title = "图标"
-                setImage(formData.icon)
-                onClick {
-                    chooseImage(isAvatar = true) { path ->
-                        receieveImage(I(), listOf(path), false) {
-                            formData.icon = it.first()
-                            imageItem.setImage(formData.icon)
-                        }
-                    }
-                }
+    override fun loadFromExistingBlock(): Block.() -> Unit = {
+        formData.title = title
+        formData.content = content
+        val head = ItemBlock.fromJson(structure)
+        formData.attachments = head.mediaScope
+        formData.icon = head.header.avatar
+    }
 
-                container.addView(this, 0)
-            }
-            coverItem = ImageItem(windowContext).apply {
-                title = "背景图"
-                setImage(formData.cover)
-                onClick {
-                    chooseImage(isAvatar = true) { path ->
-                        receieveImage(I(), listOf(path), false) {
-                            formData.cover = it.first()
-                            coverItem.setImage(formData.cover)
-                        }
-                    }
-                }
-
-                container.addView(this, 1)
-            }
-            titleItem = InputItem(windowContext).apply {
-                hint = "名称"
-                text = formData.name
-                onTextChange = {
-                    formData.name = it ?: ""
-                }
-
-                container.addView(this, 2)
-            }
-            taskItem = Next("任务", hint = formData.taskId, initialText = formData.taskId) {
-                chooseTask()
-            }
-
-            form {
-                useRealTimeValidation(disableSubmit = true)
-
-                inputLayout(titleItem.inputLayout) {
-                    isNotEmpty().description("请输入名称!")
-                }
-//                next(taskItem) {
-//                }
-
-                submitWith(R.id.ok) { result ->
-                    publish()
+    override fun initFormView(): ViewGroup.() -> Unit = {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder") {
+            chooseImage(isAvatar = true) { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.icon = it.first()
                 }
             }
         }
+        formData.coverItem = Image("背景图", "R.drawable.ic_folder") {
+            chooseImage(isAvatar = false) { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.cover = it.first()
+                }
+            }
+        }
+        formData.titleItem = OneLineInput("标题", "新建活动")
+        formData.blockItem = Next("任务") {
+            chooseTask()
+        }
+
+        add(
+            formData.iconItem to 0,
+            formData.coverItem to 1,
+            formData.titleItem to 2,
+            formData.blockItem to 3,
+        )
     }
 
     fun chooseTask() {
@@ -142,60 +104,46 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
             val texts = items.map { it.title }
             listItemsSingleChoice(items = texts) { _, idx, _ ->
                 val cube = items[idx]
-                formData.name = cube.title
-                formData.taskId = cube.objectId
+                formData.title = cube.title
+                formData.uuid = cube.objectId
                 formData.content = cube.content
-                titleItem.text = cube.title
-                emojiEditText.setText(cube.content)
             }
         }
     }
+
+    override fun validator(): Form.() -> Unit = {
+        inputLayout(formData.titleItem.inputLayout) {
+            isNotEmpty().description("请输入名称!")
+        }
+        next(formData.blockItem) {
+            isNotEmpty().description("必须选择一个任务!")
+        }
+    }
+
+    override fun currentBlock(): Block? = task
+
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
         return when {
-            titleItem.inputEditText.hasFocus() -> imageItem.height + coverItem.height
-            emojiEditText.hasFocus() -> imageItem.height + coverItem.height + titleItem.height
+            formData.titleItem.inputEditText.hasFocus() -> formData.iconItem.height + formData.coverItem.height
+            formData.urlItem.inputEditText.hasFocus() -> formData.iconItem.height + formData.coverItem.height + formData.titleItem.height
+            emojiEditText.hasFocus() -> formData.iconItem.height + formData.coverItem.height + formData.titleItem.height + formData.urlItem.height
             else -> 0
         }
     }
 
-    override fun release() {
-        formData.content = content
-        formData.attachments = attachments
-        ok()
-    }
-
-    protected fun ok() {
-        save()
-    }
-
-    open fun save() {
-        saveBlock {
-            target = I() create Activity {
-                title = formData.name
-                content = formData.content
-                subtype = ACTIVITY_One_task
-                headerBlock = ActivityBlock(
-                    type = ACTIVITY_One_task,
-                    structure = ActivityOneTaskBlock(formData.taskId).toJsonObject(),
-                    mediaScope = formData.attachments,
-                    topicScope = TopicScope(emojiEditText.realTopicList.map {
-                        TopicItem(it.topicName, it.topicId)
-                    }.toMutableList()),
-                    atScope = AtScope(emojiEditText.realUserList.map {
-                        AtItem(it.user_name, it.user_id)
-                    }.toMutableList()),
-                    header = PageHeader(
-                        icon = formData.icon,
-                        avatar = formData.icon,
-                        cover = formData.cover,
-                    )
-                )
-            }
-            onSuccess = {
-                ToastUtil.ok("成功！")
-                finish()
-            }
-            onError = errorCallback
-        }
+    override fun subtype(): Int = ACTIVITY_One_task
+    override fun getItemBlock(): ActivityBlock {
+        return ActivityBlock(
+            type = subtype(),
+            structure = ActivityOneTaskBlock(formData.uuid).toJsonObject(),
+            mediaScope = formData.attachments,
+            topicScope = formData.topicScope,
+            atScope = formData.atScope,
+            header = PageHeader(
+                icon = formData.icon,
+                avatar = formData.icon,
+                cover = formData.cover,
+            )
+        )
     }
 }

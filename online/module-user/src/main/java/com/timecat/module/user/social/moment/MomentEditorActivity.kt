@@ -3,11 +3,15 @@ package com.timecat.module.user.social.moment
 import android.view.View
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.Comment
+import com.timecat.data.bmob.ext.Moment
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.isRelays
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
+import com.timecat.identity.data.block.CommentBlock
 import com.timecat.identity.data.block.MomentBlock
+import com.timecat.identity.data.block.SimpleComment
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.base.BaseArticleBlockEditorActivity
@@ -62,11 +66,13 @@ class MomentEditorActivity : BaseArticleBlockEditorActivity() {
     override fun subtype(): Int = 0
 
     override fun savableBlock(): Block = I() create Moment {
-
+        this.parent = this@MomentEditorActivity.parent
+        this.subtype = subtype()
+        this.headerBlock = getHeadBlock()
     }
 
     override fun updatableBlock(): Block.() -> Unit = {
-        title = formData.replyBlockId
+        title = ""
         content = formData.content
         //更新评论后应该保持parent不变
         structure = getHeadBlock().toJson()
@@ -74,31 +80,21 @@ class MomentEditorActivity : BaseArticleBlockEditorActivity() {
 
     fun getHeadBlock(): MomentBlock {
         return MomentBlock(
-            mediaScope = attachments,
-            atScope = AtScope(emojiEditText.realUserList.map {
-                AtItem(it.user_name, it.user_id)
-            }.toMutableList()),
-            topicScope = TopicScope(emojiEditText.realTopicList.map {
-                TopicItem(it.topicName, it.topicId)
-            }.toMutableList()),
+            mediaScope = formData.attachments,
+            atScope = formData.atScope,
+            topicScope = formData.topicScope,
             relayScope = relay?.let { RelayScope(it.objectId) }
         )
-    }
-
-    override fun release() {
-        formData.content = content
-        formData.attachments = attachments
-        ok()
     }
 
     override fun onSaveSuccess(it: Block) {
         if (relay != null) {
             relay?.isRelays {
-                ToastUtil.ok("评论成功")
+                ToastUtil.ok("发布成功")
                 finish()
             }
         } else {
-            ToastUtil.ok("评论成功")
+            ToastUtil.ok("发布成功")
             finish()
         }
     }
