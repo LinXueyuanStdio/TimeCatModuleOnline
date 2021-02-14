@@ -10,6 +10,8 @@ import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.ext.bmob.updateUser
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.Image
+import com.timecat.layout.ui.business.form.Next
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.middle.setting.BaseSettingActivity
 import com.timecat.module.user.ext.chooseImage
@@ -45,7 +47,8 @@ class UserSettingActivity : BaseSettingActivity() {
         }
         user?.let { user ->
             LogUtil.e(user.toJSONString())
-            avatarItem = simpleImage(container, "头像", user.avatar) { avatarItem ->
+
+            avatarItem = container.Image("头像", user.avatar) { avatarItem ->
                 chooseImage(isAvatar = true) { path ->
                     receieveImage(user, listOf(path), false) {
                         for (i in it) {
@@ -53,13 +56,13 @@ class UserSettingActivity : BaseSettingActivity() {
                             user.headPortrait = file
                             updateUserObject(user) {
                                 ToastUtil.ok("头像更换成功")
-                                avatarItem.setImage(path)
+                                avatarItem.icon = path
                             }
                         }
                     }
                 }
             }
-            coverItem = simpleImage(container, "封面", user.cover) { coverItem ->
+            coverItem = container.Image("封面", user.cover) { coverItem ->
                 chooseImage(isAvatar = false) { path ->
                     receieveImage(user, listOf(path), false) {
                         for (i in it) {
@@ -67,16 +70,16 @@ class UserSettingActivity : BaseSettingActivity() {
                             user.coverPage = file
                             updateUserObject(user) {
                                 ToastUtil.ok("封面更换成功")
-                                coverItem.setImage(path)
+                                coverItem.icon = path
                             }
                         }
                     }
                 }
             }
-            simpleNext(container, "名字", null, user.nickName, null) { item ->
+            container.Next("名字", null, user.nickName, null) { item ->
                 editNickname { item.hint = it }
             }
-            simpleNext(container, "简介", null, user.intro, null) { item ->
+            container.Next("简介", null, user.intro, null) { item ->
                 editBriefIntro { item.hint = it }
             }
         }

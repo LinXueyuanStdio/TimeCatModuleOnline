@@ -173,7 +173,7 @@ class AddRoleActivity : BaseBlockEditorActivity() {
                 onSuccess = { exist ->
                     if (exist) {
                         unlockEverythingWhenPublish()
-                        ToastUtil.w("已存在，请修改权限角色名 ！")
+                        ToastUtil.w("已存在，请修改名称 ！")
                     } else {
                         save()
                     }

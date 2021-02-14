@@ -42,6 +42,8 @@ open class AddTopicActivity : BaseBlockEditorActivity() {
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
         formData.content = content
+        val head = TopicBlock.fromJson(structure)
+        formData.icon = head.header?.icon ?: "R.drawable.ic_folder"
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
@@ -52,7 +54,7 @@ open class AddTopicActivity : BaseBlockEditorActivity() {
                 }
             }
         }
-        formData.titleItem = OneLineInput("标题", "新建物产", autoAdd = false)
+        formData.titleItem = OneLineInput("标题", "新建话题", autoAdd = false)
 
         add(
             formData.iconItem to 0,
@@ -79,7 +81,11 @@ open class AddTopicActivity : BaseBlockEditorActivity() {
     override fun savableBlock(): Block = I() create Topic {
         title = formData.title
         content = formData.content
-        headerBlock = TopicBlock(
+        headerBlock = getHeadBlock()
+    }
+
+    fun getHeadBlock(): TopicBlock {
+        return TopicBlock(
             content = NoteBody(),
             header = PageHeader(
                 icon = formData.icon,
@@ -92,6 +98,7 @@ open class AddTopicActivity : BaseBlockEditorActivity() {
     override fun updatableBlock(): Block.() -> Unit = {
         title = formData.title
         content = formData.content
+        structure = getHeadBlock().toJson()
     }
 
     override fun subtype() = 0
@@ -106,7 +113,7 @@ open class AddTopicActivity : BaseBlockEditorActivity() {
                 }
                 onSuccess = { exist ->
                     if (exist) {
-                        ToastUtil.w("已存在，请修改话题名！")
+                        ToastUtil.w("已存在，请修改名称！")
                     } else {
                         save()
                     }
