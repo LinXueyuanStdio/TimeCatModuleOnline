@@ -87,30 +87,34 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
-        formData.iconItem = Image("图标", "R.drawable.ic_folder") {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
             chooseImage(isAvatar = true) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }
             }
         }
-        formData.coverItem = Image("背景图", "R.drawable.ic_folder") {
+        formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
             chooseImage(isAvatar = true) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.cover = it.first()
                 }
             }
         }
-        formData.titleItem = OneLineInput("标题", "新邮件")
+        formData.titleItem = OneLineInput("标题", "新任务", autoAdd = false)
         rulesItem = Next("任务完成条件",
             hint = formRuleItems.toString(),
-            initialText = "${formRuleItems.size}") {
+            initialText = "${formRuleItems.size}",
+            autoAdd = false
+        ) {
             selectRuleItems()
         }
         rulesContainer = ContainerItem(context)
         rewardsItem = Next("奖励",
             hint = formRewardListItems.toString(),
-            initialText = "${formRewardListItems.size}") {
+            initialText = "${formRewardListItems.size}",
+            autoAdd = false
+        ) {
             selectRewardItems()
         }
         rewardsContainer = ContainerItem(context)
@@ -270,11 +274,11 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
     //endregion
 
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
-        return when {
-            formData.titleItem.inputEditText.hasFocus() -> formData.iconItem.height + formData.coverItem.height
-            emojiEditText.hasFocus() -> formData.iconItem.height + formData.coverItem.height + formData.titleItem.height
-            else -> 0
-        }
+        var h = formData.iconItem.height + formData.coverItem.height
+        if (formData.titleItem.inputEditText.hasFocus()) return h
+        h += formData.titleItem.height
+        if (emojiEditText.hasFocus()) return h
+        return 0
     }
 
     override fun subtype() = TASK_Data

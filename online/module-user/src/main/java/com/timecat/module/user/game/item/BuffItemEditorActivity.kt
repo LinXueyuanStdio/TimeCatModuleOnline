@@ -46,14 +46,14 @@ class BuffItemEditorActivity : BaseItemAddActivity() {
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
-        formData.iconItem = Image("图标", "R.drawable.ic_folder") {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
             chooseImage(isAvatar = true) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }
             }
         }
-        formData.titleItem = OneLineInput("标题", "新建装备")
+        formData.titleItem = OneLineInput("标题", "新建Buff", autoAdd = false)
 
         add(
             formData.iconItem to 0,
@@ -70,11 +70,11 @@ class BuffItemEditorActivity : BaseItemAddActivity() {
     override fun currentBlock(): Block? = item
 
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
-        return when {
-            formData.titleItem.inputEditText.hasFocus() -> formData.iconItem.height
-            emojiEditText.hasFocus() -> formData.iconItem.height + formData.titleItem.height
-            else -> 0
-        }
+        var h = formData.iconItem.height
+        if (formData.titleItem.inputEditText.hasFocus()) return h
+        h += formData.titleItem.height
+        if (emojiEditText.hasFocus()) return h
+        return 0
     }
 
     override fun subtype() = ITEM_Buff

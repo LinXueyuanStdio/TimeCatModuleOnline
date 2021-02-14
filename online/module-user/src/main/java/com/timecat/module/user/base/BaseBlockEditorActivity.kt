@@ -43,7 +43,7 @@ abstract class BaseBlockEditorActivity : BaseComplexEditorActivity() {
         ok()
     }
 
-    protected fun ok() {
+    protected open fun ok() {
         if (currentBlock() == null) {
             save()
         } else {

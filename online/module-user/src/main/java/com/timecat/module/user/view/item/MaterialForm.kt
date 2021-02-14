@@ -33,6 +33,15 @@ class MaterialForm {
     lateinit var urlItem: InputItem
     //endregion
 
+    //region packageNameItem -> packageName
+    var packageName: String
+        get() = packageNameItem.text
+        set(value) {
+            packageNameItem.text = value
+        }
+    lateinit var packageNameItem: InputItem
+    //endregion
+
     //region blockItem -> uuid
     var uuid: String
         get() = blockItem.text

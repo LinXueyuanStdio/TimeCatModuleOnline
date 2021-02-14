@@ -71,17 +71,19 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
-        formData.iconItem = Image("图标", "R.drawable.ic_folder") {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
             chooseImage(isAvatar = true) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }
             }
         }
-        formData.titleItem = OneLineInput("标题", "新建礼包")
+        formData.titleItem = OneLineInput("标题", "新建礼包", autoAdd = false)
         packageItem = Next("礼包",
             hint = formItems.toString(),
-            initialText = "${formItems.size}") {
+            initialText = "${formItems.size}",
+            autoAdd = false
+        ) {
             selectItems()
         }
         packageDetailContainer = ContainerItem(context)
@@ -183,11 +185,11 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
     }
 
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
-        return when {
-            formData.titleItem.inputEditText.hasFocus() -> formData.iconItem.height
-            emojiEditText.hasFocus() -> formData.iconItem.height + formData.titleItem.height
-            else -> 0
-        }
+        var h = formData.iconItem.height
+        if (formData.titleItem.inputEditText.hasFocus()) return h
+        h += formData.titleItem.height
+        if (emojiEditText.hasFocus()) return h
+        return 0
     }
 
     override fun currentBlock(): Block? = item

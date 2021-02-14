@@ -1,28 +1,22 @@
 package com.timecat.module.user.social.app.add
 
-import com.afollestad.vvalidator.form
+import android.view.ViewGroup
+import com.afollestad.vvalidator.form.Form
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.ext.App
-import com.timecat.data.bmob.ext.bmob.requestExistBlock
-import com.timecat.data.bmob.ext.bmob.saveBlock
-import com.timecat.data.bmob.ext.create
-import com.timecat.data.bmob.ext.net.checkLeaderBoardExistByTitle
-import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.data.base.AttachmentTail
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.APP_iOS
+import com.timecat.identity.data.block.AndroidApp
 import com.timecat.identity.data.block.AppBlock
 import com.timecat.identity.data.block.iOSApp
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.middle.setting.MaterialForm
-import com.timecat.module.user.R
-import com.timecat.module.user.base.GO
+import com.timecat.layout.ui.business.form.Image
+import com.timecat.layout.ui.business.form.OneLineInput
+import com.timecat.layout.ui.business.form.add
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * @author 林学渊
@@ -33,95 +27,91 @@ import kotlinx.coroutines.launch
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddiOSAppActivity)
 class AddiOSAppActivity : BaseAddAppActivity() {
+    @AttrValueAutowiredAnno("block")
+    @JvmField
+    var app: Block? = null
+
     override fun title(): String = "iOS 应用"
     override fun routerInject() = NAV.inject(this)
-    data class FormData(
-        var name: String = "新建应用",
-        var content: String = "",
-        var icon: String = "R.drawable.ic_folder",
-        var attachments: AttachmentTail? = null
-    )
 
-    val formData: FormData = FormData()
-
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
-        container.apply {
-            Image("图标") { formData.iconItem ->
-                chooseImage(isAvatar = true) { path ->
-                    receieveImage(I(), listOf(path), false) {
-                        formData.icon = it.first()
-                        formData.iconItem.setImage(formData.icon)
-                    }
-                }
-            }
-            val formData.titleItem = OneLineInput("名称", formData.title) {
-                formData.title = it ?: ""
-            }
-            MultiLineInput("下载地址（url）", formData.content) {
-                formData.content = it ?: ""
-            }
-
-            form {
-                useRealTimeValidation(disableSubmit = true)
-
-                inputLayout(formData.titleItem.inputLayout) {
-                    isNotEmpty().description("请输入名称!")
-                }
-
-                submitWith(R.id.ok) { result ->
-                    publish()
-                }
-            }
-        }
-    }
-
-    override fun release() {
+    override fun loadFromExistingBlock(): Block.() -> Unit = {
+        formData.title = title
         formData.content = content
-        formData.attachments = attachments
-        ok()
+        val head = AppBlock.fromJson(structure)
+        formData.icon = head.header.avatar
+        val head2 = AndroidApp.fromJson(head.structure)
+        formData.url = head2.packageName
     }
 
-    protected fun ok() {
-        GlobalScope.launch(Dispatchers.IO) {
-            requestExistBlock {
-                query = checkLeaderBoardExistByTitle(formData.title)
-                onError = errorCallback
-                onSuccess = { exist ->
-                    if (exist) {
-                        ToastUtil.w("已存在，请修改排行榜名！")
-                    } else {
-                        save()
-                    }
+    override fun initFormView(): ViewGroup.() -> Unit = {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
+            chooseImage(isAvatar = true) { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.icon = it.first()
                 }
             }
         }
+        formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
+            chooseImage(isAvatar = true) { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.cover = it.first()
+                }
+            }
+        }
+        formData.titleItem = OneLineInput("标题", "新建应用", autoAdd = false)
+        formData.urlItem = OneLineInput("下载地址", "http://", autoAdd = false)
+        formData.packageNameItem = OneLineInput("包名", "", autoAdd = false)
+
+        add(
+            formData.iconItem to 0,
+            formData.coverItem to 1,
+            formData.titleItem to 2,
+            formData.urlItem to 3,
+            formData.packageNameItem to 4,
+        )
     }
 
-    open fun save() {
-        saveBlock {
-            target = I() create App {
-                title = formData.title
-                content = formData.content
-                headerBlock = AppBlock(
-                    type = APP_iOS,
-                    structure = iOSApp(
-                        formData.content,
-                        formData.attachments?.getAllPath() ?: mutableListOf()
-                    ).toJsonObject(),
-                    header = PageHeader(
-                        icon = formData.icon,
-                        avatar = formData.icon,
-                        cover = formData.icon,
-                    )
-                )
-            }
-            onSuccess = {
-                ToastUtil.ok("成功！")
-                GO.appDetail(it.objectId)
-                finish()
-            }
-            onError = errorCallback
+    override fun validator(): Form.() -> Unit = {
+        inputLayout(formData.titleItem.inputLayout) {
+            isNotEmpty().description("请输入名称!")
         }
+        inputLayout(formData.urlItem.inputLayout) {
+            isNotEmpty().description("请输入下载地址!")
+        }
+        inputLayout(formData.packageNameItem.inputLayout) {
+            isNotEmpty().description("请输入包名!")
+        }
+    }
+
+    override fun currentBlock(): Block? = app
+    override fun subtype(): Int = APP_iOS
+
+    override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
+        var h = formData.iconItem.height + formData.coverItem.height
+        if (formData.titleItem.inputEditText.hasFocus()) return h
+        h += formData.titleItem.height
+        if (formData.urlItem.inputEditText.hasFocus()) return h
+        h += formData.urlItem.height
+        if (formData.packageNameItem.inputEditText.hasFocus()) return h
+        h += formData.packageNameItem.height
+        if (emojiEditText.hasFocus()) return h
+        return 0
+    }
+
+    override fun getItemBlock(): AppBlock {
+        return AppBlock(
+            url = formData.url,
+            mediaScope = formData.attachments,
+            atScope = formData.atScope,
+            topicScope = formData.topicScope,
+            structure = iOSApp(
+                formData.packageName,
+            ).toJsonObject(),
+            header = PageHeader(
+                icon = formData.icon,
+                avatar = formData.icon,
+                cover = formData.cover,
+            )
+        )
     }
 }

@@ -43,28 +43,28 @@ class UrlActivityEditorActivity : BaseActivityAddActivity() {
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
-        formData.iconItem = Image("图标", "R.drawable.ic_folder") {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
             chooseImage(isAvatar = true) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }
             }
         }
-        formData.coverItem = Image("背景图", "R.drawable.ic_folder") {
+        formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
             chooseImage(isAvatar = false) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.cover = it.first()
                 }
             }
         }
-        formData.titleItem = OneLineInput("标题", "新建活动")
-        formData.urlItem = OneLineInput("url", "")
+        formData.titleItem = OneLineInput("标题", "新建活动", autoAdd = false)
+        formData.urlItem = OneLineInput("url", "", autoAdd = false)
 
         add(
             formData.iconItem to 0,
-            formData.coverItem to 0,
-            formData.titleItem to 1,
-            formData.urlItem to 1,
+            formData.coverItem to 1,
+            formData.titleItem to 2,
+            formData.urlItem to 3,
         )
     }
 
@@ -80,12 +80,13 @@ class UrlActivityEditorActivity : BaseActivityAddActivity() {
     override fun currentBlock(): Block? = task
 
     override fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
-        return when {
-            formData.titleItem.inputEditText.hasFocus() -> formData.iconItem.height + formData.coverItem.height
-            formData.urlItem.inputEditText.hasFocus() -> formData.iconItem.height + formData.coverItem.height + formData.titleItem.height
-            emojiEditText.hasFocus() -> formData.iconItem.height + formData.coverItem.height + formData.titleItem.height + formData.urlItem.height
-            else -> 0
-        }
+        var h = formData.iconItem.height + formData.coverItem.height
+        if (formData.titleItem.inputEditText.hasFocus()) return h
+        h += formData.titleItem.height
+        if (formData.urlItem.inputEditText.hasFocus()) return h
+        h += formData.urlItem.height
+        if (emojiEditText.hasFocus()) return h
+        return 0
     }
 
     override fun subtype(): Int = ACTIVITY_Url
