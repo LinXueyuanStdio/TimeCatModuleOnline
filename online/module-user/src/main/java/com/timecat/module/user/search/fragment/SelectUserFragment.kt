@@ -1,7 +1,7 @@
 package com.timecat.module.user.search.fragment
 
 import android.app.Activity
-import com.timecat.data.bmob.data.User
+import cn.leancloud.AVObject
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.user.SelectUserItem
@@ -16,7 +16,7 @@ import com.xiaojinzi.component.anno.FragmentAnno
  */
 @FragmentAnno(RouterHub.SEARCH_SelectUserFragment)
 class SelectUserFragment : SearchUserFragment() {
-    override fun transform(activity: Activity, user: User): BaseItem<*> {
-        return SelectUserItem(activity, user)
+    override fun transform(activity: Activity, user: AVObject): BaseItem<*> {
+        return SelectUserItem(activity, transform(user))
     }
 }

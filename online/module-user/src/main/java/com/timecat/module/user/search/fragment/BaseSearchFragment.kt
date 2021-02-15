@@ -3,7 +3,7 @@ package com.timecat.module.user.search.fragment
 import androidx.lifecycle.ViewModelProvider
 import com.timecat.module.user.base.BaseEndlessListFragment
 import com.timecat.module.user.search.vm.SearchViewModel
-import com.timecat.page.base.friend.list.BaseStatefulListFragment
+import io.reactivex.disposables.Disposable
 
 /**
  * @author 林学渊
@@ -15,9 +15,11 @@ import com.timecat.page.base.friend.list.BaseStatefulListFragment
 abstract class BaseSearchFragment : BaseEndlessListFragment() {
 
     lateinit var searchViewModel: SearchViewModel
+    var disposable: Disposable? = null
     override fun loadData() {
         searchViewModel = ViewModelProvider(requireActivity()).get(SearchViewModel::class.java)
         searchViewModel.searchText.observe(this, {
+            disposable?.dispose()
             it?.let { onSearch(it) }
         })
         mStatefulLayout?.showEmpty()

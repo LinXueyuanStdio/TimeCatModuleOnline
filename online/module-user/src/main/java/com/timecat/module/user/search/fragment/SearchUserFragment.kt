@@ -1,14 +1,17 @@
 package com.timecat.module.user.search.fragment
 
 import android.app.Activity
+import cn.leancloud.AVObject
+import cn.leancloud.Transformer
 import cn.leancloud.search.AVSearchQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.User
-import com.timecat.data.bmob.ext.bmob.searchUser
+import com.timecat.data.bmob.ext.bmob.searchList
 import com.timecat.data.bmob.ext.bmob.userQuery
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.user.SearchUserItem
+import com.timecat.module.user.adapter.user.SelectUserItem
 import com.xiaojinzi.component.anno.FragmentAnno
 
 /**
@@ -21,13 +24,13 @@ import com.xiaojinzi.component.anno.FragmentAnno
 @FragmentAnno(RouterHub.SEARCH_SearchUserFragment)
 open class SearchUserFragment : BaseSearchFragment() {
 
-    lateinit var userQuery: AVSearchQuery<User>
+    lateinit var userQuery: AVSearchQuery<AVObject>
 
     override fun onSearch(q: String) {
         LogUtil.se(q)
         userQuery = userQuery(q)
         mStatefulLayout.showLoading()
-        searchUser {
+        disposable = searchList {
             query = userQuery.apply {
                 setLimit(pageSize)
                 setSkip(offset)
@@ -48,12 +51,10 @@ open class SearchUserFragment : BaseSearchFragment() {
         }
     }
 
-    override fun loadData() {}
-
     override fun loadFirst() {}
 
     override fun loadMore() {
-        searchUser {
+        disposable = searchList {
             query = userQuery.apply {
                 setLimit(pageSize)
                 setSkip(offset)
@@ -74,7 +75,13 @@ open class SearchUserFragment : BaseSearchFragment() {
         }
     }
 
-    open fun transform(activity: Activity, user: User): BaseItem<*> {
-        return SearchUserItem(activity, user)
+    open fun transform(activity: Activity, user: AVObject): BaseItem<*> {
+        return SearchUserItem(activity, transform(user))
+    }
+
+    fun transform(user: AVObject): User {
+        val jsonString = user.toJSONString()
+        val rawObject = AVObject.parseAVObject(jsonString)
+        return Transformer.transform(rawObject, User::class.java)
     }
 }

@@ -1,5 +1,7 @@
 package com.timecat.module.user.game.mail
 
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.allMail
 import com.timecat.identity.readonly.RouterHub
@@ -20,4 +22,7 @@ class AllMailActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "邮箱"
     override fun query() = allMail()
     override fun block2Item(block: Block) = MailItem(this, block)
+    override fun getLayoutManager(): RecyclerView.LayoutManager {
+        return GridLayoutManager(context, 4)
+    }
 }

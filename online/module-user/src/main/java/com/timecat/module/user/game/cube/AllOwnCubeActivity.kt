@@ -50,7 +50,7 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
         })
         viewModel.cubes.observe(this, {
             if (it.isEmpty()) {
-                LogUtil.e("没有持有任何方块!")
+                LogUtil.se("没有持有任何方块!")
                 mStatefulLayout?.showEmpty("没有持有任何方块！")
                 return@observe
             } else {
@@ -105,6 +105,9 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
             query = I().allOwnCube()
             onSuccess = {
                 viewModel.cubes.postValue(it)
+            }
+            onEmpty = {
+                viewModel.cubes.postValue(listOf())
             }
             onError = {
                 mStatefulLayout?.showError("出错啦") {

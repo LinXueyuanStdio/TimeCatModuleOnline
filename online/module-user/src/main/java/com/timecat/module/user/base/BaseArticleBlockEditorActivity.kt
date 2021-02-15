@@ -1,14 +1,6 @@
 package com.timecat.module.user.base
 
 import android.view.View
-import com.timecat.data.bmob.ext.Mail
-import com.timecat.data.bmob.ext.bmob.saveBlock
-import com.timecat.data.bmob.ext.bmob.updateBlock
-import com.timecat.data.bmob.ext.create
-import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.BLOCK_MAIL
-import com.timecat.identity.data.block.MailBlock
 import com.timecat.module.user.R
 import com.timecat.module.user.view.BlockHerfView
 

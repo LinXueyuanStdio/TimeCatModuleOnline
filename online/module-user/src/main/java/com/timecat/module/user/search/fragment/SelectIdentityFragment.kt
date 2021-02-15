@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import cn.leancloud.AVObject
 import cn.leancloud.AVQuery
 import cn.leancloud.search.AVSearchQuery
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -35,11 +36,11 @@ import com.xiaojinzi.component.anno.FragmentAnno
  */
 @FragmentAnno(RouterHub.SEARCH_SelectIdentityFragment)
 class SelectIdentityFragment : SearchBlockFragment() {
-    override fun query(q: String): AVSearchQuery<Block> = blockQuery(q).apply {
+    override fun query(q: String) = blockQuery(q).apply {
         queryString = "type:$BLOCK_IDENTITY AND $q"
     }
 
-    override fun transform(activity: Activity, block: Block): BaseItem<*> {
-        return SelectBlockItem(activity, block)
+    override fun transform(activity: Activity, block: AVObject): BaseItem<*> {
+        return SelectBlockItem(activity, transform(block))
     }
 }

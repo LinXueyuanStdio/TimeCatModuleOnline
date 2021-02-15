@@ -1,15 +1,19 @@
-package com.timecat.module.user.game.mail
+package com.timecat.module.user.game.bag
 
 import android.content.Intent
 import android.view.ViewGroup
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.saveAction
+import com.timecat.data.bmob.ext.bmob.saveOwnItem
 import com.timecat.data.bmob.ext.bmob.saveOwnMail
+import com.timecat.data.bmob.ext.game.ownItem
 import com.timecat.data.bmob.ext.game.ownMail
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Next
+import com.timecat.layout.ui.business.form.NumberInput
 import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.module.user.base.login.BaseLoginEditActivity
 import com.timecat.module.user.search.SelectActivity
@@ -24,34 +28,36 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_SendMailActivity)
-class SendMailActivity : BaseLoginEditActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_SendItemActivity)
+class SendItemActivity : BaseLoginEditActivity() {
     /**
      * 要发送的邮件
      */
     @AttrValueAutowiredAnno("block")
     @JvmField
-    var mail: Block? = null
+    var item: Block? = null
 
-    override fun title(): String = "发送邮件"
-    override fun routerInject() = NAV.inject(this)
+    override fun title(): String = "发送物品"
+    override fun routerInject() =NAV.inject(this)
+
     lateinit var formData: MaterialForm
     override fun addSettingItems(container: ViewGroup) {
         formData = MaterialForm()
         container.apply {
-            formData.blockItem = Next("邮件") {
+            formData.blockItem = Next("物品") {
                 selectBlock(it)
             }
             formData.userItem = Next("用户") {
                 selectUser(it)
             }
+            formData.numItem = NumberInput("数量", "1")
         }
-        formData.block = mail
+        formData.block = item
     }
 
     override fun ok() {
-        saveOwnMail {
-            target = ownMail(formData.user!!, formData.block!!)
+        saveOwnItem {
+            target = ownItem(formData.user!!, formData.block!!, formData.num.toInt())
             onSuccess = {
                 ToastUtil.ok("成功")
                 finish()
@@ -83,12 +89,12 @@ class SendMailActivity : BaseLoginEditActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SEARCH_USER) {
-                val user = data?.getParcelableExtra("data") as User?
+                val user = data?.getSerializableExtra("data") as User?
                 user?.let {
                     formData.user = it
                 }
             } else if (requestCode == SEARCH_MAIL) {
-                val user = data?.getParcelableExtra("data") as Block?
+                val user = data?.getSerializableExtra("data") as Block?
                 user?.let {
                     formData.block = it
                 }

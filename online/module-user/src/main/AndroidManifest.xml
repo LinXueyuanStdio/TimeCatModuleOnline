@@ -226,6 +226,7 @@
         <activity android:name=".social.recommend.RecommendEditorActivity" />
         <activity android:name=".game.mail.AllOwnMailActivity" />
         <activity android:name=".game.mail.SendMailActivity" />
+        <activity android:name=".game.bag.SendItemActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

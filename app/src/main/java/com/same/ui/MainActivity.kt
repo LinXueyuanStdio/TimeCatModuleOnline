@@ -55,14 +55,15 @@ class MainActivity : Activity() {
 
         linearLayout.addView(createText("邮件"))
         linearLayout.addView(createPathButton(RouterHub.USER_AllMailActivity))
+        linearLayout.addView(createPathButton(RouterHub.USER_AllOwnMailActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_MailEditorActivity))
 
         linearLayout.addView(createText("方块"))
         linearLayout.addView(createPathButton(RouterHub.USER_AllOwnCubeActivity))
+        linearLayout.addView(createPathButton(RouterHub.USER_AllIdentityActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllMetaPermissionActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllHunPermissionActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllRoleActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllIdentityActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllAuthActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_CubeEditorActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_CubeSkillEditorActivity))

@@ -1,11 +1,14 @@
 package com.timecat.module.user.search.fragment
 
 import android.app.Activity
+import cn.leancloud.AVObject
+import cn.leancloud.Transformer
 import cn.leancloud.search.AVSearchQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.blockQuery
 import com.timecat.data.bmob.ext.bmob.searchBlock
+import com.timecat.data.bmob.ext.bmob.searchList
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.block.SearchBlockItem
 
@@ -18,15 +21,15 @@ import com.timecat.module.user.adapter.block.SearchBlockItem
  */
 open class SearchBlockFragment : BaseSearchFragment() {
 
-    lateinit var blockQuery: AVSearchQuery<Block>
+    lateinit var blockQuery: AVSearchQuery<AVObject>
 
-    open fun query(q: String): AVSearchQuery<Block> = blockQuery(q)
+    open fun query(q: String): AVSearchQuery<AVObject> = blockQuery(q)
 
     override fun onSearch(q: String) {
         LogUtil.se(q)
         blockQuery = query(q)
         mStatefulLayout.showLoading()
-        searchBlock {
+        disposable = searchBlock {
             query = blockQuery.apply {
                 setLimit(pageSize)
                 setSkip(offset)
@@ -47,12 +50,10 @@ open class SearchBlockFragment : BaseSearchFragment() {
         }
     }
 
-    override fun loadData() {}
-
     override fun loadFirst() {}
 
     override fun loadMore() {
-        searchBlock {
+        disposable = searchList {
             query = blockQuery.apply {
                 setLimit(pageSize)
                 setSkip(offset)
@@ -73,7 +74,13 @@ open class SearchBlockFragment : BaseSearchFragment() {
         }
     }
 
-    open fun transform(activity: Activity, block: Block): BaseItem<*> {
-        return SearchBlockItem(activity, block)
+    open fun transform(activity: Activity, block: AVObject): BaseItem<*> {
+        return SearchBlockItem(activity, transform(block))
+    }
+
+    fun transform(user: AVObject): Block {
+        val jsonString = user.toJSONString()
+        val rawObject = AVObject.parseAVObject(jsonString)
+        return Transformer.transform(rawObject, Block::class.java)
     }
 }

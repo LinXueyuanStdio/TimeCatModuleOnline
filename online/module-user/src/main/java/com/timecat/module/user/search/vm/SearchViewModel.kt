@@ -12,5 +12,4 @@ import androidx.lifecycle.ViewModel
  */
 class SearchViewModel : ViewModel() {
     val searchText: MutableLiveData<String> = MutableLiveData()
-    val searchSessionId: MutableLiveData<String> = MutableLiveData()
 }

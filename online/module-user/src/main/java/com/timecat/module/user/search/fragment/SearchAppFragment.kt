@@ -1,6 +1,7 @@
 package com.timecat.module.user.search.fragment
 
 import android.app.Activity
+import cn.leancloud.AVObject
 import cn.leancloud.search.AVSearchQuery
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.blockQuery
@@ -20,11 +21,11 @@ import com.xiaojinzi.component.anno.FragmentAnno
  */
 @FragmentAnno(RouterHub.SEARCH_SelectAppFragment)
 class SearchAppFragment : SearchBlockFragment() {
-    override fun query(q: String): AVSearchQuery<Block> = blockQuery(q).apply {
+    override fun query(q: String) = blockQuery(q).apply {
         queryString = "type:$BLOCK_APP AND $q"
     }
 
-    override fun transform(activity: Activity, block: Block): BaseItem<*> {
-        return SelectBlockItem(activity, block)
+    override fun transform(activity: Activity, block: AVObject): BaseItem<*> {
+        return SelectBlockItem(activity, transform(block))
     }
 }
