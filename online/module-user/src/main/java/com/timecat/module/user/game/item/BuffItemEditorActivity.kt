@@ -80,7 +80,6 @@ class BuffItemEditorActivity : BaseItemAddActivity() {
     override fun subtype() = ITEM_Buff
     override fun getItemBlock(): ItemBlock {
         return ItemBlock(
-            type = subtype(),
             structure = BuffItemBlock().toJsonObject(),
             mediaScope = formData.attachments,
             topicScope = formData.topicScope,

@@ -90,7 +90,6 @@ class DataItemEditorActivity : BaseItemAddActivity() {
     override fun subtype() = ITEM_Data
     override fun getItemBlock(): ItemBlock {
         return ItemBlock(
-            type = subtype(),
             structure = DataItemBlock(
                 where = formData.where,
                 num = formData.num

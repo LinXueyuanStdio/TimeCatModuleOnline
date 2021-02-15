@@ -7,5 +7,5 @@ package com.timecat.module.user.game.shop
  * @description null
  * @usage null
  */
-class AddShopActivity {
+class ShopEditorActivity {
 }

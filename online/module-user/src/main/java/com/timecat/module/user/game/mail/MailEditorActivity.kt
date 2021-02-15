@@ -83,7 +83,7 @@ class MailEditorActivity : BaseBlockEditorActivity() {
             }
         }
         formData.titleItem = OneLineInput("标题", "新邮件", autoAdd = false)
-        packageItem = Next("礼包",
+        packageItem = Next("附件",
             hint = formItems.toString(),
             initialText = "${formItems.size}",
             autoAdd = false

@@ -199,7 +199,6 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
 
    override fun getItemBlock(): ItemBlock {
         return ItemBlock(
-            type = subtype(),
             structure = PackageItemBlock(
                 formRewardListItems
             ).toJsonObject(),

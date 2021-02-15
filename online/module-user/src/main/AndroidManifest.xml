@@ -193,7 +193,7 @@
             android:name=".social.trace.AllTraceActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name=".game.cube.AllCubeActivity"
+            android:name=".game.cube.AllOwnCubeActivity"
             android:theme="@style/ThemeLight" />
         <activity android:name=".game.mail.AllMailActivity" />
         <activity android:name=".game.cube.CubeEditorActivity" />
@@ -224,6 +224,7 @@
         <activity android:name=".game.mail.MailEditorActivity" />
         <activity android:name=".social.leaderboard.AddLeaderBoardActivity" />
         <activity android:name=".social.recommend.RecommendEditorActivity" />
+        <activity android:name=".game.mail.AllOwnMailActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

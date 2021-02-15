@@ -18,8 +18,8 @@ import com.xiaojinzi.component.impl.Router
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_AllMailActivity)
-class AllMailActivity : BaseLoginToolbarActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_AllOwnMailActivity)
+class AllOwnMailActivity : BaseLoginToolbarActivity() {
     @AttrValueAutowiredAnno("user")
     @JvmField
     var user: User? = null

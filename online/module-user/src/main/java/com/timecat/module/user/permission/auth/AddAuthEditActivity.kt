@@ -29,6 +29,7 @@ import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditActivity
 import com.timecat.module.user.base.GO
+import com.timecat.module.user.base.login.BaseLoginEditActivity
 import com.timecat.module.user.permission.UserContext
 import com.timecat.module.user.search.SelectActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -52,7 +53,7 @@ import kotlin.collections.ArrayList
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AddAuthActivity)
-class AddAuthEditActivity : BaseBlockEditActivity() {
+class AddAuthEditActivity : BaseLoginEditActivity() {
     /**
      * 给 target 授权
      */

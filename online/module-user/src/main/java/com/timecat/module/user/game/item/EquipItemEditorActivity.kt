@@ -75,7 +75,6 @@ class EquipItemEditorActivity : BaseItemAddActivity() {
     override fun subtype() = ITEM_Equip
     override fun getItemBlock(): ItemBlock {
         return ItemBlock(
-            type = subtype(),
             structure = EquipItemBlock().toJsonObject(),
             mediaScope = formData.attachments,
             topicScope = formData.topicScope,

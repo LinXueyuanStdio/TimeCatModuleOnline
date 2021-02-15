@@ -29,8 +29,8 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description 方块（人物）
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_AllCubeActivity)
-class AllCubeActivity : BaseDetailCollapseActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_AllOwnCubeActivity)
+class AllOwnCubeActivity : BaseDetailCollapseActivity() {
     lateinit var viewModel: CubeViewModel
     lateinit var card: TopicCard
     lateinit var mBottomBar: BottomBar
@@ -61,7 +61,7 @@ class AllCubeActivity : BaseDetailCollapseActivity() {
             it.forEach {
                 val icon = it.cube.structure
                 val title = it.cube.title
-                val tab = BottomBarIvTextTab(this@AllCubeActivity, icon, title)
+                val tab = BottomBarIvTextTab(this@AllOwnCubeActivity, icon, title)
                 mBottomBar.addItem(tab)
             }
             viewModel.cube.postValue(it[0])

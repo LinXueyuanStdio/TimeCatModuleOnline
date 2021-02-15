@@ -54,7 +54,7 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
-        formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
+        formData.iconItem = Image("图标", "fontawesome://regular/fa_user", autoAdd = false) {
             chooseImage(isAvatar = true) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
@@ -120,6 +120,8 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
                 formData.title = cube.title
                 formData.uuid = cube.objectId
                 formData.content = cube.content
+                val head = ItemBlock.fromJson(cube.structure)
+                formData.icon = head.header.avatar
             }
         }
     }
@@ -127,7 +129,6 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
     override fun subtype() = ITEM_Cube
     override fun getItemBlock(): ItemBlock {
         return ItemBlock(
-            type = subtype(),
             structure = CubeItemBlock(formData.uuid).toJsonObject(),
             mediaScope = formData.attachments,
             topicScope = formData.topicScope,

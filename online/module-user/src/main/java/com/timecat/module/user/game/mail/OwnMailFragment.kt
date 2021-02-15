@@ -16,8 +16,8 @@ import com.xiaojinzi.component.anno.FragmentAnno
  * @description 邮件
  * @usage null
  */
-@FragmentAnno(RouterHub.USER_MailFragment)
-class MailFragment : BaseEndlessOwnMailFragment() {
+@FragmentAnno(RouterHub.USER_OwnMailFragment)
+class OwnMailFragment : BaseEndlessOwnMailFragment() {
     @AttrValueAutowiredAnno("user")
     @JvmField
     var user: User? = null
