@@ -13,6 +13,8 @@ import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.data.game.OwnItem
+import com.timecat.data.bmob.data.mail.OwnMail
 import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.identity.data.block.ItemBlock
@@ -104,11 +106,27 @@ fun ViewGroup.StepSliderButton(
     return button
 }
 
-fun FragmentActivity.showItemDialog(item: Block) {
+fun FragmentActivity.showItemDialog(ownItem: Block) {
+    val fragment: Fragment = NAV.rawFragment(RouterHub.USER_OwnItemDetailFragment)
+        .putParcelable("ownItem", ownItem)
+        .navigate() ?: FallBackFragment()
+    if (fragment is DialogFragment) {
+        fragment.show(supportFragmentManager, ownItem.objectId)
+    }
+}
+fun FragmentActivity.showOwnItemDialog(item: OwnItem) {
     val fragment: Fragment = NAV.rawFragment(RouterHub.USER_ItemDetailFragment)
         .putParcelable("item", item)
         .navigate() ?: FallBackFragment()
     if (fragment is DialogFragment) {
         fragment.show(supportFragmentManager, item.objectId)
+    }
+}
+fun FragmentActivity.showOwnMailDialog(ownMail: OwnMail) {
+    val fragment: Fragment = NAV.rawFragment(RouterHub.USER_MailDetailFragment)
+        .putParcelable("ownMail", ownMail)
+        .navigate() ?: FallBackFragment()
+    if (fragment is DialogFragment) {
+        fragment.show(supportFragmentManager, ownMail.uuid)
     }
 }

@@ -16,7 +16,6 @@ import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.PageHeader
-import com.timecat.identity.data.block.BLOCK_MAIL
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.MailBlock
 import com.timecat.identity.data.block.Reward
@@ -201,7 +200,7 @@ class MailEditorActivity : BaseBlockEditorActivity() {
     }
 
     override fun currentBlock(): Block? = mail
-    override fun subtype() = BLOCK_MAIL
+    override fun subtype() = 0
     override fun savableBlock(): Block = I() create Mail {
         title = formData.title
         content = formData.content

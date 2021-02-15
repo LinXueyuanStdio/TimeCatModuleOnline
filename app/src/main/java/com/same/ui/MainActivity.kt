@@ -58,7 +58,7 @@ class MainActivity : Activity() {
         linearLayout.addView(createPathButton(RouterHub.USER_MailEditorActivity))
 
         linearLayout.addView(createText("方块"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllCubeActivity))
+        linearLayout.addView(createPathButton(RouterHub.USER_AllOwnCubeActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllMetaPermissionActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllHunPermissionActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllRoleActivity))

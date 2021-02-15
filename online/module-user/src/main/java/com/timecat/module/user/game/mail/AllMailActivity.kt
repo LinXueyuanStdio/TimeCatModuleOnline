@@ -1,15 +1,12 @@
 package com.timecat.module.user.game.mail
 
-import androidx.fragment.app.Fragment
-import com.timecat.component.router.app.FallBackFragment
-import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.data.User
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.net.allMail
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.module.user.base.login.BaseLoginToolbarActivity
-import com.timecat.page.base.R
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.timecat.module.user.adapter.game.ItemItem
+import com.timecat.module.user.adapter.game.MailItem
+import com.timecat.module.user.base.BaseEndlessBlockActivity
 import com.xiaojinzi.component.anno.RouterAnno
-import com.xiaojinzi.component.impl.Router
 
 /**
  * @author 林学渊
@@ -19,27 +16,8 @@ import com.xiaojinzi.component.impl.Router
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AllMailActivity)
-class AllMailActivity : BaseLoginToolbarActivity() {
-    @AttrValueAutowiredAnno("user")
-    @JvmField
-    var user: User? = null
-
+class AllMailActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "邮箱"
-    override fun routerInject() = NAV.inject(this)
-
-    override fun initViewAfterLogin() {
-        val fm = this.supportFragmentManager
-        var fragment = fm.findFragmentById(R.id.container)
-        if (fragment == null) {
-            fragment = this.createFragment()
-            fm.beginTransaction().add(R.id.container, fragment).commit()
-        }
-    }
-
-    fun createFragment(): Fragment {
-        return Router.with(RouterHub.USER_OwnMailFragment)
-            .putParcelable("user", user)
-            .navigate() ?: FallBackFragment()
-    }
-
+    override fun query() = allMail()
+    override fun block2Item(block: Block) = MailItem(this, block)
 }

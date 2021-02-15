@@ -8,7 +8,7 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.R
-import com.timecat.module.user.adapter.game.Item
+import com.timecat.module.user.adapter.game.ItemItem
 import com.timecat.module.user.base.BaseEndlessBlockActivity
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -23,7 +23,7 @@ import com.xiaojinzi.component.anno.RouterAnno
 class AllItemActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "物品"
     override fun query() = allItem()
-    override fun block2Item(block: Block) = Item(this, block)
+    override fun block2Item(block: Block) = ItemItem(this, block)
     override fun getLayoutManager(): RecyclerView.LayoutManager {
         return GridLayoutManager(context, 4)
     }

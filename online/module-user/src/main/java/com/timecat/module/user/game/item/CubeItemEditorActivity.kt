@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
-import com.afollestad.vvalidator.form
 import com.afollestad.vvalidator.form.Form
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
@@ -20,13 +19,9 @@ import com.timecat.layout.ui.business.form.Image
 import com.timecat.layout.ui.business.form.Next
 import com.timecat.layout.ui.business.form.OneLineInput
 import com.timecat.layout.ui.business.form.add
-import com.timecat.layout.ui.business.setting.ImageItem
-import com.timecat.layout.ui.business.setting.InputItem
-import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
-import com.timecat.module.user.view.item.MaterialForm
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -118,7 +113,7 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
             listItemsSingleChoice(items = texts) { _, idx, _ ->
                 val cube = items[idx]
                 formData.title = cube.title
-                formData.uuid = cube.objectId
+                formData.blockId = cube.objectId
                 formData.content = cube.content
                 val head = ItemBlock.fromJson(cube.structure)
                 formData.icon = head.header.avatar
@@ -129,7 +124,7 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
     override fun subtype() = ITEM_Cube
     override fun getItemBlock(): ItemBlock {
         return ItemBlock(
-            structure = CubeItemBlock(formData.uuid).toJsonObject(),
+            structure = CubeItemBlock(formData.blockId).toJsonObject(),
             mediaScope = formData.attachments,
             topicScope = formData.topicScope,
             atScope = formData.atScope,

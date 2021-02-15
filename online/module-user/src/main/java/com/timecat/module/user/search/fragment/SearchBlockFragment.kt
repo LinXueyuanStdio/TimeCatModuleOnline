@@ -3,11 +3,11 @@ package com.timecat.module.user.search.fragment
 import android.app.Activity
 import cn.leancloud.search.AVSearchQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.data.bmob.data.User
-import com.timecat.data.bmob.ext.bmob.searchUser
-import com.timecat.data.bmob.ext.bmob.userQuery
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.blockQuery
+import com.timecat.data.bmob.ext.bmob.searchBlock
 import com.timecat.layout.ui.entity.BaseItem
-import com.timecat.module.user.adapter.user.SearchUserItem
+import com.timecat.module.user.adapter.block.SearchBlockItem
 
 /**
  * @author 林学渊
@@ -18,14 +18,16 @@ import com.timecat.module.user.adapter.user.SearchUserItem
  */
 open class SearchBlockFragment : BaseSearchFragment() {
 
-    lateinit var userQuery: AVSearchQuery<User>
+    lateinit var blockQuery: AVSearchQuery<Block>
+
+    open fun query(q: String): AVSearchQuery<Block> = blockQuery(q)
 
     override fun onSearch(q: String) {
         LogUtil.se(q)
-        userQuery = userQuery(q)
+        blockQuery = query(q)
         mStatefulLayout.showLoading()
-        searchUser {
-            query = userQuery.apply {
+        searchBlock {
+            query = blockQuery.apply {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
@@ -50,8 +52,8 @@ open class SearchBlockFragment : BaseSearchFragment() {
     override fun loadFirst() {}
 
     override fun loadMore() {
-        searchUser {
-            query = userQuery.apply {
+        searchBlock {
+            query = blockQuery.apply {
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
@@ -71,7 +73,7 @@ open class SearchBlockFragment : BaseSearchFragment() {
         }
     }
 
-    open fun transform(activity: Activity, user: User): BaseItem<*> {
-        return SearchUserItem(activity, user)
+    open fun transform(activity: Activity, block: Block): BaseItem<*> {
+        return SearchBlockItem(activity, block)
     }
 }

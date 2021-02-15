@@ -4,7 +4,7 @@ package com.timecat.module.user.base
 import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.mail.OwnMail
 import com.timecat.data.bmob.ext.bmob.requestOwnMail
-import com.timecat.module.user.adapter.game.MailItem
+import com.timecat.module.user.adapter.game.OwnMailItem
 
 /**
  * @author 林学渊
@@ -33,7 +33,7 @@ abstract class BaseEndlessOwnMailFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    MailItem(activity, it)
+                    OwnMailItem(activity, it)
                 }
                 adapter.reload(items)
                 mStatefulLayout?.showContent()
@@ -56,7 +56,7 @@ abstract class BaseEndlessOwnMailFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    MailItem(activity, it)
+                    OwnMailItem(activity, it)
                 }
                 adapter.onLoadMoreComplete(items)
                 mStatefulLayout?.showContent()

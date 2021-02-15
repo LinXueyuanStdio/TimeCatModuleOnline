@@ -4,7 +4,7 @@ package com.timecat.module.user.base
 import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.game.OwnItem
 import com.timecat.data.bmob.ext.bmob.requestOwnItem
-import com.timecat.module.user.adapter.game.BagItem
+import com.timecat.module.user.adapter.game.OwnItemItem
 
 /**
  * @author 林学渊
@@ -33,7 +33,7 @@ abstract class BaseEndlessOwnItemFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    BagItem(activity, it)
+                    OwnItemItem(activity, it)
                 }
                 adapter.reload(items)
                 mStatefulLayout?.showContent()
@@ -56,7 +56,7 @@ abstract class BaseEndlessOwnItemFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    BagItem(activity, it)
+                    OwnItemItem(activity, it)
                 }
                 adapter.onLoadMoreComplete(items)
                 mStatefulLayout?.showContent()

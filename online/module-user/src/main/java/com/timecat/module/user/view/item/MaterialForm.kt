@@ -1,6 +1,7 @@
 package com.timecat.module.user.view.item
 
 import com.shuyu.textutillib.RichEditText
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.base.*
 import com.timecat.layout.ui.business.setting.ImageItem
@@ -43,13 +44,32 @@ class MaterialForm {
     lateinit var packageNameItem: InputItem
     //endregion
 
-    //region blockItem -> uuid
-    var uuid: String
+    //region blockItem -> blockId
+    var block: Block? = null
+        set(value) {
+            value?.let { blockId = it.objectId }
+            field = value
+        }
+    var blockId: String
         get() = blockItem.text
         set(value) {
             blockItem.text = value
         }
     lateinit var blockItem: NextItem
+    //endregion
+
+    //region userItem -> userId
+    var user: User? = null
+        set(value) {
+            value?.let { userId = it.objectId }
+            field = value
+        }
+    var userId: String
+        get() = userItem.text
+        set(value) {
+            userItem.text = value
+        }
+    lateinit var userItem: NextItem
     //endregion
 
     //region whereItem -> where, numItem -> num

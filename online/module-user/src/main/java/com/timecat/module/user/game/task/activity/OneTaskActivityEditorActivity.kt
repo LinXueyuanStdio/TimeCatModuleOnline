@@ -105,7 +105,7 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
             listItemsSingleChoice(items = texts) { _, idx, _ ->
                 val cube = items[idx]
                 formData.title = cube.title
-                formData.uuid = cube.objectId
+                formData.blockId = cube.objectId
                 formData.content = cube.content
             }
         }
@@ -136,7 +136,7 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
     override fun getItemBlock(): ActivityBlock {
         return ActivityBlock(
             type = subtype(),
-            structure = ActivityOneTaskBlock(formData.uuid).toJsonObject(),
+            structure = ActivityOneTaskBlock(formData.blockId).toJsonObject(),
             mediaScope = formData.attachments,
             topicScope = formData.topicScope,
             atScope = formData.atScope,

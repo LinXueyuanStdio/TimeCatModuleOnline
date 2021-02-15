@@ -94,13 +94,13 @@ class GameHomeFragment : BaseLoginMainFragment() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         cube.setShakelessClickListener {
-            NAV.go(RouterHub.USER_AllCubeActivity)
+            NAV.go(RouterHub.USER_AllOwnCubeActivity)
         }
         bag.setShakelessClickListener {
             NAV.go(RouterHub.USER_BagActivity)
         }
         mail.setShakelessClickListener {
-            NAV.go(RouterHub.USER_AllMailActivity)
+            NAV.go(RouterHub.USER_AllOwnMailActivity)
         }
         activity.setShakelessClickListener {
             NAV.go(RouterHub.USER_AllTaskActivity)

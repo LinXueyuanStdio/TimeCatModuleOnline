@@ -225,6 +225,7 @@
         <activity android:name=".social.leaderboard.AddLeaderBoardActivity" />
         <activity android:name=".social.recommend.RecommendEditorActivity" />
         <activity android:name=".game.mail.AllOwnMailActivity" />
+        <activity android:name=".game.mail.SendMailActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

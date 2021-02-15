@@ -51,6 +51,8 @@ class SelectActivity : SearchActivity() {
         HunPermission("混权限", RouterHub.SEARCH_SelectHunPermissionFragment),
         MetaPermission("元权限", RouterHub.SEARCH_SelectMetaPermissionFragment),
         Role("角色", RouterHub.SEARCH_SelectRoleFragment),
-        Identity("身份", RouterHub.SEARCH_SelectIdentityFragment)
+        Identity("身份", RouterHub.SEARCH_SelectIdentityFragment),
+        Mail("邮件", RouterHub.SEARCH_SelectMailFragment),
+        App("应用", RouterHub.SEARCH_SelectAppFragment),
     }
 }
