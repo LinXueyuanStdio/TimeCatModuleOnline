@@ -114,6 +114,22 @@ class OwnItemDetailFragment : ItemDetailFragment() {
         }
     }
 
+    override fun cube(head: ItemBlock): ViewGroup.() -> Unit  = {
+        apply(super.cube(head))
+        val count = ownItem.count
+        Body("拥有 $count")
+        StepSliderButton("使用", count) { _, value ->
+            val params = mutableMapOf<String, Any>()
+            params["ownItemId"] = ownItem.objectId
+            params["count"] = value
+            AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
+
+            }, {
+                errUsingItem(it)
+            })
+        }
+    }
+
     private fun errUsingItem(err: Throwable) {
         ToastUtil.e_long("出现错误：$err")
     }

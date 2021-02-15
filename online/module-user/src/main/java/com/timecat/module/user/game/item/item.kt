@@ -106,20 +106,20 @@ fun ViewGroup.StepSliderButton(
     return button
 }
 
-fun FragmentActivity.showItemDialog(ownItem: Block) {
-    val fragment: Fragment = NAV.rawFragment(RouterHub.USER_OwnItemDetailFragment)
-        .putParcelable("ownItem", ownItem)
-        .navigate() ?: FallBackFragment()
-    if (fragment is DialogFragment) {
-        fragment.show(supportFragmentManager, ownItem.objectId)
-    }
-}
-fun FragmentActivity.showOwnItemDialog(item: OwnItem) {
+fun FragmentActivity.showItemDialog(item: Block) {
     val fragment: Fragment = NAV.rawFragment(RouterHub.USER_ItemDetailFragment)
         .putParcelable("item", item)
         .navigate() ?: FallBackFragment()
     if (fragment is DialogFragment) {
         fragment.show(supportFragmentManager, item.objectId)
+    }
+}
+fun FragmentActivity.showOwnItemDialog(ownItem: OwnItem) {
+    val fragment: Fragment = NAV.rawFragment(RouterHub.USER_OwnItemDetailFragment)
+        .putParcelable("ownItem", ownItem)
+        .navigate() ?: FallBackFragment()
+    if (fragment is DialogFragment) {
+        fragment.show(supportFragmentManager, ownItem.objectId)
     }
 }
 fun FragmentActivity.showOwnMailDialog(ownMail: OwnMail) {

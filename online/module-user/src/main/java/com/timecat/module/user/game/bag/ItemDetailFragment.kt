@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
+import android.widget.LinearLayout
 import androidx.core.view.updateLayoutParams
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.timecat.component.router.app.NAV
@@ -15,6 +15,7 @@ import com.timecat.identity.data.block.PackageItemBlock
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Body
+import com.timecat.layout.ui.business.form.Divider
 import com.timecat.layout.ui.business.setting.CenterIconItem
 import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.layout.dp
@@ -56,6 +57,7 @@ open class ItemDetailFragment : BottomSheetDialogFragment() {
             ITEM_Data -> data(head)
             ITEM_Equip -> equip(head)
             ITEM_Buff -> buff(head)
+            ITEM_Cube -> cube(head)
             else -> thing(head)
         }
         container.apply(apply)
@@ -95,8 +97,19 @@ open class ItemDetailFragment : BottomSheetDialogFragment() {
         Title()
         Content()
     }
+    open fun cube(head: ItemBlock): ViewGroup.() -> Unit = {
+        Icon(head)
+        Title()
+        Content()
+    }
 
     open fun ViewGroup.Icon(head: ItemBlock) {
+        Divider().apply {
+            alpha = 0f
+            updateLayoutParams<LinearLayout.LayoutParams> {
+                height = 20.dp
+            }
+        }
         val iconItem = CenterIconItem(context).apply {
             icon = head.header.avatar
         }
