@@ -128,14 +128,18 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
             rewardsItem to 5,
             rewardsContainer to 6,
         )
-        setRulesItems()
-        setRewardItems()
     }
 
     override fun validator(): Form.() -> Unit = {
         inputLayout(formData.titleItem.inputLayout) {
             isNotEmpty().description("请输入名称!")
         }
+    }
+
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        setRulesItems()
+        setRewardItems()
     }
 
     override fun currentBlock(): Block? = task

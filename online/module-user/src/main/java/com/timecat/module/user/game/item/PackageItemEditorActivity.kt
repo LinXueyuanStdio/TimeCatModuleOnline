@@ -10,9 +10,7 @@ import com.afollestad.vvalidator.form.Form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.Item
 import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
@@ -48,11 +46,11 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
     override fun title(): String = "礼包"
     override fun routerInject() = NAV.inject(this)
 
-    var formItems: MutableMap<String, Long> = mutableMapOf()
+    var formRewardItems: MutableMap<String, Long> = mutableMapOf()
     var formRewardListItems: List<Reward>
-        get() = formItems.toList().map { Reward(it.first, it.second) }
+        get() = formRewardItems.toList().map { Reward(it.first, it.second) }
         set(value) {
-            formItems = mutableMapOf(*value.map {
+            formRewardItems = mutableMapOf(*value.map {
                 it.uuid to it.count
             }.toTypedArray())
         }
@@ -80,8 +78,8 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
         }
         formData.titleItem = OneLineInput("标题", "新建礼包", autoAdd = false)
         packageItem = Next("礼包",
-            hint = formItems.toString(),
-            initialText = "${formItems.size}",
+            hint = formRewardItems.toString(),
+            initialText = "${formRewardItems.size}",
             autoAdd = false
         ) {
             selectItems()
@@ -94,7 +92,6 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
             packageItem to 2,
             packageDetailContainer to 3,
         )
-        setItems()
     }
 
     override fun validator(): Form.() -> Unit = {
@@ -103,9 +100,14 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
         }
     }
 
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        setItems()
+    }
+
     fun setItems() {
         requestBlock {
-            query = allItem().whereContainedIn("objectId", formItems.keys)
+            query = allItem().whereContainedIn("objectId", formRewardItems.keys)
             onSuccess = {
                 setBlockItems(it)
             }
@@ -126,11 +128,11 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                 }
                 right_field = {
                     hint = "数量"
-                    text = "${formItems[block.objectId]}"
+                    text = "${formRewardItems[block.objectId]}"
                     inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
                     onTextChange = {
                         val count = it?.toLongOrNull() ?: 0L
-                        formItems[block.objectId] = count
+                        formRewardItems[block.objectId] = count
                     }
                 }
                 closeIcon = "R.drawable.ic_close"
@@ -138,7 +140,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                     showItemDialog(block)
                 }
                 onCloseIconClick {
-                    formItems.remove(block.objectId)
+                    formRewardItems.remove(block.objectId)
                     packageDetailContainer.removeView(this)
                 }
             }
@@ -178,8 +180,8 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
                 val blocks = items.filterIndexed { index, block -> index in intArr }
                 formRewardListItems = blocks.map { Reward(it.objectId, 1) }
                 setBlockItems(blocks)
-                packageItem.hint = formItems.toString()
-                packageItem.text = "${formItems.size}"
+                packageItem.hint = formRewardItems.toString()
+                packageItem.text = "${formRewardItems.size}"
             }
         }
     }

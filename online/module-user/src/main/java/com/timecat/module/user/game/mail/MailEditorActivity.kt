@@ -98,13 +98,17 @@ class MailEditorActivity : BaseBlockEditorActivity() {
             packageItem to 2,
             packageDetailContainer to 3,
         )
-        setItems()
     }
 
     override fun validator(): Form.() -> Unit = {
         inputLayout(formData.titleItem.inputLayout) {
             isNotEmpty().description("请输入名称!")
         }
+    }
+
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        setItems()
     }
 
     fun setItems() {

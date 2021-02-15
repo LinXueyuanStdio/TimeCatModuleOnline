@@ -15,6 +15,7 @@ import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.ext.friendlyCreateTimeText
+import com.timecat.module.user.game.item.showItemDialog
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 
@@ -66,6 +67,10 @@ class Item(
                 else -> RouterHub.USER_ThingItemEditorActivity
             }
             NAV.go(path, "block", item)
+        }
+        holder.root.setOnLongClickListener {
+            activity.showItemDialog(item)
+            true
         }
 
     }
