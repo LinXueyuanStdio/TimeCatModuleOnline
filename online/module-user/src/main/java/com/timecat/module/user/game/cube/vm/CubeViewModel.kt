@@ -1,6 +1,8 @@
 package com.timecat.module.user.game.cube.vm
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnCube
@@ -23,5 +25,5 @@ class CubeViewModel : ViewModel() {
      */
     val cube: MutableLiveData<OwnCube?> = MutableLiveData()
 
-    val block: MutableLiveData<Block?> = MutableLiveData()
+    val block: LiveData<Block?> = Transformations.map(cube) { it?.cube }
 }

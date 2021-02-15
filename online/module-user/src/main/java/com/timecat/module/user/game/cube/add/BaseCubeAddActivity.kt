@@ -1,6 +1,6 @@
 package com.timecat.module.user.game.cube.add
 
-import com.timecat.module.user.base.BaseComplexEditorActivity
+import com.timecat.module.user.base.BaseBlockEditorActivity
 
 /**
  * @author 林学渊
@@ -9,6 +9,6 @@ import com.timecat.module.user.base.BaseComplexEditorActivity
  * @description null
  * @usage null
  */
-abstract class BaseCubeAddActivity : BaseComplexEditorActivity() {
+abstract class BaseCubeAddActivity : BaseBlockEditorActivity() {
 
 }

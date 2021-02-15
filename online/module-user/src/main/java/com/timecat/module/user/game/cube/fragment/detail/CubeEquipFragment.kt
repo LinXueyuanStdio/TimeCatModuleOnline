@@ -1,4 +1,4 @@
-package com.timecat.module.user.game.cube.fragment
+package com.timecat.module.user.game.cube.fragment.detail
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +17,7 @@ import java.util.*
  * 创建者，关注，点赞数等
  * @usage null
  */
-class CubeSkillFragment : BaseLoginListFragment() {
+class CubeEquipFragment : BaseLoginListFragment() {
 
     private fun loadDetail(cube: OwnCube) {
         val list = mutableListOf<BaseItem<*>>()

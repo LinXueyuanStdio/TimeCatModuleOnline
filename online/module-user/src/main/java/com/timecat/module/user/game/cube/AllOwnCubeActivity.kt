@@ -12,12 +12,16 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.data.bmob.ext.bmob.requestOwnCube
 import com.timecat.data.bmob.ext.net.allOwnCube
+import com.timecat.identity.data.block.IdentityBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.standard.navi.BottomBar
 import com.timecat.layout.ui.standard.navi.BottomBarIvTextTab
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.game.cube.fragment.*
+import com.timecat.module.user.game.cube.fragment.detail.CubeAttrFragment
+import com.timecat.module.user.game.cube.fragment.detail.CubeEquipFragment
+import com.timecat.module.user.game.cube.fragment.detail.CubeSkillFragment
 import com.timecat.module.user.game.cube.vm.CubeViewModel
 import com.timecat.module.user.view.TopicCard
 import com.xiaojinzi.component.anno.RouterAnno
@@ -59,7 +63,8 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
             mBottomBar.removeAllViews()
             mBottomBar.addHorizonSV()
             it.forEach {
-                val icon = it.cube.structure
+                val head = IdentityBlock.fromJson(it.cube.structure)
+                val icon = head.header.avatar
                 val title = it.cube.title
                 val tab = BottomBarIvTextTab(this@AllOwnCubeActivity, icon, title)
                 mBottomBar.addItem(tab)
@@ -73,6 +78,7 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
         setupHeaderCard(card)
         setupCollapse()
         setupViewPager()
+        viewPager.currentItem = 0
 
         mBottomBar.setOnTabSelectedListener(object : BottomBar.OnTabSelectedListener {
             override fun onTabSelected(position: Int, prePosition: Int) {
@@ -91,12 +97,13 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
 
     private fun loadDetail(ownCube: OwnCube) {
         val cube = ownCube.cube
+        val head = IdentityBlock.fromJson(cube.structure)
         // 1. 加载头部卡片
         titleString = cube.title
         card.apply {
             title = cube.title
             desc = cube.content
-            icon = "R.drawable.ic_launcher"
+            icon = head.header.avatar
         }
     }
 
@@ -123,18 +130,15 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
 
     class DetailAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getCount(): Int {
-            return 7
+            return 4
         }
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> CubeDetailFragment()
-                1 -> CubeAttrFragment()
-                2 -> CubeSkillFragment()
-                3 -> CubeEquipFragment()
-                4 -> CommentListFragment()
-                5 -> PostListFragment()
-                6 -> MomentListFragment()
+                1 -> CommentListFragment()
+                2 -> PostListFragment()
+                3 -> MomentListFragment()
                 else -> FallBackFragment()
             }
         }
@@ -142,12 +146,9 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
         override fun getPageTitle(position: Int): CharSequence? {
             return when (position) {
                 0 -> "详情"
-                1 -> "属性"
-                2 -> "技能"
-                3 -> "装备"
-                4 -> "讨论"
-                5 -> "帖子"
-                6 -> "动态"
+                1 -> "讨论"
+                2 -> "帖子"
+                3 -> "动态"
                 else -> super.getPageTitle(position)
             }
         }

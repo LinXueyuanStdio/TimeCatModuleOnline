@@ -25,30 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/vp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/trans"
-                    android:clipToPadding="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:tabGravity="center"
-                    app:tabIndicatorColor="?attr/colorAccent"
-                    app:tabIndicatorFullWidth="false"
-                    app:tabIndicatorGravity="bottom"
-                    app:tabSelectedTextColor="?attr/colorAccent"
-                    app:tabTextColor="?android:textColorSecondary" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <include layout="@layout/base_user_viwpager_bottom_tabs" />
         </com.gturedi.views.StatefulLayout>
 
     </LinearLayout>

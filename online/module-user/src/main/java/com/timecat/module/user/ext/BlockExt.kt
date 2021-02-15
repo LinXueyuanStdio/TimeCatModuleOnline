@@ -21,14 +21,15 @@ fun Block.starText(starText: String = "收藏"): String = starText replaceWith s
 
 fun Block.simpleAvatar(): String {
     return when (type) {
-        BLOCK_COMMENT -> {
+        BLOCK_COMMENT -> "R.drawable.ic_comment"
+        BLOCK_APP -> {
             val appBlock = AppBlock.fromJson(structure)
-            appBlock.header?.avatar ?: "R.drawable.ic_comment"
+            appBlock.header.avatar
         }
         BLOCK_MOMENT -> "R.drawable.ic_cloud_white_24dp"
         BLOCK_TOPIC -> "R.drawable.ic_cloud_white_24dp"
         BLOCK_TAG -> "R.drawable.ic_cloud_white_24dp"
-        else -> "R.drawable.ic_block_type_accent_24dp"
+        else -> "R.drawable.ic_cloud_white_24dp"
     }
 }
 

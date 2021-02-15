@@ -11,8 +11,8 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_CubeEditorActivity)
-class CubeEditorActivity : BaseComplexEditorActivity() {
+@RouterAnno(hostAndPath = RouterHub.USER_CubeAttrEditorActivity)
+class CubeAttrEditorActivity : BaseComplexEditorActivity() {
     override fun release() {
         TODO("Not yet implemented")
     }
@@ -20,5 +20,4 @@ class CubeEditorActivity : BaseComplexEditorActivity() {
     override fun title(): String {
         TODO("Not yet implemented")
     }
-
 }

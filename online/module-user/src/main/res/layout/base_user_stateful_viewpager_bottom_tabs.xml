@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gturedi.views.StatefulLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_stateful"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/toolbar"
+    android:layout_weight="1"
+    app:stfAnimationEnabled="true"
+    app:stfInAnimation="@android:anim/fade_in"
+    app:stfOutAnimation="@android:anim/fade_out">
+
+    <include layout="@layout/base_user_viwpager_bottom_tabs" />
+</com.gturedi.views.StatefulLayout>

@@ -1,7 +1,9 @@
 package com.timecat.module.user.game.cube
 
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseComplexEditorActivity
+import com.timecat.module.user.game.cube.add.BaseCubeAddActivity
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -12,8 +14,24 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_CubeSkillEditorActivity)
-class CubeSkillEditorActivity : BaseComplexEditorActivity() {
+class CubeSkillEditorActivity : BaseCubeAddActivity() {
     override fun release() {
+        TODO("Not yet implemented")
+    }
+
+    override fun currentBlock(): Block? {
+        TODO("Not yet implemented")
+    }
+
+    override fun subtype(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun savableBlock(): Block {
+        TODO("Not yet implemented")
+    }
+
+    override fun updatableBlock(): Block.() -> Unit {
         TODO("Not yet implemented")
     }
 
