@@ -82,7 +82,7 @@ class AddIdentityActivity : BaseBlockEditorActivity() {
         linkItem = Next("关联角色", autoAdd = false) {
             addRole()
         }
-        linkContainer = VerticalContainer {}
+        linkContainer = VerticalContainer(autoAdd = false) {}
         val d2 = Divider(autoAdd = false)
         add(
             formData.titleItem to 0,

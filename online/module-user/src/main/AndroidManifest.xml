@@ -222,6 +222,7 @@
         <activity android:name=".game.task.activity.LifeActivityEditorActivity" />
         <activity android:name=".game.task.activity.SevenDaySignActivityEditorActivity" />
         <activity android:name=".game.mail.MailEditorActivity" />
+        <activity android:name=".social.leaderboard.AddLeaderBoardActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

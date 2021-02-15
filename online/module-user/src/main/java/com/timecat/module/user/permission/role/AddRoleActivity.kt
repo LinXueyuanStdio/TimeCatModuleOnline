@@ -5,7 +5,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
-import com.afollestad.vvalidator.form
 import com.afollestad.vvalidator.form.Form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
@@ -87,13 +86,13 @@ class AddRoleActivity : BaseBlockEditorActivity() {
         }
     }
 
-    override fun initFormView(): ViewGroup.() -> Unit ={
+    override fun initFormView(): ViewGroup.() -> Unit = {
         formData.titleItem = OneLineInput("权限角色名", "", autoAdd = false)
         val d1 = Divider(autoAdd = false)
-        linkItem= Next("关联混权限", autoAdd = false) {
+        linkItem = Next("关联混权限", autoAdd = false) {
             addPermission()
         }
-        linkContainer = VerticalContainer{}
+        linkContainer = VerticalContainer(autoAdd = false) {}
         val d2 = Divider(autoAdd = false)
         add(
             formData.titleItem to 0,
@@ -103,11 +102,13 @@ class AddRoleActivity : BaseBlockEditorActivity() {
             d2 to 4,
         )
     }
-    override fun validator(): Form.() -> Unit ={
+
+    override fun validator(): Form.() -> Unit = {
         inputLayout(formData.titleItem.inputLayout) {
             isNotEmpty().description("权限角色名")
         }
     }
+
     private fun addPermission() {
         MaterialDialog(this).show {
             message(R.string.load_dialog_wait)
@@ -158,13 +159,14 @@ class AddRoleActivity : BaseBlockEditorActivity() {
         }
     }
 
-    override fun loadFromExistingBlock(): Block.() -> Unit ={
+    override fun loadFromExistingBlock(): Block.() -> Unit = {
         setTitle("编辑权限角色")
         formData.title = title
         formData.content = content
         mStatefulLayout?.showLoading()
         loadPermission(this)
     }
+
     override fun ok() {
         if (currentBlock() == null) {
             requestExistBlock {

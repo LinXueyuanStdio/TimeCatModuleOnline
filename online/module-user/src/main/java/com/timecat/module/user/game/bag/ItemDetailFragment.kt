@@ -15,7 +15,6 @@ import com.timecat.identity.data.block.PackageItemBlock
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Body
-import com.timecat.layout.ui.business.form.add
 import com.timecat.layout.ui.business.setting.CenterIconItem
 import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.layout.dp
@@ -100,11 +99,6 @@ open class ItemDetailFragment : BottomSheetDialogFragment() {
     open fun ViewGroup.Icon(head: ItemBlock) {
         val iconItem = CenterIconItem(context).apply {
             icon = head.header.avatar
-            imageView.updateLayoutParams<RelativeLayout.LayoutParams> {
-                width = 50.dp
-                height = 50.dp
-                topMargin = 10.dp
-            }
         }
         addView(iconItem)
     }
@@ -116,7 +110,7 @@ open class ItemDetailFragment : BottomSheetDialogFragment() {
     open fun ViewGroup.Content() {
         val content = item!!.content
         if (content.isNotEmpty()) {
-            add { Body(content) }
+            Body(content)
         }
     }
 }
