@@ -85,7 +85,7 @@ object Level {
     fun getLevel(exp: Long, expLimitFunc: (level: Int) -> Long = { expLimit(it) }): Pair<Int, Long> {
         LogUtil.se("exp: $exp")
         var curExp = exp
-        var level = 0
+        var level = 1
         var maxExp = expLimitFunc(level)
         while (maxExp < curExp) {
             level++

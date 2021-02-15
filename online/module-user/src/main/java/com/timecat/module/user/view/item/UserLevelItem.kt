@@ -30,6 +30,7 @@ open class UserLevelItem @JvmOverloads constructor(
     var expBar: RoundCornerProgressBar
 
     init {
+        padding = 10
         val accentColor = Attr.getAccentColor(context)
         val alphaAccentColor = ColorUtils.setAlpha(accentColor, 0.5f)
         levelTv = TextView {
@@ -62,7 +63,7 @@ open class UserLevelItem @JvmOverloads constructor(
             isSingleLine = true
             ellipsize = TextUtils.TruncateAt.END
             setTextColor(Attr.getPrimaryTextColor(context))
-            alpha = 0.7f
+            alpha = 0.5f
         }
         expTv = TextView {
             layout_id = "exp"
@@ -70,7 +71,6 @@ open class UserLevelItem @JvmOverloads constructor(
             layout_height = wrap_content
 
             padding = 3
-            margin_start = 3
             end_toEndOf = parent_id
             bottom_toTopOf = "exp_bar"
 
@@ -82,17 +82,22 @@ open class UserLevelItem @JvmOverloads constructor(
         expBar = RoundCornerProgressBar(context, null).apply {
             layout_id = "exp_bar"
             layout_width = match_parent
-            layout_height = wrap_content
+            layout_height = 10
             bottom_toBottomOf = parent_id
+            start_toStartOf = parent_id
+            end_toEndOf = parent_id
 
             progressColors = intArrayOf(ColorUtils.randomColor(), accentColor)
             secondaryProgressColors = intArrayOf(ColorUtils.randomColor(), alphaAccentColor)
+            enableAnimation()
+        }.also {
+            addView(it)
         }
     }
 
     var maxLevel: Int = 20
         set(value) {
-            maxLevelTv.text = "  /  $value"
+            maxLevelTv.text = "/ $value"
             field = value
         }
     var exp: Long = 1
@@ -107,7 +112,7 @@ open class UserLevelItem @JvmOverloads constructor(
         }
     var fakeExp: Long = 1
         set(value) {
-            val progress = value.coerceIn(0, expBar.max.toLong())
+            val progress = value.coerceIn(exp, expBar.max.toLong())
             expBar.secondaryProgress = progress.toFloat()
             field = progress
         }

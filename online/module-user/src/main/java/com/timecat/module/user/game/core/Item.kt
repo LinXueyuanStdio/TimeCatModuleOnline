@@ -10,13 +10,3 @@ package com.timecat.module.user.game.core
 open class Item
 
 open class ExpItem : Item()
-
-open class CubeExpItem(val exp:Long) : ExpItem()
-
-open class UserExpItem : ExpItem()
-
-open class Equipment:Item()
-
-object ItemUsage {
-
-}

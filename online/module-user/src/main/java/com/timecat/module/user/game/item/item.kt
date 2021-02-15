@@ -1,5 +1,6 @@
 package com.timecat.module.user.game.item
 
+import android.content.Context
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import cn.leancloud.AVQuery
+import com.google.android.material.button.MaterialButton
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
@@ -69,6 +71,31 @@ fun buildRewardListItem(activity: FragmentActivity, items: List<Reward>): Reward
     return rewardListItem
 }
 
+fun buildOwnRewardListItem(activity: Context, items: List<OwnItem>, onSelect:(RewardItem, Block, Int)->Unit): RewardListItem {
+    val rewardListItem = RewardListItem(activity)
+    val id2Item = mutableMapOf<String, OwnItem>()
+    for (i in items) {
+        id2Item[i.objectId] = i
+    }
+    val rewards = items.map {
+        val block = it.item
+        val header = ItemBlock.fromJson(block.structure)
+        val avatar = header.header.avatar
+        val name = block.title
+        RewardItem.Reward(it.objectId, avatar, it.count.toLong(), name)
+    }
+    rewardListItem.onClick = {
+        val reward = it.reward
+        val id = reward.uuid
+        val ownItem = id2Item[id]
+        if (ownItem != null) {
+            onSelect(it, ownItem.item, ownItem.count)
+        }
+    }
+    rewardListItem.rewards = rewards
+    return rewardListItem
+}
+
 fun ViewGroup.RewardList(activity: FragmentActivity, rewardList: List<Reward>) {
     val rewardListItem = buildRewardListItem(activity, rewardList)
     addView(rewardListItem)
@@ -86,7 +113,7 @@ fun ViewGroup.BigTitle(title: String) {
 
 fun ViewGroup.StepSliderButton(
     text: String,
-    maxCount: Int = 1,
+    maxCount: Int = 2,
     defaultCount: Int = 1,
     onClick: (View, count: Int) -> Unit
 ): Button {

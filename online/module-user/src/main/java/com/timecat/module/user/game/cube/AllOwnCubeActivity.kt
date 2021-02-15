@@ -70,6 +70,7 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
                 mBottomBar.addItem(tab)
             }
             viewModel.cube.postValue(it[0])
+            viewModel.block.postValue(it[0].cube)
         })
         card = TopicCard(this)
         card.placeholder.updateLayoutParams<ConstraintLayout.LayoutParams> {
@@ -86,6 +87,7 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
                 //选中时触发
                 val cube = viewModel.cubes.value!![position]
                 viewModel.cube.postValue(cube)
+                viewModel.block.postValue(cube.cube)
             }
 
             override fun onTabUnselected(position: Int) {}

@@ -1,11 +1,11 @@
 package com.timecat.module.user.game.cube.vm
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnCube
+import com.timecat.data.bmob.ext.bmob.requestOneOwnCube
+import com.timecat.data.bmob.ext.net.oneOwnCubeOf
 
 /**
  * @author 林学渊
@@ -23,7 +23,19 @@ class CubeViewModel : ViewModel() {
     /**
      * 当前选中的方块
      */
-    val cube: MutableLiveData<OwnCube?> = MutableLiveData()
+    val cube: MutableLiveData<OwnCube> = MutableLiveData()
 
-    val block: LiveData<Block?> = Transformations.map(cube) { it?.cube }
+    val block: MutableLiveData<Block> = MutableLiveData()
+
+    fun reloadCube() {
+        block.value?.let {
+            requestOneOwnCube {
+                query = oneOwnCubeOf(it.objectId)
+                onSuccess = {
+                    cube.postValue(it)
+                    block.postValue(it.cube)
+                }
+            }
+        }
+    }
 }
