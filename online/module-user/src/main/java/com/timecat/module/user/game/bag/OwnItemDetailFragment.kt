@@ -14,7 +14,6 @@ import com.timecat.identity.data.block.PackageItemBlock
 import com.timecat.identity.data.block.Reward
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Body
-import com.timecat.layout.ui.business.form.add
 import com.timecat.layout.ui.layout.dp
 import com.timecat.module.user.R
 import com.timecat.module.user.game.item.StepSliderButton
@@ -43,79 +42,76 @@ class OwnItemDetailFragment : ItemDetailFragment() {
     override fun pack(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.pack(head))
         val count = ownItem.count
-        add(
-            Body("拥有 $count"),
-            StepSliderButton(count, "使用") { button, value ->
-                button.isEnabled = false
-                val params = mutableMapOf<String, Any>()
-                params["ownItemId"] = ownItem.objectId
-                params["count"] = value
-                AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
-                    MaterialDialog(requireActivity()).show {
-                        title(text = "获得了")
-                        val head2 = PackageItemBlock.fromJson(head.structure)
-                        val items = head2.items.map { Reward(it.uuid, it.count * value) }
-                        val view = buildRewardListItem(requireActivity(), items)
-                        view.setPadding(10.dp)
-                        customView(view = view)
-                        positiveButton(R.string.ok)
-                        this@OwnItemDetailFragment.dismiss()
-                    }
-                }, {
-                    button.isEnabled = true
-                    errUsingItem(it)
-                })
+        Body("拥有 $count")
+        StepSliderButton("使用", count) { button, value ->
+            button.isEnabled = false
+            val params = mutableMapOf<String, Any>()
+            params["ownItemId"] = ownItem.objectId
+            params["count"] = value
+            AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
+                MaterialDialog(requireActivity()).show {
+                    title(text = "获得了")
+                    val head2 = PackageItemBlock.fromJson(head.structure)
+                    val items = head2.items.map { Reward(it.uuid, it.count * value) }
+                    val view = buildRewardListItem(requireActivity(), items)
+                    view.setPadding(10.dp)
+                    customView(view = view)
+                    positiveButton(R.string.ok)
+                    this@OwnItemDetailFragment.dismiss()
+                }
+            }, {
+                button.isEnabled = true
+                errUsingItem(it)
             })
+        }
     }
 
     override fun data(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.data(head))
         val count = ownItem.count
-        add(Body("拥有 $count"),
-            StepSliderButton(count, "使用") { _, value ->
-                val params = mutableMapOf<String, Any>()
-                params["ownItemId"] = ownItem.objectId
-                params["count"] = value
-                AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
+        Body("拥有 $count")
+        StepSliderButton("使用", count) { _, value ->
+            val params = mutableMapOf<String, Any>()
+            params["ownItemId"] = ownItem.objectId
+            params["count"] = value
+            AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
 
-                }, {
-                    errUsingItem(it)
-                })
+            }, {
+                errUsingItem(it)
             })
+        }
     }
 
     override fun equip(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.equip(head))
         val count = ownItem.count
-        add(Body("拥有 $count"),
-            StepSliderButton(count, "使用") { _, value ->
-                val params = mutableMapOf<String, Any>()
-                params["ownItemId"] = ownItem.objectId
-                params["count"] = value
-                AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
+        Body("拥有 $count")
+        StepSliderButton("使用", count) { _, value ->
+            val params = mutableMapOf<String, Any>()
+            params["ownItemId"] = ownItem.objectId
+            params["count"] = value
+            AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
 
-                }, {
-                    errUsingItem(it)
-                })
+            }, {
+                errUsingItem(it)
             })
+        }
     }
 
     override fun buff(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.buff(head))
         val count = ownItem.count
-        add(
-            Body("拥有 $count"),
-            StepSliderButton(count, "使用") { _, value ->
-                val params = mutableMapOf<String, Any>()
-                params["ownItemId"] = ownItem.objectId
-                params["count"] = value
-                AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
+        Body("拥有 $count")
+        StepSliderButton("使用", count) { _, value ->
+            val params = mutableMapOf<String, Any>()
+            params["ownItemId"] = ownItem.objectId
+            params["count"] = value
+            AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
 
-                }, {
-                    errUsingItem(it)
-                })
-            }
-        )
+            }, {
+                errUsingItem(it)
+            })
+        }
     }
 
     private fun errUsingItem(err: Throwable) {

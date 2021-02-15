@@ -9,7 +9,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import cn.leancloud.AVQuery
-import com.google.android.material.button.MaterialButton
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
@@ -20,11 +19,10 @@ import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.Reward
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.H1
-import com.timecat.layout.ui.business.form.add
+import com.timecat.layout.ui.business.form.MaterialButton
+import com.timecat.layout.ui.business.form.StepSlide
 import com.timecat.layout.ui.business.setting.RewardItem
 import com.timecat.layout.ui.business.setting.RewardListItem
-import com.timecat.layout.ui.business.setting.StepSliderItem
-import com.timecat.layout.ui.layout.setShakelessClickListener
 
 /**
  * @author 林学渊
@@ -75,41 +73,29 @@ fun ViewGroup.RewardList(activity: FragmentActivity, rewardList: List<Reward>) {
 }
 
 fun ViewGroup.BigTitle(title: String) {
-    add {
-        H1(title).apply {
-            gravity = Gravity.CENTER
-            setTextColor(Attr.getPrimaryTextColor(context))
-            setTextSize(20f)
-            maxLines = 1
-            ellipsize = TextUtils.TruncateAt.MIDDLE
-        }
+    H1(title).apply {
+        gravity = Gravity.CENTER
+        setTextColor(Attr.getPrimaryTextColor(context))
+        setTextSize(20f)
+        maxLines = 1
+        ellipsize = TextUtils.TruncateAt.MIDDLE
     }
-}
-
-fun ViewGroup.Button(text: String, onClick: (View) -> Unit): Button {
-    val button = MaterialButton(context)
-    button.setText(text)
-    button.setShakelessClickListener(800, onClick)
-    addView(button)
-    return button
 }
 
 fun ViewGroup.StepSliderButton(
-    maxCount: Int = 1,
     text: String,
+    maxCount: Int = 1,
+    defaultCount: Int = 1,
     onClick: (View, count: Int) -> Unit
 ): Button {
-    if (maxCount <= 1) {
-        return Button(text) { onClick(it, 1) }
+    if (maxCount <= defaultCount) {
+        return MaterialButton(text) { onClick(it, defaultCount) }
     }
-    val stepSliderItem = StepSliderItem(context).apply {
-        value = 1f
-        valueFrom = 1f
-        valueTo = maxCount.toFloat()
-        stepSize = 1f
-    }
-    addView(stepSliderItem)
-    val button = Button("${text} 1") {
+    val stepSliderItem = StepSlide(
+        from = 1f, to = maxCount.toFloat(), step = 1f,
+        defaultValue = defaultCount.toFloat()
+    )
+    val button = MaterialButton("$text $defaultCount") {
         onClick(it, stepSliderItem.value.toInt())
     }
     stepSliderItem.onSlide {

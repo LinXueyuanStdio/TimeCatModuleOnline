@@ -77,10 +77,10 @@ class UserSettingActivity : BaseSettingActivity() {
                 }
             }
             container.Next("名字", null, user.nickName, null) { item ->
-                editNickname { item.hint = it }
+                editNickname { item.text = it }
             }
             container.Next("简介", null, user.intro, null) { item ->
-                editBriefIntro { item.hint = it }
+                editBriefIntro { item.text = it }
             }
         }
     }

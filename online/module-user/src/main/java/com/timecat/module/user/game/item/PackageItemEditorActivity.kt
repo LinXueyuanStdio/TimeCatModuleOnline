@@ -71,7 +71,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
-        formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
+        formData.iconItem = Image("图标", "fontawesome://solid/fa_gift_solid", autoAdd = false) {
             chooseImage(isAvatar = true) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
