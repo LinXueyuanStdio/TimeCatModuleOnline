@@ -20,6 +20,9 @@ val User.expLimit: Long
 val User.waterLimit: Int
     get() = Level.waterLimit(water)
 
+/**
+ * 用户的数据
+ */
 object Level {
 
     /**
@@ -79,15 +82,15 @@ object Level {
         else -> 4425
     }
 
-    fun getLevel(exp: Long): Pair<Int, Long> {
+    fun getLevel(exp: Long, expLimitFunc: (level: Int) -> Long = { expLimit(it) }): Pair<Int, Long> {
         LogUtil.se("exp: $exp")
         var curExp = exp
         var level = 0
-        var maxExp = expLimit(level)
+        var maxExp = expLimitFunc(level)
         while (maxExp < curExp) {
             level++
             curExp -= maxExp
-            maxExp = expLimit(level);
+            maxExp = expLimitFunc(level);
         }
         return level to curExp
     }
@@ -95,8 +98,8 @@ object Level {
     /**
      * 等级为 level 时的最大累计经验值限制
      */
-    fun expAccLimit(level: Int): Long {
-        return (0..level).map { expLimit(it) }.sum()
+    fun expAccLimit(level: Int, expLimitFunc: (level: Int) -> Long = { expLimit(it) }): Long {
+        return (0..level).map { expLimitFunc(it) }.sum()
     }
 
     /**

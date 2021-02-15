@@ -46,6 +46,8 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
         val head = ItemBlock.fromJson(structure)
         formData.attachments = head.mediaScope
         formData.icon = head.header.avatar
+        val head2 = CubeItemBlock.fromJson(head.structure)
+        formData.blockId = head2.uuid
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {

@@ -40,6 +40,9 @@ class DataItemEditorActivity : BaseItemAddActivity() {
         val head = ItemBlock.fromJson(structure)
         formData.attachments = head.mediaScope
         formData.icon = head.header.avatar
+        val head2 = DataItemBlock.fromJson(head.structure)
+        formData.where = head2.where
+        formData.num = head2.num
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {

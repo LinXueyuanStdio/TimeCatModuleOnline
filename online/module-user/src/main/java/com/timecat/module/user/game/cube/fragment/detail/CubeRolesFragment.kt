@@ -2,9 +2,14 @@ package com.timecat.module.user.game.cube.fragment.detail
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnCube
-import com.timecat.layout.ui.entity.BaseItem
+import com.timecat.data.bmob.ext.bmob.requestBlockRelation
+import com.timecat.data.bmob.ext.net.findAllRole
 import com.timecat.module.user.adapter.DetailAdapter
+import com.timecat.module.user.adapter.block.BlockSmallItem
+import com.timecat.module.user.adapter.block.RoleItem
 import com.timecat.module.user.base.login.BaseLoginListFragment
 import com.timecat.module.user.game.cube.vm.CubeViewModel
 import java.util.*
@@ -20,18 +25,37 @@ import java.util.*
 class CubeRolesFragment : BaseLoginListFragment() {
 
     private fun loadDetail(cube: OwnCube) {
-        val list = mutableListOf<BaseItem<*>>()
-//        list.add(SingleAuthorItem(forum.user))TODO 不要显示创建着
-//        list.add(SimpleContentItem(requireActivity(), cube.content))
-//        list.add(ActionItem(cube))
-        adapter.reload(list)
+        val block = cube.cube
+        requestBlockRelation {
+            query = block.findAllRole()
+            onError = {
+                mStatefulLayout?.showError {
+                    loadDetail(cube)
+                }
+            }
+            onEmpty = {
+                LogUtil.e("empty")
+                mStatefulLayout?.showContent()
+            }
+            onSuccess = {
+                roles = it.map { it.to }
+                mStatefulLayout?.showContent()
+            }
+        }
     }
+
+    var roles: List<Block> = listOf()
+        set(value) {
+            val list = value.map { RoleItem(requireActivity(), it) }
+            adapter.reload(list)
+            field = value
+        }
 
     lateinit var viewModel: CubeViewModel
     override fun initViewAfterLogin() {
         viewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
         viewModel.cube.observe(viewLifecycleOwner, {
-            it?.let{loadDetail(it)}
+            it?.let { loadDetail(it) }
         })
     }
 

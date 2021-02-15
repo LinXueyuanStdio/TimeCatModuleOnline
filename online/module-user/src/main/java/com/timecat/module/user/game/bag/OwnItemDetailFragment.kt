@@ -8,6 +8,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.game.OwnItem
+import com.timecat.data.bmob.ext.game.*
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.*
 import com.timecat.identity.readonly.RouterHub
@@ -77,6 +78,17 @@ class OwnItemDetailFragment : ItemDetailFragment() {
                 MaterialDialog(requireActivity()).show {
                     title(text = "获得了")
                     val head2 = DataItemBlock.fromJson(head.structure)
+                    val num = head2.num
+                    val prefix = when (head2.where) {
+                        WHERE_UserExp -> "经验"
+                        WHERE_UserWater -> "体力"
+                        WHERE_UserCharge -> "源石"
+                        WHERE_UserMoneyCharge -> "付费源石"
+                        WHERE_UserCurrency -> "元石"
+                        WHERE_UserStar -> "飞星"
+                        else -> ""
+                    }
+                    message(text = "$prefix $num")
                     positiveButton(R.string.ok)
                     this@OwnItemDetailFragment.dismiss()
                 }
@@ -137,7 +149,7 @@ class OwnItemDetailFragment : ItemDetailFragment() {
         }
     }
 
-    override fun cube(head: ItemBlock): ViewGroup.() -> Unit  = {
+    override fun cube(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.cube(head))
         val count = ownItem.count
         Body("拥有 $count")
