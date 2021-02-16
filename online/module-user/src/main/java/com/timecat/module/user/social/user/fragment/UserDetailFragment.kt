@@ -1,18 +1,18 @@
 package com.timecat.module.user.social.user.fragment
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
+import android.view.View
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.User
-import com.timecat.layout.ui.entity.BaseItem
-import com.timecat.module.user.adapter.DetailAdapter
-import com.timecat.module.user.adapter.detail.ContributionItem
-import com.timecat.module.user.adapter.detail.SimpleContentItem
-import com.timecat.module.user.adapter.detail.TraceItem
-import com.timecat.module.user.adapter.detail.UserRelationItem
-import com.timecat.module.user.base.login.BaseLoginListFragment
-import com.timecat.module.user.social.user.vm.UserViewModel
-import java.util.*
+import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.Next
+import com.timecat.module.user.base.login.BaseLoginScrollContainerFragment
+import com.timecat.module.user.view.dsl.Content
+import com.timecat.module.user.view.dsl.Contribution
+import com.timecat.module.user.view.dsl.UserRelation
+import com.timecat.module.user.view.item.ContentItem
+import com.timecat.module.user.view.item.ContributionItem
+import com.timecat.module.user.view.item.UserRelationItem
 
 /**
  * @author 林学渊
@@ -22,42 +22,31 @@ import java.util.*
  * 创建者，关注，点赞数等
  * @usage null
  */
-class UserDetailFragment : BaseLoginListFragment() {
+class UserDetailFragment : BaseLoginScrollContainerFragment() {
 
-    private fun loadDetail(user: User) {
-        val list = mutableListOf<BaseItem<*>>()
-        val activity = requireActivity()
-        list.add(SimpleContentItem(activity, user.intro))
-        list.add(UserRelationItem(activity, user))
-        list.add(ContributionItem(activity, user))
-        if (user.objectId == UserDao.getCurrentUser()?.objectId) {
-            list.add(TraceItem(activity, user))
+    lateinit var contentItem: ContentItem
+    lateinit var userRelationItem: UserRelationItem
+    lateinit var contributionItem: ContributionItem
+    lateinit var traceItem: View
+    override fun loadDetail(user: User) {
+        container.apply {
+            contentItem = Content(user.intro)
+            userRelationItem = UserRelation()
+            contributionItem = Contribution()
+            if (user.objectId == UserDao.getCurrentUser()?.objectId) {
+                traceItem = Next("浏览记录") {
+                    NAV.raw(activity, RouterHub.USER_AllTraceActivity)
+                        .putParcelable("user", user)
+                        .forward()
+                }
+            }
         }
-        adapter.reload(list)
-        mRefreshLayout.isRefreshing = false
     }
 
-    lateinit var viewModel: UserViewModel
     override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
-        viewModel.user.observe(viewLifecycleOwner, {
-            it?.let { loadDetail(it) }
-        })
-    }
-
-    lateinit var adapter: DetailAdapter
-
-    override fun getAdapter(): RecyclerView.Adapter<*> {
-        adapter = DetailAdapter(ArrayList())
-        return adapter
-    }
-
-    //第一次不加载啦，交给 ViewModel
-    override fun loadData() {
-        mRefreshLayout.isRefreshing = false
-    }
-
-    override fun onRefresh() {
-        viewModel.user.value?.let { loadDetail(it) }
+        super.initViewAfterLogin()
+        userViewModel.intro.observe(this) {
+            contentItem.setRichText(it)
+        }
     }
 }

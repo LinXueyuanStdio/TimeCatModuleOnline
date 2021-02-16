@@ -27,27 +27,37 @@ import com.timecat.module.user.view.item.CubeLevelItem
 class CubeAttrFragment : BaseCubeFragment() {
     lateinit var cubeLevelBar: CubeLevelItem
     override fun loadDetail(ownCube: OwnCube) {
-        val I = I()
         container.apply {
             cubeLevelBar = CubeLevelBar(ownCube.maxLevel, ownCube.exp)
             if (ownCube.reachMaxExp()) {
-                MaterialButton("突破") {
-                    requireActivity().showLevelBreakDialog(I, ownCube)
-                }
+                MaterialButton("突破") { onLevelBreak() }
             } else {
-                MaterialButton("升级") {
-                    fetchExpItems(I) {
-                        requireActivity().showLevelUpDialog(it, ownCube) { dialog, expOwnItem, count ->
-                            useItem<Any?>(expOwnItem.objectId, count) {
-                                onSuccess = {
-                                    dialog.dismiss()
-                                }
-                                onError = {
-                                    ToastUtil.e_long("发生错误：$it")
-                                }
-                            }
-                            cubeViewModel.reloadCurrentCube()
-                        }
+                MaterialButton("升级") { onLevelUp() }
+            }
+        }
+    }
+
+    fun onLevelBreak() {
+        val level = cubeViewModel.maxLevel.value ?: 1
+        val exp = cubeViewModel.exp.value ?: 0L
+        requireActivity().showLevelBreakDialog(level, exp)
+    }
+
+    fun onLevelUp() {
+        fetchExpItems(I()) {
+            val level = cubeViewModel.maxLevel.value ?: 1
+            val exp = cubeViewModel.exp.value ?: 0L
+            val id = cubeViewModel.objectId.value ?: ""
+            requireActivity().showLevelUpDialog(level, exp, it) { dialog, expOwnItem, count ->
+                useItem<Any?>(expOwnItem.objectId, count, id) {
+                    onSuccess = {
+                        val fakeExp = id2exp(expOwnItem.objectId) * count
+                        val trueExp = cubeViewModel.exp.value ?: 0L + fakeExp
+                        cubeViewModel.exp.postValue(trueExp)
+                        dialog.dismiss()
+                    }
+                    onError = {
+                        ToastUtil.e_long("发生错误：$it")
                     }
                 }
             }
@@ -64,18 +74,22 @@ class CubeAttrFragment : BaseCubeFragment() {
     }
 
     fun fetchExpItems(user: User, useItems: (List<OwnItem>) -> Unit) {
+        mStatefulLayout?.showLoading()
         requestOwnItem {
             query = user.allOwnExpItem()
             onEmpty = {
+                mStatefulLayout?.showContent()
                 MaterialDialog(requireActivity()).show {
                     message(text = "未持有任何经验！")
                     positiveButton(R.string.ok)
                 }
             }
             onError = {
+                mStatefulLayout?.showContent()
                 ToastUtil.e("出现错误：$it")
             }
             onSuccess = {
+                mStatefulLayout?.showContent()
                 useItems(it)
             }
         }

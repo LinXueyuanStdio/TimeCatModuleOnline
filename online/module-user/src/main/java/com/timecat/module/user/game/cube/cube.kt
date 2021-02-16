@@ -100,10 +100,13 @@ fun ViewGroup.CubeLevelBar(
 /**
  * 显示突破窗口
  */
-fun FragmentActivity.showLevelBreakDialog(user: User, ownCube: OwnCube) {
+fun FragmentActivity.showLevelBreakDialog(
+    maxLevel: Int,
+    exp: Long,
+) {
     val container = ContainerItem(this)
     container.apply {
-        CubeLevelBar(ownCube.maxLevel, ownCube.exp)
+        val expBar = CubeLevelBar(maxLevel, exp, autoAdd = false)
     }
     MaterialDialog(this, BottomSheet()).show {
         title(text = "突破")
@@ -119,8 +122,9 @@ fun FragmentActivity.showLevelBreakDialog(user: User, ownCube: OwnCube) {
  * 显示升级窗口
  */
 fun FragmentActivity.showLevelUpDialog(
+    maxLevel: Int,
+    exp: Long,
     expItems: List<OwnItem>,
-    ownCube: OwnCube,
     onUsed: (dialog: MaterialDialog, expItem: OwnItem, count: Int) -> Unit
 ) {
     val expItemSelector = RewardListItem(this)
@@ -142,7 +146,7 @@ fun FragmentActivity.showLevelUpDialog(
         title(text = "升级")
         container.apply {
             padding = 10
-            val expBar = CubeLevelBar(ownCube.maxLevel, ownCube.exp, autoAdd = false)
+            val expBar = CubeLevelBar(maxLevel, exp, autoAdd = false)
             val stepSliderItem = StepSlide(
                 from = 1f, to = currentOwnExpItem.count.toFloat(), step = 1f,
                 defaultValue = 1f, autoAdd = false

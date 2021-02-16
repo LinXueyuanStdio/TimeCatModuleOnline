@@ -18,7 +18,7 @@ import com.timecat.module.user.social.user.vm.UserViewModel
  * @usage null
  */
 abstract class BaseLoginScrollContainerFragment : BaseScrollContainerFragment() {
-    fun I(): User = UserDao.getCurrentUser() ?: throw Exception("未登录")
+    fun I(): User = userViewModel.user.value ?: UserDao.getCurrentUser() ?: throw Exception("未登录")
     override fun layout(): Int = R.layout.base_user_stateful_scroll_container
 
     var mStatefulLayout: StatefulLayout? = null

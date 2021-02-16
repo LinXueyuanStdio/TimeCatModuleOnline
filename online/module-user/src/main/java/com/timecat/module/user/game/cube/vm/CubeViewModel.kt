@@ -26,6 +26,7 @@ class CubeViewModel : ViewModel() {
      * 当前选中的方块
      */
     val ownCube: MutableLiveData<OwnCube> = MutableLiveData()
+    val objectId: MutableLiveData<String> = MutableLiveData()
     val cube: MutableLiveData<Block> = MutableLiveData()
     val exp: MutableLiveData<Long> = MutableLiveData()
     val maxLevel: MutableLiveData<Int> = MutableLiveData()
@@ -57,6 +58,7 @@ class CubeViewModel : ViewModel() {
     fun loadCube(own: OwnCube) {
         ownCube.postValue(own)
         cube.postValue(own.cube)
+        objectId.postValue(own.objectId)
         exp.postValue(own.exp)
         maxLevel.postValue(own.maxLevel)
         star.postValue(own.star)

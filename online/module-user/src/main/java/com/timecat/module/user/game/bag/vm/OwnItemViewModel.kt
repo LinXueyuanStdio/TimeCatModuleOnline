@@ -28,6 +28,26 @@ class OwnItemViewModel : ViewModel() {
      */
     val ownExpItems: MutableLiveData<List<OwnItem>> = MutableLiveData()
 
+    val itemMap: MutableMap<String, MutableLiveData<OwnItem>> = mutableMapOf()
+    fun loadPagedOwnItems(key: String, own: List<OwnItem>) {
+        for (i in own) {
+            setOwnItem(i)
+        }
+    }
+
+    fun setOwnItem(item: OwnItem): MutableLiveData<OwnItem> {
+        var i = itemMap[item.objectId]
+        if (i == null) {
+            i = MutableLiveData(item)
+            itemMap[item.objectId] = i
+        }
+        return i
+    }
+
+    fun getOwnItem(uuid: String): MutableLiveData<OwnItem>? {
+        return itemMap[uuid]
+    }
+
     fun loadAllOwnItems(own: List<OwnItem>) {
         ownItems.postValue(own)
         val currentOwnItem = own[0]
