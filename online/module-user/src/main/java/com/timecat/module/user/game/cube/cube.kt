@@ -219,7 +219,8 @@ fun FragmentActivity.showLevelUpDialog(
 
             fun getMaxCount(itemCount: Int): Float {
                 val needExp: Long = CubeLevel.needExpToMax(exp, maxLevel)
-                val expNeedItemCount: Int = needExp / max(1L, id2exp(currentExpItem.objectId))
+                val itemExp = max(1L, id2exp(currentExpItem.objectId))
+                val expNeedItemCount: Int = needExp / itemExp
                 val maxCount = min(expNeedItemCount, itemCount)
                 return max(2, maxCount).toFloat()
             }
