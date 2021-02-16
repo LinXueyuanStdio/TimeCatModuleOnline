@@ -63,7 +63,7 @@ open class UserLevelItem @JvmOverloads constructor(
             isSingleLine = true
             ellipsize = TextUtils.TruncateAt.END
             setTextColor(Attr.getPrimaryTextColor(context))
-            alpha = 0.5f
+            alpha = 0.3f
         }
         expTv = TextView {
             layout_id = "exp"
@@ -112,7 +112,7 @@ open class UserLevelItem @JvmOverloads constructor(
         }
     var fakeExp: Long = 1
         set(value) {
-            val progress = value.coerceIn(exp, expBar.max.toLong())
+            val progress = value.coerceIn(exp, expBar.max.toLong() - exp)
             expBar.secondaryProgress = progress.toFloat()
             field = progress
         }

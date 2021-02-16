@@ -41,6 +41,7 @@ class DataItemEditorActivity : BaseItemAddActivity() {
         formData.attachments = head.mediaScope
         formData.icon = head.header.avatar
         val head2 = DataItemBlock.fromJson(head.structure)
+        formData.tableName = head2.tableName
         formData.where = head2.where
         formData.num = head2.num
     }
@@ -54,7 +55,8 @@ class DataItemEditorActivity : BaseItemAddActivity() {
             }
         }
         formData.titleItem = OneLineInput("标题", "新建装备", autoAdd = false)
-        formData.whereItem = OneLineInput("字段名称", "", autoAdd = false)
+        formData.tableNameItem = OneLineInput("表", "OwnCube", autoAdd = false)
+        formData.whereItem = OneLineInput("字段", "exp", autoAdd = false)
         formData.numItem = NumberInput("数量", "0", autoAdd = false)
         add(
             formData.iconItem to 0,
@@ -82,6 +84,8 @@ class DataItemEditorActivity : BaseItemAddActivity() {
         var h = formData.iconItem.height
         if (formData.titleItem.inputEditText.hasFocus()) return h
         h += formData.titleItem.height
+        if (formData.tableNameItem.inputEditText.hasFocus()) return h
+        h += formData.tableNameItem.height
         if (formData.whereItem.inputEditText.hasFocus()) return h
         h += formData.whereItem.height
         if (formData.numItem.inputEditText.hasFocus()) return h
@@ -94,6 +98,7 @@ class DataItemEditorActivity : BaseItemAddActivity() {
     override fun getItemBlock(): ItemBlock {
         return ItemBlock(
             structure = DataItemBlock(
+                tableName = formData.tableName,
                 where = formData.where,
                 num = formData.num
             ).toJsonObject(),

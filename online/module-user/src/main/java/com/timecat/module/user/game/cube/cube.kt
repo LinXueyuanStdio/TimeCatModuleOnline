@@ -1,7 +1,10 @@
 package com.timecat.module.user.game.cube
 
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import androidx.core.view.forEach
+import androidx.core.view.get
 import androidx.fragment.app.FragmentActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
@@ -19,11 +22,16 @@ import com.timecat.layout.ui.business.form.*
 import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.business.setting.RewardItem
 import com.timecat.layout.ui.business.setting.RewardListItem
-import com.timecat.layout.ui.drawabe.roundBorderSelector
+import com.timecat.layout.ui.drawabe.COLOR_DEFAULT
+import com.timecat.layout.ui.drawabe.COLOR_PRESSED
+import com.timecat.layout.ui.layout.dp
 import com.timecat.layout.ui.layout.padding
 import com.timecat.module.user.R
 import com.timecat.module.user.game.core.Level
 import com.timecat.module.user.view.item.CubeLevelItem
+import top.defaults.drawabletoolbox.DrawableBuilder
+import top.defaults.drawabletoolbox.LayerDrawableBuilder
+import top.defaults.drawabletoolbox.StateListDrawableBuilder
 
 /**
  * @author 林学渊
@@ -74,6 +82,9 @@ object CubeLevel {
      */
     fun expLimit(level: Int): Long = 10 * Level.expLimit(level)
     fun getLevel(exp: Long) = Level.getLevel(exp) { expLimit(it) }
+    fun needExpToMax(accExp: Long, maxLevel: Int): Long {
+        return expAccLimit(maxLevel) - accExp
+    }
 
     /**
      * 等级为 level 时的最大累计经验值限制
@@ -118,6 +129,65 @@ fun FragmentActivity.showLevelBreakDialog(
     }
 }
 
+fun roundBorderSelector(
+    colorDefault: Int = COLOR_DEFAULT,
+    colorPressed: Int = COLOR_PRESSED
+): Drawable {
+    val layer1 = DrawableBuilder()
+        .rectangle()
+        .cornerRadius(5.dp)
+        .hairlineBordered()
+        .strokeColor(colorDefault)
+        .strokeColorPressed(colorPressed)
+        .build()
+    val layer2 = DrawableBuilder()
+        .rectangle()
+        .rounded()
+        .cornerRadius(5.dp)
+        .solidColor(colorDefault)
+        .build()
+    val layer3 = DrawableBuilder()
+        .rectangle()
+        .rounded()
+        .cornerRadius(5.dp)
+        .solidColor(Color.WHITE)
+        .ripple()
+        .rippleColor(colorDefault)
+        .build()
+    val layer4 = DrawableBuilder()
+        .rectangle()
+        .rounded()
+        .hairlineBordered()
+        .longDashed()
+        .cornerRadius(5.dp)
+        .solidColor(Color.WHITE)
+        .ripple()
+        .rippleColor(colorDefault)
+        .build()
+
+    val layer5 = DrawableBuilder()
+        .rectangle()
+        .rounded()
+        .cornerRadius(5.dp)
+        .hairlineBordered()
+        .strokeColor(colorDefault)
+        .strokeColorPressed(colorPressed)
+        .build()
+    val normalState = layer5
+    val selectedState = layer1
+    val disabledState = layer4
+    val pressedState = LayerDrawableBuilder()
+        .add(layer1)
+        .inset(10)
+        .add(layer5).build()
+    return StateListDrawableBuilder()
+        .normal(normalState)
+        .pressed(pressedState)
+        .selected(selectedState)
+        .disabled(disabledState)
+        .build()
+}
+
 /**
  * 显示升级窗口
  */
@@ -146,11 +216,20 @@ fun FragmentActivity.showLevelUpDialog(
         title(text = "升级")
         container.apply {
             padding = 10
+
+            fun getMaxCount(itemCount: Int): Float {
+                val needExp: Long = CubeLevel.needExpToMax(exp, maxLevel)
+                val expNeedItemCount: Int = needExp / max(1L, id2exp(currentExpItem.objectId))
+                val maxCount = min(expNeedItemCount, itemCount)
+                return max(2, maxCount).toFloat()
+            }
+
             val expBar = CubeLevelBar(maxLevel, exp, autoAdd = false)
             val stepSliderItem = StepSlide(
-                from = 1f, to = currentOwnExpItem.count.toFloat(), step = 1f,
+                from = 1f, to = getMaxCount(currentOwnExpItem.count), step = 1f,
                 defaultValue = 1f, autoAdd = false
             )
+
             val usage = CenterBody("获得经验", autoAdd = false)
             val text = "使用"
             val button = MaterialButton("$text 1 个", autoAdd = false) {
@@ -186,7 +265,7 @@ fun FragmentActivity.showLevelUpDialog(
                         stepSliderItem.value = 1f
                     } else {
                         stepSliderItem.beVisible()
-                        stepSliderItem.valueTo = count.toFloat()
+                        stepSliderItem.valueTo = getMaxCount(count)
                         stepSliderItem.value = 1f
                     }
                     currentOwnExpItem = ownItem
@@ -200,6 +279,7 @@ fun FragmentActivity.showLevelUpDialog(
             expItemSelector.container.forEach {
                 it.background = roundBorderSelector(accentColor)
             }
+            expItemSelector.container.get(0).isSelected = true
 
             stepSliderItem.onSlide {
                 val count = it.toInt()

@@ -73,6 +73,12 @@ class MaterialForm {
     //endregion
 
     //region whereItem -> where, numItem -> num
+    var tableName: String
+        get() = tableNameItem.text
+        set(value) {
+            tableNameItem.text = value
+        }
+    lateinit var tableNameItem: InputItem
     var where: String
         get() = whereItem.text
         set(value) {
