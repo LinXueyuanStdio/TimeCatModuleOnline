@@ -5,10 +5,12 @@ import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.data.bmob.data.game.OwnItem
 import com.timecat.data.bmob.ext.bmob.requestOwnItem
+import com.timecat.data.bmob.ext.bmob.useItem
 import com.timecat.element.alert.ToastUtil
 import com.timecat.layout.ui.business.form.MaterialButton
 import com.timecat.module.user.R
 import com.timecat.module.user.game.cube.*
+import com.timecat.module.user.view.item.CubeLevelItem
 
 /**
  * @author 林学渊
@@ -23,11 +25,11 @@ import com.timecat.module.user.game.cube.*
  * @usage null
  */
 class CubeAttrFragment : BaseCubeFragment() {
-
+    lateinit var cubeLevelBar: CubeLevelItem
     override fun loadDetail(ownCube: OwnCube) {
         val I = I()
         container.apply {
-            CubeLevelBar(ownCube.maxLevel, ownCube.exp)
+            cubeLevelBar = CubeLevelBar(ownCube.maxLevel, ownCube.exp)
             if (ownCube.reachMaxExp()) {
                 MaterialButton("突破") {
                     requireActivity().showLevelBreakDialog(I, ownCube)
@@ -35,12 +37,29 @@ class CubeAttrFragment : BaseCubeFragment() {
             } else {
                 MaterialButton("升级") {
                     fetchExpItems(I) {
-                        requireActivity().showLevelUpDialog(it, ownCube) {
-                            viewModel.reloadCube()
+                        requireActivity().showLevelUpDialog(it, ownCube) { dialog, expOwnItem, count ->
+                            useItem<Any?>(expOwnItem.objectId, count) {
+                                onSuccess = {
+                                    dialog.dismiss()
+                                }
+                                onError = {
+                                    ToastUtil.e_long("发生错误：$it")
+                                }
+                            }
+                            cubeViewModel.reloadCurrentCube()
                         }
                     }
                 }
             }
+        }
+    }
+
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        cubeViewModel.cubeLevelBar.observe(this) {
+            val (maxLevel, exp) = it
+            cubeLevelBar.maxLevel = maxLevel
+            cubeLevelBar.exp = exp
         }
     }
 

@@ -6,17 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data.common.Action
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.*
-import com.timecat.data.bmob.ext.follow
-import com.timecat.data.bmob.ext.net.allFollowBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.ForumBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseDetailCollapseActivity
@@ -49,7 +43,7 @@ class CubeActivity : BaseDetailCollapseActivity() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         viewModel = ViewModelProvider(this).get(CubeViewModel::class.java)
-        viewModel.block.observe(this, {
+        viewModel.cube.observe(this, {
             it?.let { loadDetail(it) }
         })
         card = TopicCard(this)
@@ -78,7 +72,7 @@ class CubeActivity : BaseDetailCollapseActivity() {
         requestOneBlock {
             query = oneBlockOf(blockId)
             onSuccess = {
-                viewModel.block.postValue(it)
+                viewModel.cube.postValue(it)
             }
             onError = {
                 mStatefulLayout?.showError("出错啦") {

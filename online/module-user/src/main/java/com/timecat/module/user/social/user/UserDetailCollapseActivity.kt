@@ -93,12 +93,12 @@ class UserDetailCollapseActivity : BaseDetailCollapseActivity() {
 
     override fun fetch() {
         if (userId == I().objectId) {
-            viewModel.user.postValue(I())
+            viewModel.loadUser(I())
         } else {
             requestOneUser {
                 query = oneUserOf(userId)
                 onSuccess = {
-                    viewModel.user.postValue(it)
+                    viewModel.loadUser(it)
                 }
                 onError = {
                     mStatefulLayout?.showError("出错啦") {

@@ -154,7 +154,7 @@ class AddRoleActivity : BaseBlockEditorActivity() {
 
     private fun simplePermission(viewGroup: ViewGroup, permission: Block) {
         viewGroup.Next(permission.title, permission.content, null) {
-            val info = "${permission.title}\n由 ${permission.user.nick} 创建"
+            val info = "${permission.title}\n由 ${permission.user.nickName} 创建"
             ToastUtil.i(info)
         }
     }

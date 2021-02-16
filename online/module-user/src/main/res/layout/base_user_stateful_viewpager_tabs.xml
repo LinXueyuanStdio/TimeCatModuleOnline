@@ -10,5 +10,5 @@
     app:stfInAnimation="@android:anim/fade_in"
     app:stfOutAnimation="@android:anim/fade_out">
 
-    <include layout="@layout/base_user_viwpager_bottom_tabs" />
+    <include layout="@layout/base_user_viwpager_tabs" />
 </com.gturedi.views.StatefulLayout>

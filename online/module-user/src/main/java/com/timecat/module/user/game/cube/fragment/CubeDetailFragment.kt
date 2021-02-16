@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.data.bmob.data.game.OwnCube
-import com.timecat.module.user.base.login.BaseLoginBottomTabsFragment
+import com.timecat.module.user.base.login.BaseLoginTabsFragment
 import com.timecat.module.user.game.cube.fragment.detail.*
 import com.timecat.module.user.game.cube.vm.CubeViewModel
 
@@ -18,7 +18,7 @@ import com.timecat.module.user.game.cube.vm.CubeViewModel
  * 创建者，关注，点赞数等
  * @usage null
  */
-class CubeDetailFragment : BaseLoginBottomTabsFragment() {
+class CubeDetailFragment : BaseLoginTabsFragment() {
 
     private fun loadDetail(cube: OwnCube) {
     }
@@ -26,7 +26,7 @@ class CubeDetailFragment : BaseLoginBottomTabsFragment() {
     lateinit var viewModel: CubeViewModel
     override fun initViewAfterLogin() {
         viewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
-        viewModel.cube.observe(viewLifecycleOwner, {
+        viewModel.ownCube.observe(viewLifecycleOwner, {
             it?.let { loadDetail(it) }
         })
         setupViewPager()

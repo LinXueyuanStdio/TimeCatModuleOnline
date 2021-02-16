@@ -6,17 +6,14 @@ import androidx.fragment.app.FragmentActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
-import com.jess.arms.utils.DrawableProvider
 import com.timecat.component.commonsdk.extension.beGone
 import com.timecat.component.commonsdk.extension.beVisible
 import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.data.bmob.data.game.OwnItem
-import com.timecat.data.bmob.ext.bmob.useItem
 import com.timecat.data.bmob.ext.net.allDataItem
 import com.timecat.data.bmob.ext.net.allOwnItem
-import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.layout.ui.business.form.*
 import com.timecat.layout.ui.business.setting.ContainerItem
@@ -40,6 +37,11 @@ const val expBlock2 = "602a4b7e9c05de425460047e" //专业经验
 const val expBlock3 = "602a4cba286a8427b94dde52" //顿悟经验
 const val expBlock4 = "602a4d299c05de42546004c6" //实践经验
 const val expBlock5 = "602a4f2b286a8427b94ddeb2" //造物经验
+fun isExpItem(id: String): Boolean = when (id) {
+    expBlock1, expBlock2, expBlock3, expBlock4, expBlock5 -> true
+    else -> false
+}
+
 fun allExpItem() = allDataItem().apply {
     whereContainedIn("objectId", listOf(
         expBlock1,
@@ -119,7 +121,7 @@ fun FragmentActivity.showLevelBreakDialog(user: User, ownCube: OwnCube) {
 fun FragmentActivity.showLevelUpDialog(
     expItems: List<OwnItem>,
     ownCube: OwnCube,
-    onUsed: () -> Unit
+    onUsed: (dialog: MaterialDialog, expItem: OwnItem, count: Int) -> Unit
 ) {
     val expItemSelector = RewardListItem(this)
     val id2Item = mutableMapOf<String, OwnItem>()
@@ -148,15 +150,7 @@ fun FragmentActivity.showLevelUpDialog(
             val usage = CenterBody("获得经验", autoAdd = false)
             val text = "使用"
             val button = MaterialButton("$text 1 个", autoAdd = false) {
-                useItem<Any?>(currentExpItem.objectId, stepSliderItem.value.toInt()) {
-                    onSuccess = {
-                        dismiss()
-                        onUsed()
-                    }
-                    onError = {
-                        ToastUtil.e_long("发生错误：$it")
-                    }
-                }
+                onUsed(this@show, currentOwnExpItem, stepSliderItem.value.toInt())
             }
 
             fun useExpItem(expUnit: Long, count: Int) {

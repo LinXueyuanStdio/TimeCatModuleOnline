@@ -98,7 +98,7 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
         parent?.let {
             block_herf.visibility = View.VISIBLE
             block_herf.bindBlock(relay ?: it)
-            emojiEditText.hint = relay?.let { "转发 @${it.user.nick}" } ?: "回复 @${it.user.nick}"
+            emojiEditText.hint = relay?.let { "转发 @${it.user.nickName}" } ?: "回复 @${it.user.nickName}"
         }
         comment?.let {
             replyBlockId = it.title

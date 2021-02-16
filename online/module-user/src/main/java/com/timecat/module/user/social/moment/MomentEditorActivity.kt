@@ -57,7 +57,7 @@ class MomentEditorActivity : BaseArticleBlockEditorActivity() {
         relay?.let {
             block_herf.visibility = View.VISIBLE
             block_herf.bindBlock(it)
-            emojiEditText.hint = "转发 @${it.user.nick}"
+            emojiEditText.hint = "转发 @${it.user.nickName}"
         }
     }
 

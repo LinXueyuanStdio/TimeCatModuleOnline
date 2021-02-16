@@ -1,5 +1,6 @@
 package com.timecat.module.user.base.login
 
+import androidx.lifecycle.ViewModelProvider
 import com.gturedi.views.StatefulLayout
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
@@ -7,6 +8,7 @@ import com.timecat.data.bmob.data.User
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseMainActivity
+import com.timecat.module.user.social.user.vm.UserViewModel
 
 /**
  * @author 林学渊
@@ -17,10 +19,18 @@ import com.timecat.module.user.base.BaseMainActivity
  */
 abstract class BaseLoginMainActivity : BaseMainActivity() {
     fun I(): User = UserDao.getCurrentUser() ?: throw Exception("未登录")
-    var mStatefulLayout: StatefulLayout? = null
 
     override fun layoutId(): Int = R.layout.user_activity_base_login_main
-    override fun init() {
+
+    var mStatefulLayout: StatefulLayout? = null
+
+    lateinit var userViewModel: UserViewModel
+
+    override fun initView() {
+        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        userViewModel.user.observe(this, {
+            it?.let { loadDetail(it) }
+        })
         mStatefulLayout = findViewById(R.id.ll_stateful)
         mStatefulLayout?.showLoading()
         val I = UserDao.getCurrentUser()
@@ -30,9 +40,11 @@ abstract class BaseLoginMainActivity : BaseMainActivity() {
             }
         } else {
             mStatefulLayout?.showContent()
+            userViewModel.loadUser(I)
             initViewAfterLogin()
         }
     }
 
     protected open fun initViewAfterLogin() {}
+    protected open fun loadDetail(user: User) {}
 }

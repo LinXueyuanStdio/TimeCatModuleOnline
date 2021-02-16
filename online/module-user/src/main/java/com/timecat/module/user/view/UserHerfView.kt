@@ -47,10 +47,10 @@ class UserHerfView @JvmOverloads constructor(
         val curUser = UserDao.getCurrentUser()
         if (user.objectId == curUser?.objectId) {
             root.userSection.focusUser.setOnClickListener(null)
-            root.userSection.userName.text = "${user.nick}(我)"
+            root.userSection.userName.text = "${user.nickName}(我)"
             root.userSection.focusUser.visibility = View.GONE
         } else {
-            root.userSection.userName.text = user.nick
+            root.userSection.userName.text = user.nickName
             setupFollowUserButton(context, root.userSection.focusUser, user)
         }
         LOAD.image(user.avatar, root.userSection.userHead)

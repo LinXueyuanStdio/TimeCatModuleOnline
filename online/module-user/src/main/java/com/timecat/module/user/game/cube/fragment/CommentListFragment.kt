@@ -14,7 +14,7 @@ import com.timecat.module.user.base.GO
  */
 class CommentListFragment : BaseListFragment() {
     override fun name(): String = "讨论"
-    override fun query() = viewModel.block.value!!.findAllComment()
+    override fun query() = viewModel.cube.value!!.findAllComment()
     override fun addNew(block: Block) {
         GO.addCommentFor(block)
     }

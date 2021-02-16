@@ -23,7 +23,7 @@ abstract class BaseListFragment : BaseEndlessBlockFragment() {
     lateinit var viewModel: CubeViewModel
     override fun initViewAfterLogin() {
         viewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
-        viewModel.cube.observe(viewLifecycleOwner, {
+        viewModel.ownCube.observe(viewLifecycleOwner, {
             load()
         })
     }
@@ -32,7 +32,7 @@ abstract class BaseListFragment : BaseEndlessBlockFragment() {
         super.bindView(view)
         write_response = view.findViewById(R.id.write_response)
         write_response.setShakelessClickListener {
-            viewModel.block.value?.let {
+            viewModel.cube.value?.let {
                 addNew(it)
             }
         }

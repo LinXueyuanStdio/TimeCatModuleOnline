@@ -103,7 +103,7 @@ class InterActionItem(
     }
 
     private fun setAuthContent(holder: DetailVH, block: InterAction) {
-        val content = "${block.user.nick}(${block.user.objectId}) 给 ${block.target.nick}(${block.target.objectId}) 授予 ${block.block}"
+        val content = "${block.user.nickName}(${block.user.objectId}) 给 ${block.target.nickName}(${block.target.objectId}) 授予 ${block.block}"
         setRichTextView(holder, content)
         setOnItemClick(holder) {
             //TODO auth detail，not editable

@@ -8,7 +8,6 @@ import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.data.bmob.ext.bmob.requestBlockRelation
 import com.timecat.data.bmob.ext.net.findAllRole
 import com.timecat.module.user.adapter.DetailAdapter
-import com.timecat.module.user.adapter.block.BlockSmallItem
 import com.timecat.module.user.adapter.block.RoleItem
 import com.timecat.module.user.base.login.BaseLoginListFragment
 import com.timecat.module.user.game.cube.vm.CubeViewModel
@@ -54,7 +53,7 @@ class CubeRolesFragment : BaseLoginListFragment() {
     lateinit var viewModel: CubeViewModel
     override fun initViewAfterLogin() {
         viewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
-        viewModel.cube.observe(viewLifecycleOwner, {
+        viewModel.ownCube.observe(viewLifecycleOwner, {
             it?.let { loadDetail(it) }
         })
     }
@@ -72,6 +71,6 @@ class CubeRolesFragment : BaseLoginListFragment() {
     }
 
     override fun onRefresh() {
-        viewModel.cube.value?.let { loadDetail(it) }
+        viewModel.ownCube.value?.let { loadDetail(it) }
     }
 }

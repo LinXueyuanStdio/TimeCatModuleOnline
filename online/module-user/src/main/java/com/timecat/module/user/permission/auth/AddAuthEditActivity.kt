@@ -101,7 +101,7 @@ class AddAuthEditActivity : BaseLoginEditActivity() {
             Next("我以", formData.authSource) {
                 changeAuthSource(it)
             }
-            authTarget = Next("授予", target?.nick ?: "") {
+            authTarget = Next("授予", target?.nickName ?: "") {
                 changeAuthTarget(it)
             }
             val spinnerData = listOf(AuthType.AuthIdentity, AuthType.AuthRole, AuthType.AuthPermission)
@@ -166,7 +166,7 @@ class AddAuthEditActivity : BaseLoginEditActivity() {
                 val user = data?.getSerializableExtra("data") as User?
                 user?.let {
                     formData.target = it
-                    authTarget.text = it.nick ?: ""
+                    authTarget.text = it.nickName ?: ""
                 }
             }
         }

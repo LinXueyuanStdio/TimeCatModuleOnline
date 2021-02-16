@@ -69,28 +69,28 @@ class ActionItem(
         }
         when (action.type) {
             ACTION_CLICK -> {
-                holder.tv_name.setText("${action.user.nick} 点击 $typeStr ${title}")
+                holder.tv_name.setText("${action.user.nickName} 点击 $typeStr ${title}")
             }
             ACTION_LIKE -> {
-                holder.tv_name.setText("${action.user.nick} 点赞 $typeStr ${title}")
+                holder.tv_name.setText("${action.user.nickName} 点赞 $typeStr ${title}")
             }
             ACTION_DING -> {
-                holder.tv_name.setText("${action.user.nick} 拍了拍 $typeStr ${title}")
+                holder.tv_name.setText("${action.user.nickName} 拍了拍 $typeStr ${title}")
             }
             ACTION_SCORE -> {
-                holder.tv_name.setText("${action.user.nick} 评分 $typeStr ${title}")
+                holder.tv_name.setText("${action.user.nickName} 评分 $typeStr ${title}")
             }
             ACTION_DOWNLOAD -> {
-                holder.tv_name.setText("${action.user.nick} 下载 $typeStr ${title}")
+                holder.tv_name.setText("${action.user.nickName} 下载 $typeStr ${title}")
             }
             ACTION_FOCUS -> {
-                holder.tv_name.setText("${action.user.nick} 关注 $typeStr ${title}")
+                holder.tv_name.setText("${action.user.nickName} 关注 $typeStr ${title}")
             }
             ACTION_VOTE -> {
-                holder.tv_name.setText("${action.user.nick} 投票 $typeStr ${title}")
+                holder.tv_name.setText("${action.user.nickName} 投票 $typeStr ${title}")
             }
             ACTION_RECOMMEND -> {
-                holder.tv_name.setText("${action.user.nick} 推荐 $typeStr ${title}")
+                holder.tv_name.setText("${action.user.nickName} 推荐 $typeStr ${title}")
             }
         }
     }

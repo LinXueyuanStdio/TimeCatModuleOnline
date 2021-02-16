@@ -13,7 +13,7 @@ import com.timecat.module.user.base.GO
  */
 class PostListFragment : BaseListFragment() {
     override fun name(): String = "帖子"
-    override fun query() = viewModel.block.value!!.findAllPost()
+    override fun query() = viewModel.cube.value!!.findAllPost()
     override fun addNew(block: Block) {
         GO.addPostFor(block)
     }

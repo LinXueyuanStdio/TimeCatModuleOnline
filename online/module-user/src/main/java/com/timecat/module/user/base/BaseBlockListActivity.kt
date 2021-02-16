@@ -1,14 +1,11 @@
 package com.timecat.module.user.base
 
-import androidx.recyclerview.widget.RecyclerView
-import com.gturedi.views.CustomStateOptions
-import com.timecat.component.router.app.NAV
-import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.data.service.DataError
-import com.timecat.module.user.R
-import com.timecat.module.user.adapter.BlockAdapter
-import com.timecat.module.user.base.login.BaseLoginListActivity
-import java.util.*
+import cn.leancloud.AVQuery
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.layout.ui.entity.BaseItem
+import com.timecat.module.user.adapter.block.BlockSmallItem
+import com.timecat.module.user.adapter.detail.BaseDetailVH
 
 /**
  * @author 林学渊
@@ -17,35 +14,27 @@ import java.util.*
  * @description null
  * @usage null
  */
-abstract class BaseBlockListActivity : BaseLoginListActivity() {
-    lateinit var mAdapter: BlockAdapter
-
-    override fun routerInject() = NAV.inject(this)
-
-    override fun getAdapter(): RecyclerView.Adapter<*> {
-        mAdapter = BlockAdapter(this, ArrayList())
-        return mAdapter
-    }
-
-    var errorCallback: (DataError) -> Unit = {
-        mRefreshLayout.isRefreshing = false
-        mStatefulLayout?.showError("查询失败") {
-            mRefreshLayout.isRefreshing = true
-            mStatefulLayout?.showLoading()
-            onRefresh()
-        }
-        ToastUtil.e("查询失败")
-        it.printStackTrace()
-    }
-    var emptyCallback: () -> Unit = {
-        mRefreshLayout.isRefreshing = false
-        mStatefulLayout?.showCustom(
-            CustomStateOptions()
-                .buttonText("什么也没找到")
-                .image(R.drawable.stf_ic_empty)
-                .buttonClickListener {
-                    onRefresh()
+abstract class BaseBlockListActivity : BaseSimpleListActivity() {
+    abstract fun query(): AVQuery<Block>
+    override fun onRefresh() {
+        requestBlock {
+            query = query().apply {
+                cachePolicy = AVQuery.CachePolicy.CACHE_THEN_NETWORK
+            }
+            onError = errorCallback
+            onEmpty = emptyCallback
+            onSuccess = {
+                mRefreshLayout.isRefreshing = false
+                val items = it.map {
+                    block2Item(it)
                 }
-        )
+                mAdapter.updateDataSet(items)
+                mStatefulLayout?.showContent()
+            }
+        }
+    }
+
+    open fun block2Item(block: Block): BaseItem<out BaseDetailVH> {
+        return BlockSmallItem(this, block)
     }
 }

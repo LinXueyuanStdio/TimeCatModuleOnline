@@ -21,10 +21,10 @@ abstract class BaseCubeFragment : BaseLoginScrollContainerFragment() {
 
     abstract fun loadDetail(ownCube: OwnCube)
 
-    lateinit var viewModel: CubeViewModel
+    lateinit var cubeViewModel: CubeViewModel
     override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
-        viewModel.cube.observe(viewLifecycleOwner, {
+        cubeViewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
+        cubeViewModel.ownCube.observe(viewLifecycleOwner, {
             it?.let { loadDetail(it) }
         })
     }

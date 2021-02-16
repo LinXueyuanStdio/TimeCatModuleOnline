@@ -19,9 +19,6 @@ import com.timecat.layout.ui.standard.navi.BottomBarIvTextTab
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.game.cube.fragment.*
-import com.timecat.module.user.game.cube.fragment.detail.CubeAttrFragment
-import com.timecat.module.user.game.cube.fragment.detail.CubeEquipFragment
-import com.timecat.module.user.game.cube.fragment.detail.CubeSkillFragment
 import com.timecat.module.user.game.cube.vm.CubeViewModel
 import com.timecat.module.user.view.TopicCard
 import com.xiaojinzi.component.anno.RouterAnno
@@ -49,10 +46,10 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         viewModel = ViewModelProvider(this).get(CubeViewModel::class.java)
-        viewModel.cube.observe(this, {
+        viewModel.ownCube.observe(this, {
             it?.let { loadDetail(it) }
         })
-        viewModel.cubes.observe(this, {
+        viewModel.ownCubes.observe(this, {
             if (it.isEmpty()) {
                 LogUtil.se("没有持有任何方块!")
                 mStatefulLayout?.showEmpty("没有持有任何方块！")
@@ -69,8 +66,6 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
                 val tab = BottomBarIvTextTab(this@AllOwnCubeActivity, icon, title)
                 mBottomBar.addItem(tab)
             }
-            viewModel.cube.postValue(it[0])
-            viewModel.block.postValue(it[0].cube)
         })
         card = TopicCard(this)
         card.placeholder.updateLayoutParams<ConstraintLayout.LayoutParams> {
@@ -85,9 +80,9 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
             override fun onTabSelected(position: Int, prePosition: Int) {
                 LogUtil.sd("select $position, $prePosition")
                 //选中时触发
-                val cube = viewModel.cubes.value!![position]
-                viewModel.cube.postValue(cube)
-                viewModel.block.postValue(cube.cube)
+                val cube = viewModel.ownCubes.value!![position]
+                viewModel.ownCube.postValue(cube)
+                viewModel.cube.postValue(cube.cube)
             }
 
             override fun onTabUnselected(position: Int) {}
@@ -113,10 +108,10 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
         requestOwnCube {
             query = I().allOwnCube()
             onSuccess = {
-                viewModel.cubes.postValue(it)
+                viewModel.loadAllCube(it)
             }
             onEmpty = {
-                viewModel.cubes.postValue(listOf())
+                viewModel.loadAllCube(listOf())
             }
             onError = {
                 mStatefulLayout?.showError("出错啦") {
