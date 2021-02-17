@@ -1,5 +1,6 @@
 package com.timecat.module.user.game.cube.fragment.detail
 
+import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -9,11 +10,12 @@ import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.data.bmob.data.game.OwnItem
 import com.timecat.data.bmob.ext.bmob.requestOwnItem
 import com.timecat.data.bmob.ext.bmob.useItem
-import com.timecat.element.alert.ToastUtil
 import com.timecat.layout.ui.business.form.MaterialButton
 import com.timecat.module.user.R
 import com.timecat.module.user.ext.simpleErrorCallback
 import com.timecat.module.user.game.cube.*
+import com.timecat.module.user.view.dsl.Content
+import com.timecat.module.user.view.item.ContentItem
 import com.timecat.module.user.view.item.CubeLevelItem
 
 /**
@@ -29,14 +31,20 @@ import com.timecat.module.user.view.item.CubeLevelItem
  * @usage null
  */
 class CubeAttrFragment : BaseCubeFragment() {
+    lateinit var contentItem: ContentItem
     lateinit var cubeLevelBar: CubeLevelItem
     override fun loadDetail(ownCube: OwnCube) {
         container.apply {
             cubeLevelBar = CubeLevelBar(ownCube.maxLevel, ownCube.exp)
+            contentItem = Content(ownCube.cube.content)
             if (ownCube.reachMaxExp()) {
-                MaterialButton("突破") { onLevelBreak() }
+                MaterialButton("突破") {
+                    onLevelBreak()
+                }
             } else {
-                MaterialButton("升级") { onLevelUp() }
+                MaterialButton("升级") {
+                    onLevelUp(it as TextView)
+                }
             }
         }
     }
@@ -47,13 +55,13 @@ class CubeAttrFragment : BaseCubeFragment() {
         requireActivity().showLevelBreakDialog(level, exp)
     }
 
-    fun onLevelUp() {
-        fetchExpItems(I()) {
+    fun onLevelUp(button: TextView) {
+        fetchExpItems(button, I()) {
+            button.hideProgress()
             val level = cubeViewModel.maxLevel.value ?: 1
             val exp = cubeViewModel.exp.value ?: 0L
             val id = cubeViewModel.objectId.value ?: ""
             requireActivity().showLevelUpDialog(level, exp, it) { dialog, btn, expOwnItem, count ->
-                btn.showProgress()
                 cubeViewModel.attachLifecycle = useItem<Any?>(expOwnItem.objectId, count, id) {
                     onSuccess = {
                         val fakeExp = id2exp(expOwnItem.objectId) * count
@@ -70,33 +78,36 @@ class CubeAttrFragment : BaseCubeFragment() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        cubeViewModel.cubeLevelBar.observe(this) {
-            LogUtil.e("$it")
-            val (maxLevel, exp) = it
-            cubeLevelBar.maxLevel = maxLevel
-            cubeLevelBar.exp = exp
+        cubeViewModel.cubeLevelBar.observe(viewLifecycleOwner) {
+            if (::cubeLevelBar.isInitialized) {
+                val (maxLevel, exp) = it
+                cubeLevelBar.maxLevel = maxLevel
+                cubeLevelBar.exp = exp
+            }
+        }
+        cubeViewModel.cube.observe(viewLifecycleOwner) {
+            if (::contentItem.isInitialized) {
+                contentItem.setRichText(it.content)
+            }
         }
     }
 
-    fun fetchExpItems(user: User, useItems: (List<OwnItem>) -> Unit) {
-        mStatefulLayout?.showLoading()
+    fun fetchExpItems(button: TextView, user: User, useItems: (List<OwnItem>) -> Unit) {
+        button.showProgress()
         cubeViewModel.attachLifecycle = requestOwnItem {
             query = user.allOwnExpItem()
             onEmpty = {
-                mStatefulLayout?.showContent()
                 MaterialDialog(requireActivity()).show {
                     message(text = "未持有任何经验！")
                     positiveButton(R.string.ok)
                 }
             }
-            onError = {
-                mStatefulLayout?.showContent()
-                ToastUtil.e("出现错误：$it")
-            }
             onSuccess = {
-                mStatefulLayout?.showContent()
+                button.hideProgress("升级")
                 useItems(it)
             }
+            onError = simpleErrorCallback
+            onComplete = { button.hideProgress("升级") }
         }
     }
 }

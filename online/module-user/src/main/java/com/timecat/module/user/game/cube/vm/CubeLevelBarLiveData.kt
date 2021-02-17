@@ -15,17 +15,14 @@ class CubeLevelBarLiveData(
     val maxLevel: MutableLiveData<Int>
 ) : MediatorLiveData<Pair<Int, Long>>() {
     init {
-        addSource(exp) {
-            val currentMaxLevel: Int = value?.first ?: 1
-            val currentExp = exp.value ?: 0
-            val v = currentMaxLevel to currentExp
-            postValue(v)
-        }
-        addSource(maxLevel) {
-            val currentMaxLevel: Int = maxLevel.value ?: 1
-            val currentExp = value?.second ?: 0
-            val v = currentMaxLevel to currentExp
-            postValue(v)
-        }
+        addSource(exp) { updateValue() }
+        addSource(maxLevel) { updateValue() }
+    }
+
+    private fun updateValue() {
+        val currentMaxLevel: Int = maxLevel.value ?: 1
+        val currentExp: Long = exp.value ?: 0
+        val v = currentMaxLevel to currentExp
+        postValue(v)
     }
 }

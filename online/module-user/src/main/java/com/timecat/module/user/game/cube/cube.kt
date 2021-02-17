@@ -115,8 +115,7 @@ object CubeLevel {
 }
 
 fun OwnCube.reachMaxExp(): Boolean {
-    val (level, _) = CubeLevel.getLevel(exp)
-    return exp >= CubeLevel.expAccLimit(level)
+    return CubeLevel.needExpToMax(exp, maxLevel) <= 1
 }
 
 fun ViewGroup.CubeLevelBar(

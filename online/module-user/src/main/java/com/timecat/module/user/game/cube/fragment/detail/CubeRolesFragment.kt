@@ -1,17 +1,11 @@
 package com.timecat.module.user.game.cube.fragment.detail
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.data.bmob.ext.bmob.requestBlockRelation
 import com.timecat.data.bmob.ext.net.findAllRole
-import com.timecat.module.user.adapter.DetailAdapter
-import com.timecat.module.user.adapter.block.RoleItem
-import com.timecat.module.user.base.login.BaseLoginListFragment
-import com.timecat.module.user.game.cube.vm.CubeViewModel
-import java.util.*
+import com.timecat.module.user.ext.AvatarHead
 
 /**
  * @author 林学渊
@@ -21,15 +15,16 @@ import java.util.*
  * 创建者，关注，点赞数等
  * @usage null
  */
-class CubeRolesFragment : BaseLoginListFragment() {
+class CubeRolesFragment : BaseCubeFragment() {
 
-    private fun loadDetail(cube: OwnCube) {
-        val block = cube.cube
-        requestBlockRelation {
+    override fun loadDetail(ownCube: OwnCube) {
+        val block = ownCube.cube
+        mStatefulLayout?.showLoading()
+        cubeViewModel.attachLifecycle = requestBlockRelation {
             query = block.findAllRole()
             onError = {
                 mStatefulLayout?.showError {
-                    loadDetail(cube)
+                    loadDetail(ownCube)
                 }
             }
             onEmpty = {
@@ -45,32 +40,13 @@ class CubeRolesFragment : BaseLoginListFragment() {
 
     var roles: List<Block> = listOf()
         set(value) {
-            val list = value.map { RoleItem(requireActivity(), it) }
-            adapter.reload(list)
+            container.apply {
+                removeAllViews()
+                value.forEach {
+                    AvatarHead("R.drawable.ic_launcher", it.title, it.content)
+                }
+            }
             field = value
         }
 
-    lateinit var viewModel: CubeViewModel
-    override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
-        viewModel.ownCube.observe(viewLifecycleOwner, {
-            it?.let { loadDetail(it) }
-        })
-    }
-
-    lateinit var adapter: DetailAdapter
-
-    override fun getAdapter(): RecyclerView.Adapter<*> {
-        adapter = DetailAdapter(ArrayList())
-        return adapter
-    }
-
-    //第一次不加载啦，交给 ViewModel
-    override fun loadData() {
-        mRefreshLayout.isRefreshing = false
-    }
-
-    override fun onRefresh() {
-        viewModel.ownCube.value?.let { loadDetail(it) }
-    }
 }
