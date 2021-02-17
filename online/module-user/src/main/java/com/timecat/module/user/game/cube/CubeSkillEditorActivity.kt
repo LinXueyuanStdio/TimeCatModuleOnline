@@ -15,6 +15,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  */
 @RouterAnno(hostAndPath = RouterHub.USER_CubeSkillEditorActivity)
 class CubeSkillEditorActivity : BaseCubeAddActivity() {
+    override fun title(): String = "技能"
     override fun release() {
         TODO("Not yet implemented")
     }
@@ -35,7 +36,4 @@ class CubeSkillEditorActivity : BaseCubeAddActivity() {
         TODO("Not yet implemented")
     }
 
-    override fun title(): String {
-        TODO("Not yet implemented")
-    }
 }

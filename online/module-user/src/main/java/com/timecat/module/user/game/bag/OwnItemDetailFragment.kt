@@ -13,8 +13,10 @@ import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Body
+import com.timecat.layout.ui.business.form.MaterialButton
 import com.timecat.layout.ui.layout.dp
 import com.timecat.module.user.R
+import com.timecat.module.user.game.cube.isExpItem
 import com.timecat.module.user.game.item.StepSliderButton
 import com.timecat.module.user.game.item.buildRewardListItem
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -69,33 +71,13 @@ class OwnItemDetailFragment : ItemDetailFragment() {
         apply(super.data(head))
         val count = ownItem.count
         Body("拥有 $count")
-        StepSliderButton("使用", count) { button, value ->
-            button.isEnabled = false
-            val params = mutableMapOf<String, Any>()
-            params["ownItemId"] = ownItem.objectId
-            params["count"] = value
-            AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
-                MaterialDialog(requireActivity()).show {
-                    title(text = "获得了")
-                    val head2 = DataItemBlock.fromJson(head.structure)
-                    val num = head2.num
-                    val prefix = when (head2.where) {
-                        WHERE_UserExp -> "经验"
-                        WHERE_UserWater -> "体力"
-                        WHERE_UserCharge -> "源石"
-                        WHERE_UserMoneyCharge -> "付费源石"
-                        WHERE_UserCurrency -> "元石"
-                        WHERE_UserStar -> "飞星"
-                        else -> ""
-                    }
-                    message(text = "$prefix $num")
-                    positiveButton(R.string.ok)
-                    this@OwnItemDetailFragment.dismiss()
-                }
-            }, {
-                button.isEnabled = true
-                errUsingItem(it)
-            })
+        MaterialButton("使用") { button ->
+            val id = ownItem.item.objectId
+            val path: String = when {
+                isExpItem(id) -> RouterHub.USER_AllOwnCubeActivity
+                else -> RouterHub.USER_AllOwnCubeActivity
+            }
+            NAV.go(path)
         }
     }
 
@@ -152,6 +134,10 @@ class OwnItemDetailFragment : ItemDetailFragment() {
     override fun cube(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.cube(head))
         val count = ownItem.count
+        Body("拥有 $count")
+        if (count > 0) {
+            Body("多余的方块将转化为混沌石")
+        }
         Body("拥有 $count")
         StepSliderButton("使用", count) { button, value ->
             button.isEnabled = false

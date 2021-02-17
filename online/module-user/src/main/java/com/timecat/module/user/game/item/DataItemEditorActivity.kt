@@ -61,8 +61,9 @@ class DataItemEditorActivity : BaseItemAddActivity() {
         add(
             formData.iconItem to 0,
             formData.titleItem to 1,
-            formData.whereItem to 2,
-            formData.numItem to 3,
+            formData.tableNameItem to 2,
+            formData.whereItem to 3,
+            formData.numItem to 4,
         )
     }
 
@@ -70,8 +71,11 @@ class DataItemEditorActivity : BaseItemAddActivity() {
         inputLayout(formData.titleItem.inputLayout) {
             isNotEmpty().description("请输入名称!")
         }
+        inputLayout(formData.tableNameItem.inputLayout) {
+            isNotEmpty().description("请输入表!")
+        }
         inputLayout(formData.whereItem.inputLayout) {
-            isNotEmpty().description("请输入字段名称!")
+            isNotEmpty().description("请输入字段!")
         }
         inputLayout(formData.numItem.inputLayout) {
             isNotEmpty().description("请输入数量!")

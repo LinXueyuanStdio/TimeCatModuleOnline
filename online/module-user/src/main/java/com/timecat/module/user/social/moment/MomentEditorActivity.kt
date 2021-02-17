@@ -1,23 +1,18 @@
 package com.timecat.module.user.social.moment
 
-import android.view.View
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.Comment
 import com.timecat.data.bmob.ext.Moment
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.isRelays
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
-import com.timecat.identity.data.block.CommentBlock
 import com.timecat.identity.data.block.MomentBlock
-import com.timecat.identity.data.block.SimpleComment
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.base.BaseArticleBlockEditorActivity
+import com.timecat.module.user.view.BlockHerfView
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.android.synthetic.main.user_activity_moment_add.*
 
 /**
  * @author 林学渊
@@ -55,7 +50,8 @@ class MomentEditorActivity : BaseArticleBlockEditorActivity() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         relay?.let {
-            block_herf.visibility = View.VISIBLE
+            val block_herf = BlockHerfView(context)
+            container.addView(block_herf, 0)
             block_herf.bindBlock(it)
             emojiEditText.hint = "转发 @${it.user.nickName}"
         }

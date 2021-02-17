@@ -38,7 +38,7 @@ class CubeDetailFragment : BaseLoginTabsFragment() {
 
     class DetailAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getCount(): Int {
-            return 5
+            return 2 //TODO 目前实现的只有前两个
         }
 
         override fun getItem(position: Int): Fragment {

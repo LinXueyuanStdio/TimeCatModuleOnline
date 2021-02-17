@@ -13,11 +13,8 @@ import com.xiaojinzi.component.anno.RouterAnno
  */
 @RouterAnno(hostAndPath = RouterHub.USER_CubeStarEditorActivity)
 class CubeStarEditorActivity : BaseComplexEditorActivity() {
+    override fun title(): String = "星级"
     override fun release() {
-        TODO("Not yet implemented")
-    }
-
-    override fun title(): String {
         TODO("Not yet implemented")
     }
 }

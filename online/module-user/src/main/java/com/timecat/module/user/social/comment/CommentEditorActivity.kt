@@ -1,10 +1,8 @@
 package com.timecat.module.user.social.comment
 
-import android.view.View
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Comment
-import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.isRelays
 import com.timecat.element.alert.ToastUtil
@@ -12,9 +10,9 @@ import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseArticleBlockEditorActivity
+import com.timecat.module.user.view.BlockHerfView
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.android.synthetic.main.user_activity_moment_add.*
 
 /**
  * @author 林学渊
@@ -92,9 +90,11 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         parent?.let {
-            block_herf.visibility = View.VISIBLE
+            val block_herf = BlockHerfView(context)
+            container.addView(block_herf, 0)
             block_herf.bindBlock(relay ?: it)
-            emojiEditText.hint = relay?.let { "转发 @${it.user.nickName}" } ?: "回复 @${it.user.nickName}"
+            emojiEditText.hint = relay?.let { "转发 @${it.user.nickName}" }
+                ?: "回复 @${it.user.nickName}"
         }
         comment?.let {
             replyBlockId = it.title

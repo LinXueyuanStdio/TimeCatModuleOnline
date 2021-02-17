@@ -1,10 +1,12 @@
 package com.timecat.module.user.base
 
 
+import androidx.lifecycle.ViewModelProvider
 import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.game.OwnItem
 import com.timecat.data.bmob.ext.bmob.requestOwnItem
 import com.timecat.module.user.adapter.game.OwnItemItem
+import com.timecat.module.user.game.bag.vm.ItemViewModel
 
 /**
  * @author 林学渊
@@ -18,8 +20,13 @@ abstract class BaseEndlessOwnItemFragment : BaseEndlessListFragment() {
     abstract fun name(): String
     abstract fun query(): AVQuery<OwnItem>
 
+    lateinit var itemViewModel: ItemViewModel
+    override fun initViewAfterLogin() {
+        itemViewModel = ViewModelProvider(requireActivity()).get(ItemViewModel::class.java)
+    }
+
     override fun loadFirst() {
-        requestOwnItem {
+        itemViewModel.attachLifecycle = requestOwnItem {
             query = query().apply {
                 setLimit(pageSize)
                 setSkip(offset)
@@ -36,13 +43,14 @@ abstract class BaseEndlessOwnItemFragment : BaseEndlessListFragment() {
                     OwnItemItem(activity, it)
                 }
                 adapter.reload(items)
+                itemViewModel.loadPagedOwnItems(it)
                 mStatefulLayout?.showContent()
             }
         }
     }
 
     override fun loadMore() {
-        requestOwnItem {
+        itemViewModel.attachLifecycle = requestOwnItem {
             query = query().apply {
                 setLimit(pageSize)
                 setSkip(offset)
@@ -59,6 +67,7 @@ abstract class BaseEndlessOwnItemFragment : BaseEndlessListFragment() {
                     OwnItemItem(activity, it)
                 }
                 adapter.onLoadMoreComplete(items)
+                itemViewModel.loadPagedOwnItems(it)
                 mStatefulLayout?.showContent()
             }
         }

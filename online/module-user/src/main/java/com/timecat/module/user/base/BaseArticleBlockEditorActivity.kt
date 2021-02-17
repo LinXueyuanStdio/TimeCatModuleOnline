@@ -1,9 +1,5 @@
 package com.timecat.module.user.base
 
-import android.view.View
-import com.timecat.module.user.R
-import com.timecat.module.user.view.BlockHerfView
-
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
@@ -12,28 +8,4 @@ import com.timecat.module.user.view.BlockHerfView
  * @usage 简化添加 社区 block 流程
  */
 abstract class BaseArticleBlockEditorActivity : BaseBlockEditorActivity() {
-
-    override fun layout(): Int = R.layout.user_activity_moment_add
-
-    lateinit var add_pos: View
-    lateinit var privacy: View
-    lateinit var block_herf: BlockHerfView
-
-    override fun bindView() {
-        super.bindView()
-        add_pos = findViewById(R.id.add_pos)
-        privacy = findViewById(R.id.privacy)
-        block_herf = findViewById(R.id.block_herf)
-    }
-
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
-        add_pos.setOnClickListener {
-
-        }
-
-        privacy.setOnClickListener {
-
-        }
-    }
 }

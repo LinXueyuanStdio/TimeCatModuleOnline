@@ -26,10 +26,7 @@ fun Block.simpleAvatar(): String {
             val appBlock = AppBlock.fromJson(structure)
             appBlock.header.avatar
         }
-        BLOCK_MOMENT -> "R.drawable.ic_cloud_white_24dp"
-        BLOCK_TOPIC -> "R.drawable.ic_cloud_white_24dp"
-        BLOCK_TAG -> "R.drawable.ic_cloud_white_24dp"
-        else -> "R.drawable.ic_cloud_white_24dp"
+        else -> "R.drawable.ic_launcher"
     }
 }
 

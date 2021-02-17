@@ -34,10 +34,13 @@ abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
                     block2Item(it)
                 }
                 adapter.updateDataSet(items)
+                hookLoad(it)
                 mStatefulLayout?.showContent()
             }
         }
     }
+
+    open fun hookLoad(it: List<Block>) {}
 
     open fun block2Item(block: Block): BaseItem<out BaseDetailVH> {
         return BlockSmallItem(this, block)
@@ -59,6 +62,7 @@ abstract class BaseEndlessBlockActivity : BaseEndlessListActivity() {
                 val items = it.map {
                     block2Item(it)
                 }
+                hookLoad(it)
                 adapter.onLoadMoreComplete(items)
                 mStatefulLayout?.showContent()
             }

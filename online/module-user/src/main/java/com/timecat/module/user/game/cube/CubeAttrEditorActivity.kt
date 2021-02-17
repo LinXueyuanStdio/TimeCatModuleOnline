@@ -16,8 +16,6 @@ class CubeAttrEditorActivity : BaseComplexEditorActivity() {
     override fun release() {
         TODO("Not yet implemented")
     }
+    override fun title(): String = "属性"
 
-    override fun title(): String {
-        TODO("Not yet implemented")
-    }
 }

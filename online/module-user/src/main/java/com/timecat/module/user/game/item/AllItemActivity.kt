@@ -1,6 +1,7 @@
 package com.timecat.module.user.game.item
 
 import android.view.Menu
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.timecat.component.router.app.NAV
@@ -10,6 +11,7 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.game.ItemItem
 import com.timecat.module.user.base.BaseEndlessBlockActivity
+import com.timecat.module.user.game.bag.vm.ItemViewModel
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -27,6 +29,9 @@ class AllItemActivity : BaseEndlessBlockActivity() {
     override fun getLayoutManager(): RecyclerView.LayoutManager {
         return GridLayoutManager(context, 4)
     }
+
+    override var pageSize: Int = 100
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_add, menu)
         menu?.apply {

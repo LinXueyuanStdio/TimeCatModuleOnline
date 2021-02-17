@@ -77,7 +77,7 @@ abstract class BaseEndlessListActivity : BaseLoginListActivity() {
         adapter.updateItem(notMoreItem, Payload.NO_MORE_LOAD)
     }
 
-    var pageSize = 10
+    open var pageSize = 10
     var offset = 0
 
     fun load() {

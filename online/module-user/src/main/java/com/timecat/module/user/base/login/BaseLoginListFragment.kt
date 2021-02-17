@@ -33,6 +33,7 @@ abstract class BaseLoginListFragment : BaseStatefulRefreshListFragment() {
             mStatefulLayout?.showContent()
             userViewModel.loadUser(I)
             initViewAfterLogin()
+            super.lazyInit()
         }
     }
 

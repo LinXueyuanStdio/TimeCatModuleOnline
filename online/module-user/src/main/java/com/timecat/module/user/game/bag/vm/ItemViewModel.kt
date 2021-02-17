@@ -2,6 +2,7 @@ package com.timecat.module.user.game.bag.vm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnItem
 import com.timecat.module.user.ext.RxViewModel
 import com.timecat.module.user.game.cube.isExpItem
@@ -13,9 +14,14 @@ import com.timecat.module.user.game.cube.isExpItem
  * @description null
  * @usage null
  */
-class OwnItemViewModel : RxViewModel() {
+class ItemViewModel : RxViewModel() {
     /**
      * 所有物品
+     */
+    val items: MutableLiveData<List<Block>> = MutableLiveData()
+
+    /**
+     * 所有拥有的物品
      */
     val ownItems: MutableLiveData<List<OwnItem>> = MutableLiveData()
 
@@ -30,7 +36,7 @@ class OwnItemViewModel : RxViewModel() {
     val ownExpItems: MutableLiveData<List<OwnItem>> = MutableLiveData()
 
     val itemMap: MutableMap<String, MutableLiveData<OwnItem>> = mutableMapOf()
-    fun loadPagedOwnItems(key: String, own: List<OwnItem>) {
+    fun loadPagedOwnItems(own: List<OwnItem>) {
         for (i in own) {
             setOwnItem(i)
         }

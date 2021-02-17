@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -115,17 +116,17 @@ fun ViewGroup.StepSliderButton(
     text: String,
     maxCount: Int = 2,
     defaultCount: Int = 1,
-    onClick: (View, count: Int) -> Unit
+    onClick: (TextView, count: Int) -> Unit
 ): Button {
     if (maxCount <= defaultCount) {
-        return MaterialButton(text) { onClick(it, defaultCount) }
+        return MaterialButton(text) { onClick(it as TextView, defaultCount) }
     }
     val stepSliderItem = StepSlide(
         from = 1f, to = maxCount.toFloat(), step = 1f,
         defaultValue = defaultCount.toFloat()
     )
     val button = MaterialButton("$text $defaultCount") {
-        onClick(it, stepSliderItem.value.toInt())
+        onClick(it as TextView, stepSliderItem.value.toInt())
     }
     stepSliderItem.onSlide {
         button.text = "${text} ${it.toInt()}"
