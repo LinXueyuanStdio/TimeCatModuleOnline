@@ -1,1 +1,1 @@
-[{"attrKey":["mEmail"],"attrType":"java.lang.String"},{"attrKey":["mPhone"],"attrType":"java.lang.String"},{"attrKey":["mUsername"],"attrType":"java.lang.String"},{"attrKey":["type"],"attrType":"java.lang.String"}]
+[{"attrKey":["type"],"attrType":"java.lang.String"},{"attrKey":["mPhone"],"attrType":"java.lang.String"},{"attrKey":["mUsername"],"attrType":"java.lang.String"},{"attrKey":["mEmail"],"attrType":"java.lang.String"}]

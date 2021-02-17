@@ -138,7 +138,6 @@ class OwnItemDetailFragment : ItemDetailFragment() {
         if (count > 0) {
             Body("多余的方块将转化为混沌石")
         }
-        Body("拥有 $count")
         StepSliderButton("使用", count) { button, value ->
             button.isEnabled = false
             val params = mutableMapOf<String, Any>()
@@ -147,7 +146,7 @@ class OwnItemDetailFragment : ItemDetailFragment() {
             AVCloud.callFunctionInBackground<Any?>("useItem", params).subscribe({
                 MaterialDialog(requireActivity()).show {
                     title(text = "使用成功")
-                    message(text = "多余的方块将转化为混沌石")
+                    message(text = "多余的方块已转化为混沌石")
                     positiveButton(R.string.ok)
                     this@OwnItemDetailFragment.dismiss()
                 }

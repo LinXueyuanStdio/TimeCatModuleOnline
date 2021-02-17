@@ -16,9 +16,9 @@ import com.timecat.identity.data.block.SimpleComment
 import com.timecat.identity.data.block.type.BLOCK_COMMENT
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.timecat.module.user.view.BlockHerfView
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
-import kotlinx.android.synthetic.main.user_activity_moment_add.*
 
 /**
  * @author 林学渊
@@ -96,7 +96,8 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         parent?.let {
-            block_herf.visibility = View.VISIBLE
+            val block_herf = BlockHerfView(context)
+            container.addView(block_herf, 0)
             block_herf.bindBlock(relay ?: it)
             emojiEditText.hint = relay?.let { "转发 @${it.user.nickName}" } ?: "回复 @${it.user.nickName}"
         }

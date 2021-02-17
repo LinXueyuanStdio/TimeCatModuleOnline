@@ -14,6 +14,7 @@ import com.timecat.data.bmob.ext.*
 import com.timecat.data.bmob.ext.bmob.*
 import com.timecat.data.bmob.ext.net.*
 import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.block.IdentityBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.*
 import com.timecat.layout.ui.business.setting.ContainerItem
@@ -130,9 +131,10 @@ class AddIdentityActivity : BaseBlockEditorActivity() {
 
     override fun subtype(): Int = 0
 
-    override fun savableBlock(): Block = I() create Role {
+    override fun savableBlock(): Block = I() create Identity {
         title = formData.title
         content = formData.content
+        headerBlock = getHeadBlock()
     }
 
     override fun onSaveSuccess(it: Block) {
@@ -142,6 +144,11 @@ class AddIdentityActivity : BaseBlockEditorActivity() {
     override fun updatableBlock(): Block.() -> Unit = {
         title = formData.title
         content = formData.content
+        structure = getHeadBlock().toJson()
+    }
+
+    fun getHeadBlock():IdentityBlock {
+        return IdentityBlock()
     }
 
     override fun onUpdateSuccess(it: Block) {

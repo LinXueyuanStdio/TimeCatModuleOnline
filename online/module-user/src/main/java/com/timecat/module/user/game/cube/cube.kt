@@ -163,43 +163,6 @@ fun FragmentActivity.showLevelBreakDialog(
     }
 }
 
-fun roundRectSolidDrawableBuilder(solidColor: Int) = DrawableBuilder()
-    .rectangle()
-    .rounded()
-    .cornerRadius(5.dp)
-    .solidColor(solidColor)
-
-fun roundRectStrokeDrawableBuilder(strokeColor: Int) = DrawableBuilder()
-    .rectangle()
-    .rounded()
-    .cornerRadius(5.dp)
-    .strokeColor(strokeColor)
-
-fun roundRectDashedDrawableBuilder(strokeColor: Int) = DrawableBuilder()
-    .rectangle()
-    .rounded()
-    .hairlineBordered()
-    .cornerRadius(5.dp)
-    .dashed()
-    .strokeColor(strokeColor)
-
-fun roundRectSelector(
-    colorDefault: Int = COLOR_DEFAULT
-): Drawable {
-    val layer5 = roundRectDashedDrawableBuilder(colorDefault).build()
-    val normalState = layer5
-    val selectedState = roundRectSolidDrawableBuilder(colorDefault).build()
-    val disabledState = roundRectDashedDrawableBuilder(Color.GRAY).build()
-    val pressedState = LayerDrawableBuilder()
-        .add(layer5)
-        .inset(10).build()
-    return StateListDrawableBuilder()
-        .normal(normalState)
-        .pressed(pressedState)
-        .selected(selectedState)
-        .disabled(disabledState)
-        .build()
-}
 
 /**
  * 显示升级窗口

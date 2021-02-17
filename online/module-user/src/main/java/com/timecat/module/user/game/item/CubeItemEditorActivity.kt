@@ -12,6 +12,7 @@ import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.CubeItemBlock
+import com.timecat.identity.data.block.IdentityBlock
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.type.ITEM_Cube
 import com.timecat.identity.readonly.RouterHub
@@ -116,8 +117,8 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
                 val cube = items[idx]
                 formData.title = cube.title
                 formData.blockId = cube.objectId
-                formData.content = cube.content
-                val head = ItemBlock.fromJson(cube.structure)
+                formData.content = "${cube.content}\n使用后获得方块：${cube.title}"
+                val head = IdentityBlock.fromJson(cube.structure)
                 formData.icon = head.header.avatar
             }
         }
