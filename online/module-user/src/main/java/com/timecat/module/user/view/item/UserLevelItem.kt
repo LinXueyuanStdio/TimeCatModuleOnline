@@ -112,9 +112,10 @@ open class UserLevelItem @JvmOverloads constructor(
         }
     var fakeExp: Long = 1
         set(value) {
-            val progress = value.coerceIn(exp, expBar.max.toLong() - exp)
-            expBar.secondaryProgress = progress.toFloat()
-            field = progress
+            val curExp = expBar.progress
+            val progress = (curExp + value).coerceIn(curExp, expBar.max)
+            expBar.secondaryProgress = progress
+            field = progress.toLong()
         }
 
     open var getLevel: (Long) -> Pair<Int, Long> = { Level.getLevel(it) }

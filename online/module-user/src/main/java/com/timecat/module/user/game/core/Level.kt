@@ -99,7 +99,11 @@ object Level {
      * 等级为 level 时的最大累计经验值限制
      */
     fun expAccLimit(level: Int, expLimitFunc: (level: Int) -> Long = { expLimit(it) }): Long {
-        return (0..level).map { expLimitFunc(it) }.sum()
+        var sum: Long = 0
+        for (i in 0..level) {
+            sum += expLimitFunc(i)
+        }
+        return sum
     }
 
     /**

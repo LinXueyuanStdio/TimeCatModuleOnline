@@ -30,14 +30,18 @@ class UserDetailFragment : BaseLoginScrollContainerFragment() {
     lateinit var traceItem: View
     override fun loadDetail(user: User) {
         container.apply {
-            contentItem = Content(user.intro)
-            userRelationItem = UserRelation()
-            contributionItem = Contribution()
+            if (!::contentItem.isInitialized) {
+                contentItem = Content(user.intro)
+                userRelationItem = UserRelation()
+                contributionItem = Contribution()
+            }
             if (user.objectId == UserDao.getCurrentUser()?.objectId) {
-                traceItem = Next("浏览记录") {
-                    NAV.raw(activity, RouterHub.USER_AllTraceActivity)
-                        .putParcelable("user", user)
-                        .forward()
+                if (!::traceItem.isInitialized) {
+                    traceItem = Next("浏览记录") {
+                        NAV.raw(activity, RouterHub.USER_AllTraceActivity)
+                            .putParcelable("user", user)
+                            .forward()
+                    }
                 }
             }
         }

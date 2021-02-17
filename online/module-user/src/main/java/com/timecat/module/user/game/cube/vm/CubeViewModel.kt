@@ -1,13 +1,12 @@
 package com.timecat.module.user.game.cube.vm
 
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.data.bmob.ext.bmob.requestOneOwnCube
 import com.timecat.data.bmob.ext.net.oneOwnCubeOf
 import com.timecat.identity.data.block.IdentityBlock
+import com.timecat.module.user.ext.RxViewModel
 
 /**
  * @author 林学渊
@@ -16,7 +15,7 @@ import com.timecat.identity.data.block.IdentityBlock
  * @description null
  * @usage null
  */
-class CubeViewModel : ViewModel() {
+class CubeViewModel : RxViewModel() {
     /**
      * 所有方块
      */
@@ -44,6 +43,7 @@ class CubeViewModel : ViewModel() {
     val equipment_5: MutableLiveData<Block?> = MutableLiveData()
     val equipment_6: MutableLiveData<Block?> = MutableLiveData()
     val head: MutableLiveData<IdentityBlock> = MutableLiveData()
+    val cubeLevelBar: CubeLevelBarLiveData = CubeLevelBarLiveData(exp, maxLevel)
 
     fun loadAllCube(own: List<OwnCube>) {
         if (own.isEmpty()) {
@@ -88,6 +88,5 @@ class CubeViewModel : ViewModel() {
         }
     }
 
-    val cubeLevelBar: CubeLevelBarLiveData = CubeLevelBarLiveData(exp, maxLevel)
 
 }

@@ -1,7 +1,10 @@
 package com.timecat.module.user.ext
 
 import cn.leancloud.AVObject
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.commonsdk.utils.string.StringUtil
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.service.DataError
 import org.joda.time.DateTime
 import java.util.*
 
@@ -16,4 +19,9 @@ fun AVObject.friendlyUpdateTimeText(): String = friendlyTimeText(updatedAt)
 fun AVObject.friendlyCreateTimeText(): String = friendlyTimeText(createdAt)
 fun friendlyTimeText(time: Date): String {
     return StringUtil.friendlyTime(DateTime(time))
+}
+
+val simpleErrorCallback: (DataError) -> Unit = {
+    ToastUtil.e_long("发生错误：$it")
+    LogUtil.e("发生错误：$it")
 }

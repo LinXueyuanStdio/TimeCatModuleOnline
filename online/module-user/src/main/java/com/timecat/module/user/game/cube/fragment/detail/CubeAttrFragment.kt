@@ -1,6 +1,9 @@
 package com.timecat.module.user.game.cube.fragment.detail
 
 import com.afollestad.materialdialogs.MaterialDialog
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showProgress
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.data.bmob.data.game.OwnItem
@@ -9,6 +12,7 @@ import com.timecat.data.bmob.ext.bmob.useItem
 import com.timecat.element.alert.ToastUtil
 import com.timecat.layout.ui.business.form.MaterialButton
 import com.timecat.module.user.R
+import com.timecat.module.user.ext.simpleErrorCallback
 import com.timecat.module.user.game.cube.*
 import com.timecat.module.user.view.item.CubeLevelItem
 
@@ -48,17 +52,17 @@ class CubeAttrFragment : BaseCubeFragment() {
             val level = cubeViewModel.maxLevel.value ?: 1
             val exp = cubeViewModel.exp.value ?: 0L
             val id = cubeViewModel.objectId.value ?: ""
-            requireActivity().showLevelUpDialog(level, exp, it) { dialog, expOwnItem, count ->
-                useItem<Any?>(expOwnItem.objectId, count, id) {
+            requireActivity().showLevelUpDialog(level, exp, it) { dialog, btn, expOwnItem, count ->
+                btn.showProgress()
+                cubeViewModel.attachLifecycle = useItem<Any?>(expOwnItem.objectId, count, id) {
                     onSuccess = {
                         val fakeExp = id2exp(expOwnItem.objectId) * count
                         val trueExp = cubeViewModel.exp.value ?: 0L + fakeExp
                         cubeViewModel.exp.postValue(trueExp)
                         dialog.dismiss()
                     }
-                    onError = {
-                        ToastUtil.e_long("发生错误：$it")
-                    }
+                    onError = simpleErrorCallback
+                    onComplete = { btn.hideProgress() }
                 }
             }
         }
@@ -67,6 +71,7 @@ class CubeAttrFragment : BaseCubeFragment() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         cubeViewModel.cubeLevelBar.observe(this) {
+            LogUtil.e("$it")
             val (maxLevel, exp) = it
             cubeLevelBar.maxLevel = maxLevel
             cubeLevelBar.exp = exp
@@ -75,7 +80,7 @@ class CubeAttrFragment : BaseCubeFragment() {
 
     fun fetchExpItems(user: User, useItems: (List<OwnItem>) -> Unit) {
         mStatefulLayout?.showLoading()
-        requestOwnItem {
+        cubeViewModel.attachLifecycle = requestOwnItem {
             query = user.allOwnExpItem()
             onEmpty = {
                 mStatefulLayout?.showContent()

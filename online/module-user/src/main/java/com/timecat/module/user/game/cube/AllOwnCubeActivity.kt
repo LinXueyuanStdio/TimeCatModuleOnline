@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
+import cn.leancloud.AVQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
@@ -106,7 +107,9 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
 
     override fun fetch() {
         requestOwnCube {
-            query = I().allOwnCube()
+            query = I().allOwnCube().apply {
+                cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
+            }
             onSuccess = {
                 viewModel.loadAllCube(it)
             }

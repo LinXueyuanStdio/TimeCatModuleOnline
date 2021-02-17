@@ -3,6 +3,7 @@ package com.timecat.module.user.social.topic.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.module.user.ext.RxViewModel
 
 /**
  * @author 林学渊
@@ -11,6 +12,6 @@ import com.timecat.data.bmob.data.common.Block
  * @description null
  * @usage null
  */
-class TopicViewModel : ViewModel() {
+class TopicViewModel : RxViewModel() {
     val topic: MutableLiveData<Block?> = MutableLiveData()
 }

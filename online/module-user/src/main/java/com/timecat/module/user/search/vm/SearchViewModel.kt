@@ -2,6 +2,7 @@ package com.timecat.module.user.search.vm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.timecat.module.user.ext.RxViewModel
 
 /**
  * @author 林学渊
@@ -10,6 +11,6 @@ import androidx.lifecycle.ViewModel
  * @description null
  * @usage null
  */
-class SearchViewModel : ViewModel() {
+class SearchViewModel : RxViewModel() {
     val searchText: MutableLiveData<String> = MutableLiveData()
 }

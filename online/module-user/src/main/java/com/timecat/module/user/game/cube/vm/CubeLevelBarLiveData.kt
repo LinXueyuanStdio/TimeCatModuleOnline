@@ -11,8 +11,8 @@ import androidx.lifecycle.MutableLiveData
  * @usage null
  */
 class CubeLevelBarLiveData(
-    exp: MutableLiveData<Long>,
-    maxLevel: MutableLiveData<Int>
+    val exp: MutableLiveData<Long>,
+    val maxLevel: MutableLiveData<Int>
 ) : MediatorLiveData<Pair<Int, Long>>() {
     init {
         addSource(exp) {
