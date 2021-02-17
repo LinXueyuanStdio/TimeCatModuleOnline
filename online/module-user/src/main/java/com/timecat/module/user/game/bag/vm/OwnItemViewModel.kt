@@ -3,6 +3,7 @@ package com.timecat.module.user.game.bag.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.timecat.data.bmob.data.game.OwnItem
+import com.timecat.module.user.ext.RxViewModel
 import com.timecat.module.user.game.cube.isExpItem
 
 /**
@@ -12,7 +13,7 @@ import com.timecat.module.user.game.cube.isExpItem
  * @description null
  * @usage null
  */
-class OwnItemViewModel : ViewModel() {
+class OwnItemViewModel : RxViewModel() {
     /**
      * 所有物品
      */

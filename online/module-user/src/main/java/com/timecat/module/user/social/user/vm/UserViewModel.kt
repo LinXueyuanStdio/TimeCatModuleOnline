@@ -3,6 +3,7 @@ package com.timecat.module.user.social.user.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.timecat.data.bmob.data.User
+import com.timecat.module.user.ext.RxViewModel
 import java.util.*
 
 /**
@@ -12,7 +13,7 @@ import java.util.*
  * @description 用户上下文
  * @usage null
  */
-class UserViewModel : ViewModel() {
+class UserViewModel : RxViewModel() {
     val user: MutableLiveData<User?> = MutableLiveData()
 
     var intro: MutableLiveData<String> = MutableLiveData()

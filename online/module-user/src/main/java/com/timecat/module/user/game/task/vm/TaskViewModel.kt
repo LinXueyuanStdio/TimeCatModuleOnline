@@ -8,6 +8,7 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnActivity
 import com.timecat.identity.data.base.IStatus
 import com.timecat.identity.data.block.type.*
+import com.timecat.module.user.ext.RxViewModel
 import com.timecat.module.user.game.task.channal.TaskChannel
 
 /**
@@ -17,7 +18,7 @@ import com.timecat.module.user.game.task.channal.TaskChannel
  * @description null
  * @usage null
  */
-class TaskViewModel : ViewModel() {
+class TaskViewModel : RxViewModel() {
     /**
      * 所有活动
      */
