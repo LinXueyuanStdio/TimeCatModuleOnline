@@ -6,9 +6,13 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
+import androidx.core.view.updateLayoutParams
+import androidx.recyclerview.widget.RecyclerView
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
@@ -23,9 +27,6 @@ import com.timecat.module.user.R
 import com.timecat.module.user.adapter.ImageAdapter
 import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
-import kotlinx.android.synthetic.main.header_app_layout_detail.view.*
-import kotlinx.android.synthetic.main.header_moment_detail.view.userSection
-import kotlinx.android.synthetic.main.user_base_item_comment_header.view.*
 
 /**
  * @author 林学渊
@@ -45,46 +46,79 @@ class AppView @JvmOverloads constructor(
     init {
         init(context)
     }
+    lateinit var placeholder: View
+    
+    lateinit var icon: ImageView
+    lateinit var appname: TextView
+    
+    lateinit var downloadSum: TextView
+    lateinit var download: TextView
+    lateinit var commentSum: TextView
+    lateinit var focusSum: TextView
+    lateinit var focus: TextView
+    
+    lateinit var preface: RecyclerView
+    lateinit var introDetail: TextView
+    
+    lateinit var userHead: UserHeadView
+    lateinit var share: ShareView
 
     private fun init(context: Context, layout: Int = R.layout.header_app_layout_detail) {
         val inflater = LayoutInflater.from(context)
         root = inflater.inflate(layout, this)
-        root.focus.tag = "关注"
+        
+        placeholder = root.findViewById(R.id.placeholder)
+        
+        icon = root.findViewById(R.id.icon)
+        appname = root.findViewById(R.id.appname)
+
+        downloadSum = root.findViewById(R.id.downloadSum)
+        download = root.findViewById(R.id.download)
+        commentSum = root.findViewById(R.id.commentSum)
+        focusSum = root.findViewById(R.id.focusSum)
+        focus = root.findViewById(R.id.focus)
+
+        preface = root.findViewById(R.id.preface)
+        introDetail = root.findViewById(R.id.introDetail)
+
+        userHead = root.findViewById(R.id.userSection)
+        share = root.findViewById(R.id.share)
+
+        orientation = VERTICAL
     }
 
+    fun setPlaceholderHeight(height: Int) {
+        placeholder.updateLayoutParams<LayoutParams> {
+            this.height = height
+        }
+    }
     class InitItem(var title: String)
 
     /**
      * 必须调用，初始化
      */
     fun bindBlock(block: Block, onInit: (InitItem) -> Unit) {
-        setCommentSum(block.comments)
         initAvater(root, block)
         initStatistic(root, block)
-        initFocusButton(root, block)
-        root.introDetail.setText(block.content)
+        initFocusButton(block)
+        introDetail.setText(block.content)
         val app = AppBlock.fromJson(block.structure)
         initByAppBlock(root, block.subtype, app, onInit)
-        root.userSection.bindBlock(block.user)
-    }
-
-    fun setCommentSum(count: Int) {
-        root.commentSumTitle.text = "评论 ($count)"
-        root.commentSum.text = "$count 评论"
+        userHead.bindBlock(block.user)
     }
 
     private fun initAvater(root: View, block: Block) {
-        LOAD.image("R.drawable.ic_launcher", root.icon)
-        root.appname.text = block.title
+        LOAD.image("R.drawable.ic_launcher", icon)
+        appname.text = block.title
     }
 
-    private fun initFocusButton(root: View, block: Block) {
+    private fun initFocusButton(block: Block) {
         block.focusSum {
-            root.focusSum.text = "${it} 关注"
+            focusSum.text = "${it} 关注"
         }
-        setupFollowBlockButton(context, root.focus, block) {
+        setupFollowBlockButton(context, focus, block) {
             block.focusSum {
-                root.focusSum.text = "${it} 关注"
+                focusSum.text = "${it} 关注"
             }
         }
     }
@@ -93,23 +127,23 @@ class AppView @JvmOverloads constructor(
         requestBlockCount {
             query = block.findAllComment()
             onSuccess = {
-                root.commentSum.text = "$it 评论"
+                commentSum.text = "$it 评论"
             }
         }
-        root.downloadSum.text = "${block.usedBy} 浏览"
+        downloadSum.text = "${block.usedBy} 浏览"
     }
 
     private fun initByAppBlock(root: View, subtype: Int, app: AppBlock, onInit: (InitItem) -> Unit) {
         app.mediaScope?.let {
-            root.preface.adapter = ImageAdapter(it.getPhoto())
+            preface.adapter = ImageAdapter(it.getPhoto())
         }
         when (subtype) {
             APP_AndroidApp -> {
                 val androidApp = AndroidApp.fromJson(app.structure)
                 onInit(InitItem("Android 应用"))
                 initByAndroidApp(root, androidApp)
-                root.download.text = "下载"
-                root.download.setShakelessClickListener {
+                download.text = "下载"
+                download.setShakelessClickListener {
                     ToastUtil.w("暂不可用")
                 }
             }
@@ -117,8 +151,8 @@ class AppView @JvmOverloads constructor(
                 val webApp = WebApp.fromJson(app.structure)
                 onInit(InitItem("网页"))
                 initByWebApp(root, webApp)
-                root.download.text = "访问"
-                root.download.setShakelessClickListener {
+                download.text = "访问"
+                download.setShakelessClickListener {
                     HERF.gotoUrl(context, app.url)
                 }
             }
@@ -126,8 +160,8 @@ class AppView @JvmOverloads constructor(
                 val iOSApp = iOSApp.fromJson(app.structure)
                 onInit(InitItem("iOS 应用"))
                 initByiOSApp(root, iOSApp)
-                root.download.text = "下载"
-                root.download.setShakelessClickListener {
+                download.text = "下载"
+                download.setShakelessClickListener {
                     ToastUtil.w("暂不可用")
                 }
             }
@@ -135,8 +169,8 @@ class AppView @JvmOverloads constructor(
                 val macApp = MacApp.fromJson(app.structure)
                 onInit(InitItem("Mac 应用"))
                 initByMacApp(root, macApp)
-                root.download.text = "下载"
-                root.download.setShakelessClickListener {
+                download.text = "下载"
+                download.setShakelessClickListener {
                     ToastUtil.w("暂不可用")
                 }
             }
@@ -144,8 +178,8 @@ class AppView @JvmOverloads constructor(
                 val linuxApp = LinuxApp.fromJson(app.structure)
                 onInit(InitItem("Linux 应用"))
                 initByLinuxApp(root, linuxApp)
-                root.download.text = "下载"
-                root.download.setShakelessClickListener {
+                download.text = "下载"
+                download.setShakelessClickListener {
                     ToastUtil.w("暂不可用")
                 }
             }
@@ -153,8 +187,8 @@ class AppView @JvmOverloads constructor(
                 val windowsApp = WindowsApp.fromJson(app.structure)
                 onInit(InitItem("Windows 应用"))
                 initByWindowsApp(root, windowsApp)
-                root.download.text = "下载"
-                root.download.setShakelessClickListener {
+                download.text = "下载"
+                download.setShakelessClickListener {
                     ToastUtil.w("暂不可用")
                 }
             }
@@ -162,8 +196,8 @@ class AppView @JvmOverloads constructor(
                 val pluginApp = PluginApp.fromJson(app.structure)
                 onInit(InitItem("插件管理器"))
                 initByPluginApp(root, pluginApp, false)
-                root.download.text = "下载"
-                root.download.setShakelessClickListener {
+                download.text = "下载"
+                download.setShakelessClickListener {
                     ToastUtil.w("暂不可用")
                 }
             }
@@ -171,8 +205,8 @@ class AppView @JvmOverloads constructor(
                 val pluginApp = PluginApp.fromJson(app.structure)
                 onInit(InitItem("云插件"))
                 initByPluginApp(root, pluginApp, true)
-                root.download.text = "下载"
-                root.download.setShakelessClickListener {
+                download.text = "下载"
+                download.setShakelessClickListener {
                     ToastUtil.w("暂不可用")
                 }
             }
@@ -181,63 +215,32 @@ class AppView @JvmOverloads constructor(
     }
 
     private fun initByAndroidApp(root: View, androidApp: AndroidApp) {
-        root.version.text = androidApp.latestVersion
-        root.rom.text = androidApp.minROM
-        root.updateDetail.setText(androidApp.updateInfo!!)
+
     }
 
     private fun initByWebApp(root: View, webApp: WebApp) {
-        root.rom.visibility = View.GONE
-        root.version.visibility = View.GONE
-        root.updateInfo.visibility = View.GONE
-        root.updateDetail.visibility = View.GONE
-        root.preface.visibility = View.GONE
+
     }
 
     private fun initByiOSApp(root: View, iOSApp: iOSApp) {
-        root.rom.visibility = View.GONE
-        root.version.visibility = View.GONE
 
-        root.updateInfo.visibility = View.GONE
-        root.updateDetail.visibility = View.GONE
-        root.preface.visibility = View.GONE
     }
 
     private fun initByMacApp(root: View, macApp: MacApp) {
-        root.rom.visibility = View.GONE
-        root.version.visibility = View.GONE
-        root.updateInfo.visibility = View.GONE
-        root.updateDetail.visibility = View.GONE
-        root.preface.visibility = View.GONE
+
     }
 
     private fun initByLinuxApp(root: View, linuxApp: LinuxApp) {
-        root.rom.visibility = View.GONE
-        root.version.visibility = View.GONE
-        root.updateInfo.visibility = View.GONE
-        root.updateDetail.visibility = View.GONE
-        root.preface.visibility = View.GONE
+
     }
 
     private fun initByWindowsApp(root: View, windowsApp: WindowsApp) {
-        root.rom.visibility = View.GONE
-        root.version.visibility = View.GONE
-        root.updateInfo.visibility = View.GONE
-        root.updateDetail.visibility = View.GONE
-        root.preface.visibility = View.GONE
+
     }
 
     private fun initByPluginApp(root: View, pluginApp: PluginApp, isPlugin: Boolean) {
 
-        root.rom.visibility = View.GONE
-        root.version.visibility = View.VISIBLE
-        root.version.text = pluginApp.updateInfo.first().version_name
-        root.updateInfo.visibility = View.VISIBLE
-        root.updateDetail.visibility = View.VISIBLE
-        root.updateDetail.setText(pluginApp.updateInfo.first().updateInfo)
-        root.preface.visibility = View.GONE
-
-        root.download.text = "下载"
+        download.text = "下载"
 
         val s: PluginService? = NAV.service(PluginService::class.java)
 
@@ -253,7 +256,7 @@ class AppView @JvmOverloads constructor(
             }
         }
         checkDownloadButtonStatus(pluginApp.packageName)
-        root.download.setOnClickListener {
+        download.setOnClickListener {
             s?.apply {
                 val input = object : PluginService.InputToPlugin {
                     override fun downloadUrl(): String {
@@ -290,18 +293,18 @@ class AppView @JvmOverloads constructor(
                 }
                 val output = object : PluginService.OutputFromPlugin {
                     override fun onDownloadSuccess() {
-                        if (root.download != null) {
-                            root.download.post {
-                                root.download.isEnabled = true
+                        if (download != null) {
+                            download.post {
+                                download.isEnabled = true
                                 checkDownloadButtonStatus(pluginApp.packageName)
                             }
                         }
                     }
 
                     override fun onDownloadFail(s: String) {
-                        if (root.download != null) {
-                            root.download.post {
-                                root.download.isEnabled = true
+                        if (download != null) {
+                            download.post {
+                                download.isEnabled = true
                                 ToastUtil.e(s)
                                 checkDownloadButtonStatus(pluginApp.packageName)
                             }
@@ -309,13 +312,13 @@ class AppView @JvmOverloads constructor(
                     }
 
                     override fun setEnabled(enabled: Boolean) {
-                        root.download.isEnabled = enabled
+                        download.isEnabled = enabled
                     }
 
                     override fun onEnterFail(s: String) {
-                        if (root.download != null) {
-                            root.download.post {
-                                root.download.isEnabled = true
+                        if (download != null) {
+                            download.post {
+                                download.isEnabled = true
                                 ToastUtil.e(s)
                                 checkDownloadButtonStatus(pluginApp.packageName)
                             }
@@ -323,9 +326,9 @@ class AppView @JvmOverloads constructor(
                     }
 
                     override fun onEnterComplete() {
-                        if (root.download != null) {
-                            root.download.post {
-                                root.download.isEnabled = true
+                        if (download != null) {
+                            download.post {
+                                download.isEnabled = true
                                 checkDownloadButtonStatus(pluginApp.packageName)
                             }
                         }
@@ -341,7 +344,7 @@ class AppView @JvmOverloads constructor(
                     }
 
                     override fun onDownloadStart() {
-                        root.download.text = "下载中"
+                        download.text = "下载中"
                     }
                 }
                 start(input, output)

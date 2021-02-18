@@ -30,35 +30,15 @@ class BlockHerfView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
     @StyleRes defStyleRes: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
-    lateinit var root: View
-
-    init {
-        init(context)
-    }
-
-    lateinit var userSection: LinearLayout
-    lateinit var focusUser: Button
-    lateinit var userHead: ImageView
-    lateinit var userName: TextView
-    private fun init(context: Context, layout: Int = R.layout.user_base_item_user_herf) {
-        val inflater = LayoutInflater.from(context)
-        root = inflater.inflate(layout, this)
-        userSection = root.findViewById(R.id.userSection)
-        focusUser = root.findViewById(R.id.focusUser)
-        userHead = root.findViewById(R.id.userHead)
-        userName = root.findViewById(R.id.userName)
-        focusUser.tag = "关注"
-    }
-
+) : UserHerfView(context, attrs, defStyleAttr, defStyleRes) {
     /**
      * 必须调用，初始化
      */
     fun bindBlock(block: Block) {
-        userName.text = block.title
+        title = "@${block.user.nickName}\n${block.content}"
+        icon = block.simpleAvatar()
         setupFollowBlockButton(context, focusUser, block)
-        LOAD.image(block.simpleAvatar(), userHead)
-        userSection.setShakelessClickListener {
+        setShakelessClickListener {
             block.showDetail()
         }
     }

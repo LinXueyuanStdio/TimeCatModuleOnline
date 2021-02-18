@@ -99,7 +99,7 @@ fun setupFollowUserButton(
 
 fun setupFollowBlockButton(
     context: Context,
-    button: Button,
+    button: TextView,
     block: Block,
     needRefresh: (() -> Unit)? = null
 ) {

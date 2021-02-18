@@ -57,10 +57,10 @@ class TopicDetailCollapseActivity : BaseBlockDetailActivity() {
     }
 
     override fun fetch() {
-        viewModel attach requestOneBlock {
+        blockViewModel attach requestOneBlock {
             query = oneBlockOf(blockId)
             onSuccess = {
-                viewModel.block.postValue(it)
+                blockViewModel.block.postValue(it)
             }
             onError = {
                 mStatefulLayout?.showError("出错啦") {

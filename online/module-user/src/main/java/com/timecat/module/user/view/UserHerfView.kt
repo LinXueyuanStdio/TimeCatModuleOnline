@@ -28,7 +28,7 @@ import com.timecat.module.user.view.widget.UserCircleImageView
  * @description null
  * @usage null
  */
-class UserHerfView @JvmOverloads constructor(
+open class UserHerfView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,

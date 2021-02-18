@@ -1,6 +1,5 @@
 package com.timecat.module.user.social.moment
 
-import com.google.android.material.appbar.AppBarLayout
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
@@ -50,10 +49,10 @@ class MomentDetailActivity : BaseBlockDetailActivity() {
         setupCollapse { card.userHead.height }
     }
     override fun fetch() {
-        viewModel attach requestOneBlock {
+        blockViewModel attach requestOneBlock {
             query = oneBlockOf(blockId)
             onSuccess = {
-                viewModel.block.postValue(it)
+                blockViewModel.block.postValue(it)
             }
             onError = {
                 mStatefulLayout?.showError("出错啦") {

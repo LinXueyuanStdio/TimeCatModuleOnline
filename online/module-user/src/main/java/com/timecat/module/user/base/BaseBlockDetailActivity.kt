@@ -6,14 +6,13 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
-import com.timecat.module.user.social.app.fragment.CommentListFragment
 import com.timecat.module.user.social.common.BlockViewModel
+import com.timecat.module.user.social.common.CommentListFragment
 import com.timecat.module.user.social.common.LikeListFragment
 import com.timecat.module.user.social.common.RelayListFragment
 import com.timecat.module.user.social.share.showMore
@@ -30,7 +29,7 @@ import com.timecat.module.user.view.ToolbarHeadView
 abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
     override fun routerInject() = NAV.inject(this)
 
-    lateinit var viewModel: BlockViewModel
+    lateinit var blockViewModel: BlockViewModel
     lateinit var userHerf: ToolbarHeadView
     lateinit var footer: CommentFooterView
     lateinit var more: View
@@ -44,8 +43,8 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        viewModel = ViewModelProvider(this).get(BlockViewModel::class.java)
-        viewModel.block.observe(this, {
+        blockViewModel = ViewModelProvider(this).get(BlockViewModel::class.java)
+        blockViewModel.block.observe(this, {
             it?.let { loadDetail(it) }
         })
     }
