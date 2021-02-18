@@ -75,6 +75,11 @@
         tools:text="用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述"
         tools:visibility="visible" />
 
+    <com.timecat.module.user.view.ShareView
+        android:id="@+id/share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <include layout="@layout/user_base_item_separate_10dp" />
 
 </LinearLayout>

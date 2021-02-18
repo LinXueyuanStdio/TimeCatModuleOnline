@@ -7,7 +7,6 @@ import androidx.appcompat.widget.PopupMenu
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
-import com.timecat.component.commonsdk.extension.beVisible
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.commonsdk.utils.LetMeKnow
 import com.timecat.component.commonsdk.utils.override.LogUtil
@@ -29,7 +28,6 @@ import com.timecat.identity.data.block.type.BLOCK_POST
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
 import com.timecat.layout.ui.layout.setShakelessClickListener
-import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.block.util.CopyToClipboard
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailItem
@@ -58,7 +56,7 @@ class BlockItem(
 ) : BaseDetailItem<BlockItem.DetailVH>(block.objectId) {
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
-        val headView:UserHeadView = root.findViewById(R.id.head)
+        val headView: UserHeadView = root.findViewById(R.id.head)
     }
 
     override fun getLayoutRes(): Int = R.layout.user_moment_item_main
@@ -105,6 +103,11 @@ class BlockItem(
     private fun setHeader(holder: DetailVH, block: Block) {
         val user = block.user
         holder.headView.bindBlock(user)
+        if (!TextUtils.isEmpty(block.user.intro)) {
+            holder.headView.content = "$timeString | ${block.user.intro}"
+        } else {
+            holder.headView.content = timeString
+        }
         holder.headView.moreView.setShakelessClickListener {
             PopupMenu(activity, it).apply {
                 inflate(R.menu.social_head)
@@ -151,11 +154,11 @@ class BlockItem(
             avatarView.setShakelessClickListener {
                 GO.forumDetail(block.objectId)
             }
-            titleView.setText(block.title)
+            title = block.title
             titleView.setShakelessClickListener {
                 GO.forumDetail(block.objectId)
             }
-            contentView.setText("$updateTimeString")
+            content = updateTimeString
             contentView.setShakelessClickListener {
                 GO.forumDetail(block.objectId)
             }

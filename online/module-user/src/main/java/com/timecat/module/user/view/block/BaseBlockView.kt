@@ -1,4 +1,4 @@
-package com.timecat.module.user.view
+package com.timecat.module.user.view.block
 
 import android.app.Activity
 import android.content.Context
@@ -27,6 +27,9 @@ import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.friendlyCreateTimeText
 import com.timecat.module.user.ext.mySpanCreateListener
+import com.timecat.module.user.view.MomentHerfView
+import com.timecat.module.user.view.ShareView
+import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.item.BigContentItem
 import kotlinx.android.synthetic.main.header_moment_detail.view.*
 import kotlinx.android.synthetic.main.user_base_item_comment_header.view.*
@@ -46,7 +49,6 @@ abstract class BaseBlockView @JvmOverloads constructor(
     @StyleRes defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-
     init {
         init(context)
     }
@@ -58,6 +60,7 @@ abstract class BaseBlockView @JvmOverloads constructor(
     lateinit var circle_image_container: BGANinePhotoLayout
     lateinit var position: TextView
     lateinit var momentHerf: MomentHerfView
+    lateinit var share: ShareView
 
     private fun init(context: Context, layout: Int = R.layout.header_moment_detail) {
         val inflater = LayoutInflater.from(context)
@@ -68,6 +71,7 @@ abstract class BaseBlockView @JvmOverloads constructor(
         circle_image_container = root.findViewById(R.id.circle_image_container)
         momentHerf = root.findViewById(R.id.momentHerf)
         position = root.findViewById(R.id.position)
+        share = root.findViewById(R.id.share)
     }
 
     protected lateinit var activity: Activity
@@ -82,6 +86,10 @@ abstract class BaseBlockView @JvmOverloads constructor(
         placeholder.updateLayoutParams<LayoutParams> {
             this.height = height
         }
+    }
+
+    protected open fun setShare(block: Block) {
+        share.blockId = block.objectId
     }
 
     protected open fun setHead(block: Block) {

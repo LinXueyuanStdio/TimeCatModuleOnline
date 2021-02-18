@@ -65,7 +65,7 @@
                             android:id="@+id/user_herf"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:visibility="invisible" />
+                            />
                     </com.timecat.page.base.view.BlurringToolbar>
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>

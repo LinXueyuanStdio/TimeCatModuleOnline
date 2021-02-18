@@ -1,4 +1,4 @@
-package com.timecat.module.user.view
+package com.timecat.module.user.view.block
 
 import android.app.Activity
 import android.content.Context
@@ -7,7 +7,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.block.PostBlock
-import kotlinx.android.synthetic.main.header_moment_detail.view.*
+import com.timecat.module.user.view.block.BaseBlockView
 
 /**
  * @author 林学渊
@@ -29,5 +29,6 @@ class PostView @JvmOverloads constructor(
         setRichTextView(root, block.content, head.atScope, head.topicScope)
         setMediaScope(root, head.mediaScope)
         setPosScope(root, head.posScope)
+        setShare(block)
     }
 }

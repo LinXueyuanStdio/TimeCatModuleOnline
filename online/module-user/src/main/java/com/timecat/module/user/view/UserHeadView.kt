@@ -9,18 +9,18 @@ import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.timecat.component.commonsdk.extension.beVisible
 import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.User
+import com.timecat.layout.ui.layout.dp
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
-import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.game.core.level
 import com.timecat.module.user.view.dsl.roundGrayDrawable
 import com.timecat.module.user.view.dsl.setupFollowUserButton
-import kotlinx.android.synthetic.main.user_block_cube_item.view.*
 
 /**
  * @author 林学渊
@@ -57,8 +57,12 @@ class UserHeadView @JvmOverloads constructor(
         followView = root.findViewById(R.id.head_follow)
         moreView = root.findViewById(R.id.head_more)
 
-        levelView.background = roundGrayDrawable()
+        levelView.background = roundGrayDrawable(Attr.getBackgroundDarkestColor(context))
         followView.background = roundGrayDrawable(Attr.getAccentColor(context))
+        isFocusableInTouchMode = false
+        val dp_10 = 10.dp
+        val dp_8 = 8.dp
+        setPadding(dp_10, dp_10, dp_10, dp_8)
     }
 
     var icon: String = ""
@@ -76,6 +80,7 @@ class UserHeadView @JvmOverloads constructor(
     var content: String = ""
         set(value) {
             contentView.text = value
+            contentView.beVisible()
             field = value
         }
     var level: Int = 1

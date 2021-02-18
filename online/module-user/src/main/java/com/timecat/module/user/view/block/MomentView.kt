@@ -1,4 +1,4 @@
-package com.timecat.module.user.view
+package com.timecat.module.user.view.block
 
 import android.app.Activity
 import android.content.Context
@@ -29,5 +29,6 @@ class MomentView @JvmOverloads constructor(
         setMediaScope(root, head.mediaScope)
         setRelayScope(root, head.relayScope)
         setPosScope(root, head.posScope)
+        setShare(block)
     }
 }

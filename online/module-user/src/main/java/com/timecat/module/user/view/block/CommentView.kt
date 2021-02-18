@@ -1,4 +1,4 @@
-package com.timecat.module.user.view
+package com.timecat.module.user.view.block
 
 import android.app.Activity
 import android.content.Context
@@ -45,5 +45,6 @@ class CommentView @JvmOverloads constructor(
 
             }
         }
+        setShare(block)
     }
 }

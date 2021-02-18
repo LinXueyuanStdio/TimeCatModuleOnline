@@ -1,6 +1,5 @@
 package com.timecat.module.user.social.recommend
 
-import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import com.timecat.data.bmob.data.common.Block
@@ -8,7 +7,7 @@ import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockDetailActivity
-import com.timecat.module.user.view.CommentView
+import com.timecat.module.user.view.block.CommentView
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 

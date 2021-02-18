@@ -1,15 +1,11 @@
 package com.timecat.module.user.social.moment
 
-import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockDetailActivity
-import com.timecat.module.user.view.MomentView
-import com.timecat.module.user.view.PostView
+import com.timecat.module.user.view.block.MomentView
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
