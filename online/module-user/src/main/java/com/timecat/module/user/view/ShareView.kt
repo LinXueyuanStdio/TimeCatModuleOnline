@@ -6,7 +6,11 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
+import com.timecat.component.commonsdk.utils.ShareUtils
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.identity.Attr
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.element.alert.ToastUtil
 import com.timecat.layout.ui.layout.*
 import com.timecat.module.user.R
 import com.timecat.module.user.view.dsl.UserCircleImageView
@@ -33,21 +37,35 @@ class ShareView @JvmOverloads constructor(
         TextView {
             layout_width = wrap_content
             layout_height = wrap_content
-            margin = 10
-            padding = 10
+            margin = 5
+            padding = 5
 
             text = "分享"
             setTextColor(Attr.getSecondaryTextColor(context))
         }
-        CircleImage(R.drawable.ic_qq) {
+        CircleImage(R.drawable.ic_logo_qq) {
+            ShareUtils.shareTextToQQFriend(context, block?.content) {
+                ToastUtil.w_long(it)
+            }
         }
-        CircleImage(R.drawable.ic_wechat) {
+        CircleImage(R.drawable.ic_logo_wechat) {
+            ShareUtils.shareTextToWechatFriend(context, block?.content) {
+                ToastUtil.w_long(it)
+            }
         }
-        CircleImage(R.drawable.ic_category_circle) {
+        CircleImage(R.drawable.ic_logo_moments) {
+            ShareUtils.shareTextToTimeLine(context, block?.content) {
+                ToastUtil.w_long(it)
+            }
         }
-        CircleImage(R.mipmap.twitter) {
+        CircleImage(R.drawable.ic_logo_weibo) {
+            ShareUtils.shareTextToSina(context, block?.content) {
+                ToastUtil.w_long(it)
+            }
         }
-        CircleImage(R.drawable.ic_more_horiz_24dp) {
+        CircleImage(R.drawable.ic_logo_more) {
+            LogUtil.e("share")
+            onShare(it)
         }
     }
 
@@ -64,5 +82,6 @@ class ShareView @JvmOverloads constructor(
         setShakelessClickListener(onClick = onClick)
     }
 
-    var blockId: String = ""
+    var block: Block? = null
+    var onShare: (View) -> Unit = {}
 }

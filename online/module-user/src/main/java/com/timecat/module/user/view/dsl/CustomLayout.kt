@@ -6,6 +6,7 @@ import com.shuyu.textutillib.model.UserModel
 import com.timecat.layout.ui.business.form.wrapContext
 import com.timecat.module.user.view.item.ContentItem
 import com.timecat.module.user.view.item.ContributionItem
+import com.timecat.module.user.view.item.IconTextItem
 import com.timecat.module.user.view.item.UserRelationItem
 import com.timecat.module.user.view.widget.UserCircleImageView
 
@@ -37,6 +38,17 @@ inline fun ViewGroup.Content(
 ): ContentItem {
     val view = ContentItem(style.wrapContext(context))
     view.setRichText(content, nameList, topicList)
+    return view.apply(init).also { if (autoAdd) addView(it) }
+}
+inline fun ViewGroup.IconText(
+    icon: Int,
+    text: String,
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: IconTextItem.() -> Unit = {}
+): IconTextItem {
+    val view = IconTextItem(style.wrapContext(context))
+    view.setIconText(icon, text)
     return view.apply(init).also { if (autoAdd) addView(it) }
 }
 

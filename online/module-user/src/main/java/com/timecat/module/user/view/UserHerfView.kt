@@ -2,14 +2,17 @@ package com.timecat.module.user.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
+import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.User
+import com.timecat.layout.ui.drawabe.selectableItemBackground
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
@@ -48,6 +51,10 @@ class UserHerfView @JvmOverloads constructor(
         titleView = root.findViewById(R.id.userName)
         focusUser = root.findViewById(R.id.focusUser)
         more = root.findViewById(R.id.more)
+
+        gravity = Gravity.CENTER
+        orientation = HORIZONTAL
+        background = selectableItemBackground(context)
     }
 
     var icon: String = ""
@@ -67,14 +74,14 @@ class UserHerfView @JvmOverloads constructor(
     fun bindBlock(user: User) {
         val curUser = UserDao.getCurrentUser()
         if (user.objectId == curUser?.objectId) {
-            focusUser.setOnClickListener(null)
-            titleView.text = "${user.nickName}(我)"
             focusUser.visibility = View.GONE
+            focusUser.setOnClickListener(null)
+            title = "${user.nickName}(我)"
         } else {
-            titleView.text = user.nickName
+            title = user.nickName
             setupFollowUserButton(context, focusUser, user)
         }
-        LOAD.image(user.avatar, avatarView)
+        icon = user.avatar
         setShakelessClickListener {
             GO.userDetail(user.objectId)
         }

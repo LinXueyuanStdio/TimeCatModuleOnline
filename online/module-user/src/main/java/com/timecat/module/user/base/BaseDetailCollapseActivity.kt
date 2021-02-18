@@ -81,6 +81,7 @@ abstract class BaseDetailCollapseActivity : BaseLoginDetailActivity() {
         collapseContainer.addView(card, 0)
         card.updateLayoutParams<CollapsingToolbarLayout.LayoutParams> {
             collapseMode = CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PARALLAX
+            parallaxMultiplier = 0f
         }
     }
 

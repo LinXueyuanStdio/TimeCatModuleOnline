@@ -89,7 +89,7 @@ abstract class BaseBlockView @JvmOverloads constructor(
     }
 
     protected open fun setShare(block: Block) {
-        share.blockId = block.objectId
+        share.block = block
     }
 
     protected open fun setHead(block: Block) {

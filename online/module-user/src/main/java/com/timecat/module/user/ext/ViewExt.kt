@@ -8,8 +8,7 @@ import com.timecat.component.commonsdk.extension.beVisible
 import com.timecat.layout.ui.business.form.wrapContext
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.IconLoader
-import com.timecat.module.user.R
-import kotlinx.android.synthetic.main.user_base_item_user_head.view.*
+import com.timecat.module.user.view.UserHeadView
 
 /**
  * @author 林学渊
@@ -31,11 +30,13 @@ fun ViewGroup.AvatarHead(
     style: Int? = null,
     autoAdd: Boolean = true,
     onClick: (View) -> Unit = {}
-): View = Layout(R.layout.user_base_item_user_head, style, autoAdd).apply {
-    IconLoader.loadIcon(context, head_image, avatar)
-    head_title.setText(title)
-    head_content.setText(content)
-    head_content.beVisible()
-    head_more.beGone()
+): View = UserHeadView(style.wrapContext(context)).apply {
+    icon = avatar
+    this.title = title
+    this.content = content
+    this.levelView.beGone()
+    this.followView.beGone()
+    this.moreView.beGone()
     setShakelessClickListener(onClick = onClick)
-}
+}.also { if (autoAdd) addView(it) }
+
