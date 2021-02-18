@@ -37,12 +37,12 @@ import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.*
 import com.timecat.module.user.permission.PermissionValidator
+import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import kotlinx.android.synthetic.main.user_base_item_footer.view.*
 import kotlinx.android.synthetic.main.user_base_item_moment.view.*
-import kotlinx.android.synthetic.main.user_base_item_user_head.view.*
 import kotlinx.android.synthetic.main.user_moment_item_main.view.*
 
 /**
@@ -57,7 +57,9 @@ class BlockItem(
     var block: Block
 ) : BaseDetailItem<BlockItem.DetailVH>(block.objectId) {
 
-    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter)
+    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
+        val headView:UserHeadView = root.findViewById(R.id.head)
+    }
 
     override fun getLayoutRes(): Int = R.layout.user_moment_item_main
 
@@ -102,81 +104,62 @@ class BlockItem(
     var updateTimeString: String = block.friendlyUpdateTimeText()
     private fun setHeader(holder: DetailVH, block: Block) {
         val user = block.user
-        holder.apply {
-            IconLoader.loadIcon(activity, root.head_image, user.avatar)
-            root.head_image.setShakelessClickListener {
-                GO.userDetail(user.objectId)
-            }
-            root.head_title.setText(user.nickName)
-            root.head_title.setShakelessClickListener {
-                GO.userDetail(user.objectId)
-            }
-            if (!TextUtils.isEmpty(user.intro)) {
-                root.head_content.setText("$timeString | ${user.intro}")
-            } else {
-                root.head_content.setText("$timeString")
-            }
-            root.head_content.beVisible()
-            root.head_content.setShakelessClickListener {
-                GO.userDetail(user.objectId)
-            }
-            root.head_more.setShakelessClickListener {
-                PopupMenu(activity, it).apply {
-                    inflate(R.menu.social_head)
-                    PermissionValidator.checkById("delete_block") {
-                        onAllowed = {
-                            menu.findItem(R.id.delete)?.setVisible(true)
-                        }
+        holder.headView.bindBlock(user)
+        holder.headView.moreView.setShakelessClickListener {
+            PopupMenu(activity, it).apply {
+                inflate(R.menu.social_head)
+                PermissionValidator.checkById("delete_block") {
+                    onAllowed = {
+                        menu.findItem(R.id.delete)?.setVisible(true)
                     }
-                    setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.copy -> {
-                                LetMeKnow.report(LetMeKnow.CLICK_TIMECAT_COPY)
-                                CopyToClipboard.copy(activity, block.content)
-                                true
-                            }
-                            R.id.delete -> {
-                                deleteBlock {
-                                    target = block
-                                    onError = {
-                                        LogUtil.e(it)
-                                        ToastUtil.e("删除出错")
-                                    }
-                                    onSuccess = {
-                                        LogUtil.e(it)
-                                        ToastUtil.ok("删除成功")
-                                    }
-                                }
-                                true
-                            }
-                            else -> false
-                        }
-                    }
-                    show()
                 }
+                setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.copy -> {
+                            LetMeKnow.report(LetMeKnow.CLICK_TIMECAT_COPY)
+                            CopyToClipboard.copy(activity, block.content)
+                            true
+                        }
+                        R.id.delete -> {
+                            deleteBlock {
+                                target = block
+                                onError = {
+                                    LogUtil.e(it)
+                                    ToastUtil.e("删除出错")
+                                }
+                                onSuccess = {
+                                    LogUtil.e(it)
+                                    ToastUtil.ok("删除成功")
+                                }
+                            }
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                show()
             }
         }
     }
 
     private fun setForumHeader(holder: DetailVH, block: Block) {
         val b = ForumBlock.fromJson(block.structure)
-        holder.apply {
+        holder.headView.apply {
             b.header?.let {
-                IconLoader.loadIcon(activity, root.head_image, it.avatar)
+                icon = it.avatar
             }
-            root.head_image.setShakelessClickListener {
+            avatarView.setShakelessClickListener {
                 GO.forumDetail(block.objectId)
             }
-            root.head_title.setText(block.title)
-            root.head_title.setShakelessClickListener {
+            titleView.setText(block.title)
+            titleView.setShakelessClickListener {
                 GO.forumDetail(block.objectId)
             }
-            root.head_content.setText("$updateTimeString")
-            root.head_content.beVisible()
-            root.head_content.setShakelessClickListener {
+            contentView.setText("$updateTimeString")
+            contentView.setShakelessClickListener {
                 GO.forumDetail(block.objectId)
             }
-            root.head_more.setShakelessClickListener {
+            moreView.setShakelessClickListener {
                 PopupMenu(activity, it).apply {
                     inflate(R.menu.social_head)
                     PermissionValidator.checkById("delete_block") {

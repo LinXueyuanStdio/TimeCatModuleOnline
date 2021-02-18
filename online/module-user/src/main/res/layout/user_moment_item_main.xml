@@ -14,7 +14,6 @@
         android:background="@color/master_background_reverse"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -24,18 +23,13 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/end">
 
-        <include layout="@layout/user_base_item_user_head" />
+        <com.timecat.module.user.view.UserHeadView
+            android:id="@+id/head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <include layout="@layout/user_base_item_moment" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:alpha="0.1"
-            android:background="@color/master_background_reverse"
-            app:layout_constraintBottom_toTopOf="@+id/footer" />
 
         <include layout="@layout/user_base_item_footer" />
     </androidx.constraintlayout.widget.ConstraintLayout>

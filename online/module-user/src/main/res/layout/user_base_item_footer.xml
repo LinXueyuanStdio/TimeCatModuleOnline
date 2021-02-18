@@ -19,7 +19,8 @@
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_small">
 
         <ImageView
             android:id="@+id/footer_like_icon"
@@ -29,7 +30,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:src="@drawable/user_ic_love"
-            android:tint="@color/master_icon_view_hint" />
+            app:tint="@color/master_icon_view_hint" />
 
         <TextView
             android:id="@+id/footer_like"
@@ -49,7 +50,8 @@
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_small">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -58,7 +60,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:src="@drawable/ic_comment"
-            android:tint="@color/master_icon_view_hint" />
+            app:tint="@color/master_icon_view_hint" />
 
         <TextView
             android:id="@+id/footer_comment"
@@ -78,7 +80,8 @@
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_small">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -87,7 +90,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:src="@drawable/ic_share_white_24dp"
-            android:tint="@color/master_icon_view_hint" />
+            app:tint="@color/master_icon_view_hint" />
 
         <TextView
             android:id="@+id/footer_share"
