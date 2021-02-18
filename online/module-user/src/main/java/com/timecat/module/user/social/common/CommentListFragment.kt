@@ -1,7 +1,6 @@
-package com.timecat.module.user.game.cube.fragment
+package com.timecat.module.user.social.common
 
 
-import android.view.View
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.findAllComment
 import com.timecat.module.user.base.GO
@@ -15,11 +14,7 @@ import com.timecat.module.user.base.GO
  */
 class CommentListFragment : BaseListFragment() {
     override fun name(): String = "讨论"
-    override fun query() = viewModel.cube.value!!.findAllComment()
-    override fun bindView(view: View) {
-        super.bindView(view)
-        write_response.setText("写评论")
-    }
+    override fun query() = viewModel.block.value!!.findAllComment()
     override fun addNew(block: Block) {
         GO.addCommentFor(block)
     }

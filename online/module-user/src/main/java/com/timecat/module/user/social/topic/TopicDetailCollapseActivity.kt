@@ -5,20 +5,17 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.lifecycle.ViewModelProvider
 import com.timecat.component.router.app.FallBackFragment
-import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.data.block.ForumBlock
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.module.user.base.BaseDetailCollapseActivity
-import com.timecat.module.user.social.topic.fragment.CommentListFragment
-import com.timecat.module.user.social.topic.fragment.MomentListFragment
-import com.timecat.module.user.social.topic.fragment.PostListFragment
+import com.timecat.module.user.base.BaseBlockDetailActivity
+import com.timecat.module.user.social.common.CommentListFragment
+import com.timecat.module.user.social.common.LikeListFragment
+import com.timecat.module.user.social.common.RelayListFragment
 import com.timecat.module.user.social.topic.fragment.TopicDetailFragment
-import com.timecat.module.user.social.topic.vm.TopicViewModel
 import com.timecat.module.user.view.TopicCard
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -32,31 +29,25 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_TopicDetailActivity)
-class TopicDetailCollapseActivity : BaseDetailCollapseActivity() {
+class TopicDetailCollapseActivity : BaseBlockDetailActivity() {
+
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
-    lateinit var viewModel: TopicViewModel
     lateinit var card: TopicCard
-    override fun routerInject() = NAV.inject(this)
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        viewModel = ViewModelProvider(this).get(TopicViewModel::class.java)
-        viewModel.topic.observe(this, {
-            it?.let { loadDetail(it) }
-        })
+
         card = TopicCard(this)
-        card.placeholder.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            height = getStatusBarHeightPlusToolbarHeight()
-        }
+        card.setPlaceholderHeight(getStatusBarHeightPlusToolbarHeight())
         setupHeaderCard(card)
         setupCollapse()
         setupViewPager()
         fetch()
     }
 
-    private fun loadDetail(block: Block) {
-        // 1. 加载头部卡片
+    override fun loadDetail(block: Block) {
+        super.loadDetail(block)
         val headerBlock = ForumBlock.fromJson(block.structure)
         titleString = block.title
         card.apply {
@@ -68,10 +59,10 @@ class TopicDetailCollapseActivity : BaseDetailCollapseActivity() {
     }
 
     override fun fetch() {
-        requestOneBlock {
+        viewModel attach requestOneBlock {
             query = oneBlockOf(blockId)
             onSuccess = {
-                viewModel.topic.postValue(it)
+                viewModel.block.postValue(it)
             }
             onError = {
                 mStatefulLayout?.showError("出错啦") {
@@ -94,8 +85,8 @@ class TopicDetailCollapseActivity : BaseDetailCollapseActivity() {
             return when (position) {
                 0 -> TopicDetailFragment()
                 1 -> CommentListFragment()
-                2 -> PostListFragment()
-                3 -> MomentListFragment()
+                2 -> LikeListFragment()
+                3 -> RelayListFragment()
                 else -> FallBackFragment()
             }
         }
@@ -104,11 +95,10 @@ class TopicDetailCollapseActivity : BaseDetailCollapseActivity() {
             return when (position) {
                 0 -> "详情"
                 1 -> "讨论"
-                2 -> "帖子"
-                3 -> "动态"
+                2 -> "赞"
+                3 -> "转发"
                 else -> super.getPageTitle(position)
             }
         }
     }
-
 }

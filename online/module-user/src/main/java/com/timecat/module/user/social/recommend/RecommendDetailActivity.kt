@@ -1,7 +1,11 @@
 package com.timecat.module.user.social.recommend
 
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestOneBlock
+import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockDetailActivity
 import com.timecat.module.user.view.CommentView
@@ -17,21 +21,42 @@ import com.xiaojinzi.component.anno.RouterAnno
  */
 @RouterAnno(hostAndPath = RouterHub.USER_RecommendDetailActivity)
 class RecommendDetailActivity : BaseBlockDetailActivity() {
+    override fun title(): String = "评分"
+
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
-    lateinit var headerView: CommentView
+    lateinit var card: CommentView
 
-    override fun title(): String = "评论"
-    override fun getDetailBlockId(): String = blockId
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
 
-    override fun getHeaderView(): View {
-        headerView = CommentView(this)
-        return headerView
+        card = CommentView(this)
+        card.placeholder.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            height = getStatusBarHeightPlusToolbarHeight()
+        }
+        setupHeaderCard(card)
+        setupCollapse()
+        setupViewPager()
+        fetch()
     }
 
-    override fun initBlockHeader(block: Block) {
-        headerView.bindBlock(this, block)
+    override fun loadDetail(block: Block) {
+        super.loadDetail(block)
+        card.bindBlock(this, block)
     }
 
+    override fun fetch() {
+        viewModel attach requestOneBlock {
+            query = oneBlockOf(blockId)
+            onSuccess = {
+                viewModel.block.postValue(it)
+            }
+            onError = {
+                mStatefulLayout?.showError("出错啦") {
+                    fetch()
+                }
+            }
+        }
+    }
 }
 

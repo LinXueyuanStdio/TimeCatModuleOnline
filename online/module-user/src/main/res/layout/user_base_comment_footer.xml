@@ -1,79 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:parentTag="android.widget.LinearLayout">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/write_response"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:layout_weight="3"
         android:background="?attr/selectableItemBackground"
-        android:drawableStart="@drawable/ic_edit_24dp"
-        android:drawableTint="@color/master_icon_view"
+        android:drawablePadding="@dimen/margin_small"
         android:gravity="start|center_vertical"
         android:paddingStart="@dimen/micro"
         android:paddingEnd="@dimen/micro"
         android:text="写回复"
         android:textColor="@color/master_textColorPrimary"
+        app:drawableStartCompat="@drawable/ic_edit_24dp"
+        app:drawableTint="@color/master_icon_view"
         tools:targetApi="m" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/comment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
-        android:drawableTop="@drawable/ic_comment"
         android:drawableTint="@color/master_icon_view"
         android:gravity="center"
         android:text="123"
         android:textColor="@color/master_textColorPrimary"
+        app:drawableTopCompat="@drawable/ic_comment"
         tools:targetApi="m" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/like"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
-        android:drawableTop="@drawable/ic_heart"
-        android:drawableTint="@color/master_icon_view"
         android:gravity="center"
         android:text="456"
         android:textColor="@color/master_textColorPrimary"
+        app:drawableTint="@color/master_icon_view"
+        app:drawableTopCompat="@drawable/ic_heart"
         tools:targetApi="m" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/star"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
-        android:drawableTop="@drawable/ic_star"
-        android:drawableTint="@color/master_icon_view"
         android:gravity="center"
         android:text="456"
         android:textColor="@color/master_textColorPrimary"
+        app:drawableTint="@color/master_icon_view"
+        app:drawableTopCompat="@drawable/ic_star"
         tools:targetApi="m" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/share"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
-        android:drawableTop="@drawable/ic_share"
-        android:drawableTint="@color/master_icon_view"
         android:gravity="center"
         android:text="123"
         android:textColor="@color/master_textColorPrimary"
+        app:drawableTint="@color/master_icon_view"
+        app:drawableTopCompat="@drawable/ic_share"
         tools:targetApi="m" />
-</LinearLayout>
+</merge>

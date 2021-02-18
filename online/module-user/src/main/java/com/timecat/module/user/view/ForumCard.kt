@@ -33,35 +33,6 @@ class ForumCard @JvmOverloads constructor(
     lateinit var button: Button
     lateinit var placeholder: View
 
-    var title: String = ""
-        set(value) {
-            titleView.text = value
-            field = value
-        }
-    var desc: String = ""
-        set(value) {
-            descView.text = value
-            field = value
-        }
-    var icon: String = ""
-        set(value) {
-            IconLoader.loadIcon(context, iconView, value)
-        }
-    var buttonText: String = ""
-        set(value) {
-            button.text = value
-            field = value
-        }
-    var buttonColor: Int = Color.WHITE
-        set(value) {
-            button.backgroundTintList = ColorStateList.valueOf(value)
-            field = value
-        }
-    var buttonClick: (View) -> Unit = {}
-        set(value) {
-            button.setShakelessClickListener(onClick = value)
-        }
-
     init {
         layout_width = match_parent
         layout_height = wrap_content
@@ -137,4 +108,36 @@ class ForumCard @JvmOverloads constructor(
             backgroundTintList = ColorStateList.valueOf(Attr.getPrimaryColor(context))
         }
     }
+
+
+    var title: String = ""
+        set(value) {
+            titleView.text = value
+            field = value
+        }
+    var desc: String = ""
+        set(value) {
+            descView.text = value
+            field = value
+        }
+    var icon: String = ""
+        set(value) {
+            IconLoader.loadIcon(context, iconView, value)
+            field = value
+        }
+    var buttonText: String = ""
+        set(value) {
+            button.text = value
+            field = value
+        }
+    var buttonColor: Int = Color.WHITE
+        set(value) {
+            button.backgroundTintList = ColorStateList.valueOf(value)
+            field = value
+        }
+    var buttonClick: (View) -> Unit = {}
+        set(value) {
+            button.setShakelessClickListener(onClick = value)
+        }
+
 }

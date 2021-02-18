@@ -6,6 +6,7 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Comment
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
+import com.timecat.data.bmob.ext.isCommented
 import com.timecat.data.bmob.ext.isRelays
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
@@ -110,14 +111,9 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
     }
 
     override fun onSaveSuccess(it: Block) {
-        if (relay != null) {
-            relay?.isRelays {
-                ToastUtil.ok("评论成功")
-                finish()
-            }
-        } else {
-            ToastUtil.ok("评论成功")
-            finish()
-        }
+        parent?.isCommented()
+        relay?.isRelays()
+        ToastUtil.ok("评论成功")
+        finish()
     }
 }

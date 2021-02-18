@@ -19,21 +19,22 @@
             android:layout_gravity="top"
             android:orientation="horizontal">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/write_response"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="3"
                 android:background="?attr/selectableItemBackground"
-                android:drawableStart="@drawable/ic_edit_24dp"
-                android:drawableTint="@color/master_icon_view"
+                android:drawablePadding="@dimen/margin_small"
                 android:gravity="start|center_vertical"
                 android:padding="10dp"
                 android:paddingStart="@dimen/micro"
                 android:paddingEnd="@dimen/micro"
                 android:text="写回复"
                 android:textColor="@color/master_textColorPrimary"
+                app:drawableStartCompat="@drawable/ic_edit_24dp"
+                app:drawableTint="@color/master_icon_view"
                 tools:targetApi="m" />
         </LinearLayout>
 

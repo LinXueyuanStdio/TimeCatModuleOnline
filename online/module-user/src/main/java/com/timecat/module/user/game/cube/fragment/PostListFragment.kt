@@ -1,5 +1,6 @@
 package com.timecat.module.user.game.cube.fragment
 
+import android.view.View
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.findAllPost
 import com.timecat.module.user.base.GO
@@ -14,6 +15,10 @@ import com.timecat.module.user.base.GO
 class PostListFragment : BaseListFragment() {
     override fun name(): String = "帖子"
     override fun query() = viewModel.cube.value!!.findAllPost()
+    override fun bindView(view: View) {
+        super.bindView(view)
+        write_response.setText("发帖子")
+    }
     override fun addNew(block: Block) {
         GO.addPostFor(block)
     }

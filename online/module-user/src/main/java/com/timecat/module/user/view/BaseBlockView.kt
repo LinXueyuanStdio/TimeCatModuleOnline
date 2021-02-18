@@ -2,12 +2,15 @@ package com.timecat.module.user.view
 
 import android.app.Activity
 import android.content.Context
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
+import androidx.core.view.updateLayoutParams
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
@@ -18,14 +21,14 @@ import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
+import com.timecat.identity.data.block.*
 import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
+import com.timecat.module.user.ext.friendlyCreateTimeText
 import com.timecat.module.user.ext.mySpanCreateListener
+import com.timecat.module.user.view.item.BigContentItem
 import kotlinx.android.synthetic.main.header_moment_detail.view.*
-import kotlinx.android.synthetic.main.header_moment_detail.view.circle_image_container
-import kotlinx.android.synthetic.main.header_moment_detail.view.momentHerf
-import kotlinx.android.synthetic.main.header_moment_detail.view.position
 import kotlinx.android.synthetic.main.user_base_item_comment_header.view.*
 import kotlinx.android.synthetic.main.user_base_item_moment.view.*
 
@@ -42,15 +45,29 @@ abstract class BaseBlockView @JvmOverloads constructor(
     @AttrRes defStyleAttr: Int = 0,
     @StyleRes defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
-    lateinit var root: View
+
 
     init {
         init(context)
     }
 
+    lateinit var root: View
+    lateinit var placeholder: View
+    lateinit var userHead: UserHeadView
+    lateinit var contentItem: BigContentItem
+    lateinit var circle_image_container: BGANinePhotoLayout
+    lateinit var position: TextView
+    lateinit var momentHerf: MomentHerfView
+
     private fun init(context: Context, layout: Int = R.layout.header_moment_detail) {
         val inflater = LayoutInflater.from(context)
         root = inflater.inflate(layout, this)
+        placeholder = root.findViewById(R.id.placeholder)
+        userHead = root.findViewById(R.id.userSection)
+        contentItem = root.findViewById(R.id.moment_content)
+        circle_image_container = root.findViewById(R.id.circle_image_container)
+        momentHerf = root.findViewById(R.id.momentHerf)
+        position = root.findViewById(R.id.position)
     }
 
     protected lateinit var activity: Activity
@@ -61,17 +78,29 @@ abstract class BaseBlockView @JvmOverloads constructor(
      */
     abstract fun bindBlock(activity: Activity, block: Block)
 
-    fun setCommentSum(count: Int) {
-        root.commentSumTitle.text = "评论 ($count)"
+    fun setPlaceholderHeight(height: Int) {
+        placeholder.updateLayoutParams<LayoutParams> {
+            this.height = height
+        }
     }
 
-    fun setRichTextView(
+    protected open fun setHead(block: Block) {
+        userHead.bindBlock(block.user)
+        val timeString: String = block.friendlyCreateTimeText()
+        if (!TextUtils.isEmpty(block.user.intro)) {
+            userHead.content = "$timeString | ${block.user.intro}"
+        } else {
+            userHead.content = timeString
+        }
+    }
+
+    protected open fun setRichTextView(
         headerView: View,
         content: String,
         atScope: AtScope? = null,
         topicScope: TopicScope? = null
     ) {
-        headerView.moment_content.apply {
+        contentItem.apply {
             val color = Attr.getAccentColor(context)
             atColor = color
             topicColor = color
@@ -106,15 +135,13 @@ abstract class BaseBlockView @JvmOverloads constructor(
         }
     }
 
-    fun setMediaScope(
+    protected open fun setMediaScope(
         headerView: View,
         mediaScope: AttachmentTail? = null
     ) {
         mediaScope?.let {
-            headerView.circle_image_container.apply {
-                val datas = it.attachmentItems.map {
-                    it.attachment
-                }
+            circle_image_container.apply {
+                val datas = it.attachmentItems.map { it.attachment }
                 if (datas.isEmpty()) {
                     return@apply
                 }
@@ -151,8 +178,7 @@ abstract class BaseBlockView @JvmOverloads constructor(
         }
     }
 
-
-    fun setRelayScope(
+    protected open fun setRelayScope(
         root: View,
         relayScope: RelayScope? = null
     ) {
@@ -160,8 +186,8 @@ abstract class BaseBlockView @JvmOverloads constructor(
             requestOneBlock {
                 query = oneBlockOf(it.objectId)
                 onSuccess = { data ->
-                    root.momentHerf.apply {
-                        visibility = VISIBLE
+                    momentHerf.apply {
+                        visibility = View.VISIBLE
                         if (data == null) {
                             isNotExist()
                         } else {
@@ -178,12 +204,12 @@ abstract class BaseBlockView @JvmOverloads constructor(
     }
 
 
-    fun setPosScope(
+    protected open fun setPosScope(
         root: View,
         posScope: PosScope? = null
     ) {
         posScope?.let {
-            root.position.visibility = View.VISIBLE
+            position.visibility = View.VISIBLE
         }
     }
 

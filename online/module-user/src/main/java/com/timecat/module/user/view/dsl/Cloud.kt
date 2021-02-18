@@ -32,7 +32,7 @@ import com.timecat.module.user.R
  */
 fun setupFollowUserButton(
     context: Context,
-    button: Button,
+    button: TextView,
     user: User
 ) {
     button.apply {

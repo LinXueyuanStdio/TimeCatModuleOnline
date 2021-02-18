@@ -35,6 +35,7 @@ class CubeAttrFragment : BaseCubeFragment() {
     lateinit var cubeLevelBar: CubeLevelItem
     override fun loadDetail(ownCube: OwnCube) {
         container.apply {
+            container.removeAllViews()
             cubeLevelBar = CubeLevelBar(ownCube.maxLevel, ownCube.exp)
             contentItem = Content(ownCube.cube.content)
             if (ownCube.reachMaxExp()) {

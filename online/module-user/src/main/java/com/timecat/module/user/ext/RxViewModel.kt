@@ -19,6 +19,10 @@ open class RxViewModel : ViewModel() {
             field = value
         }
 
+    infix fun attach(disposable: Disposable?) {
+        attachLifecycle = disposable
+    }
+
     override fun onCleared() {
         disposables.clear()
         super.onCleared()

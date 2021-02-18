@@ -1,4 +1,4 @@
-package com.timecat.module.user.social.topic.fragment
+package com.timecat.module.user.social.common
 
 import android.view.View
 import android.widget.TextView
@@ -7,32 +7,32 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseEndlessBlockFragment
-import com.timecat.module.user.social.topic.vm.TopicViewModel
 
 /**
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020/10/3
- * @description 话题的子块组成的列表
+ * @description 论坛的子块组成的列表
  * @usage null
  */
 abstract class BaseListFragment : BaseEndlessBlockFragment() {
 
     override fun layout(): Int = R.layout.user_base_refresh_list
-    lateinit var write_response: TextView
-    lateinit var viewModel: TopicViewModel
+    lateinit var response: TextView
+
+    lateinit var viewModel: BlockViewModel
     override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(TopicViewModel::class.java)
-        viewModel.topic.observe(viewLifecycleOwner, {
+        viewModel = ViewModelProvider(requireActivity()).get(BlockViewModel::class.java)
+        viewModel.block.observe(viewLifecycleOwner, {
             load()
         })
     }
 
     override fun bindView(view: View) {
         super.bindView(view)
-        write_response = view.findViewById(R.id.write_response)
-        write_response.setShakelessClickListener {
-            viewModel.topic.value?.let {
+        response = view.findViewById(R.id.write_response)
+        response.setShakelessClickListener {
+            viewModel.block.value?.let {
                 addNew(it)
             }
         }

@@ -27,6 +27,7 @@ import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.business.setting.RewardItem
 import com.timecat.layout.ui.business.setting.RewardListItem
 import com.timecat.layout.ui.drawabe.COLOR_DEFAULT
+import com.timecat.layout.ui.drawabe.roundRectSelector
 import com.timecat.layout.ui.layout.dp
 import com.timecat.layout.ui.layout.padding
 import com.timecat.module.user.R

@@ -1,9 +1,11 @@
 package com.timecat.module.user.social.comment
 
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Comment
 import com.timecat.data.bmob.ext.create
+import com.timecat.data.bmob.ext.isCommented
 import com.timecat.data.bmob.ext.isRelays
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
@@ -25,9 +27,9 @@ import com.xiaojinzi.component.anno.RouterAnno
 class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     /**
      * 评论某价值块
-     * 当评论为第一次时，parent = 价值块
-     * 当评论为回复某评论时，parent = 评论
-     * 当评论为回复某回复时，parent = 评论，title = 回复
+     * 当评论为第一次时，parent.type = 价值块
+     * 当评论为回复某评论时，parent.type = 评论，parent.subtype = 评论
+     * 当评论为回复某回复时，parent.type = 评论，parent.subtype = 回复
      */
     @AttrValueAutowiredAnno("parent")
     @JvmField
@@ -65,15 +67,18 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     }
 
     override fun savableBlock(): Block = I() create Comment {
-        this.parent = this@CommentEditorActivity.parent
-        this.subtype = subtype()
-        this.headerBlock = getHeadBlock()
+        title = replyBlockId
+        content = formData.content
+        parent = this@CommentEditorActivity.parent
+        subtype = subtype()
+        headerBlock = getHeadBlock()
     }
 
     override fun updatableBlock(): Block.() -> Unit = {
         title = replyBlockId
         content = formData.content
         //更新评论后应该保持parent不变
+        subtype = subtype()
         structure = getHeadBlock().toJson()
     }
 
@@ -90,11 +95,12 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         parent?.let {
+            LogUtil.e(it)
             val block_herf = BlockHerfView(context)
             container.addView(block_herf, 0)
             block_herf.bindBlock(relay ?: it)
-            emojiEditText.hint = relay?.let { "转发 @${it.user.nickName}" }
-                ?: "回复 @${it.user.nickName}"
+            emojiEditText.hint = relay?.let { "转发 #${it.title} @${it.user.nickName}" }
+                ?: "评论 #${it.title}"
         }
         comment?.let {
             replyBlockId = it.title
@@ -105,14 +111,9 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     }
 
     override fun onSaveSuccess(it: Block) {
-        if (relay != null) {
-            relay?.isRelays {
-                ToastUtil.ok("评论成功")
-                finish()
-            }
-        } else {
-            ToastUtil.ok("评论成功")
-            finish()
-        }
+        parent?.isCommented()
+        relay?.isRelays()
+        ToastUtil.ok("评论成功")
+        finish()
     }
 }

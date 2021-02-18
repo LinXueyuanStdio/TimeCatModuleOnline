@@ -42,27 +42,25 @@ abstract class BaseDetailCollapseActivity : BaseLoginDetailActivity() {
     override fun initViewAfterLogin() {
     }
 
-    protected fun setupCollapse() {
-        appBarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
-            override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
-                if (verticalOffset == 0) {
-                    if (state != CollapsingToolbarLayoutState.EXPANDED) {
-                        state = CollapsingToolbarLayoutState.EXPANDED
-                        //修改状态标记为展开
-                        toolbar.setTitle("")
-                    }
-                } else if (appBarLayout != null && abs(verticalOffset) >= appBarLayout.totalScrollRange) {
-                    if (state != CollapsingToolbarLayoutState.COLLAPSED) {
-                        toolbar.setTitle(titleString)
-                    }
-                } else {
+    protected open fun setupCollapse() {
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            if (verticalOffset == 0) {
+                if (state != CollapsingToolbarLayoutState.EXPANDED) {
+                    state = CollapsingToolbarLayoutState.EXPANDED
+                    //修改状态标记为展开
                     toolbar.setTitle("")
                 }
+            } else if (appBarLayout != null && abs(verticalOffset) >= appBarLayout.totalScrollRange) {
+                if (state != CollapsingToolbarLayoutState.COLLAPSED) {
+                    toolbar.setTitle(titleString)
+                }
+            } else {
+                toolbar.setTitle("")
             }
         })
     }
 
-    protected fun setupViewPager() {
+    protected open fun setupViewPager() {
         viewPager.adapter = getAdapter()
         viewPager.currentItem = 1
         tabs.setupWithViewPager(viewPager)

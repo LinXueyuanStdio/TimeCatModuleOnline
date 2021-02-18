@@ -1,4 +1,4 @@
-package com.timecat.module.user.social.topic.fragment
+package com.timecat.module.user.social.common
 
 
 import com.timecat.data.bmob.data.common.Block
@@ -12,9 +12,9 @@ import com.timecat.module.user.base.GO
  * @description 话题讨论
  * @usage null
  */
-class CommentListFragment : BaseListFragment() {
-    override fun name(): String = "讨论"
-    override fun query() = viewModel.topic.value!!.findAllComment()
+class RelayListFragment : BaseListFragment() {
+    override fun name(): String = "转发"
+    override fun query() = viewModel.block.value!!.findAllComment()
     override fun addNew(block: Block) {
         GO.addCommentFor(block)
     }

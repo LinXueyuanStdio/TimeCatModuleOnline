@@ -1,10 +1,29 @@
 package com.timecat.module.user.social.comment
 
-import android.view.View
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.appbar.AppBarLayout
+import com.timecat.component.router.app.FallBackFragment
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestOneBlock
+import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.bind
+import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockDetailActivity
+import com.timecat.module.user.social.app.fragment.CommentListFragment
+import com.timecat.module.user.social.common.BlockViewModel
+import com.timecat.module.user.social.common.LikeListFragment
+import com.timecat.module.user.social.common.RelayListFragment
+import com.timecat.module.user.view.CommentFooterView
 import com.timecat.module.user.view.CommentView
+import com.timecat.module.user.view.UserHerfView
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -17,21 +36,40 @@ import com.xiaojinzi.component.anno.RouterAnno
  */
 @RouterAnno(hostAndPath = RouterHub.USER_CommentDetailActivity)
 class CommentDetailActivity : BaseBlockDetailActivity() {
+    override fun title(): String = "评论"
+
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
-    lateinit var headerView: CommentView
+    lateinit var card: CommentView
 
-    override fun title(): String = "评论"
-    override fun getDetailBlockId(): String = blockId
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
 
-    override fun getHeaderView(): View {
-        headerView = CommentView(this)
-        return headerView
+        card = CommentView(this)
+        card.setPlaceholderHeight(getStatusBarHeightPlusToolbarHeight())
+        setupHeaderCard(card)
+        setupCollapse()
+        setupViewPager()
+        fetch()
     }
 
-    override fun initBlockHeader(block: Block) {
-        headerView.bindBlock(this, block)
+    override fun loadDetail(block: Block) {
+        super.loadDetail(block)
+        card.bindBlock(this, block)
     }
 
+    override fun fetch() {
+        viewModel attach requestOneBlock {
+            query = oneBlockOf(blockId)
+            onSuccess = {
+                viewModel.block.postValue(it)
+            }
+            onError = {
+                mStatefulLayout?.showError("出错啦") {
+                    fetch()
+                }
+            }
+        }
+    }
 }
 

@@ -6,12 +6,17 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.timecat.module.user.view.UserHerfView
+    <View
+        android:id="@+id/placeholder"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
+    <com.timecat.module.user.view.UserHeadView
         android:id="@+id/userSection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.shuyu.textutillib.RichTextView
+    <com.timecat.module.user.view.item.BigContentItem
         android:id="@+id/moment_content"
         style="@style/TimeCatWidget.EditText.PaddingHorizontal"
         android:layout_width="wrap_content"
@@ -43,14 +48,16 @@
         android:id="@+id/momentHerf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <com.timecat.layout.ui.business.label_tag_view.TagCloudView
         android:id="@+id/tag_cloud_view"
         style="@style/TimeCatWidget.TagCloudView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/position"
@@ -65,10 +72,9 @@
         android:textColor="@color/master_colorAccent"
         android:textSize="12sp"
         android:visibility="gone"
-        tools:text="用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述" />
+        tools:text="用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述"
+        tools:visibility="visible" />
 
     <include layout="@layout/user_base_item_separate_10dp" />
-
-    <include layout="@layout/user_base_item_comment_header" />
 
 </LinearLayout>

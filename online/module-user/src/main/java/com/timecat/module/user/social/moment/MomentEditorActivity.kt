@@ -4,6 +4,7 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Moment
 import com.timecat.data.bmob.ext.create
+import com.timecat.data.bmob.ext.isCommented
 import com.timecat.data.bmob.ext.isRelays
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
@@ -62,15 +63,18 @@ class MomentEditorActivity : BaseArticleBlockEditorActivity() {
     override fun subtype(): Int = 0
 
     override fun savableBlock(): Block = I() create Moment {
-        this.parent = this@MomentEditorActivity.parent
-        this.subtype = subtype()
-        this.headerBlock = getHeadBlock()
+        title = ""
+        content = formData.content
+        parent = this@MomentEditorActivity.parent
+        subtype = subtype()
+        headerBlock = getHeadBlock()
     }
 
     override fun updatableBlock(): Block.() -> Unit = {
         title = ""
         content = formData.content
         //更新评论后应该保持parent不变
+        subtype = subtype()
         structure = getHeadBlock().toJson()
     }
 
@@ -84,14 +88,8 @@ class MomentEditorActivity : BaseArticleBlockEditorActivity() {
     }
 
     override fun onSaveSuccess(it: Block) {
-        if (relay != null) {
-            relay?.isRelays {
-                ToastUtil.ok("发布成功")
-                finish()
-            }
-        } else {
-            ToastUtil.ok("发布成功")
-            finish()
-        }
+        relay?.isRelays()
+        ToastUtil.ok("发布成功")
+        finish()
     }
 }

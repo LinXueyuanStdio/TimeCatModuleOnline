@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/userSection"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:parentTag="android.widget.LinearLayout">
 
-    <ImageView
+    <com.timecat.module.user.view.widget.UserCircleImageView
         android:id="@+id/userHead"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -34,15 +36,19 @@
         android:id="@+id/focusUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="10dp"
         android:gravity="center"
         android:text="关注"
-        android:textColor="@color/master_textColorPrimary"  />
+        android:textColor="@color/master_textColorPrimary" />
 
     <ImageView
+        android:id="@+id/more"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginEnd="10dp"
         android:contentDescription="@string/temp"
         android:src="@drawable/ic_arrow_right_white_24dp"
+        android:visibility="gone"
         app:tint="@color/master_icon_view" />
-</LinearLayout>
+</merge>
