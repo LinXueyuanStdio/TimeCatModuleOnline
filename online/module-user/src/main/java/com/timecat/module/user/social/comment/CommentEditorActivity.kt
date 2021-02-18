@@ -65,7 +65,7 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     }
 
     override fun savableBlock(): Block = I() create Comment {
-        title = relay?.let { it.title / it.objectId } ?: parent!!.objectId
+        title = relay?.let { it.title / it.objectId } ?: this@CommentEditorActivity.parent!!.objectId
         content = formData.content
         parent = this@CommentEditorActivity.parent
         subtype = subtype()
@@ -109,7 +109,7 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
 
     override fun onSaveSuccess(it: Block) {
         parent?.isCommented()
-        relay?.isRelays()
+        relay?.isCommented()
         ToastUtil.ok("评论成功")
         finish()
     }

@@ -9,6 +9,7 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.page.base.extension.simpleUIContainer
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
+import com.xiaojinzi.component.anno.FragmentAnno
 
 /**
  * @author 林学渊
@@ -17,6 +18,7 @@ import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
  * @description null
  * @usage null
  */
+@FragmentAnno(USER_CommentDetailBottomSheet)
 class CommentDetailBottomSheet : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("block")
     @JvmField
@@ -26,6 +28,7 @@ class CommentDetailBottomSheet : BottomSheetDialogFragment() {
         NAV.inject(this)
         super.onCreate(savedInstanceState)
     }
+
     override fun setupDialog(dialog: Dialog, style: Int) {
         val view = buildView(dialog.context)
         dialog.setContentView(view)

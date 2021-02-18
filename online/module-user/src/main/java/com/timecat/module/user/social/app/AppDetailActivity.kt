@@ -9,6 +9,7 @@ import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockDetailActivity
+import com.timecat.module.user.social.app.fragment.AppDetailFragment
 import com.timecat.module.user.social.common.CommentListFragment
 import com.timecat.module.user.social.common.LikeListFragment
 import com.timecat.module.user.social.common.RelayListFragment
@@ -85,7 +86,7 @@ class AppDetailActivity : BaseBlockDetailActivity() {
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> TopicDetailFragment()
+                0 -> AppDetailFragment()
                 1 -> CommentListFragment()
                 2 -> LikeListFragment()
                 3 -> RelayListFragment()
