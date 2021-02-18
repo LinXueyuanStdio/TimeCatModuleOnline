@@ -1,6 +1,5 @@
 package com.timecat.module.user.social.comment
 
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
@@ -42,8 +41,13 @@ class CommentDetailActivity : BaseBlockDetailActivity() {
         card.bindBlock(this, block)
         card.share.onShare = {
             showShare(supportFragmentManager, block)
-            LogUtil.e("share")
         }
+    }
+
+    override fun setupCollapse() {
+        toolbar.setTitle("")
+        userHerf.title.text = title()
+        setupCollapse {  card.userHead.height }
     }
 
     override fun fetch() {

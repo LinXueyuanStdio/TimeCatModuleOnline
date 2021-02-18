@@ -57,7 +57,7 @@ class UserHeadView @JvmOverloads constructor(
         followView = root.findViewById(R.id.head_follow)
         moreView = root.findViewById(R.id.head_more)
 
-        levelView.background = roundGrayDrawable(Attr.getBackgroundDarkestColor(context))
+        levelView.background = roundGrayDrawable(Attr.getBackgroundDarkColor(context))
         followView.background = roundGrayDrawable(Attr.getAccentColor(context))
         isFocusableInTouchMode = false
         val dp_10 = 10.dp

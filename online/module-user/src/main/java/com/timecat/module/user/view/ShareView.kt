@@ -64,7 +64,6 @@ class ShareView @JvmOverloads constructor(
             }
         }
         CircleImage(R.drawable.ic_logo_more) {
-            LogUtil.e("share")
             onShare(it)
         }
     }

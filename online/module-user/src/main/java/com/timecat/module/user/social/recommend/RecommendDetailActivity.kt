@@ -44,6 +44,12 @@ class RecommendDetailActivity : BaseBlockDetailActivity() {
         card.bindBlock(this, block)
     }
 
+    override fun setupCollapse() {
+        toolbar.setTitle("")
+        userHerf.title.text = title()
+        setupCollapse { card.userHead.height }
+    }
+
     override fun fetch() {
         viewModel attach requestOneBlock {
             query = oneBlockOf(blockId)

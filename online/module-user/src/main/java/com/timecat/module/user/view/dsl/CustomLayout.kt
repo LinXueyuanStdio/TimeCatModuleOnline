@@ -52,6 +52,18 @@ inline fun ViewGroup.IconText(
     return view.apply(init).also { if (autoAdd) addView(it) }
 }
 
+inline fun ViewGroup.RoundIconText(
+    icon: Int,
+    text: String,
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: IconTextItem.() -> Unit = {}
+): IconTextItem {
+    val view = IconTextItem(style.wrapContext(context))
+    view.setRoundIconText(icon, text)
+    return view.apply(init).also { if (autoAdd) addView(it) }
+}
+
 
 inline fun ViewGroup.UserRelation(
     style: Int? = null,

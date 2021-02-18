@@ -107,6 +107,7 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
             formData.content = it.content
             val head = CommentBlock.fromJson(it.structure)
             formData.attachments = head.mediaScope
+            formData.setScope(head.atScope, head.topicScope)
         }
     }
 

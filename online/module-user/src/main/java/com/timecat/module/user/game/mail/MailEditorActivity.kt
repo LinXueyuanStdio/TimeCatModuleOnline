@@ -69,6 +69,7 @@ class MailEditorActivity : BaseBlockEditorActivity() {
         formData.content = content
         val head = MailBlock.fromJson(structure)
         formData.attachments = head.mediaScope
+        formData.setScope(head.atScope, head.topicScope)
         formData.icon = head.header.avatar
         formRewardListItems = head.rewards
     }

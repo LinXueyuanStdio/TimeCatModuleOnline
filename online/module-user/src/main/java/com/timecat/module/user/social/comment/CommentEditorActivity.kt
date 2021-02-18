@@ -12,6 +12,7 @@ import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseArticleBlockEditorActivity
+import com.timecat.module.user.ext.div
 import com.timecat.module.user.view.BlockHerfView
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
@@ -27,9 +28,8 @@ import com.xiaojinzi.component.anno.RouterAnno
 class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     /**
      * 评论某价值块
-     * 当评论为第一次时，parent.type = 价值块
-     * 当评论为回复某评论时，parent.type = 评论，parent.subtype = 评论
-     * 当评论为回复某回复时，parent.type = 评论，parent.subtype = 回复
+     * 当评论为第一次时，parent = 价值块，title=价值块.id
+     * 当评论为评论某评论时，parent = 价值块，relay = 评论，title=reply.title/reply.id
      */
     @AttrValueAutowiredAnno("parent")
     @JvmField
@@ -49,8 +49,6 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     @JvmField
     var comment: Block? = null
 
-    var replyBlockId: String = ""
-
     override fun title(): String = "评论"
     override fun routerInject() = NAV.inject(this)
 
@@ -67,7 +65,7 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     }
 
     override fun savableBlock(): Block = I() create Comment {
-        title = replyBlockId
+        title = relay?.let { it.title / it.objectId } ?: parent!!.objectId
         content = formData.content
         parent = this@CommentEditorActivity.parent
         subtype = subtype()
@@ -75,9 +73,8 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     }
 
     override fun updatableBlock(): Block.() -> Unit = {
-        title = replyBlockId
+        //更新评论后应该保持parent,title不变
         content = formData.content
-        //更新评论后应该保持parent不变
         subtype = subtype()
         structure = getHeadBlock().toJson()
     }
@@ -99,14 +96,14 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
             val block_herf = BlockHerfView(context)
             container.addView(block_herf, 0)
             block_herf.bindBlock(relay ?: it)
-            emojiEditText.hint = relay?.let { "转发 #${it.title} @${it.user.nickName}" }
+            emojiEditText.hint = relay?.let { "回复 #${it.title} @${it.user.nickName}" }
                 ?: "评论 #${it.title}"
         }
         comment?.let {
-            replyBlockId = it.title
             formData.content = it.content
             val head = CommentBlock.fromJson(it.structure)
             formData.attachments = head.mediaScope
+            formData.setScope(head.atScope, head.topicScope)
         }
     }
 

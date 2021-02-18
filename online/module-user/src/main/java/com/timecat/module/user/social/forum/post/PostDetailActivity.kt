@@ -1,5 +1,6 @@
 package com.timecat.module.user.social.forum.post
 
+import com.google.android.material.appbar.AppBarLayout
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
@@ -42,6 +43,12 @@ class PostDetailActivity : BaseBlockDetailActivity() {
         card.share.onShare = {
             showShare(supportFragmentManager, block)
         }
+    }
+
+    override fun setupCollapse() {
+        toolbar.setTitle("")
+        userHerf.title.text = title()
+        setupCollapse { card.userHead.height }
     }
 
     override fun fetch() {

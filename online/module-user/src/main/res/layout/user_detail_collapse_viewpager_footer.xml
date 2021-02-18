@@ -61,11 +61,29 @@
                         app:layout_collapseMode="pin"
                         app:popupTheme="@style/AppTheme.PopupOverlay">
 
-                        <com.timecat.module.user.view.UserHerfView
-                            android:id="@+id/user_herf"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            />
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.timecat.module.user.view.ToolbarHeadView
+                                android:id="@+id/user_herf"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <ImageView
+                                android:id="@+id/more_dialog"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="@dimen/small_spacing"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/more"
+                                android:padding="@dimen/margin_small"
+                                android:src="@drawable/ic_more_vert_black_24dp"
+                                app:tint="@color/master_icon_view" />
+                        </LinearLayout>
                     </com.timecat.page.base.view.BlurringToolbar>
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -92,8 +110,8 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.timecat.module.user.view.CommentFooterView
-            android:layout_width="match_parent"
             android:id="@+id/footer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 </com.gturedi.views.StatefulLayout>

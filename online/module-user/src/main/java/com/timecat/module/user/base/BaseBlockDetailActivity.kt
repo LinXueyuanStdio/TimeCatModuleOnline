@@ -1,20 +1,24 @@
 package com.timecat.module.user.base
 
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import com.timecat.module.user.social.app.fragment.CommentListFragment
 import com.timecat.module.user.social.common.BlockViewModel
 import com.timecat.module.user.social.common.LikeListFragment
 import com.timecat.module.user.social.common.RelayListFragment
+import com.timecat.module.user.social.share.showMore
 import com.timecat.module.user.view.CommentFooterView
-import com.timecat.module.user.view.UserHerfView
+import com.timecat.module.user.view.ToolbarHeadView
 
 /**
  * @author 林学渊
@@ -27,13 +31,15 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
     override fun routerInject() = NAV.inject(this)
 
     lateinit var viewModel: BlockViewModel
-    lateinit var userHerf: UserHerfView
+    lateinit var userHerf: ToolbarHeadView
     lateinit var footer: CommentFooterView
+    lateinit var more: View
     override fun layout(): Int = R.layout.user_detail_collapse_viewpager_footer
     override fun bindView() {
         super.bindView()
         userHerf = findViewById(R.id.user_herf)
         footer = findViewById(R.id.footer)
+        more = findViewById(R.id.more_dialog)
     }
 
     override fun initViewAfterLogin() {
@@ -46,16 +52,22 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
 
     protected open fun loadDetail(block: Block) {
         titleString = block.title
-        userHerf.bindBlock(block.user)
+        userHerf.head.bindBlock(block.user)
         footer.bindBlock(this, block)
+        more.setShakelessClickListener {
+            showMore(supportFragmentManager, block)
+        }
     }
 
     override fun setupCollapse() {
-        toolbar.setTitle("")
+        setupCollapse { appBarLayout.totalScrollRange }
+    }
+
+    fun setupCollapse(visHeight: () -> Int) {
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
-            var alpha = Math.abs(i).toFloat() / appBarLayout.totalScrollRange
-            alpha = Math.min(1f, alpha)
-            userHerf.setAlpha(alpha)
+//            LogUtil.se("${i} / ${visHeight()}")
+            //滑动超过 head的可见高度，则显示 userHerf
+            userHerf.displayedChild = if (Math.abs(i) >= visHeight()) 1 else 0
         })
     }
 

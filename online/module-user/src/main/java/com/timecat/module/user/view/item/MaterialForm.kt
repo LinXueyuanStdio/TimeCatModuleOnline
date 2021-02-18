@@ -1,6 +1,8 @@
 package com.timecat.module.user.view.item
 
 import com.shuyu.textutillib.RichEditText
+import com.shuyu.textutillib.model.TopicModel
+import com.shuyu.textutillib.model.UserModel
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.base.*
@@ -125,6 +127,16 @@ class MaterialForm {
         get() = emojiEditText.realUserList.map {
             AtItem(it.user_name, it.user_id)
         }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
+
+    fun setScope(atScope: AtScope?, topicScope: TopicScope?) {
+        atScope?.let {
+            emojiEditText.setRichEditNameList(it.ats.map { UserModel(it.name, it.objectId) })
+        }
+        topicScope?.let {
+            emojiEditText.setRichEditTopicList(it.topics.map { TopicModel(it.name, it.objectId) })
+        }
+    }
+
     lateinit var emojiEditText: RichEditText
     //endregion
 

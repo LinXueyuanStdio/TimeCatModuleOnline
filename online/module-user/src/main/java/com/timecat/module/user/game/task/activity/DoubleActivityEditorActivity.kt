@@ -39,6 +39,7 @@ class DoubleActivityEditorActivity : BaseActivityAddActivity() {
         formData.content = content
         val head = ItemBlock.fromJson(structure)
         formData.attachments = head.mediaScope
+        formData.setScope(head.atScope, head.topicScope)
         formData.icon = head.header.avatar
     }
 

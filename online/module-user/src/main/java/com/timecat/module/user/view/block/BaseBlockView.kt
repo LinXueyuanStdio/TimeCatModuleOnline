@@ -14,6 +14,7 @@ import androidx.core.view.updateLayoutParams
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
+import com.timecat.component.commonsdk.extension.beGone
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.data.common.Block
@@ -100,6 +101,7 @@ abstract class BaseBlockView @JvmOverloads constructor(
         } else {
             userHead.content = timeString
         }
+        userHead.moreView.beGone()
     }
 
     protected open fun setRichTextView(

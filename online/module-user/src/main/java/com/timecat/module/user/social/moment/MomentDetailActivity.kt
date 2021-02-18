@@ -1,5 +1,6 @@
 package com.timecat.module.user.social.moment
 
+import com.google.android.material.appbar.AppBarLayout
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
@@ -43,6 +44,11 @@ class MomentDetailActivity : BaseBlockDetailActivity() {
         }
     }
 
+    override fun setupCollapse() {
+        toolbar.setTitle("")
+        userHerf.title.text = title()
+        setupCollapse { card.userHead.height }
+    }
     override fun fetch() {
         viewModel attach requestOneBlock {
             query = oneBlockOf(blockId)
