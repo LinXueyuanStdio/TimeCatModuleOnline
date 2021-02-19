@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.1"
+        android:background="@color/master_background_reverse"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.timecat.module.user.view.UserHeadView
+        android:id="@+id/userHead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="@dimen/small_spacing"
+        android:animateLayoutChanges="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/footer_like"
+        app:layout_constraintTop_toBottomOf="@id/userHead">
+
+        <com.shuyu.textutillib.RichTextView
+            android:id="@+id/saying_content"
+            style="@style/TimeCatWidget.EditText.MomentLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:paddingBottom="10dp"
+            tools:text="用户描述用户描述用户描述述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述" />
+
+        <com.timecat.layout.ui.business.nine.BGANinePhotoLayout
+            android:id="@+id/circle_image_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:visibility="gone"
+            app:bga_npl_itemCornerRadius="0dp"
+            app:bga_npl_itemSpanCount="3"
+            app:bga_npl_itemWhiteSpacing="4dp"
+            app:bga_npl_itemWidth="0dp"
+            app:bga_npl_otherWhiteSpacing="64dp"
+            app:bga_npl_placeholderDrawable="@mipmap/bga_pp_ic_holder_light"
+            app:bga_npl_showAsLargeWhenOnlyOne="true"
+            tools:visibility="visible" />
+
+        <com.timecat.module.user.view.MomentHerfView
+            android:id="@+id/momentHerf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <com.timecat.layout.ui.business.label_tag_view.TagCloudView
+            android:id="@+id/tag_cloud_view"
+            style="@style/TimeCatWidget.TagCloudView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/position"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLength="20"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/master_colorAccent"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述用户描述" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/footer_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:drawablePadding="@dimen/small_spacing"
+        android:textColor="@color/master_textColorSecondary"
+        android:textSize="@dimen/text_size_tiny"
+        app:drawableStartCompat="@drawable/user_ic_love"
+        app:drawableTint="@color/master_icon_view"
+        app:layout_constraintBottom_toTopOf="@id/subs"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="10" />
+
+    <TextView
+        android:id="@+id/footer_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:drawablePadding="@dimen/small_spacing"
+        android:textColor="@color/master_textColorSecondary"
+        android:textSize="@dimen/text_size_tiny"
+        app:drawableStartCompat="@drawable/ic_share"
+        app:drawableTint="@color/master_icon_view"
+        app:layout_constraintBottom_toTopOf="@id/subs"
+        app:layout_constraintStart_toEndOf="@id/footer_like"
+        tools:text="10" />
+
+    <TextView
+        android:id="@+id/footer_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:drawablePadding="@dimen/small_spacing"
+        android:textColor="@color/master_textColorSecondary"
+        android:textSize="@dimen/text_size_tiny"
+        app:drawableStartCompat="@drawable/ic_comment"
+        app:drawableTint="@color/master_icon_view"
+        app:layout_constraintBottom_toTopOf="@id/subs"
+        app:layout_constraintStart_toEndOf="@id/footer_share"
+        tools:text="10" />
+
+    <com.timecat.layout.ui.business.setting.ContainerItem
+        android:id="@+id/subs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:background="@color/master_background_dark"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/main_flag"
+        tools:visibility="visible" />
+
+    <View
+        android:id="@+id/main_flag"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:alpha="0.1"
+        android:background="@color/master_background_reverse"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,19 +12,18 @@ import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.element.alert.ToastUtil
-import com.timecat.layout.ui.business.form.*
+import com.timecat.layout.ui.business.form.CenterText
+import com.timecat.layout.ui.business.form.Divider
+import com.timecat.layout.ui.business.form.HorizontalContainer
 import com.timecat.layout.ui.business.setting.ContainerItem
-import com.timecat.layout.ui.business.setting.RewardItem
-import com.timecat.layout.ui.layout.*
-import com.timecat.layout.ui.layout.padding_top
+import com.timecat.layout.ui.layout.HorizontalScrollView
+import com.timecat.layout.ui.layout.padding
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import com.timecat.module.user.view.dsl.IconText
 import com.timecat.module.user.view.dsl.RoundIconText
-import com.timecat.module.user.view.item.IconTextItem
-import com.timecat.page.base.extension.simpleUIContainer
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.FragmentAnno
-import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊

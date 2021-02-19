@@ -1,26 +1,26 @@
 package com.timecat.module.user.adapter.block
 
-import android.app.Activity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
+import com.shuyu.textutillib.RichTextView
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
+import com.timecat.component.commonsdk.extension.beGone
+import com.timecat.component.commonsdk.extension.beVisibleIf
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.arms.BaseApplication
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
-import com.timecat.identity.data.block.type.BLOCK_COMMENT
-import com.timecat.identity.data.block.type.BLOCK_MOMENT
-import com.timecat.identity.data.block.type.BLOCK_POST
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
 import com.timecat.layout.ui.layout.setShakelessClickListener
@@ -28,16 +28,13 @@ import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailItem
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
-import com.timecat.module.user.ext.commentText
-import com.timecat.module.user.ext.likeText
-import com.timecat.module.user.ext.mySpanCreateListener
-import com.timecat.module.user.ext.shareText
+import com.timecat.module.user.ext.*
+import com.timecat.module.user.social.comment.showComment
+import com.timecat.module.user.social.share.showShare
+import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
-import kotlinx.android.synthetic.main.user_base_item_footer.view.*
-import kotlinx.android.synthetic.main.user_base_item_moment.view.*
-import kotlinx.android.synthetic.main.user_base_item_moment_content.view.*
 
 /**
  * @author 林学渊
@@ -46,14 +43,27 @@ import kotlinx.android.synthetic.main.user_base_item_moment_content.view.*
  * @description null
  * @usage null
  */
-open class BlockContentItem(
-    open val activity: Activity,
+open class CommentItem(
+    open val activity: FragmentActivity,
     open var block: Block,
-) : BaseDetailItem<BlockContentItem.DetailVH>(block.objectId) {
+    val isMain: Boolean = false,
+) : BaseDetailItem<CommentItem.DetailVH>(block.objectId) {
 
-    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter)
+    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
+        val main_flag: View = root.findViewById(R.id.main_flag)
+        val userHead: UserHeadView = root.findViewById(R.id.userHead)
+        val container: View = root.findViewById(R.id.container)
+        val item: View = root.findViewById(R.id.item)
+        val saying_content: RichTextView = root.findViewById(R.id.saying_content)
+        val circle_image_container: BGANinePhotoLayout = root.findViewById(R.id.circle_image_container)
+        val position: TextView = root.findViewById(R.id.position)
+        val footer_like: TextView = root.findViewById(R.id.footer_like)
+        val footer_comment: TextView = root.findViewById(R.id.footer_comment)
+        val footer_share: TextView = root.findViewById(R.id.footer_share)
+        val subs: ViewGroup = root.findViewById(R.id.subs)
+    }
 
-    override fun getLayoutRes(): Int = R.layout.user_base_item_moment_content
+    override fun getLayoutRes(): Int = R.layout.user_base_item_comment
 
     override fun createViewHolder(
         view: View,
@@ -68,40 +78,19 @@ open class BlockContentItem(
     ) {
         super.bindViewHolder(adapter, holder, position, payloads)
         holder.itemView.tag = block.objectId
-        when (block.type) {
-            BLOCK_MOMENT -> {
-                setMomentContent(holder, block)
-                setFooter(adapter, holder, block)
-            }
-            BLOCK_POST -> {
-                setPostContent(holder, block)
-                setFooter(adapter, holder, block)
-            }
-            BLOCK_COMMENT -> {
-                setCommentContent(holder, block)
-                setFooter(adapter, holder, block)
-            }
-        }
-    }
+        holder.main_flag.beVisibleIf(isMain)
+        holder.userHead.bindBlock(block.user)
+        val timeString: String = block.friendlyCreateTimeText()
+        holder.userHead.content = timeString
+        holder.userHead.moreView.beGone()
 
-    private fun setMomentContent(holder: DetailVH, block: Block) {
-        val mb = MomentBlock.fromJson(block.structure)
-        setRichTextView(holder, block.content, mb.atScope, mb.topicScope)
-        setRelayScope(holder, block, mb.relayScope)
-        setMediaScope(holder, block, mb.mediaScope)
-        setPosScope(holder, block, mb.posScope)
-        setOnItemClick(holder) {
-            GO.momentDetail(block.objectId)
+        setCommentContent(holder, block)
+        setFooter(adapter, holder, block)
+        holder.item.setShakelessClickListener {
+            GO.relayComment(block.parent, block)
         }
-    }
-
-    private fun setPostContent(holder: DetailVH, block: Block) {
-        val mb = PostBlock.fromJson(block.structure)
-        setRichTextView(holder, block.content, mb.atScope, mb.topicScope)
-        setMediaScope(holder, block, mb.mediaScope)
-        setPosScope(holder, block, mb.posScope)
-        setOnItemClick(holder) {
-            GO.postDetail(block.objectId)
+        holder.subs.setShakelessClickListener {
+            showComment(activity.supportFragmentManager, block)
         }
     }
 
@@ -110,33 +99,6 @@ open class BlockContentItem(
         setRichTextView(holder, block.content, head.atScope, head.topicScope)
         setMediaScope(holder, block, head.mediaScope)
         setPosScope(holder, block, head.posScope)
-        when (block.subtype) {
-            COMMENT_SIMPLE -> {
-                setOnItemClick(holder) {
-                    GO.commentDetail(block.objectId)
-                }
-            }
-            COMMENT_REPLY -> {
-                setOnItemClick(holder) {
-                    GO.commentDetail(block.objectId)
-                }
-            }
-            COMMENT_SCORE -> {
-                setOnItemClick(holder) {
-                    GO.commentDetail(block.objectId)
-                }
-            }
-            COMMENT_TEXT -> {
-                setOnItemClick(holder) {
-                    GO.commentDetail(block.objectId)
-                }
-            }
-            COMMENT_VIDEO -> {
-                setOnItemClick(holder) {
-                    GO.commentDetail(block.objectId)
-                }
-            }
-        }
     }
 
     private fun setRichTextView(
@@ -145,7 +107,7 @@ open class BlockContentItem(
         atScope: AtScope? = null,
         topicScope: TopicScope? = null
     ) {
-        holder.root.saying_content.apply {
+        holder.saying_content.apply {
             val color = Attr.getAccentColor(context)
             atColor = color
             topicColor = color
@@ -185,9 +147,9 @@ open class BlockContentItem(
         block: Block,
         mediaScope: AttachmentTail? = null
     ) {
-        holder.root.circle_image_container.visibility = View.GONE
+        holder.circle_image_container.visibility = View.GONE
         mediaScope?.let {
-            holder.root.circle_image_container.apply {
+            holder.circle_image_container.apply {
                 if (holder.itemView.tag != block.objectId) return
                 visibility = View.VISIBLE
                 val datas = it.attachmentItems.map {
@@ -225,41 +187,14 @@ open class BlockContentItem(
         }
     }
 
-    private fun setRelayScope(
-        holder: DetailVH,
-        block: Block,
-        relayScope: RelayScope? = null
-    ) {
-        holder.root.momentHerf.visibility = View.GONE
-        relayScope?.let {
-            requestBlock {
-                query = oneBlockOf(it.objectId)
-                onSuccess = { data ->
-                    holder.root.momentHerf.apply {
-                        visibility = View.VISIBLE
-                        if (data.isEmpty()) {
-                            isNotExist()
-                        } else {
-                            bindBlock(data[0])
-                            setRelay(data[0])
-                        }
-                    }
-                }
-                onError = {
-                    it.printStackTrace()
-                }
-            }
-        }
-    }
-
     private fun setPosScope(
         holder: DetailVH,
         block: Block,
         posScope: PosScope? = null
     ) {
-        holder.root.position.visibility = View.GONE
+        holder.position.visibility = View.GONE
         posScope?.let {
-            holder.root.position.apply {
+            holder.position.apply {
                 if (holder.itemView.tag != block.objectId) return
                 visibility = View.VISIBLE
             }
@@ -270,7 +205,7 @@ open class BlockContentItem(
         holder: DetailVH,
         onClick: (View) -> Unit
     ) {
-        holder.root.container.setShakelessClickListener {
+        holder.item.setShakelessClickListener {
             onClick(it)
         }
     }
@@ -279,12 +214,8 @@ open class BlockContentItem(
         requestOneBlock {
             query = oneBlockOf(block.objectId)
             onSuccess = {
-                if (it == null) {
-                    ToastUtil.e("发生错误")
-                } else {
-                    this@BlockContentItem.block = it
-                    adapter.updateItem(this@BlockContentItem)
-                }
+                this@CommentItem.block = it
+                adapter.updateItem(this@CommentItem)
             }
             onError = {
                 it.printStackTrace()
@@ -293,52 +224,34 @@ open class BlockContentItem(
     }
 
     private fun setFooter(adapter: FlexibleAdapter<IFlexible<*>>, holder: DetailVH, block: Block) {
-        holder.root.footer_like.text = block.likeText()
-        holder.root.footer_comment.text = block.commentText()
-        holder.root.footer_share.text = block.shareText()
+        holder.footer_like.text = block.likeText()
+        holder.footer_comment.text = block.commentText()
+        holder.footer_share.text = block.shareText()
 
         setupLikeBlockButton(
             BaseApplication.getContext(),
-            holder.root.footer_like_ll.footer_like_icon,
+            holder.footer_like,
             block
         ) {
             rebind(adapter, block)
         }
-        holder.root.footer_comment_ll.apply {
-            setOnClickListener {
+        holder.footer_comment.apply {
+            setShakelessClickListener {
                 if (UserDao.getCurrentUser() == null) {
                     NAV.go(RouterHub.LOGIN_LoginActivity)
-                    return@setOnClickListener
+                    return@setShakelessClickListener
                 }
-                addCommentFor(block)
+                GO.relayComment(block.parent, block)
             }
         }
-        holder.root.footer_share_ll.apply {
-            setOnClickListener {
+        holder.footer_share.apply {
+            setShakelessClickListener {
                 if (UserDao.getCurrentUser() == null) {
                     NAV.go(RouterHub.LOGIN_LoginActivity)
-                    return@setOnClickListener
+                    return@setShakelessClickListener
                 }
-                when (block.type) {
-                    BLOCK_COMMENT -> {
-                        //转发评论
-                        GO.relayComment(block.parent, block)
-                    }
-                    BLOCK_MOMENT -> {
-                        //转发动态
-                        GO.relayMoment(block.parent, block)
-                    }
-                }
+                showShare(activity.supportFragmentManager, block)
             }
         }
-    }
-
-    private fun addCommentFor(block: Block) {
-        GO.addCommentFor(block)
-    }
-
-    private fun getText(count: Int): String {
-        if (count == 0) return ""
-        return "$count"
     }
 }

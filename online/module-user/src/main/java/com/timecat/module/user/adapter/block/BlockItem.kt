@@ -1,9 +1,9 @@
 package com.timecat.module.user.adapter.block
 
-import android.app.Activity
 import android.text.TextUtils
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
+import androidx.fragment.app.FragmentActivity
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
@@ -35,6 +35,7 @@ import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.*
 import com.timecat.module.user.permission.PermissionValidator
+import com.timecat.module.user.social.comment.showComment
 import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -51,7 +52,7 @@ import kotlinx.android.synthetic.main.user_moment_item_main.view.*
  * @usage null
  */
 class BlockItem(
-    val activity: Activity,
+    val activity: FragmentActivity,
     var block: Block
 ) : BaseDetailItem<BlockItem.DetailVH>(block.objectId) {
 
@@ -235,32 +236,8 @@ class BlockItem(
         setRichTextView(holder, block.content, head.atScope, head.topicScope)
         setMediaScope(holder, block, head.mediaScope)
         setPosScope(holder, block, head.posScope)
-        when (block.subtype) {
-            COMMENT_SIMPLE -> {
-                setOnItemClick(holder) {
-                    GO.commentDetail(block.objectId)
-                }
-            }
-            COMMENT_REPLY -> {
-                setOnItemClick(holder) {
-                    GO.commentDetail(block.objectId)
-                }
-            }
-            COMMENT_SCORE -> {
-                setOnItemClick(holder) {
-                    GO.commentDetail(block.objectId)
-                }
-            }
-            COMMENT_TEXT -> {
-                setOnItemClick(holder) {
-                    GO.commentDetail(block.objectId)
-                }
-            }
-            COMMENT_VIDEO -> {
-                setOnItemClick(holder) {
-                    GO.commentDetail(block.objectId)
-                }
-            }
+        setOnItemClick(holder) {
+            showComment(activity.supportFragmentManager, block)
         }
     }
 
