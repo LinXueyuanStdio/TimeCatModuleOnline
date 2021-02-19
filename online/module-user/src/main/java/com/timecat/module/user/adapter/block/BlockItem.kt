@@ -18,7 +18,6 @@ import com.timecat.data.bmob.ext.bmob.deleteBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
 import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
@@ -28,7 +27,7 @@ import com.timecat.identity.data.block.type.BLOCK_FORUM
 import com.timecat.identity.data.block.type.BLOCK_MOMENT
 import com.timecat.identity.data.block.type.BLOCK_POST
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
+import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.util.CopyToClipboard
 import com.timecat.module.user.R
@@ -299,31 +298,12 @@ class BlockItem(
                 val datas = it.attachmentItems.map {
                     it.attachment
                 }
-                data = ArrayList(datas)
-                setDelegate(object : BGANinePhotoLayout.Delegate {
-                    override fun onClickNinePhotoItem(
-                        ninePhotoLayout: BGANinePhotoLayout,
-                        view: View,
-                        position: Int,
-                        model: String,
-                        models: MutableList<String>
-                    ) {
+                setUrls(datas)
+                setCallback(object : NineGridView.SimpleCallback() {
+                    override fun onImageItemClicked(position: Int, urls: MutableList<String>) {
                         IMG.preview(activity)
                             .setIndex(position)
-                            .setImageList(models)
-                            .start()
-                    }
-
-                    override fun onClickExpand(
-                        ninePhotoLayout: BGANinePhotoLayout,
-                        view: View,
-                        position: Int,
-                        model: String,
-                        models: MutableList<String>
-                    ) {
-                        IMG.preview(activity)
-                            .setIndex(position)
-                            .setImageList(models)
+                            .setImageList(urls)
                             .start()
                     }
                 })

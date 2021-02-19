@@ -4,7 +4,7 @@ import android.app.Activity
 import android.view.View
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.AttachmentTail
-import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
+import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.module.user.R
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -58,31 +58,12 @@ class NinePhotoItem(
                 val datas = it.attachmentItems.map {
                     it.attachment
                 }
-                data = ArrayList(datas)
-                setDelegate(object : BGANinePhotoLayout.Delegate {
-                    override fun onClickNinePhotoItem(
-                        ninePhotoLayout: BGANinePhotoLayout,
-                        view: View,
-                        position: Int,
-                        model: String,
-                        models: MutableList<String>
-                    ) {
+                setUrls(datas)
+                setCallback(object : NineGridView.SimpleCallback() {
+                    override fun onImageItemClicked(position: Int, urls: MutableList<String>) {
                         IMG.preview(activity)
                             .setIndex(position)
-                            .setImageList(models)
-                            .start()
-                    }
-
-                    override fun onClickExpand(
-                        ninePhotoLayout: BGANinePhotoLayout,
-                        view: View,
-                        position: Int,
-                        model: String,
-                        models: MutableList<String>
-                    ) {
-                        IMG.preview(activity)
-                            .setIndex(position)
-                            .setImageList(models)
+                            .setImageList(urls)
                             .start()
                     }
                 })

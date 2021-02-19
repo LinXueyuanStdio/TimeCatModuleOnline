@@ -23,7 +23,7 @@ import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
-import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
+import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.friendlyCreateTimeText
@@ -55,7 +55,7 @@ abstract class BaseBlockView @JvmOverloads constructor(
     lateinit var placeholder: View
     lateinit var userHead: UserHeadView
     lateinit var contentItem: BigContentItem
-    lateinit var circle_image_container: BGANinePhotoLayout
+    lateinit var circle_image_container: NineGridView
     lateinit var position: TextView
     lateinit var momentHerf: MomentHerfView
     lateinit var share: ShareView
@@ -153,31 +153,12 @@ abstract class BaseBlockView @JvmOverloads constructor(
                     return@apply
                 }
                 visibility = View.VISIBLE
-                data = ArrayList(datas)
-                setDelegate(object : BGANinePhotoLayout.Delegate {
-                    override fun onClickNinePhotoItem(
-                        ninePhotoLayout: BGANinePhotoLayout,
-                        view: View,
-                        position: Int,
-                        model: String,
-                        models: MutableList<String>
-                    ) {
+                setUrls(datas)
+                setCallback(object : NineGridView.SimpleCallback() {
+                    override fun onImageItemClicked(position: Int, urls: MutableList<String>) {
                         IMG.preview(activity)
                             .setIndex(position)
-                            .setImageList(models)
-                            .start()
-                    }
-
-                    override fun onClickExpand(
-                        ninePhotoLayout: BGANinePhotoLayout,
-                        view: View,
-                        position: Int,
-                        model: String,
-                        models: MutableList<String>
-                    ) {
-                        IMG.preview(activity)
-                            .setIndex(position)
-                            .setImageList(models)
+                            .setImageList(urls)
                             .start()
                     }
                 })

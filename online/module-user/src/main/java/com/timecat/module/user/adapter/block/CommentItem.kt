@@ -20,7 +20,7 @@ import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.business.nine.BGANinePhotoLayout
+import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailItem
@@ -54,7 +54,7 @@ open class CommentItem(
         val container: View = root.findViewById(R.id.container)
         val item: View = root.findViewById(R.id.item)
         val saying_content: RichTextView = root.findViewById(R.id.saying_content)
-        val circle_image_container: BGANinePhotoLayout = root.findViewById(R.id.circle_image_container)
+        val circle_image_container: NineGridView = root.findViewById(R.id.circle_image_container)
         val position: TextView = root.findViewById(R.id.position)
         val footer_like: TextView = root.findViewById(R.id.footer_like)
         val footer_comment: TextView = root.findViewById(R.id.footer_comment)
@@ -160,31 +160,12 @@ open class CommentItem(
                 val datas = it.attachmentItems.map {
                     it.attachment
                 }
-                data = ArrayList(datas)
-                setDelegate(object : BGANinePhotoLayout.Delegate {
-                    override fun onClickNinePhotoItem(
-                        ninePhotoLayout: BGANinePhotoLayout,
-                        view: View,
-                        position: Int,
-                        model: String,
-                        models: MutableList<String>
-                    ) {
+                setUrls(datas)
+                setCallback(object : NineGridView.SimpleCallback() {
+                    override fun onImageItemClicked(position: Int, urls: MutableList<String>) {
                         IMG.preview(activity)
                             .setIndex(position)
-                            .setImageList(models)
-                            .start()
-                    }
-
-                    override fun onClickExpand(
-                        ninePhotoLayout: BGANinePhotoLayout,
-                        view: View,
-                        position: Int,
-                        model: String,
-                        models: MutableList<String>
-                    ) {
-                        IMG.preview(activity)
-                            .setIndex(position)
-                            .setImageList(models)
+                            .setImageList(urls)
                             .start()
                     }
                 })
