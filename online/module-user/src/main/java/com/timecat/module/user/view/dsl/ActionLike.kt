@@ -15,6 +15,8 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.deleteAction
 import com.timecat.data.bmob.ext.bmob.requestOneActionOrNull
 import com.timecat.data.bmob.ext.bmob.saveAction
+import com.timecat.data.bmob.ext.isLiked
+import com.timecat.data.bmob.ext.isUnLiked
 import com.timecat.data.bmob.ext.like
 import com.timecat.data.bmob.ext.net.allLikeBlock
 import com.timecat.element.alert.ToastUtil
@@ -125,12 +127,14 @@ fun View.setupLikeBlock(
                 target = I like block
                 onSuccess = {
                     needRefresh?.invoke()
+                    relation = it
+                    block.isLiked()
                     block.likes += 1
                     onActive()
                     ToastUtil.ok("点赞成功")
                 }
                 onError = { e ->
-                    ToastUtil.ok("点赞失败")
+                    ToastUtil.e("点赞失败")
                     LogUtil.e(e.toString())
                 }
             }
@@ -139,9 +143,10 @@ fun View.setupLikeBlock(
                 target = relation!!
                 onSuccess = {
                     needRefresh?.invoke()
+                    relation = null
+                    block.isUnLiked()
                     block.likes -= 1
                     onInActive()
-                    relation = null
                     ToastUtil.ok("解除点赞成功")
                 }
                 onError = { e ->

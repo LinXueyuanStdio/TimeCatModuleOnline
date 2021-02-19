@@ -55,6 +55,7 @@ fun View.setupFollowUser(
                 target = I follow user
                 onSuccess = {
                     needRefresh?.invoke()
+                    relation = it
                     onActive()
                     ToastUtil.ok("关注成功")
                 }
@@ -68,8 +69,8 @@ fun View.setupFollowUser(
                 target = relation!!
                 onSuccess = {
                     needRefresh?.invoke()
-                    onInActive()
                     relation = null
+                    onInActive()
                     ToastUtil.ok("解除关注成功")
                 }
                 onError = { e ->

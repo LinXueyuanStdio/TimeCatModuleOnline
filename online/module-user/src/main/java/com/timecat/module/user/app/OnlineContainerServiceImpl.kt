@@ -13,7 +13,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @description null
  * @usage null
  */
-@ServiceAnno(ContainerService::class, name = arrayOf(RouterHub.GLOBAL_OnlineContainerService))
+@ServiceAnno(ContainerService::class, name = [RouterHub.GLOBAL_OnlineContainerService])
 class OnlineContainerServiceImpl : ContainerService {
     override fun loadForVirtualPath(context: Context,
                                     parentUuid: String,

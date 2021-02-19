@@ -12,6 +12,8 @@ import com.timecat.data.bmob.ext.bmob.deleteAction
 import com.timecat.data.bmob.ext.bmob.requestOneActionOrNull
 import com.timecat.data.bmob.ext.bmob.saveAction
 import com.timecat.data.bmob.ext.follow
+import com.timecat.data.bmob.ext.isFollowed
+import com.timecat.data.bmob.ext.isUnFollowed
 import com.timecat.data.bmob.ext.net.allFollowBlock
 import com.timecat.element.alert.ToastUtil
 import com.timecat.layout.ui.layout.setShakelessClickListener
@@ -56,6 +58,8 @@ fun View.setupFollowBlock(
                 target = I follow block
                 onSuccess = {
                     needRefresh?.invoke()
+                    relation = it
+                    block.isFollowed()
                     onActive()
                     ToastUtil.ok("关注成功")
                 }
@@ -69,8 +73,9 @@ fun View.setupFollowBlock(
                 target = relation!!
                 onSuccess = {
                     needRefresh?.invoke()
-                    onInActive()
                     relation = null
+                    block.isUnFollowed()
+                    onInActive()
                     ToastUtil.ok("解除关注成功")
                 }
                 onError = { e ->
