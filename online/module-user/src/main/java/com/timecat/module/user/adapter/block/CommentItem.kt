@@ -30,6 +30,7 @@ import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.*
 import com.timecat.module.user.social.comment.showSubComments
+import com.timecat.module.user.social.share.showMore
 import com.timecat.module.user.social.share.showShare
 import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
@@ -82,12 +83,14 @@ open class CommentItem(
         holder.userHead.bindBlock(block.user)
         val timeString: String = block.friendlyCreateTimeText()
         holder.userHead.content = timeString
-        holder.userHead.moreView.beGone()
+        holder.userHead.moreView.setShakelessClickListener {
+            showMore(activity.supportFragmentManager, block)
+        }
 
         setCommentContent(holder, block)
         setFooter(adapter, holder, block)
         holder.item.setShakelessClickListener {
-            GO.reply(block)
+            GO.replyComment(block)
         }
         holder.subs.setShakelessClickListener {
             showSubComments(activity.supportFragmentManager, block)
@@ -241,7 +244,7 @@ open class CommentItem(
                     NAV.go(RouterHub.LOGIN_LoginActivity)
                     return@setShakelessClickListener
                 }
-                GO.replyComment(block.parent, block)
+                GO.replyComment(block)
             }
         }
         holder.footer_share.apply {

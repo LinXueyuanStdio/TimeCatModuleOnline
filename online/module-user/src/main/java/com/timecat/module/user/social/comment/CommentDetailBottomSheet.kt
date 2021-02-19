@@ -111,7 +111,7 @@ class CommentDetailBottomSheet : BottomSheetDialogFragment() {
             GO.toAnyDetail(block.parent)
         }
         response.setShakelessClickListener {
-            GO.replyComment(block.parent, block)
+            GO.replyComment(block)
         }
         return root
     }

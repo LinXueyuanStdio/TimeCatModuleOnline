@@ -158,17 +158,10 @@ public class GO {
            .navigation();
     }
 
-    public static void replyComment(Block parent, Block relay) {
+    public static void replyComment(Block comment) {
         NAV.raw(RouterHub.USER_AddCommentActivity)
-           .withParcelable("parent", parent)
-           .withParcelable("relay", relay)
-           .navigation();
-    }
-
-    public static void reply(Block block) {
-        NAV.raw(RouterHub.USER_AddCommentActivity)
-           .withParcelable("parent", block.getParent())
-           .withParcelable("relay", block)
+           .withParcelable("parent", comment.getParent())
+           .withParcelable("relay", comment)
            .navigation();
     }
 

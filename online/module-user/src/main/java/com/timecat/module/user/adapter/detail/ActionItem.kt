@@ -82,12 +82,8 @@ class ActionItem(
         requestOneBlock {
             query = oneBlockOf(block.objectId)
             onSuccess = {
-                if (it == null) {
-                    ToastUtil.e("发生错误")
-                } else {
-                    this@ActionItem.block = it
-                    adapter.updateItem(this@ActionItem)
-                }
+                this@ActionItem.block = it
+                adapter.updateItem(this@ActionItem)
             }
             onError = {
                 it.printStackTrace()

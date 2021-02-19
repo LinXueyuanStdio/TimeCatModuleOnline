@@ -424,7 +424,7 @@ class BlockItem(
                 when (block.type) {
                     BLOCK_COMMENT -> {
                         //转发评论
-                        GO.replyComment(block.parent, block)
+                        GO.replyComment(block)
                     }
                     BLOCK_MOMENT -> {
                         //转发动态

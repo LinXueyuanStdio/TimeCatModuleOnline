@@ -13,6 +13,7 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
+import com.timecat.module.user.view.dsl.setupLikeBlockButton
 
 /**
  * @author 林学渊
@@ -33,7 +34,7 @@ class CommentFooterView @JvmOverloads constructor(
     }
 
     lateinit var root: View
-    lateinit var write_response: TextView
+    lateinit var response: TextView
     lateinit var comment: TextView
     lateinit var like: TextView
     lateinit var star: TextView
@@ -42,7 +43,7 @@ class CommentFooterView @JvmOverloads constructor(
     private fun init(context: Context, layout: Int = R.layout.user_base_comment_footer) {
         val inflater = LayoutInflater.from(context)
         root = inflater.inflate(layout, this)
-        write_response = root.findViewById(R.id.write_response)
+        response = root.findViewById(R.id.write_response)
         comment = root.findViewById(R.id.comment)
         like = root.findViewById(R.id.like)
         star = root.findViewById(R.id.star)
@@ -56,13 +57,14 @@ class CommentFooterView @JvmOverloads constructor(
      */
     fun bindBlock(activity: Activity, block: Block) {
         this.activity = activity
-        write_response.setShakelessClickListener {
-            GO.replyComment(block.parent, block)
+        response.setShakelessClickListener {
+            GO.replyComment(block)
         }
         comment.text = "${block.comments}"
         like.text = "${block.likes}"
         star.text = "${block.stars}"
         share.text = "${block.relays}"
+        setupLikeBlockButton(activity, like, block)
     }
 
 }
