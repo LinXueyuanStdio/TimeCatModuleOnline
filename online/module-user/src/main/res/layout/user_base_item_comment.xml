@@ -53,7 +53,7 @@
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:visibility="gone"
-            app:bga_npl_itemCornerRadius="0dp"
+            app:bga_npl_itemCornerRadius="5dp"
             app:bga_npl_itemSpanCount="3"
             app:bga_npl_itemWhiteSpacing="4dp"
             app:bga_npl_itemWidth="0dp"
