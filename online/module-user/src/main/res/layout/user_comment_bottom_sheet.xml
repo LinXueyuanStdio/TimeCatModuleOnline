@@ -28,14 +28,16 @@
 
                 <TextView
                     android:id="@+id/title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_horizontal"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackground"
                     android:padding="@dimen/spacing_small"
                     android:text="回复"
-                    android:textColor="@color/master_textColorSecondary" />
+                    android:textColor="@color/master_textColorSecondary"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/source"
@@ -65,13 +67,19 @@
                 android:overScrollMode="never" />
         </com.gturedi.views.StatefulLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.1"
+            android:background="@color/master_background_reverse" />
+
         <TextView
             android:id="@+id/response"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
-            android:drawablePadding="@dimen/small_spacing"
-            android:padding="@dimen/small_spacing"
+            android:drawablePadding="@dimen/spacing_small"
+            android:padding="@dimen/spacing_small"
             android:text="写回复"
             android:textColor="@color/master_textColorPrimary"
             app:drawableStartCompat="@drawable/ic_edit_24dp" />

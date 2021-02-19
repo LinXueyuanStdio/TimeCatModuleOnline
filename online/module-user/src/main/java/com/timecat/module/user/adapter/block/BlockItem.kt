@@ -397,7 +397,8 @@ class BlockItem(
         setupLikeBlockButton(
             activity,
             holder.root.footer_like_ll,
-            holder.root.footer_like_ll.footer_like_icon,
+            holder.root.footer_like_icon,
+            holder.root.footer_like,
             block
         ) {
 //            rebind(adapter, block)

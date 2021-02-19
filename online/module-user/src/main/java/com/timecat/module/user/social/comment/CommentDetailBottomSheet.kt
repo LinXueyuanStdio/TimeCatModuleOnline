@@ -145,9 +145,6 @@ class CommentDetailBottomSheet : BottomSheetDialogFragment() {
     }
     var emptyCallback: () -> Unit = {
         mStatefulLayout.showContent()
-        val activity = requireActivity()
-        val items = mutableListOf(CommentItem(activity, block, true))
-        mAdapter.reload(items)
         mAdapter.updateItem(notMoreItem, Payload.NO_MORE_LOAD)
     }
 
@@ -174,7 +171,13 @@ class CommentDetailBottomSheet : BottomSheetDialogFragment() {
                 cachePolicy = AVQuery.CachePolicy.NETWORK_ONLY
             }
             onError = errorCallback
-            onEmpty = emptyCallback
+            onEmpty = {
+                val activity = requireActivity()
+                val items = mutableListOf(CommentItem(activity, block, true))
+                mAdapter.reload(items)
+                mAdapter.updateItem(notMoreItem, Payload.NO_MORE_LOAD)
+                mStatefulLayout.showContent()
+            }
             onSuccess = {
                 offset += it.size
                 val activity = requireActivity()
