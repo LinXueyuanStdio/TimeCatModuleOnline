@@ -15,6 +15,7 @@ import com.timecat.identity.data.block.PackageItemBlock
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Body
+import com.timecat.layout.ui.business.form.CenterBody
 import com.timecat.layout.ui.business.form.Divider
 import com.timecat.layout.ui.business.setting.CenterIconItem
 import com.timecat.layout.ui.business.setting.ContainerItem
@@ -123,7 +124,7 @@ open class ItemDetailFragment : BottomSheetDialogFragment() {
     open fun ViewGroup.Content() {
         val content = item!!.content
         if (content.isNotEmpty()) {
-            Body(content)
+            CenterBody(content)
         }
     }
 }

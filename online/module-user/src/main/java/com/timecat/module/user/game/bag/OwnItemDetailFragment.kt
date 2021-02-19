@@ -13,6 +13,7 @@ import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Body
+import com.timecat.layout.ui.business.form.CenterBody
 import com.timecat.layout.ui.business.form.MaterialButton
 import com.timecat.layout.ui.layout.dp
 import com.timecat.module.user.R
@@ -43,7 +44,7 @@ class OwnItemDetailFragment : ItemDetailFragment() {
     override fun pack(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.pack(head))
         val count = ownItem.count
-        Body("拥有 $count")
+        CenterBody("拥有 $count")
         StepSliderButton("使用", count) { button, value ->
             button.isEnabled = false
             val params = mutableMapOf<String, Any>()
@@ -70,7 +71,7 @@ class OwnItemDetailFragment : ItemDetailFragment() {
     override fun data(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.data(head))
         val count = ownItem.count
-        Body("拥有 $count")
+        CenterBody("拥有 $count")
         MaterialButton("使用") { button ->
             val id = ownItem.item.objectId
             val path: String = when {
@@ -84,7 +85,7 @@ class OwnItemDetailFragment : ItemDetailFragment() {
     override fun equip(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.equip(head))
         val count = ownItem.count
-        Body("拥有 $count")
+        CenterBody("拥有 $count")
         StepSliderButton("使用", count) { button, value ->
             button.isEnabled = false
             val params = mutableMapOf<String, Any>()
@@ -111,7 +112,7 @@ class OwnItemDetailFragment : ItemDetailFragment() {
     override fun buff(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.buff(head))
         val count = ownItem.count
-        Body("拥有 $count")
+        CenterBody("拥有 $count")
         StepSliderButton("使用", count) { button, value ->
             button.isEnabled = false
             val params = mutableMapOf<String, Any>()
@@ -134,9 +135,9 @@ class OwnItemDetailFragment : ItemDetailFragment() {
     override fun cube(head: ItemBlock): ViewGroup.() -> Unit = {
         apply(super.cube(head))
         val count = ownItem.count
-        Body("拥有 $count")
+        CenterBody("拥有 $count")
         if (count > 0) {
-            Body("多余的方块将转化为混沌石")
+            CenterBody("多余的方块将转化为混沌石")
         }
         StepSliderButton("使用", count) { button, value ->
             button.isEnabled = false

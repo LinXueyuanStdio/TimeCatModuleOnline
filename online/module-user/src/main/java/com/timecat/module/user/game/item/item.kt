@@ -23,6 +23,7 @@ import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.Reward
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.CenterH1
 import com.timecat.layout.ui.business.form.H1
 import com.timecat.layout.ui.business.form.MaterialButton
 import com.timecat.layout.ui.business.form.StepSlide
@@ -103,7 +104,7 @@ fun ViewGroup.RewardList(activity: FragmentActivity, rewardList: List<Reward>) {
 }
 
 fun ViewGroup.BigTitle(title: String) {
-    H1(title).apply {
+    CenterH1(title).apply {
         gravity = Gravity.CENTER
         setTextColor(Attr.getPrimaryTextColor(context))
         setTextSize(20f)

@@ -24,7 +24,11 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/end">
 
-        <include layout="@layout/user_base_item_user_head" />
+        <com.timecat.module.user.view.UserHeadView
+            android:id="@+id/head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <include layout="@layout/user_base_item_moment" />
 
