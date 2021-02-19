@@ -154,6 +154,7 @@ class CommentDetailBottomSheet : BottomSheetDialogFragment() {
     open fun load() {
         offset = 0
         mAdapter.clear()
+        mAdapter.setEndlessProgressItem(notMoreItem)
         loadFirst()
     }
 

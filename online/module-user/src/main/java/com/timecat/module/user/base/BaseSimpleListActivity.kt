@@ -8,10 +8,7 @@ import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.service.DataError
 import com.timecat.layout.ui.entity.BaseAdapter
 import com.timecat.module.user.R
-import com.timecat.module.user.adapter.BlockAdapter
 import com.timecat.module.user.base.login.BaseLoginListActivity
-import eu.davidea.flexibleadapter.FlexibleAdapter
-import java.util.*
 
 /**
  * @author 林学渊

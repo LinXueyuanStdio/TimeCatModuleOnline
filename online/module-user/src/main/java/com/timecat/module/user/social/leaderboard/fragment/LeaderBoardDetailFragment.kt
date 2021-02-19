@@ -29,7 +29,6 @@ class LeaderBoardDetailFragment : BaseLoginListFragment() {
         val head = LeaderBoardBlock.fromJson(forum.structure)
         list.add(SimpleContentItem(requireActivity(), forum.content, head.atScope, head.topicScope))
         list.add(ActionItem(forum))
-        list.add(NinePhotoItem(requireActivity(), forum.objectId, head.mediaScope))
         adapter.reload(list)
     }
 

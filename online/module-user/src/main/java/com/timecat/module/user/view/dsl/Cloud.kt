@@ -3,9 +3,10 @@ package com.timecat.module.user.view.dsl
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
-import android.widget.Button
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.widget.TextViewCompat
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.dao.UserDao
@@ -19,6 +20,7 @@ import com.timecat.data.bmob.ext.net.allFollow
 import com.timecat.data.bmob.ext.net.allFollowBlock
 import com.timecat.data.bmob.ext.net.allLikeBlock
 import com.timecat.element.alert.ToastUtil
+import com.timecat.layout.ui.layout.drawable_start
 import com.timecat.layout.ui.layout.drawable_top
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -30,6 +32,119 @@ import com.timecat.module.user.R
  * @description null
  * @usage null
  */
+//region follow
+fun View.setupFollowBlock(
+    block: Block,
+    needRefresh: (() -> Unit)? = null,
+    onActive: () -> Unit = {},
+    onInActive: () -> Unit = {}
+) = apply {
+    var relation: Action? = null
+    val I = UserDao.getCurrentUser() ?: return@apply
+    tag = block.objectId
+    requestOneActionOrNull {
+        query = I.allFollowBlock(block)
+        onError = {
+            isEnabled = false
+            onInActive()
+        }
+        onEmpty = {
+            isEnabled = true
+            onInActive()
+        }
+        onSuccess = {
+            isEnabled = true
+            relation = it
+            onActive()
+        }
+    }
+    setShakelessClickListener {
+        if (relation == null) {
+            saveAction {
+                target = I follow block
+                onSuccess = {
+                    needRefresh?.invoke()
+                    onActive()
+                    ToastUtil.ok("关注成功")
+                }
+                onError = { e ->
+                    ToastUtil.ok("关注失败")
+                    LogUtil.e(e.toString())
+                }
+            }
+        } else {
+            deleteAction {
+                target = relation!!
+                onSuccess = {
+                    needRefresh?.invoke()
+                    onInActive()
+                    ToastUtil.ok("解除关注成功")
+                }
+                onError = { e ->
+                    ToastUtil.e("解除关注失败")
+                    LogUtil.e(e.toString())
+                }
+            }
+        }
+    }
+}
+
+fun View.setupFollowUser(
+    user: User,
+    needRefresh: (() -> Unit)? = null,
+    onActive: () -> Unit = {},
+    onInActive: () -> Unit = {}
+) = apply {
+    var relation: User2User? = null
+    val I = UserDao.getCurrentUser() ?: return@apply
+    tag = user.objectId
+    requestOneUserRelationOrNull {
+        query = I.allFollow(user)
+        onError = {
+            isEnabled = false
+            onInActive()
+        }
+        onEmpty = {
+            isEnabled = true
+            onInActive()
+        }
+        onSuccess = {
+            isEnabled = true
+            relation = it
+            onActive()
+        }
+    }
+    setShakelessClickListener {
+        if (relation == null) {
+            saveUserRelation {
+                target = I follow user
+                onSuccess = {
+                    needRefresh?.invoke()
+                    onActive()
+                    ToastUtil.ok("关注成功")
+                }
+                onError = { e ->
+                    ToastUtil.ok("关注失败")
+                    LogUtil.e(e.toString())
+                }
+            }
+        } else {
+            deleteUserRelation {
+                target = relation!!
+                onSuccess = {
+                    needRefresh?.invoke()
+                    onInActive()
+                    ToastUtil.ok("解除关注成功")
+                }
+                onError = { e ->
+                    ToastUtil.e("解除关注失败")
+                    LogUtil.e(e.toString())
+                }
+            }
+        }
+    }
+}
+
 fun setupFollowUserButton(
     context: Context,
     button: TextView,
@@ -38,62 +153,17 @@ fun setupFollowUserButton(
     button.apply {
         text = "关注"
         isEnabled = false
-        var relation: User2User? = null
-        val I = UserDao.getCurrentUser() ?: return@apply
-        requestOneUserRelation {
-            query = I.allFollow(user)
-            onError = {
-                isEnabled = true
-                text = "关注"
-                tag = "关注"
-                setTextColor(Attr.getPrimaryColor(context))
-            }
-            onSuccess = {
-                if (it == null) {
-                    isEnabled = true
-                    text = "关注"
-                    tag = "关注"
-                    setTextColor(Attr.getPrimaryColor(context))
-                } else {
-                    isEnabled = true
-                    relation = it
-                    text = "已关注"
-                    tag = "已关注"
-                    setTextColor(Attr.getBackgroundDarkestColor(context))
-                }
-            }
+        val onActive = {
+            text = "已关注"
+            setBackgroundResource(R.drawable.shape_4)
+            setTextColor(Attr.getBackgroundDarkColor(context))
         }
-        setShakelessClickListener {
-            if (relation == null) {
-                saveUserRelation {
-                    target = I follow user
-                    onSuccess = {
-                        setBackgroundResource(R.drawable.shape_4)
-                        text = "已关注"
-                        setTextColor(Attr.getPrimaryTextColor(context))
-                        ToastUtil.ok("关注成功")
-                    }
-                    onError = { e ->
-                        ToastUtil.ok("关注失败")
-                        LogUtil.e(e.toString())
-                    }
-                }
-            } else {
-                deleteUserRelation {
-                    target = relation!!
-                    onSuccess = {
-                        setBackgroundResource(R.drawable.shape_3)
-                        text = "关注"
-                        setTextColor(Attr.getPrimaryTextColorReverse(context))
-                        ToastUtil.ok("解除关注成功")
-                    }
-                    onError = { e ->
-                        ToastUtil.e("解除关注失败")
-                        LogUtil.e(e.toString())
-                    }
-                }
-            }
+        val onInActive = {
+            text = "关注"
+            setBackgroundResource(R.drawable.shape_3)
+            setTextColor(Attr.getPrimaryTextColor(context))
         }
+        setupFollowUser(user, null, onActive, onInActive)
     }
 }
 
@@ -104,69 +174,24 @@ fun setupFollowBlockButton(
     needRefresh: (() -> Unit)? = null
 ) {
     button.apply {
-        isEnabled = false
         text = "关注"
-        var relation: Action? = null
-        val I = UserDao.getCurrentUser() ?: return@apply
-        requestOneAction {
-            query = I.allFollowBlock(block)
-            onError = {
-                isEnabled = true
-                text = "关注"
-                tag = "关注"
-                setTextColor(Attr.getPrimaryColor(context))
-            }
-            onSuccess = {
-                if (it == null) {
-                    isEnabled = true
-                    text = "关注"
-                    tag = "关注"
-                    setTextColor(Attr.getPrimaryColor(context))
-                } else {
-                    isEnabled = true
-                    relation = it
-                    text = "已关注"
-                    tag = "已关注"
-                    setTextColor(Attr.getBackgroundDarkestColor(context))
-                }
-            }
+        isEnabled = false
+        val onActive = {
+            text = "已关注"
+            setBackgroundResource(R.drawable.shape_4)
+            setTextColor(Attr.getBackgroundDarkColor(context))
         }
-        setShakelessClickListener {
-            if (relation == null) {
-                saveAction {
-                    target = I follow block
-                    onSuccess = {
-                        needRefresh?.invoke()
-                        setBackgroundResource(R.drawable.shape_4)
-                        text = "已关注"
-                        setTextColor(Attr.getPrimaryTextColor(context))
-                        ToastUtil.ok("关注成功")
-                    }
-                    onError = { e ->
-                        ToastUtil.ok("关注失败")
-                        LogUtil.e(e.toString())
-                    }
-                }
-            } else {
-                deleteAction {
-                    target = relation!!
-                    onSuccess = {
-                        needRefresh?.invoke()
-                        setBackgroundResource(R.drawable.shape_3)
-                        text = "关注"
-                        setTextColor(Attr.getPrimaryTextColorReverse(context))
-                        ToastUtil.ok("解除关注成功")
-                    }
-                    onError = { e ->
-                        ToastUtil.e("解除关注失败")
-                        LogUtil.e(e.toString())
-                    }
-                }
-            }
+        val onInActive = {
+            text = "关注"
+            setBackgroundResource(R.drawable.shape_3)
+            setTextColor(Attr.getPrimaryTextColor(context))
         }
+        setupFollowBlock(block, needRefresh, onActive, onInActive)
     }
 }
+//endregion
 
+//region like
 fun setupLikeBlockButton(
     context: Context,
     iv: TextView,
@@ -175,75 +200,108 @@ fun setupLikeBlockButton(
 ) {
     iv.apply {
         isEnabled = false
-        var relation: Action? = null
-        val I = UserDao.getCurrentUser() ?: return@apply
-        requestOneAction {
-            query = I.allLikeBlock(block)
-            onError = {
-                isEnabled = true
+        val onActive = {
+            if (tag == block.objectId) {
+                drawable_top = R.drawable.user_ic_favorite_24dp
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getAccentColor(context)))
+                }
+                text = "已点赞"
+            }
+        }
+        val onInActive = {
+            if (tag == block.objectId) {
                 drawable_top = R.drawable.user_ic_love
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    compoundDrawableTintList = ColorStateList.valueOf(Attr.getIconColor(context))
+                    TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getIconColor(context)))
                 }
                 text = "点赞"
-                tag = "点赞"
             }
-            onSuccess = {
-                if (it == null) {
-                    isEnabled = true
-                    drawable_top = R.drawable.user_ic_love
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        compoundDrawableTintList = ColorStateList.valueOf(Attr.getIconColor(context))
-                    }
-                    text = "点赞"
-                    tag = "点赞"
-                } else {
-                    isEnabled = true
-                    relation = it
-                    drawable_top = R.drawable.user_ic_favorite_24dp
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        compoundDrawableTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
-                    }
-                    text = "已点赞"
-                    tag = "已点赞"
-                }
-            }
-
         }
-        setShakelessClickListener {
-            if (relation == null) {
-                saveAction {
-                    target = I follow block
-                    onSuccess = {
-                        needRefresh?.invoke()
-                        drawable_top = R.drawable.user_ic_favorite_24dp
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            compoundDrawableTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
-                        }
-                        tag = "已点赞"
-                        ToastUtil.ok("点赞成功")
-                    }
-                    onError = { e ->
-                        ToastUtil.ok("点赞失败")
-                        LogUtil.e(e.toString())
-                    }
+        setupLikeBlock(block, needRefresh, onActive, onInActive)
+    }
+}
+
+fun setupLikeBlockButton2(
+    context: Context,
+    iv: TextView,
+    block: Block,
+    needRefresh: (() -> Unit)? = null
+) {
+    iv.apply {
+        isEnabled = false
+        val onActive = {
+            if (tag == block.objectId) {
+                drawable_start = R.drawable.user_ic_favorite_24dp
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getAccentColor(context)))
                 }
-            } else {
-                deleteAction {
-                    target = relation!!
-                    onSuccess = {
-                        needRefresh?.invoke()
-                        drawable_top = R.drawable.user_ic_love
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            compoundDrawableTintList = ColorStateList.valueOf(Attr.getIconColor(context))
-                        }
-                        tag = "点赞"
-                        ToastUtil.ok("解除点赞成功")
-                    }
-                    onError = { e ->
-                        ToastUtil.e("解除点赞失败")
-                        LogUtil.e(e.toString())
-                    }
+                text = "已点赞"
+            }
+        }
+        val onInActive = {
+            if (tag == block.objectId) {
+                drawable_start = R.drawable.user_ic_love
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getIconColor(context)))
+                }
+                text = "点赞"
+            }
+        }
+        setupLikeBlock(block, needRefresh, onActive, onInActive)
+    }
+}
+
+fun View.setupLikeBlock(
+    block: Block,
+    needRefresh: (() -> Unit)? = null,
+    onActive: () -> Unit = {},
+    onInActive: () -> Unit = {}
+) = apply {
+    var relation: Action? = null
+    val I = UserDao.getCurrentUser() ?: return@apply
+    tag = block.objectId
+    requestOneActionOrNull {
+        query = I.allLikeBlock(block)
+        onError = {
+            isEnabled = false
+            onInActive()
+        }
+        onEmpty = {
+            isEnabled = true
+            onInActive()
+        }
+        onSuccess = {
+            isEnabled = true
+            relation = it
+            onActive()
+        }
+    }
+    setShakelessClickListener {
+        if (relation == null) {
+            saveAction {
+                target = I follow block
+                onSuccess = {
+                    needRefresh?.invoke()
+                    onActive()
+                    ToastUtil.ok("点赞成功")
+                }
+                onError = { e ->
+                    ToastUtil.ok("点赞失败")
+                    LogUtil.e(e.toString())
+                }
+            }
+        } else {
+            deleteAction {
+                target = relation!!
+                onSuccess = {
+                    needRefresh?.invoke()
+                    onInActive()
+                    ToastUtil.ok("解除点赞成功")
+                }
+                onError = { e ->
+                    ToastUtil.e("解除点赞失败")
+                    LogUtil.e(e.toString())
                 }
             }
         }
@@ -258,66 +316,19 @@ fun setupLikeBlockButton(
 ) {
     iv.apply {
         isEnabled = false
-        var relation: Action? = null
-        val I = UserDao.getCurrentUser() ?: return@apply
-        requestOneAction {
-            query = I.allLikeBlock(block)
-            onError = {
-                isEnabled = true
+        val onActive = {
+            if (tag == block.objectId) {
+                setImageResource(R.drawable.user_ic_favorite_24dp)
+                imageTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
+            }
+        }
+        val onInActive = {
+            if (tag == block.objectId) {
                 setImageResource(R.drawable.user_ic_love)
                 imageTintList = ColorStateList.valueOf(Attr.getIconColor(context))
-                tag = "点赞"
-                tag = "点赞"
-            }
-            onSuccess = {
-                if (it == null) {
-                    isEnabled = true
-                    setImageResource(R.drawable.user_ic_love)
-                    imageTintList = ColorStateList.valueOf(Attr.getIconColor(context))
-                    tag = "点赞"
-                    tag = "点赞"
-                } else {
-                    isEnabled = true
-                    relation = it
-                    setImageResource(R.drawable.user_ic_favorite_24dp)
-                    imageTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
-                    tag = "已点赞"
-                    tag = "已点赞"
-                }
             }
         }
-        setShakelessClickListener {
-            if (relation == null) {
-                saveAction {
-                    target = I follow block
-                    onSuccess = {
-                        needRefresh?.invoke()
-                        setImageResource(R.drawable.user_ic_favorite_24dp)
-                        imageTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
-                        tag = "已点赞"
-                        ToastUtil.ok("点赞成功")
-                    }
-                    onError = { e ->
-                        ToastUtil.ok("点赞失败")
-                        LogUtil.e(e.toString())
-                    }
-                }
-            } else {
-                deleteAction {
-                    target = relation!!
-                    onSuccess = {
-                        needRefresh?.invoke()
-                        setImageResource(R.drawable.user_ic_love)
-                        imageTintList = ColorStateList.valueOf(Attr.getIconColor(context))
-                        tag = "点赞"
-                        ToastUtil.ok("解除点赞成功")
-                    }
-                    onError = { e ->
-                        ToastUtil.e("解除点赞失败")
-                        LogUtil.e(e.toString())
-                    }
-                }
-            }
-        }
+        setupLikeBlock(block, needRefresh, onActive, onInActive)
     }
 }
+//endregion

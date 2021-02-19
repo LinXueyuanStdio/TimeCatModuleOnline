@@ -66,7 +66,7 @@ abstract class BaseEndlessListFragment : BaseLoginListFragment() {
     }
 
     override fun onRefresh() {
-        mRefreshLayout.isRefreshing = false
+        loadData()
     }
 
     var errorCallback: (DataError) -> Unit = {
@@ -90,6 +90,8 @@ abstract class BaseEndlessListFragment : BaseLoginListFragment() {
 
     open fun load() {
         offset = 0
+        adapter.clear()
+        adapter.setEndlessProgressItem(notMoreItem)
         loadFirst()
     }
 

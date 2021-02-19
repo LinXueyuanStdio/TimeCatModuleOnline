@@ -58,7 +58,7 @@ abstract class BaseEndlessListActivity : BaseLoginListActivity() {
     }
 
     override fun onRefresh() {
-        mRefreshLayout.isRefreshing = false
+        loadData()
     }
 
     var errorCallback: (DataError) -> Unit = {
@@ -82,6 +82,8 @@ abstract class BaseEndlessListActivity : BaseLoginListActivity() {
 
     fun load() {
         offset = 0
+        adapter.clear()
+        adapter.setEndlessProgressItem(notMoreItem)
         loadFirst()
     }
 

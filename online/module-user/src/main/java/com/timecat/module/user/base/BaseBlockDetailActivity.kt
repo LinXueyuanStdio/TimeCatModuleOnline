@@ -53,6 +53,9 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
         titleString = block.title
         userHerf.head.bindBlock(block.user)
         footer.bindBlock(this, block)
+        footer.comment.setShakelessClickListener {
+            collapseContainer.setScrimsShown(true, true)
+        }
         more.setShakelessClickListener {
             showMore(supportFragmentManager, block)
         }

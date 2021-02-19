@@ -16,6 +16,7 @@ import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.deleteBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
+import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.image.IMG
@@ -36,6 +37,7 @@ import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.*
 import com.timecat.module.user.permission.PermissionValidator
 import com.timecat.module.user.social.comment.showSubComments
+import com.timecat.module.user.view.MomentHerfView
 import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -58,6 +60,7 @@ class BlockItem(
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
         val headView: UserHeadView = root.findViewById(R.id.head)
+        val momentHerf: MomentHerfView = root.findViewById(R.id.momentHerf)
     }
 
     override fun getLayoutRes(): Int = R.layout.user_moment_item_main
@@ -334,17 +337,19 @@ class BlockItem(
     ) {
         holder.root.momentHerf.visibility = View.GONE
         relayScope?.let {
-            requestOneBlock {
+            requestOneBlockOrNull {
                 query = oneBlockOf(it.objectId)
-                onSuccess = { data ->
-                    holder.root.momentHerf.apply {
+                onEmpty = {
+                    holder.momentHerf.apply {
                         visibility = View.VISIBLE
-                        if (data == null) {
-                            isNotExist()
-                        } else {
-                            bindBlock(data)
-                            setRelay(data)
-                        }
+                        isNotExist()
+                    }
+                }
+                onSuccess = { data ->
+                    holder.momentHerf.apply {
+                        visibility = View.VISIBLE
+                        bindBlock(data)
+                        setRelay(data)
                     }
                 }
                 onError = {

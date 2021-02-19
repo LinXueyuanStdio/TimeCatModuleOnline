@@ -20,6 +20,7 @@ import com.timecat.layout.ui.layout.HorizontalScrollView
 import com.timecat.layout.ui.layout.padding
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
+import com.timecat.module.user.social.comment.showSubComments
 import com.timecat.module.user.view.dsl.IconText
 import com.timecat.module.user.view.dsl.RoundIconText
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -35,8 +36,7 @@ import com.xiaojinzi.component.anno.FragmentAnno
 @FragmentAnno(USER_MoreBottomSheet)
 class MoreBottomSheet : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("block")
-    @JvmField
-    var block: Block? = null
+    lateinit var block: Block
     override fun onCreate(savedInstanceState: Bundle?) {
         NAV.inject(this)
         super.onCreate(savedInstanceState)
@@ -56,10 +56,16 @@ class MoreBottomSheet : BottomSheetDialogFragment() {
             HorizontalScrollView {
                 isHorizontalScrollBarEnabled = false
                 HorizontalContainer {
+                    RoundIconText(R.drawable.ic_wrap_text, "查看会话") {
+                        setShakelessClickListener {
+                            showSubComments(childFragmentManager, block)
+                            dismiss()
+                        }
+                    }
                     RoundIconText(R.drawable.ic_copy_24dp, "复制") {
                         setShakelessClickListener {
                             val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-                            cm?.setPrimaryClip(ClipData.newPlainText(null, block?.shareText()))
+                            cm?.setPrimaryClip(ClipData.newPlainText(null, block.shareText()))
                             ToastUtil.ok("已复制到粘贴板")
                             dismiss()
                         }
@@ -86,7 +92,7 @@ class MoreBottomSheet : BottomSheetDialogFragment() {
                 HorizontalContainer {
                     IconText(R.drawable.ic_logo_wechat, "微信") {
                         setShakelessClickListener {
-                            ShareUtils.shareTextToWechatFriend(context, block?.shareText()) {
+                            ShareUtils.shareTextToWechatFriend(context, block.shareText()) {
                                 ToastUtil.w_long(it)
                             }
                             dismiss()
@@ -94,7 +100,7 @@ class MoreBottomSheet : BottomSheetDialogFragment() {
                     }
                     IconText(R.drawable.ic_logo_moments, "朋友圈") {
                         setShakelessClickListener {
-                            ShareUtils.shareTextToTimeLine(context, block?.shareText()) {
+                            ShareUtils.shareTextToTimeLine(context, block.shareText()) {
                                 ToastUtil.w_long(it)
                             }
                             dismiss()
@@ -102,14 +108,14 @@ class MoreBottomSheet : BottomSheetDialogFragment() {
                     }
                     IconText(R.drawable.ic_logo_weibo, "微博") {
                         setShakelessClickListener {
-                            ShareUtils.shareTextToSina(context, block?.shareText()) {
+                            ShareUtils.shareTextToSina(context, block.shareText()) {
                                 ToastUtil.w_long(it)
                             }
                         }
                     }
                     IconText(R.drawable.ic_logo_qq, "QQ") {
                         setShakelessClickListener {
-                            ShareUtils.shareTextToQQFriend(context, block?.shareText()) {
+                            ShareUtils.shareTextToQQFriend(context, block.shareText()) {
                                 ToastUtil.w_long(it)
                             }
                             dismiss()
@@ -118,14 +124,14 @@ class MoreBottomSheet : BottomSheetDialogFragment() {
                     IconText(R.drawable.ic_logo_link, "复制链接") {
                         setShakelessClickListener {
                             val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-                            cm?.setPrimaryClip(ClipData.newPlainText(null, block?.herf()))
+                            cm?.setPrimaryClip(ClipData.newPlainText(null, block.herf()))
                             ToastUtil.ok("已复制到粘贴板")
                             dismiss()
                         }
                     }
                     IconText(R.drawable.ic_logo_more, "更多") {
                         setShakelessClickListener {
-                            ShareUtils.share(context, block?.shareText())
+                            ShareUtils.share(context, block.shareText())
                             dismiss()
                         }
                     }

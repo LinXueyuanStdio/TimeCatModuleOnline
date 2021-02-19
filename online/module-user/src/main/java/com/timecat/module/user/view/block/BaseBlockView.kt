@@ -19,6 +19,7 @@ import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
+import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
@@ -193,17 +194,19 @@ abstract class BaseBlockView @JvmOverloads constructor(
         relayScope: RelayScope? = null
     ) {
         relayScope?.let {
-            requestOneBlock {
+            requestOneBlockOrNull {
                 query = oneBlockOf(it.objectId)
+                onEmpty = {
+                    momentHerf.apply {
+                        visibility = VISIBLE
+                        isNotExist()
+                    }
+                }
                 onSuccess = { data ->
                     momentHerf.apply {
-                        visibility = View.VISIBLE
-                        if (data == null) {
-                            isNotExist()
-                        } else {
-                            bindBlock(data)
-                            setRelay(data)
-                        }
+                        visibility = VISIBLE
+                        bindBlock(data)
+                        setRelay(data)
                     }
                 }
                 onError = {

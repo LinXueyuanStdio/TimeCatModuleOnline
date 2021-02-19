@@ -90,6 +90,8 @@ abstract class BaseEndlessListBottomSheet : BaseLoginListFragment() {
 
     open fun load() {
         offset = 0
+        adapter.clear()
+        adapter.setEndlessProgressItem(notMoreItem)
         loadFirst()
     }
 

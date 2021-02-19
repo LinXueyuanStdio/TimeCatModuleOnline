@@ -8,7 +8,6 @@ import com.shuyu.textutillib.RichTextView
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
-import com.timecat.component.commonsdk.extension.beGone
 import com.timecat.component.commonsdk.extension.beVisibleIf
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.identity.Attr
@@ -17,7 +16,6 @@ import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.extend.arms.BaseApplication
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
@@ -34,6 +32,7 @@ import com.timecat.module.user.social.share.showMore
 import com.timecat.module.user.social.share.showShare
 import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
+import com.timecat.module.user.view.dsl.setupLikeBlockButton2
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 
@@ -91,6 +90,10 @@ open class CommentItem(
         setFooter(adapter, holder, block)
         holder.item.setShakelessClickListener {
             GO.replyComment(block)
+        }
+        holder.item.setOnLongClickListener {
+            showMore(activity.supportFragmentManager, block)
+            true
         }
         holder.subs.setShakelessClickListener {
             showSubComments(activity.supportFragmentManager, block)
@@ -231,30 +234,22 @@ open class CommentItem(
         holder.footer_comment.text = block.commentText()
         holder.footer_share.text = block.shareText()
 
-        setupLikeBlockButton(
-            BaseApplication.getContext(),
-            holder.footer_like,
-            block
-        ) {
+        setupLikeBlockButton2(activity, holder.footer_like, block) {
             rebind(adapter, block)
         }
-        holder.footer_comment.apply {
-            setShakelessClickListener {
-                if (UserDao.getCurrentUser() == null) {
-                    NAV.go(RouterHub.LOGIN_LoginActivity)
-                    return@setShakelessClickListener
-                }
-                GO.replyComment(block)
+        holder.footer_comment.setShakelessClickListener {
+            if (UserDao.getCurrentUser() == null) {
+                NAV.go(RouterHub.LOGIN_LoginActivity)
+                return@setShakelessClickListener
             }
+            GO.replyComment(block)
         }
-        holder.footer_share.apply {
-            setShakelessClickListener {
-                if (UserDao.getCurrentUser() == null) {
-                    NAV.go(RouterHub.LOGIN_LoginActivity)
-                    return@setShakelessClickListener
-                }
-                showShare(activity.supportFragmentManager, block)
+        holder.footer_share.setShakelessClickListener {
+            if (UserDao.getCurrentUser() == null) {
+                NAV.go(RouterHub.LOGIN_LoginActivity)
+                return@setShakelessClickListener
             }
+            showShare(activity.supportFragmentManager, block)
         }
     }
 }
