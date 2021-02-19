@@ -13,7 +13,6 @@ import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.NoteBody
 import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.ForumBlock
-import com.timecat.identity.data.block.TopicBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Image
 import com.timecat.layout.ui.business.form.OneLineInput
@@ -42,8 +41,9 @@ open class AddForumActivity : BaseBlockEditorActivity() {
     override fun routerInject() = NAV.inject(this)
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        val head = TopicBlock.fromJson(structure)
+        val head = ForumBlock.fromJson(structure)
         formData.icon = head.header?.icon ?: "R.drawable.ic_folder"
+        formData.attachments = head.mediaScope
         formData.setContentScope(context, content, head.atScope, head.topicScope)
     }
 
