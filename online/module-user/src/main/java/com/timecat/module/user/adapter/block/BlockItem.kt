@@ -18,7 +18,7 @@ import com.timecat.data.bmob.ext.bmob.deleteBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
 import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.data.bmob.ext.net.oneNullableBlockOf
+import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
@@ -339,7 +339,7 @@ class BlockItem(
         holder.root.momentHerf.visibility = View.GONE
         relayScope?.let {
             requestOneBlockOrNull {
-                query = oneNullableBlockOf(it.objectId)
+                query = oneBlockOf(it.objectId)
                 onEmpty = {
                     holder.momentHerf.apply {
                         visibility = View.VISIBLE
@@ -416,10 +416,11 @@ class BlockItem(
 
         setupLikeBlockButton(
             activity,
+            holder.root.footer_like_ll,
             holder.root.footer_like_ll.footer_like_icon,
             block
         ) {
-            rebind(adapter, block)
+//            rebind(adapter, block)
         }
         holder.root.footer_comment_ll.apply {
             setOnClickListener {

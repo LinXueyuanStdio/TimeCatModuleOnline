@@ -31,7 +31,6 @@ import com.timecat.module.user.social.comment.showSubComments
 import com.timecat.module.user.social.share.showMore
 import com.timecat.module.user.social.share.showShare
 import com.timecat.module.user.view.UserHeadView
-import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import com.timecat.module.user.view.dsl.setupLikeBlockButton2
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -226,7 +225,7 @@ open class CommentItem(
         holder.footer_share.text = block.shareText("")
 
         setupLikeBlockButton2(activity, holder.footer_like, block) {
-            rebind(adapter, block)
+//            rebind(adapter, block)
         }
         holder.footer_comment.setShakelessClickListener {
             if (UserDao.getCurrentUser() == null) {

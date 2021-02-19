@@ -16,6 +16,7 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.common.User2User
 import com.timecat.data.bmob.ext.bmob.*
 import com.timecat.data.bmob.ext.follow
+import com.timecat.data.bmob.ext.like
 import com.timecat.data.bmob.ext.net.*
 import com.timecat.element.alert.ToastUtil
 import com.timecat.layout.ui.layout.drawable_start
@@ -41,7 +42,7 @@ fun View.setupFollowBlock(
     val I = UserDao.getCurrentUser() ?: return@apply
     tag = block.objectId
     requestOneActionOrNull {
-        query = I.allNullableFollowBlock(block)
+        query = I.allFollowBlock(block)
         onError = {
             LogUtil.se("onError$it")
             isEnabled = false
@@ -98,7 +99,7 @@ fun View.setupFollowUser(
     val I = UserDao.getCurrentUser() ?: return@apply
     tag = user.objectId
     requestOneUserRelationOrNull {
-        query = I.allNullableFollow(user)
+        query = I.allFollow(user)
         onError = {
             LogUtil.se("onError$it")
             isEnabled = false
@@ -204,7 +205,7 @@ fun setupLikeBlockButton(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getAccentColor(context)))
                 }
-                text = "已点赞"
+                text = "${block.likes + 1}"
             }
         }
         val onInActive = {
@@ -213,7 +214,7 @@ fun setupLikeBlockButton(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getIconColor(context)))
                 }
-                text = "点赞"
+                text = "${if (block.likes == 0) "点赞" else block.likes}"
             }
         }
         setupLikeBlock(block, needRefresh, onActive, onInActive)
@@ -228,12 +229,14 @@ fun setupLikeBlockButton2(
 ) {
     iv.apply {
         isEnabled = false
+        tag = block.objectId
         val onActive = {
             if (tag == block.objectId) {
                 drawable_start = R.drawable.user_ic_favorite_24dp
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getAccentColor(context)))
                 }
+                text = "${block.likes + 1}"
             }
         }
         val onInActive = {
@@ -242,6 +245,7 @@ fun setupLikeBlockButton2(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getSecondaryTextColor(context)))
                 }
+                text = "${if (block.likes == 0) "点赞" else block.likes}"
             }
         }
         setupLikeBlock(block, needRefresh, onActive, onInActive)
@@ -258,7 +262,7 @@ fun View.setupLikeBlock(
     val I = UserDao.getCurrentUser() ?: return@apply
     tag = block.objectId
     requestOneActionOrNull {
-        query = I.allNullableLikeBlock(block)
+        query = I.allLikeBlock(block)
         onError = {
             isEnabled = false
             LogUtil.se("onError$it")
@@ -279,7 +283,7 @@ fun View.setupLikeBlock(
     setShakelessClickListener {
         if (relation == null) {
             saveAction {
-                target = I follow block
+                target = I like block
                 onSuccess = {
                     needRefresh?.invoke()
                     onActive()
@@ -309,25 +313,26 @@ fun View.setupLikeBlock(
 
 fun setupLikeBlockButton(
     context: Context,
+    container: View,
     iv: ImageView,
     block: Block,
     needRefresh: (() -> Unit)? = null
 ) {
     iv.apply {
-        isEnabled = false
         val onActive = {
-            if (tag == block.objectId) {
+            if (container.tag == block.objectId) {
                 setImageResource(R.drawable.user_ic_favorite_24dp)
                 imageTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
             }
         }
         val onInActive = {
-            if (tag == block.objectId) {
+            if (container.tag == block.objectId) {
                 setImageResource(R.drawable.user_ic_love)
                 imageTintList = ColorStateList.valueOf(Attr.getIconColor(context))
             }
         }
-        setupLikeBlock(block, needRefresh, onActive, onInActive)
+        container.isEnabled = false
+        container.setupLikeBlock(block, needRefresh, onActive, onInActive)
     }
 }
 //endregion

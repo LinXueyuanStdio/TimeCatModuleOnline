@@ -18,10 +18,8 @@ import com.timecat.component.commonsdk.extension.beGone
 import com.timecat.component.commonsdk.helper.HERF
 import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
 import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.data.bmob.ext.net.oneNullableBlockOf
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
@@ -34,9 +32,6 @@ import com.timecat.module.user.view.MomentHerfView
 import com.timecat.module.user.view.ShareView
 import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.item.BigContentItem
-import kotlinx.android.synthetic.main.header_moment_detail.view.*
-import kotlinx.android.synthetic.main.user_base_item_comment_header.view.*
-import kotlinx.android.synthetic.main.user_base_item_moment.view.*
 
 /**
  * @author 林学渊
@@ -197,7 +192,7 @@ abstract class BaseBlockView @JvmOverloads constructor(
     ) {
         relayScope?.let {
             requestOneBlockOrNull {
-                query = oneNullableBlockOf(it.objectId)
+                query = oneBlockOf(it.objectId)
                 onEmpty = {
                     momentHerf.apply {
                         visibility = VISIBLE
