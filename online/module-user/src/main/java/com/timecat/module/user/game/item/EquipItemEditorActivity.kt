@@ -34,10 +34,9 @@ class EquipItemEditorActivity : BaseItemAddActivity() {
     override fun routerInject() = NAV.inject(this)
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        formData.content = content
         val head = ItemBlock.fromJson(structure)
         formData.attachments = head.mediaScope
-        formData.setScope(head.atScope, head.topicScope)
+        formData.setContentScope(context, content, head.atScope, head.topicScope)
         formData.icon = head.header.avatar
     }
 

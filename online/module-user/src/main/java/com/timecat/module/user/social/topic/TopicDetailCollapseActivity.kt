@@ -8,11 +8,12 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.data.block.ForumBlock
+import com.timecat.identity.data.block.TopicBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockDetailActivity
 import com.timecat.module.user.social.common.CommentListFragment
 import com.timecat.module.user.social.common.LikeListFragment
-import com.timecat.module.user.social.common.RelayListFragment
+import com.timecat.module.user.social.common.MomentListFragment
 import com.timecat.module.user.social.topic.fragment.TopicDetailFragment
 import com.timecat.module.user.view.TopicCard
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
@@ -46,7 +47,7 @@ class TopicDetailCollapseActivity : BaseBlockDetailActivity() {
 
     override fun loadDetail(block: Block) {
         super.loadDetail(block)
-        val headerBlock = ForumBlock.fromJson(block.structure)
+        val headerBlock = TopicBlock.fromJson(block.structure)
         titleString = block.title
         card.apply {
             title = block.title
@@ -84,7 +85,7 @@ class TopicDetailCollapseActivity : BaseBlockDetailActivity() {
                 0 -> TopicDetailFragment()
                 1 -> CommentListFragment()
                 2 -> LikeListFragment()
-                3 -> RelayListFragment()
+                3 -> MomentListFragment()
                 else -> FallBackFragment()
             }
         }

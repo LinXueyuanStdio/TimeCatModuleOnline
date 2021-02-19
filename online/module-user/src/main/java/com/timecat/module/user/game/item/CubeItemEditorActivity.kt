@@ -5,6 +5,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.afollestad.vvalidator.form.Form
+import com.shuyu.textutillib.model.TopicModel
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
@@ -43,10 +44,9 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
     override fun routerInject() = NAV.inject(this)
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        formData.content = content
         val head = ItemBlock.fromJson(structure)
         formData.attachments = head.mediaScope
-        formData.setScope(head.atScope, head.topicScope)
+        formData.setContentScope(context, content, head.atScope, head.topicScope)
         formData.icon = head.header.avatar
         val head2 = CubeItemBlock.fromJson(head.structure)
         formData.blockId = head2.uuid
@@ -118,7 +118,8 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
                 val cube = items[idx]
                 formData.title = cube.title
                 formData.blockId = cube.objectId
-                formData.content = "${cube.content}\n使用后获得方块：${cube.title}"
+                val content = "${cube.content}\n使用后获得方块：#${cube.title}"
+                formData.setContent(context, content, null, listOf(TopicModel(cube.title, cube.objectId)))
                 val head = IdentityBlock.fromJson(cube.structure)
                 formData.icon = head.header.avatar
             }

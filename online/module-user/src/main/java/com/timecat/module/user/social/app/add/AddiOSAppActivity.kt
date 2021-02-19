@@ -36,11 +36,10 @@ class AddiOSAppActivity : BaseAddAppActivity() {
 
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        formData.content = content
         val head = AppBlock.fromJson(structure)
         formData.icon = head.header.avatar
         val head2 = AndroidApp.fromJson(head.structure)
-        formData.url = head2.packageName
+        formData.url = head.url
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {

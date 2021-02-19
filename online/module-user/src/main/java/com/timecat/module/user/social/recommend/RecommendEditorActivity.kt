@@ -1,10 +1,10 @@
 package com.timecat.module.user.social.recommend
 
-import android.view.View
+import com.shuyu.textutillib.model.TopicModel
+import com.shuyu.textutillib.model.UserModel
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Comment
-import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.isCommented
 import com.timecat.data.bmob.ext.isRelays
@@ -14,7 +14,6 @@ import com.timecat.identity.data.block.COMMENT_REPLY
 import com.timecat.identity.data.block.COMMENT_SIMPLE
 import com.timecat.identity.data.block.CommentBlock
 import com.timecat.identity.data.block.SimpleComment
-import com.timecat.identity.data.block.type.BLOCK_COMMENT
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.timecat.module.user.view.BlockHerfView
@@ -54,8 +53,6 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
     @JvmField
     var comment: Block? = null
 
-    var replyBlockId: String = ""
-
     override fun title(): String = "评论"
     override fun routerInject() = NAV.inject(this)
 
@@ -78,7 +75,6 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
     }
 
     override fun updatableBlock(): Block.() -> Unit = {
-        title = replyBlockId
         content = formData.content
         //更新评论后应该保持parent不变
         structure = getHeadBlock().toJson()
@@ -99,15 +95,22 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
         parent?.let {
             val block_herf = BlockHerfView(context)
             container.addView(block_herf, 0)
-            block_herf.bindBlock(relay ?: it)
-            emojiEditText.hint = relay?.let { "转发 @${it.user.nickName}" } ?: "回复 @${it.user.nickName}"
+            if (relay == null) {
+                block_herf.bindBlock(relay ?: it)
+                emojiEditText.hint = "评论 @${it.user.nickName}"
+                val content = ""
+                formData.setContentScope(context, content, null, null)
+            } else {
+                relay?.let {
+                    block_herf.bindBlock(it)
+                    emojiEditText.hint = "转发 @${it.user.nickName}"
+                }
+            }
         }
         comment?.let {
-            replyBlockId = it.title
-            formData.content = it.content
             val head = CommentBlock.fromJson(it.structure)
             formData.attachments = head.mediaScope
-            formData.setScope(head.atScope, head.topicScope)
+            formData.setContentScope(context, it.content, head.atScope, head.topicScope)
         }
     }
 

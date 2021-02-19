@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
+import com.timecat.module.user.base.BaseEndlessActionFragment
 import com.timecat.module.user.base.BaseEndlessBlockFragment
 
 /**
@@ -15,10 +16,7 @@ import com.timecat.module.user.base.BaseEndlessBlockFragment
  * @description 论坛的子块组成的列表
  * @usage null
  */
-abstract class BaseListFragment : BaseEndlessBlockFragment() {
-
-    override fun layout(): Int = R.layout.user_base_refresh_list
-    lateinit var response: TextView
+abstract class BaseActionListFragment : BaseEndlessActionFragment() {
 
     lateinit var viewModel: BlockViewModel
     override fun initViewAfterLogin() {
@@ -28,17 +26,5 @@ abstract class BaseListFragment : BaseEndlessBlockFragment() {
         })
     }
 
-    override fun bindView(view: View) {
-        super.bindView(view)
-        response = view.findViewById(R.id.write_response)
-        response.setShakelessClickListener {
-            viewModel.block.value?.let {
-                addNew(it)
-            }
-        }
-    }
-
     override fun loadData() {}
-
-    open fun addNew(block: Block) {}
 }

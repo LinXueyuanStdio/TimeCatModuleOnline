@@ -1,9 +1,12 @@
 package com.timecat.module.user.social.common
 
 
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.net.findAllComment
-import com.timecat.module.user.base.GO
+import androidx.fragment.app.FragmentActivity
+import com.timecat.data.bmob.data.common.Action
+import com.timecat.data.bmob.ext.net.allLikes
+import com.timecat.layout.ui.entity.BaseItem
+import com.timecat.module.user.adapter.detail.BaseDetailVH
+import com.timecat.module.user.adapter.user.UserItem
 
 /**
  * @author 林学渊
@@ -12,10 +15,10 @@ import com.timecat.module.user.base.GO
  * @description 话题讨论
  * @usage null
  */
-class LikeListFragment : BaseListFragment() {
+class LikeListFragment : BaseActionListFragment() {
     override fun name(): String = "点赞"
-    override fun query() = viewModel.block.value!!.findAllComment()
-    override fun addNew(block: Block) {
-        GO.addCommentFor(block)
+    override fun query() = viewModel.block.value!!.allLikes()
+    override fun action2Item(activity: FragmentActivity, action: Action): BaseItem<out BaseDetailVH> {
+        return UserItem(activity, action.user)
     }
 }

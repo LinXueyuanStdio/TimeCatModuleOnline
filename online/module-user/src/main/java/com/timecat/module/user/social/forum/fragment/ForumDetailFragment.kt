@@ -23,13 +23,13 @@ import java.util.*
  */
 class ForumDetailFragment : BaseLoginListFragment() {
 
-    private fun loadDetail(forum: Block) {
+    private fun loadDetail(block: Block) {
         val list = mutableListOf<BaseItem<*>>()
 //        list.add(SingleAuthorItem(forum.user))TODO 不要显示创建着
-        val header = ForumBlock.fromJson(forum.structure)
-        list.add(SimpleContentItem(requireActivity(), forum.content))
-        list.add(ActionItem(forum))
-        list.add(NinePhotoItem(requireActivity(), forum.objectId, header.mediaScope))
+        val head = ForumBlock.fromJson(block.structure)
+        list.add(SimpleContentItem(requireActivity(), block.content, head.atScope, head.topicScope))
+        list.add(ActionItem(block))
+        list.add(NinePhotoItem(requireActivity(), block.objectId, head.mediaScope))
         adapter.reload(list)
     }
 

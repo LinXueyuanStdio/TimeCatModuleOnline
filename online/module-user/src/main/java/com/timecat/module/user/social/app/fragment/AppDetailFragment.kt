@@ -3,7 +3,7 @@ package com.timecat.module.user.social.app.fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.identity.data.block.ForumBlock
+import com.timecat.identity.data.block.AppBlock
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.adapter.detail.ActionItem
@@ -26,10 +26,10 @@ class AppDetailFragment : BaseLoginListFragment() {
     private fun loadDetail(forum: Block) {
         val list = mutableListOf<BaseItem<*>>()
 //        list.add(SingleAuthorItem(forum.user))TODO 不要显示创建着
-        val header = ForumBlock.fromJson(forum.structure)
-        list.add(SimpleContentItem(requireActivity(), forum.content))
+        val head = AppBlock.fromJson(forum.structure)
+        list.add(SimpleContentItem(requireActivity(), forum.content, head.atScope, head.topicScope))
         list.add(ActionItem(forum))
-        list.add(NinePhotoItem(requireActivity(), forum.objectId, header.mediaScope))
+        list.add(NinePhotoItem(requireActivity(), forum.objectId, head.mediaScope))
         adapter.reload(list)
     }
 

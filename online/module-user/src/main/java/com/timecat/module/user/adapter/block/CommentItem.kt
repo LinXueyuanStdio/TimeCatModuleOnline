@@ -29,7 +29,7 @@ import com.timecat.module.user.adapter.detail.BaseDetailItem
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.*
-import com.timecat.module.user.social.comment.showComment
+import com.timecat.module.user.social.comment.showSubComments
 import com.timecat.module.user.social.share.showShare
 import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
@@ -87,10 +87,10 @@ open class CommentItem(
         setCommentContent(holder, block)
         setFooter(adapter, holder, block)
         holder.item.setShakelessClickListener {
-            GO.relayComment(block.parent, block)
+            GO.reply(block)
         }
         holder.subs.setShakelessClickListener {
-            showComment(activity.supportFragmentManager, block)
+            showSubComments(activity.supportFragmentManager, block)
         }
     }
 
@@ -241,7 +241,7 @@ open class CommentItem(
                     NAV.go(RouterHub.LOGIN_LoginActivity)
                     return@setShakelessClickListener
                 }
-                GO.relayComment(block.parent, block)
+                GO.replyComment(block.parent, block)
             }
         }
         holder.footer_share.apply {

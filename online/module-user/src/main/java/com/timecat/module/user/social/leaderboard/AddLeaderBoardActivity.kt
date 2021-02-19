@@ -42,9 +42,9 @@ open class AddLeaderBoardActivity : BaseBlockEditorActivity() {
     override fun routerInject() = NAV.inject(this)
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        formData.content = content
-        val head = TopicBlock.fromJson(structure)
+        val head = LeaderBoardBlock.fromJson(structure)
         formData.icon = head.header?.icon ?: "R.drawable.ic_folder"
+        formData.setContentScope(context, content, head.atScope, head.topicScope)
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
@@ -83,12 +83,13 @@ open class AddLeaderBoardActivity : BaseBlockEditorActivity() {
         title = formData.title
         content = formData.content
         headerBlock = getHeadBlock()
-
     }
 
     fun getHeadBlock(): LeaderBoardBlock {
         return LeaderBoardBlock(
             content = NoteBody(),
+            atScope = formData.atScope,
+            topicScope = formData.topicScope,
             header = PageHeader(
                 icon = formData.icon,
                 avatar = formData.icon,

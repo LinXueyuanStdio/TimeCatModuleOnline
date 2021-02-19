@@ -42,9 +42,9 @@ open class AddForumActivity : BaseBlockEditorActivity() {
     override fun routerInject() = NAV.inject(this)
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        formData.content = content
         val head = TopicBlock.fromJson(structure)
         formData.icon = head.header?.icon ?: "R.drawable.ic_folder"
+        formData.setContentScope(context, content, head.atScope, head.topicScope)
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
@@ -88,6 +88,9 @@ open class AddForumActivity : BaseBlockEditorActivity() {
     fun getHeadBlock(): ForumBlock {
         return ForumBlock(
             content = NoteBody(),
+            mediaScope = formData.attachments,
+            atScope = formData.atScope,
+            topicScope = formData.topicScope,
             header = PageHeader(
                 icon = formData.icon,
                 avatar = formData.icon,

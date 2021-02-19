@@ -1,10 +1,13 @@
 package com.timecat.module.user.base
 
 
+import androidx.fragment.app.FragmentActivity
 import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.common.Action
 import com.timecat.data.bmob.ext.bmob.requestAction
+import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.action.ActionItem
+import com.timecat.module.user.adapter.detail.BaseDetailVH
 
 /**
  * @author 林学渊
@@ -33,7 +36,7 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    ActionItem(activity, it)
+                    action2Item(activity, it)
                 }
                 adapter.reload(items)
                 mStatefulLayout?.showContent()
@@ -41,6 +44,9 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
         }
     }
 
+    open fun action2Item(activity: FragmentActivity, action: Action): BaseItem<out BaseDetailVH> {
+        return ActionItem(activity, action)
+    }
     override fun loadMore() {
         requestAction {
             query = query().apply {
@@ -56,7 +62,7 @@ abstract class BaseEndlessActionFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    ActionItem(activity, it)
+                    action2Item(activity, it)
                 }
                 adapter.onLoadMoreComplete(items)
                 mStatefulLayout?.showContent()

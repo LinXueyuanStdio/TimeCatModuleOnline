@@ -36,9 +36,9 @@ class AddAndroidAppActivity : BaseAddAppActivity() {
 
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        formData.content = content
         val head = AppBlock.fromJson(structure)
         formData.icon = head.header.avatar
+        formData.setContentScope(context, content, head.atScope, head.topicScope)
         val head2 = AndroidApp.fromJson(head.structure)
         formData.url = head2.packageName
     }

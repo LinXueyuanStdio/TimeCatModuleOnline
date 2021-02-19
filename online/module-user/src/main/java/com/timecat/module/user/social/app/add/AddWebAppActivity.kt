@@ -36,11 +36,11 @@ class AddWebAppActivity : BaseAddAppActivity() {
 
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        formData.content = content
         val head = AppBlock.fromJson(structure)
         formData.icon = head.header.avatar
-        val head2 = AndroidApp.fromJson(head.structure)
-        formData.url = head2.packageName
+        val head2 = WebApp.fromJson(head.structure)
+        formData.url = head.url
+        formData.setContentScope(context, content, head.atScope, head.topicScope)
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {

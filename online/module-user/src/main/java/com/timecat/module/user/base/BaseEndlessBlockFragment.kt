@@ -1,9 +1,13 @@
 package com.timecat.module.user.base
 
+import androidx.fragment.app.FragmentActivity
 import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.block.BlockItem
+import com.timecat.module.user.adapter.block.BlockSmallItem
+import com.timecat.module.user.adapter.detail.BaseDetailVH
 
 /**
  * @author 林学渊
@@ -32,12 +36,16 @@ abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    BlockItem(activity, it)
+                    block2Item(activity, it)
                 }
                 adapter.reload(items)
                 mStatefulLayout?.showContent()
             }
         }
+    }
+
+    open fun block2Item(activity: FragmentActivity, block: Block): BaseItem<out BaseDetailVH> {
+        return BlockItem(activity, block)
     }
 
     override fun loadMore() {
@@ -55,7 +63,7 @@ abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()
                 val items = it.map {
-                    BlockItem(activity, it)
+                    block2Item(activity, it)
                 }
                 adapter.onLoadMoreComplete(items)
                 mStatefulLayout?.showContent()

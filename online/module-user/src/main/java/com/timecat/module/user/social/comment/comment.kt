@@ -15,8 +15,7 @@ import com.timecat.identity.readonly.RouterHub
  */
 const val USER_CommentDetailBottomSheet: String = RouterHub.USER + RouterHub.FRAGMENT + "/CommentDetailBottomSheet"
 
-
-fun showComment(m: FragmentManager, block: Block) {
+fun showSubComments(m: FragmentManager, block: Block) {
     val f = NAV.fragment(USER_CommentDetailBottomSheet, "block", block)
     if (f is DialogFragment) {
         f.show(m, block.objectId)

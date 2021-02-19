@@ -12,9 +12,8 @@ import com.timecat.module.user.base.BaseBlockDetailActivity
 import com.timecat.module.user.social.app.fragment.AppDetailFragment
 import com.timecat.module.user.social.common.CommentListFragment
 import com.timecat.module.user.social.common.LikeListFragment
-import com.timecat.module.user.social.common.RelayListFragment
+import com.timecat.module.user.social.common.MomentListFragment
 import com.timecat.module.user.social.share.showShare
-import com.timecat.module.user.social.topic.fragment.TopicDetailFragment
 import com.timecat.module.user.view.AppView
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
@@ -89,7 +88,7 @@ class AppDetailActivity : BaseBlockDetailActivity() {
                 0 -> AppDetailFragment()
                 1 -> CommentListFragment()
                 2 -> LikeListFragment()
-                3 -> RelayListFragment()
+                3 -> MomentListFragment()
                 else -> FallBackFragment()
             }
         }

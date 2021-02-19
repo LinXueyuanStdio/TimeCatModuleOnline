@@ -18,6 +18,7 @@ import com.timecat.data.bmob.ext.net.allHunPermission
 import com.timecat.data.bmob.ext.net.checkRoleExistByTitle
 import com.timecat.data.bmob.ext.net.findAllHunPermission
 import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.block.RoleBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.*
 import com.timecat.layout.ui.business.setting.ContainerItem
@@ -162,7 +163,8 @@ class AddRoleActivity : BaseBlockEditorActivity() {
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         setTitle("编辑权限角色")
         formData.title = title
-        formData.content = content
+        val head = RoleBlock.fromJson(structure)
+        formData.setContentScope(context, content, head.atScope, head.topicScope)
         mStatefulLayout?.showLoading()
         loadPermission(this)
     }

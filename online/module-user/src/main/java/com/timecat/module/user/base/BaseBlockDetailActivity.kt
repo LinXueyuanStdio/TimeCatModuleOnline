@@ -14,7 +14,7 @@ import com.timecat.module.user.R
 import com.timecat.module.user.social.common.BlockViewModel
 import com.timecat.module.user.social.common.CommentListFragment
 import com.timecat.module.user.social.common.LikeListFragment
-import com.timecat.module.user.social.common.RelayListFragment
+import com.timecat.module.user.social.common.MomentListFragment
 import com.timecat.module.user.social.share.showMore
 import com.timecat.module.user.view.CommentFooterView
 import com.timecat.module.user.view.ToolbarHeadView
@@ -81,7 +81,7 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> RelayListFragment()
+                0 -> MomentListFragment()
                 1 -> CommentListFragment()
                 2 -> LikeListFragment()
                 else -> FallBackFragment()

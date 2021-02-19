@@ -34,11 +34,11 @@ class AddMacAppActivity : BaseAddAppActivity() {
 
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        formData.content = content
         val head = AppBlock.fromJson(structure)
         formData.icon = head.header.avatar
-        val head2 = AndroidApp.fromJson(head.structure)
+        val head2 = MacApp.fromJson(head.structure)
         formData.url = head2.packageName
+        formData.setContentScope(context, content, head.atScope, head.topicScope)
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {

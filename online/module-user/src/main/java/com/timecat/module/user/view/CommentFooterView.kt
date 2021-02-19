@@ -57,7 +57,7 @@ class CommentFooterView @JvmOverloads constructor(
     fun bindBlock(activity: Activity, block: Block) {
         this.activity = activity
         write_response.setShakelessClickListener {
-            GO.relayComment(block.parent, block)
+            GO.replyComment(block.parent, block)
         }
         comment.text = "${block.comments}"
         like.text = "${block.likes}"

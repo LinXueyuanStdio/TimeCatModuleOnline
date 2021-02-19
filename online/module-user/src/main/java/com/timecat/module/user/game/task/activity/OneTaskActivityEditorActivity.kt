@@ -13,6 +13,7 @@ import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.ActivityBlock
 import com.timecat.identity.data.block.ActivityOneTaskBlock
+import com.timecat.identity.data.block.IdentityBlock
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.type.ACTIVITY_One_task
 import com.timecat.identity.readonly.RouterHub
@@ -41,10 +42,9 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
 
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        formData.content = content
         val head = ItemBlock.fromJson(structure)
         formData.attachments = head.mediaScope
-        formData.setScope(head.atScope, head.topicScope)
+        formData.setContentScope(context, content, head.atScope, head.topicScope)
         formData.icon = head.header.avatar
     }
 
@@ -107,7 +107,9 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
                 val cube = items[idx]
                 formData.title = cube.title
                 formData.blockId = cube.objectId
-                formData.content = cube.content
+                val head = IdentityBlock.fromJson(cube.structure)
+                val content = cube.content
+                formData.setContentScope(context, content, head.atScope, head.topicScope)
             }
         }
     }

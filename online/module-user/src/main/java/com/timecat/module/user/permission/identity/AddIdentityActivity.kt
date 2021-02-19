@@ -103,7 +103,8 @@ class AddIdentityActivity : BaseBlockEditorActivity() {
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         setTitle("编辑方块")
         formData.title = title
-        formData.content = content
+        val head = IdentityBlock.fromJson(structure)
+        formData.setContentScope(context, content, head.atScope, head.topicScope)
         mStatefulLayout?.showLoading()
         loadRoles(this)
     }

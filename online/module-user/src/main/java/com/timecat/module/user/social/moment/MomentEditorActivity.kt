@@ -1,10 +1,10 @@
 package com.timecat.module.user.social.moment
 
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Moment
 import com.timecat.data.bmob.ext.create
-import com.timecat.data.bmob.ext.isCommented
 import com.timecat.data.bmob.ext.isRelays
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
@@ -25,14 +25,14 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_AddMomentActivity)
 class MomentEditorActivity : BaseArticleBlockEditorActivity() {
     /**
-     * 暂时没用
+     * 被转发的价值块
      */
     @AttrValueAutowiredAnno("parent")
     @JvmField
     var parent: Block? = null
 
     /**
-     * 被转发的块
+     * 评论
      */
     @AttrValueAutowiredAnno("relay")
     @JvmField
@@ -50,11 +50,12 @@ class MomentEditorActivity : BaseArticleBlockEditorActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        relay?.let {
+        parent?.let {
+            LogUtil.e(it)
             val block_herf = BlockHerfView(context)
             container.addView(block_herf, 0)
             block_herf.bindBlock(it)
-            emojiEditText.hint = "转发 @${it.user.nickName}"
+            emojiEditText.hint = relay?.let { "@${it.user.nickName}" } ?: "@${it.user.nickName}"
         }
     }
 

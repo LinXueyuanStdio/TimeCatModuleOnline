@@ -16,7 +16,7 @@ import com.timecat.module.user.game.shop.fragment.ShopDetailFragment
 import com.timecat.module.user.game.shop.vm.ShopViewModel
 import com.timecat.module.user.social.common.CommentListFragment
 import com.timecat.module.user.social.common.LikeListFragment
-import com.timecat.module.user.social.common.RelayListFragment
+import com.timecat.module.user.social.common.MomentListFragment
 import com.timecat.module.user.view.TopicCard
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -93,7 +93,7 @@ class ShopActivity : BaseDetailCollapseActivity() {
                 0 -> ShopDetailFragment()
                 1 -> CommentListFragment()
                 2 -> LikeListFragment()
-                3 -> RelayListFragment()
+                3 -> MomentListFragment()
                 else -> FallBackFragment()
             }
         }

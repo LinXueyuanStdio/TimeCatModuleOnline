@@ -35,7 +35,7 @@ import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.*
 import com.timecat.module.user.permission.PermissionValidator
-import com.timecat.module.user.social.comment.showComment
+import com.timecat.module.user.social.comment.showSubComments
 import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -237,7 +237,7 @@ class BlockItem(
         setMediaScope(holder, block, head.mediaScope)
         setPosScope(holder, block, head.posScope)
         setOnItemClick(holder) {
-            showComment(activity.supportFragmentManager, block)
+            showSubComments(activity.supportFragmentManager, block)
         }
     }
 
@@ -424,7 +424,7 @@ class BlockItem(
                 when (block.type) {
                     BLOCK_COMMENT -> {
                         //转发评论
-                        GO.relayComment(block.parent, block)
+                        GO.replyComment(block.parent, block)
                     }
                     BLOCK_MOMENT -> {
                         //转发动态

@@ -1,12 +1,12 @@
 package com.timecat.module.user.social.comment
 
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.shuyu.textutillib.model.TopicModel
+import com.shuyu.textutillib.model.UserModel
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Comment
 import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.isCommented
-import com.timecat.data.bmob.ext.isRelays
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
@@ -65,7 +65,8 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     }
 
     override fun savableBlock(): Block = I() create Comment {
-        title = relay?.let { it.title / it.objectId } ?: this@CommentEditorActivity.parent!!.objectId
+        title = relay?.let { it.title / it.objectId }
+            ?: this@CommentEditorActivity.parent!!.objectId
         content = formData.content
         parent = this@CommentEditorActivity.parent
         subtype = subtype()
@@ -91,19 +92,27 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        parent?.let {
-            LogUtil.e(it)
+        parent?.let { parent ->
             val block_herf = BlockHerfView(context)
             container.addView(block_herf, 0)
-            block_herf.bindBlock(relay ?: it)
-            emojiEditText.hint = relay?.let { "回复 #${it.title} @${it.user.nickName}" }
-                ?: "评论 #${it.title}"
+            block_herf.bindBlock(relay ?: parent)
+            if (relay == null) {
+                emojiEditText.hint = "评论 @${parent.user.nickName}"
+            } else {
+                relay?.let {
+                    emojiEditText.hint = "转发 @${it.user.nickName}"
+                    val content = "//@${it.user.nickName}：${it.content}"
+                    formData.setContent(context, content,
+                        listOf(UserModel(it.user.nickName, it.user.objectId)),
+                        listOf(TopicModel(parent.title, parent.objectId)))
+                    emojiEditText.setSelection(0)
+                }
+            }
         }
         comment?.let {
-            formData.content = it.content
             val head = CommentBlock.fromJson(it.structure)
             formData.attachments = head.mediaScope
-            formData.setScope(head.atScope, head.topicScope)
+            formData.setContentScope(context, it.content, head.atScope, head.topicScope)
         }
     }
 

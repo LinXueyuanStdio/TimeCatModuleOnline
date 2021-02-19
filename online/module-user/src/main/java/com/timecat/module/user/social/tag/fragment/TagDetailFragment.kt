@@ -3,6 +3,8 @@ package com.timecat.module.user.social.tag.fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.identity.data.block.ForumBlock
+import com.timecat.identity.data.block.TagBlock
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.adapter.detail.ActionItem
@@ -24,7 +26,8 @@ class TagDetailFragment : BaseLoginListFragment() {
     private fun loadDetail(block: Block) {
         val list = mutableListOf<BaseItem<*>>()
 //        list.add(SingleAuthorItem(block.user))TODO 不要显示创建着
-        list.add(SimpleContentItem(requireActivity(), block.content))
+        val head = TagBlock.fromJson(block.structure)
+        list.add(SimpleContentItem(requireActivity(), block.content, head.atScope, head.topicScope))
         list.add(ActionItem(block))
         adapter.reload(list)
     }

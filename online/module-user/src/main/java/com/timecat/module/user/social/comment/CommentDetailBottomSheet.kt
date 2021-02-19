@@ -26,7 +26,6 @@ import com.timecat.layout.ui.entity.BaseAdapter
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.ToolbarUtils
 import com.timecat.module.user.R
-import com.timecat.module.user.adapter.block.BlockItem
 import com.timecat.module.user.adapter.block.CommentItem
 import com.timecat.module.user.adapter.block.NotMoreItem
 import com.timecat.module.user.base.GO
@@ -112,7 +111,7 @@ class CommentDetailBottomSheet : BottomSheetDialogFragment() {
             GO.toAnyDetail(block.parent)
         }
         response.setShakelessClickListener {
-            GO.relayComment(block.parent, block)
+            GO.replyComment(block.parent, block)
         }
         return root
     }

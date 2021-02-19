@@ -31,7 +31,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|end"
                     android:background="?attr/selectableItemBackground"
-                    android:text="查看源动态" />
+                    android:padding="@dimen/small_spacing"
+                    android:text="查看源动态"
+                    android:textColor="@color/master_textColorSecondary" />
             </LinearLayout>
         </com.timecat.page.base.view.BlurringToolbar>
 

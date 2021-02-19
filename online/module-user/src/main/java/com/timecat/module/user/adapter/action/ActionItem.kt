@@ -50,13 +50,12 @@ class ActionItem(
     ) {
         LOAD.image(action.user.avatar, holder.iv_avatar)
         holder.root.safeClick {
-            if (action.block == null) return@safeClick
             val block = action.block
             GO.toAnyDetail(block)
         }
         val block = action.block
-        val title = block?.title
-        val typeStr = when (block?.type) {
+        val title = block.title
+        val typeStr = when (block.type) {
             BLOCK_MOMENT -> "动态"
             BLOCK_FORUM -> "论坛"
             BLOCK_TOPIC -> "主题"

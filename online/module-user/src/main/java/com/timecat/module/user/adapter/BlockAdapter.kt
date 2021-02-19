@@ -383,7 +383,7 @@ class BlockAdapter(
                 when (block.type) {
                     BLOCK_COMMENT -> {
                         //转发评论
-                        GO.relayComment(block.parent, block)
+                        GO.replyComment(block.parent, block)
                     }
                     BLOCK_MOMENT -> {
                         //转发动态

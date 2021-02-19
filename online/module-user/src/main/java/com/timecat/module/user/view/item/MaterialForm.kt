@@ -1,5 +1,6 @@
 package com.timecat.module.user.view.item
 
+import android.content.Context
 import com.shuyu.textutillib.RichEditText
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
@@ -114,11 +115,8 @@ class MaterialForm {
     //endregion
 
     //region emojiEditText -> content, topicScope, atScope, attachments
-    var content: String
+    val content: String
         get() = emojiEditText.realText
-        set(value) {
-            emojiEditText.setText(value)
-        }
     val topicScope: TopicScope?
         get() = emojiEditText.realTopicList.map {
             TopicItem(it.topicName, it.topicId)
@@ -127,6 +125,19 @@ class MaterialForm {
         get() = emojiEditText.realUserList.map {
             AtItem(it.user_name, it.user_id)
         }.ifEmpty { null }?.let { AtScope(it.toMutableList()) }
+
+    fun setContentScope(context: Context, content: String, atScope: AtScope?, topicScope: TopicScope?) {
+        emojiEditText.resolveInsertText(context, content,
+            atScope?.let {
+                it.ats.map { UserModel(it.name, it.objectId) }
+            },
+            topicScope?.let {
+                it.topics.map { TopicModel(it.name, it.objectId) }
+            })
+    }
+    fun setContent(context: Context, content: String, userModels: List<UserModel>?, topicModels: List<TopicModel>?) {
+        emojiEditText.resolveInsertText(context, content, userModels, topicModels)
+    }
 
     fun setScope(atScope: AtScope?, topicScope: TopicScope?) {
         atScope?.let {

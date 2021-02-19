@@ -31,7 +31,9 @@ class UserItem(
     val user: User
 ) : BaseHeaderItem<UserItem.DetailVH>(user.objectId) {
 
-    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter)
+    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
+
+    }
 
     override fun getLayoutRes(): Int = R.layout.user_base_item_user_head
 
