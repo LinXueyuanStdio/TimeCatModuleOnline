@@ -9,6 +9,8 @@ import com.google.android.material.appbar.AppBarLayout
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestOneBlock
+import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import com.timecat.module.user.social.common.BlockViewModel
@@ -50,6 +52,7 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
     }
 
     protected open fun loadDetail(block: Block) {
+        mStatefulLayout?.showContent()
         titleString = block.title
         userHerf.head.bindBlock(block.user)
         footer.bindBlock(this, block)
@@ -71,6 +74,21 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
             //滑动超过 head的可见高度，则显示 userHerf
             userHerf.displayedChild = if (Math.abs(i) >= visHeight()) 1 else 0
         })
+    }
+
+    fun fetch(blockId: String) {
+        mStatefulLayout?.showLoading()
+        blockViewModel attach requestOneBlock {
+            query = oneBlockOf(blockId)
+            onSuccess = {
+                blockViewModel.block.postValue(it)
+            }
+            onError = {
+                mStatefulLayout?.showError("出错啦") {
+                    fetch()
+                }
+            }
+        }
     }
 
     override fun getAdapter(): FragmentStatePagerAdapter {

@@ -16,9 +16,7 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.common.User2User
 import com.timecat.data.bmob.ext.bmob.*
 import com.timecat.data.bmob.ext.follow
-import com.timecat.data.bmob.ext.net.allFollow
-import com.timecat.data.bmob.ext.net.allFollowBlock
-import com.timecat.data.bmob.ext.net.allLikeBlock
+import com.timecat.data.bmob.ext.net.*
 import com.timecat.element.alert.ToastUtil
 import com.timecat.layout.ui.layout.drawable_start
 import com.timecat.layout.ui.layout.drawable_top
@@ -43,8 +41,9 @@ fun View.setupFollowBlock(
     val I = UserDao.getCurrentUser() ?: return@apply
     tag = block.objectId
     requestOneActionOrNull {
-        query = I.allFollowBlock(block)
+        query = I.allNullableFollowBlock(block)
         onError = {
+            LogUtil.se("onError$it")
             isEnabled = false
             onInActive()
         }
@@ -99,8 +98,9 @@ fun View.setupFollowUser(
     val I = UserDao.getCurrentUser() ?: return@apply
     tag = user.objectId
     requestOneUserRelationOrNull {
-        query = I.allFollow(user)
+        query = I.allNullableFollow(user)
         onError = {
+            LogUtil.se("onError$it")
             isEnabled = false
             onInActive()
         }
@@ -155,12 +155,10 @@ fun setupFollowUserButton(
         isEnabled = false
         val onActive = {
             text = "已关注"
-            setBackgroundResource(R.drawable.shape_4)
-            setTextColor(Attr.getBackgroundDarkColor(context))
+            setTextColor(Attr.getSecondaryTextColor(context))
         }
         val onInActive = {
             text = "关注"
-            setBackgroundResource(R.drawable.shape_3)
             setTextColor(Attr.getPrimaryTextColor(context))
         }
         setupFollowUser(user, null, onActive, onInActive)
@@ -236,16 +234,14 @@ fun setupLikeBlockButton2(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getAccentColor(context)))
                 }
-                text = "已点赞"
             }
         }
         val onInActive = {
             if (tag == block.objectId) {
                 drawable_start = R.drawable.user_ic_love
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getIconColor(context)))
+                    TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getSecondaryTextColor(context)))
                 }
-                text = "点赞"
             }
         }
         setupLikeBlock(block, needRefresh, onActive, onInActive)
@@ -262,17 +258,20 @@ fun View.setupLikeBlock(
     val I = UserDao.getCurrentUser() ?: return@apply
     tag = block.objectId
     requestOneActionOrNull {
-        query = I.allLikeBlock(block)
+        query = I.allNullableLikeBlock(block)
         onError = {
             isEnabled = false
+            LogUtil.se("onError$it")
             onInActive()
         }
         onEmpty = {
             isEnabled = true
+            LogUtil.se("onEmpty")
             onInActive()
         }
         onSuccess = {
             isEnabled = true
+            LogUtil.se("onSuccess")
             relation = it
             onActive()
         }

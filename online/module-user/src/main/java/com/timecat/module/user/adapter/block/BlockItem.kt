@@ -18,6 +18,7 @@ import com.timecat.data.bmob.ext.bmob.deleteBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
 import com.timecat.data.bmob.ext.net.oneBlockOf
+import com.timecat.data.bmob.ext.net.oneNullableBlockOf
 import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
@@ -338,7 +339,7 @@ class BlockItem(
         holder.root.momentHerf.visibility = View.GONE
         relayScope?.let {
             requestOneBlockOrNull {
-                query = oneBlockOf(it.objectId)
+                query = oneNullableBlockOf(it.objectId)
                 onEmpty = {
                     holder.momentHerf.apply {
                         visibility = View.VISIBLE
@@ -354,6 +355,15 @@ class BlockItem(
                 }
                 onError = {
                     it.printStackTrace()
+                }
+            }
+        }
+        if (relayScope == null) {
+            block.parent?.let { data ->
+                holder.momentHerf.apply {
+                    visibility = View.VISIBLE
+                    bindBlock(data)
+                    setRelay(data)
                 }
             }
         }

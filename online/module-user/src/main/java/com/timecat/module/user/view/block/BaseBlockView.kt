@@ -21,6 +21,7 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
 import com.timecat.data.bmob.ext.net.oneBlockOf
+import com.timecat.data.bmob.ext.net.oneNullableBlockOf
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
@@ -191,11 +192,12 @@ abstract class BaseBlockView @JvmOverloads constructor(
 
     protected open fun setRelayScope(
         root: View,
+        block: Block,
         relayScope: RelayScope? = null
     ) {
         relayScope?.let {
             requestOneBlockOrNull {
-                query = oneBlockOf(it.objectId)
+                query = oneNullableBlockOf(it.objectId)
                 onEmpty = {
                     momentHerf.apply {
                         visibility = VISIBLE
@@ -211,6 +213,15 @@ abstract class BaseBlockView @JvmOverloads constructor(
                 }
                 onError = {
                     it.printStackTrace()
+                }
+            }
+        }
+        if (relayScope == null) {
+            block.parent?.let { data ->
+                momentHerf.apply {
+                    visibility = View.VISIBLE
+                    bindBlock(data)
+                    setRelay(data)
                 }
             }
         }

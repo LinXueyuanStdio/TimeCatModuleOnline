@@ -56,10 +56,9 @@ class MoreBottomSheet : BottomSheetDialogFragment() {
             HorizontalScrollView {
                 isHorizontalScrollBarEnabled = false
                 HorizontalContainer {
-                    RoundIconText(R.drawable.ic_wrap_text, "查看会话") {
+                    RoundIconText(R.drawable.ic_wrap_text, "会话流") {
                         setShakelessClickListener {
                             showSubComments(childFragmentManager, block)
-                            dismiss()
                         }
                     }
                     RoundIconText(R.drawable.ic_copy_24dp, "复制") {

@@ -145,6 +145,9 @@ class CommentDetailBottomSheet : BottomSheetDialogFragment() {
     }
     var emptyCallback: () -> Unit = {
         mStatefulLayout.showContent()
+        val activity = requireActivity()
+        val items = mutableListOf(CommentItem(activity, block, true))
+        mAdapter.reload(items)
         mAdapter.updateItem(notMoreItem, Payload.NO_MORE_LOAD)
     }
 

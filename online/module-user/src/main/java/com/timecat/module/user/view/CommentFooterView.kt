@@ -9,10 +9,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
+import androidx.fragment.app.FragmentActivity
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
+import com.timecat.module.user.social.share.showShare
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
 
 /**
@@ -55,7 +57,7 @@ class CommentFooterView @JvmOverloads constructor(
     /**
      * 必须调用，初始化
      */
-    fun bindBlock(activity: Activity, block: Block) {
+    fun bindBlock(activity: FragmentActivity, block: Block) {
         this.activity = activity
         response.setShakelessClickListener {
             GO.replyComment(block)
@@ -65,6 +67,12 @@ class CommentFooterView @JvmOverloads constructor(
         star.text = "${block.stars}"
         share.text = "${block.relays}"
         setupLikeBlockButton(activity, like, block)
+        star.setShakelessClickListener {
+            showShare(activity.supportFragmentManager, block)
+        }
+        share.setShakelessClickListener {
+            showShare(activity.supportFragmentManager, block)
+        }
     }
 
 }

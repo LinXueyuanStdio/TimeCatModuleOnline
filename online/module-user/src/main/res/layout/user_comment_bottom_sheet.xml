@@ -23,15 +23,27 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="end"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_horizontal"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="@dimen/spacing_small"
+                    android:text="回复"
+                    android:textColor="@color/master_textColorSecondary" />
 
                 <TextView
                     android:id="@+id/source"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
+                    android:layout_gravity="end|center_vertical"
                     android:background="?attr/selectableItemBackground"
-                    android:padding="@dimen/small_spacing"
+                    android:padding="@dimen/spacing_small"
                     android:text="查看源动态"
                     android:textColor="@color/master_textColorSecondary" />
             </LinearLayout>

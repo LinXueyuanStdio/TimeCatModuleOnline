@@ -5,8 +5,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.requestOneBlock
-import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockDetailActivity
 import com.timecat.module.user.social.app.fragment.AppDetailFragment
@@ -61,17 +59,7 @@ class AppDetailActivity : BaseBlockDetailActivity() {
     }
 
     override fun fetch() {
-        blockViewModel attach requestOneBlock {
-            query = oneBlockOf(blockId)
-            onSuccess = {
-                blockViewModel.block.postValue(it)
-            }
-            onError = {
-                mStatefulLayout?.showError("出错啦") {
-                    fetch()
-                }
-            }
-        }
+        fetch(blockId)
     }
 
     override fun getAdapter(): FragmentStatePagerAdapter {

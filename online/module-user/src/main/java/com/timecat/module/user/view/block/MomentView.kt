@@ -27,7 +27,7 @@ class MomentView @JvmOverloads constructor(
         val head = MomentBlock.fromJson(block.structure)
         setRichTextView(root, block.content, head.atScope, head.topicScope)
         setMediaScope(root, head.mediaScope)
-        setRelayScope(root, head.relayScope)
+        setRelayScope(root, block, head.relayScope)
         setPosScope(root, head.posScope)
         setShare(block)
     }

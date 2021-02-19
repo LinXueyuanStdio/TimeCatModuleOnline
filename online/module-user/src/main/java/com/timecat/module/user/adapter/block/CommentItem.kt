@@ -207,15 +207,6 @@ open class CommentItem(
         }
     }
 
-    private fun setOnItemClick(
-        holder: DetailVH,
-        onClick: (View) -> Unit
-    ) {
-        holder.item.setShakelessClickListener {
-            onClick(it)
-        }
-    }
-
     fun rebind(adapter: FlexibleAdapter<IFlexible<*>>, block: Block) {
         requestOneBlock {
             query = oneBlockOf(block.objectId)
@@ -230,9 +221,9 @@ open class CommentItem(
     }
 
     private fun setFooter(adapter: FlexibleAdapter<IFlexible<*>>, holder: DetailVH, block: Block) {
-        holder.footer_like.text = block.likeText()
-        holder.footer_comment.text = block.commentText()
-        holder.footer_share.text = block.shareText()
+        holder.footer_like.text = block.likeText("")
+        holder.footer_comment.text = block.commentText("")
+        holder.footer_share.text = block.shareText("")
 
         setupLikeBlockButton2(activity, holder.footer_like, block) {
             rebind(adapter, block)

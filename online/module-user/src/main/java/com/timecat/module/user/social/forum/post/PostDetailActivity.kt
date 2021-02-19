@@ -51,17 +51,7 @@ class PostDetailActivity : BaseBlockDetailActivity() {
     }
 
     override fun fetch() {
-        blockViewModel attach requestOneBlock {
-            query = oneBlockOf(blockId)
-            onSuccess = {
-                blockViewModel.block.postValue(it)
-            }
-            onError = {
-                mStatefulLayout?.showError("出错啦") {
-                    fetch()
-                }
-            }
-        }
+        fetch(blockId)
     }
 }
 

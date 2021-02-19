@@ -41,7 +41,7 @@
                     app:contentScrim="@color/master_background"
                     app:expandedTitleMarginEnd="64dp"
                     app:expandedTitleMarginStart="48dp"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     app:titleEnabled="false"
                     app:toolbarId="@id/toolbar">
                     <!--<ImageView-->
@@ -96,7 +96,6 @@
                     android:background="@color/master_colorBackground"
                     app:tabIndicatorColor="@color/master_colorPrimary"
                     app:tabIndicatorFullWidth="false"
-                    app:tabIndicatorHeight="4dp"
                     app:tabSelectedTextColor="@color/master_colorPrimary"
                     app:tabTextColor="@color/master_textColorSecondary" />
 
@@ -106,6 +105,7 @@
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:overScrollMode="never"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
