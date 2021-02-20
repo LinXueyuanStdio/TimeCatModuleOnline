@@ -17,10 +17,10 @@ open class CustomClickTopicSpan(context: Context, topicModel: TopicModel, color:
 
     override fun updateDrawState(ds: TextPaint) {
         super.updateDrawState(ds)
-        ds.isUnderlineText = true
-        ds.style = Paint.Style.FILL_AND_STROKE
-        val effects = DashPathEffect(floatArrayOf(1f, 1f), 1f)
-        ds.pathEffect = effects
-        ds.strokeWidth = 2f
+//        ds.isUnderlineText = true
+//        ds.style = Paint.Style.FILL_AND_STROKE
+//        val effects = DashPathEffect(floatArrayOf(1f, 1f), 1f)
+//        ds.pathEffect = effects
+//        ds.strokeWidth = 2f
     }
 }

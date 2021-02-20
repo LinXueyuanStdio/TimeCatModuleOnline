@@ -16,12 +16,12 @@ open class CustomClickAtUserSpan(context: Context, userModel: UserModel, color: 
 
     override fun updateDrawState(ds: TextPaint) {
         super.updateDrawState(ds)
-        ds.isUnderlineText = true
+//        ds.isUnderlineText = true
         //间隔线
-        ds.style = Paint.Style.STROKE
-        val effects = DashPathEffect(floatArrayOf(1f, 1f), 1f)
-        ds.pathEffect = effects
-        ds.strokeWidth = 5f
+//        ds.style = Paint.Style.STROKE
+//        val effects = DashPathEffect(floatArrayOf(1f, 1f), 1f)
+//        ds.pathEffect = effects
+//        ds.strokeWidth = 2f
     }
 
 }

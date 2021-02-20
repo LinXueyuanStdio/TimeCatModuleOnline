@@ -73,7 +73,7 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
         tabs.getTabAt(1)?.let {
             it.text = "评论${block.comments}"
         }
-        tabs.getTabAt(3)?.let {
+        tabs.getTabAt(2)?.let {
             it.text = "赞${block.likes}"
         }
     }

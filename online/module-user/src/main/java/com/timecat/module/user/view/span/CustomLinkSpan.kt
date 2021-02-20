@@ -16,7 +16,7 @@ open class CustomLinkSpan(context: Context, url: String, color: Int, spanUrlCall
 
     override fun updateDrawState(ds: TextPaint) {
         super.updateDrawState(ds)
-        ds.isUnderlineText = true
-        ds.typeface = Typeface.DEFAULT_BOLD
+//        ds.isUnderlineText = true
+//        ds.typeface = Typeface.DEFAULT_BOLD
     }
 }

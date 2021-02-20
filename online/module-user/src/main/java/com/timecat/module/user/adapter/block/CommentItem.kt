@@ -137,7 +137,7 @@ open class CommentItem(
                                         padding_start = 10
                                         padding_end = 10
                                         margin = 0
-                                        text_size = 12
+                                        text_size = 14
                                         maxLines = 2
                                         ellipsize = TextUtils.TruncateAt.END
                                         background = selectableItemBackground(context)
@@ -153,7 +153,7 @@ open class CommentItem(
                                         padding_start = 10
                                         padding_end = 10
                                         margin = 0
-                                        text_size = 12
+                                        text_size = 14
                                         maxLines = 2
                                         ellipsize = TextUtils.TruncateAt.END
                                         background = selectableItemBackground(context)
@@ -172,7 +172,7 @@ open class CommentItem(
                             padding_start = 10
                             padding_end = 10
                             margin = 0
-                            text_size = 12
+                            text_size = 14
                             background = selectableItemBackground(context)
                             setShakelessClickListener {
                                 showSubComments(activity.supportFragmentManager, block)
