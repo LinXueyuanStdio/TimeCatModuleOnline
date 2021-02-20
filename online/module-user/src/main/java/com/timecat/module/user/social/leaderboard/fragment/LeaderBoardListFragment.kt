@@ -25,7 +25,4 @@ class LeaderBoardListFragment : BaseEndlessBlock2BlockFragment() {
             load()
         })
     }
-
-    override fun loadData() {}
-
 }

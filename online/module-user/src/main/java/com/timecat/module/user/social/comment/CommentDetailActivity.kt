@@ -1,10 +1,10 @@
 package com.timecat.module.user.social.comment
 
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.requestOneBlock
-import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.base.BaseBlockDetailActivity
+import com.timecat.module.user.base.GO
 import com.timecat.module.user.social.share.showShare
 import com.timecat.module.user.view.block.CommentView
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -38,6 +38,9 @@ class CommentDetailActivity : BaseBlockDetailActivity() {
 
     override fun loadDetail(block: Block) {
         super.loadDetail(block)
+        footer.response.setShakelessClickListener {
+            GO.replyComment(block)
+        }
         card.bindBlock(this, block)
         card.share.onShare = {
             showShare(supportFragmentManager, block)

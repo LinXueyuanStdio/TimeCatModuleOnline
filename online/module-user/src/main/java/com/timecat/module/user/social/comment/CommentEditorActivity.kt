@@ -63,7 +63,7 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     override fun savableBlock(): Block = I() create Comment {
         title = relay?.let { it.title / it.objectId }
             ?: this@CommentEditorActivity.parent!!.objectId
-        content = relay?.let { "回复 @${it.user.nickName} ：${formData.content}" } ?: formData.content
+        content = formData.content
         parent = this@CommentEditorActivity.parent
         subtype = subtype()
         headerBlock = getHeadBlock()
@@ -82,7 +82,7 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
             atScope = formData.atScope,
             topicScope = formData.topicScope,
             structure = relay?.let {
-                ReplyComment(it.user.objectId).toJsonObject()
+                ReplyComment(it.user.objectId, it.user.nickName).toJsonObject()
             }
         )
     }

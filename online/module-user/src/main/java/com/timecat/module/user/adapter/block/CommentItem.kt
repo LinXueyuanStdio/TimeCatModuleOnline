@@ -1,10 +1,10 @@
 package com.timecat.module.user.adapter.block
 
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
-import cn.leancloud.json.JSONObject
 import com.shuyu.textutillib.RichTextView
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
@@ -17,16 +17,17 @@ import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.asUser
+import com.timecat.data.bmob.ext.bmob.asBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.business.form.H3
 import com.timecat.layout.ui.business.ninegrid.NineGridView
-import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.drawabe.roundRectSolidDrawableBuilder
+import com.timecat.layout.ui.drawabe.selectableItemBackground
+import com.timecat.layout.ui.layout.*
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailItem
 import com.timecat.module.user.adapter.detail.BaseDetailVH
@@ -36,6 +37,7 @@ import com.timecat.module.user.social.comment.showSubComments
 import com.timecat.module.user.social.share.showMore
 import com.timecat.module.user.social.share.showShare
 import com.timecat.module.user.view.UserHeadView
+import com.timecat.module.user.view.dsl.Content
 import com.timecat.module.user.view.dsl.setupLikeBlockButton2
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -74,6 +76,7 @@ open class CommentItem(
         adapter: FlexibleAdapter<IFlexible<*>>
     ): DetailVH = DetailVH(view, adapter)
 
+
     override fun bindViewHolder(
         adapter: FlexibleAdapter<IFlexible<*>>,
         holder: DetailVH,
@@ -83,7 +86,7 @@ open class CommentItem(
         super.bindViewHolder(adapter, holder, position, payloads)
         holder.itemView.tag = block.objectId
         holder.main_flag.beVisibleIf(isMain)
-        holder.userHead.bindBlock(block.get("user").asUser())
+        holder.userHead.bindBlock(block.user)
         val timeString: String = block.friendlyCreateTimeText()
         holder.userHead.content = timeString
         holder.userHead.moreView.setShakelessClickListener {
@@ -99,31 +102,86 @@ open class CommentItem(
             showMore(activity.supportFragmentManager, block)
             true
         }
-        block.getJSONArray("hot_children")?.let { subcomments ->
-            holder.subs.apply {
-                beVisible()
-                for (comment in subcomments) {
-                    LogUtil.e(comment)
-                    val obj = comment as JSONObject?
-                    obj?.let {
-                        val author = it.getJSONObject("user").getString("nickName")
-                        val content = it.getString("content")
-                        val type = it.getIntValue("type")
-                        if (type == COMMENT_REPLY) {
-                            H3("$author$content")
-                        } else {
-                            H3("$author：$content")
+        if (isMain) {
+            block.getJSONArray("hot_children")?.let { subcomments ->
+                holder.subs.apply {
+                    if (subcomments.size <= 0) return@apply
+                    removeAllViews()
+                    padding_top = 5
+                    padding_bottom = 5
+                    margin_end = 10
+                    background = roundRectSolidDrawableBuilder(Attr.getBackgroundDarkColor(context)).build()
+                    for (comment in subcomments) {
+                        LogUtil.e(comment)
+                        comment.asBlock().let { comment ->
+                            val author = comment.user
+                            val name = author.getString("nickName")
+                            val id = author.getString("objectId")
+                            val content = comment.getString("content")
+                            val type = comment.getInt("type")
+                            var subcontent ="@$name ：$content"
+                            when (type) {
+                                COMMENT_REPLY -> {
+                                    val structure = comment.get("structure") as Map<String, Any>
+                                    val replyId = structure["replyUserId"] as String?
+                                    val replyName = structure["replyUserName"] as String?
+                                    if (replyId != block.objectId) {
+                                        subcontent = "@$name 回复@${replyName} ：$content"
+                                    }
+                                    Content(subcontent, nameList = listOf(
+                                        UserModel("${name}", id),
+                                        UserModel("${replyName}", replyId)
+                                    )) {
+                                        padding_top = 5
+                                        padding_bottom = 5
+                                        padding_start = 10
+                                        padding_end = 10
+                                        margin = 0
+                                        text_size = 12
+                                        maxLines = 2
+                                        ellipsize = TextUtils.TruncateAt.END
+                                        background = selectableItemBackground(context)
+                                        setShakelessClickListener {
+                                            showSubComments(activity.supportFragmentManager, block)
+                                        }
+                                    }
+                                }
+                                else -> {
+                                    Content(subcontent, nameList = listOf(UserModel("${name}", id))) {
+                                        padding_top = 5
+                                        padding_bottom = 5
+                                        padding_start = 10
+                                        padding_end = 10
+                                        margin = 0
+                                        text_size = 12
+                                        maxLines = 2
+                                        ellipsize = TextUtils.TruncateAt.END
+                                        background = selectableItemBackground(context)
+                                        setShakelessClickListener {
+                                            showSubComments(activity.supportFragmentManager, block)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-                if (subcomments.size >= 3) {
-                    H3("查看全部 ${block.comments} 回复")
+                    if (subcomments.size >= 3) {
+                        Content("共 ${block.comments} 条回复") {
+                            padding_top = 5
+                            padding_bottom = 5
+                            padding_start = 10
+                            padding_end = 10
+                            margin = 0
+                            text_size = 12
+                            background = selectableItemBackground(context)
+                            setShakelessClickListener {
+                                showSubComments(activity.supportFragmentManager, block)
+                            }
+                        }
+                    }
+                    beVisible()
                 }
             }
-        }
-
-        holder.subs.setShakelessClickListener {
-            showSubComments(activity.supportFragmentManager, block)
         }
     }
 

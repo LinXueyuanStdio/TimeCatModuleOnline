@@ -67,6 +67,6 @@ class CommentListFragment : BaseBlockListFragment() {
     }
 
     override fun block2Item(activity: FragmentActivity, block: Block): BaseItem<out BaseDetailVH> {
-        return CommentItem(activity, block)
+        return CommentItem(activity, block, true)
     }
 }

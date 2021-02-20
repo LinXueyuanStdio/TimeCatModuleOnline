@@ -83,10 +83,6 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
             mediaScope = formData.attachments,
             atScope = formData.atScope,
             topicScope = formData.topicScope,
-            structure =  relay?.let {
-                val obj = ReplyComment(it.user.objectId).toJsonObject()
-                obj
-            }
         )
     }
 

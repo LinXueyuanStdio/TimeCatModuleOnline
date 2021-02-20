@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
@@ -53,14 +54,27 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
 
     protected open fun loadDetail(block: Block) {
         mStatefulLayout?.showContent()
+        LogUtil.e(block.parent)
         titleString = block.title
         userHerf.head.bindBlock(block.user)
         footer.bindBlock(this, block)
+        footer.response.setShakelessClickListener {
+            GO.addCommentFor(block)
+        }
         footer.comment.setShakelessClickListener {
             collapseContainer.setScrimsShown(true, true)
         }
         more.setShakelessClickListener {
             showMore(supportFragmentManager, block)
+        }
+        tabs.getTabAt(0)?.let {
+            it.text = "转发${block.relays}"
+        }
+        tabs.getTabAt(1)?.let {
+            it.text = "评论${block.comments}"
+        }
+        tabs.getTabAt(3)?.let {
+            it.text = "赞${block.likes}"
         }
     }
 
