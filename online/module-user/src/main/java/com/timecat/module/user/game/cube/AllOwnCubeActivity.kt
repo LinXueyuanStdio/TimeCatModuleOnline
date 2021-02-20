@@ -1,7 +1,5 @@
 package com.timecat.module.user.game.cube
 
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -18,9 +16,12 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.standard.navi.BottomBar
 import com.timecat.layout.ui.standard.navi.BottomBarIvTextTab
 import com.timecat.module.user.R
-import com.timecat.module.user.base.BaseDetailCollapseActivity
+import com.timecat.module.user.base.BaseBlockDetailActivity
 import com.timecat.module.user.game.cube.fragment.*
 import com.timecat.module.user.game.cube.vm.CubeViewModel
+import com.timecat.module.user.social.common.CommentListFragment
+import com.timecat.module.user.social.common.LikeListFragment
+import com.timecat.module.user.social.common.MomentListFragment
 import com.timecat.module.user.view.TopicCard
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -32,8 +33,8 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AllOwnCubeActivity)
-class AllOwnCubeActivity : BaseDetailCollapseActivity() {
-    lateinit var viewModel: CubeViewModel
+class AllOwnCubeActivity : BaseBlockDetailActivity() {
+    lateinit var cubeViewModel: CubeViewModel
     lateinit var card: TopicCard
     lateinit var mBottomBar: BottomBar
     override fun routerInject() = NAV.inject(this)
@@ -46,11 +47,14 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        viewModel = ViewModelProvider(this).get(CubeViewModel::class.java)
-        viewModel.ownCube.observe(this, {
+        cubeViewModel = ViewModelProvider(this).get(CubeViewModel::class.java)
+        cubeViewModel.ownCube.observe(this, {
             it?.let { loadDetail(it) }
         })
-        viewModel.ownCubes.observe(this, {
+        cubeViewModel.cube.observe(this) {
+            blockViewModel.block.postValue(it)
+        }
+        cubeViewModel.ownCubes.observe(this, {
             if (it.isEmpty()) {
                 LogUtil.se("没有持有任何方块!")
                 mStatefulLayout?.showEmpty("没有持有任何方块！")
@@ -69,9 +73,7 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
             }
         })
         card = TopicCard(this)
-        card.placeholder.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            height = getStatusBarHeightPlusToolbarHeight()
-        }
+        card.setPlaceholderHeight(getStatusBarHeightPlusToolbarHeight())
         setupHeaderCard(card)
         setupCollapse()
         setupViewPager()
@@ -81,9 +83,9 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
             override fun onTabSelected(position: Int, prePosition: Int) {
                 LogUtil.sd("select $position, $prePosition")
                 //选中时触发
-                val cube = viewModel.ownCubes.value!![position]
-                viewModel.ownCube.postValue(cube)
-                viewModel.cube.postValue(cube.cube)
+                val cube = cubeViewModel.ownCubes.value!![position]
+                cubeViewModel.ownCube.postValue(cube)
+                cubeViewModel.cube.postValue(cube.cube)
             }
 
             override fun onTabUnselected(position: Int) {}
@@ -112,10 +114,10 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
                 cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
             }
             onSuccess = {
-                viewModel.loadAllCube(it)
+                cubeViewModel.loadAllCube(it)
             }
             onEmpty = {
-                viewModel.loadAllCube(listOf())
+                cubeViewModel.loadAllCube(listOf())
             }
             onError = {
                 mStatefulLayout?.showError("出错啦") {
@@ -138,8 +140,8 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
             return when (position) {
                 0 -> CubeDetailFragment()
                 1 -> CommentListFragment()
-                2 -> PostListFragment()
-                3 -> MomentListFragment()
+                2 -> MomentListFragment()
+                3 -> LikeListFragment()
                 else -> FallBackFragment()
             }
         }
@@ -148,8 +150,8 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
             return when (position) {
                 0 -> "详情"
                 1 -> "讨论"
-                2 -> "帖子"
-                3 -> "动态"
+                2 -> "动态"
+                3 -> "赞"
                 else -> super.getPageTitle(position)
             }
         }

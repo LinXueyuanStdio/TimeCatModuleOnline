@@ -18,6 +18,9 @@ abstract class BaseEndlessOwnMailFragment : BaseEndlessListFragment() {
     abstract fun name(): String
     abstract fun query(): AVQuery<OwnMail>
 
+    override fun initViewAfterLogin() {
+        loadData()
+    }
     override fun loadFirst() {
         requestOwnMail {
             query = query().apply {

@@ -23,6 +23,7 @@ abstract class BaseEndlessOwnItemFragment : BaseEndlessListFragment() {
     lateinit var itemViewModel: ItemViewModel
     override fun initViewAfterLogin() {
         itemViewModel = ViewModelProvider(requireActivity()).get(ItemViewModel::class.java)
+        loadData()
     }
 
     override fun loadFirst() {
