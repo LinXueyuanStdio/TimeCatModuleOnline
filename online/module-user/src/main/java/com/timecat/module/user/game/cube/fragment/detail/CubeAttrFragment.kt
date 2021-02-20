@@ -5,6 +5,7 @@ import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.data.bmob.data.game.OwnItem
@@ -75,6 +76,7 @@ class CubeAttrFragment : BaseCubeFragment() {
         }
         cubeViewModel.cubeLevelBar.observe(this) {
             val (maxLevel, exp) = it
+            LogUtil.se("$maxLevel, $exp")
             cubeLevelBar.maxLevel = maxLevel
             cubeLevelBar.exp = exp
             if (reachMaxExp(exp, maxLevel)) {
@@ -105,7 +107,6 @@ class CubeAttrFragment : BaseCubeFragment() {
                 }
             }
             onSuccess = {
-                button.hideProgress("升级")
                 useItems(it)
             }
             onError = simpleErrorCallback

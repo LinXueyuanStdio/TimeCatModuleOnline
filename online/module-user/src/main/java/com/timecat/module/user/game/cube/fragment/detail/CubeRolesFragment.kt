@@ -29,8 +29,8 @@ class CubeRolesFragment : BaseCubeFragment() {
                 }
             }
             onEmpty = {
-                container.removeAllViews()
                 LogUtil.e("empty")
+                roles = listOf()
                 mStatefulLayout?.showContent()
             }
             onSuccess = {
