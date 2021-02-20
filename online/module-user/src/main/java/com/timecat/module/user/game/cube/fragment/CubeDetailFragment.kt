@@ -21,12 +21,13 @@ import com.timecat.module.user.game.cube.vm.CubeViewModel
 class CubeDetailFragment : BaseLoginTabsFragment() {
 
     private fun loadDetail(cube: OwnCube) {
+        //特定种类的方块有特定的养成页面，这个以后再实现
     }
 
-    lateinit var viewModel: CubeViewModel
+    lateinit var cubeViewModel: CubeViewModel
     override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
-        viewModel.ownCube.observe(viewLifecycleOwner, {
+        cubeViewModel = ViewModelProvider(requireActivity()).get(CubeViewModel::class.java)
+        cubeViewModel.ownCube.observe(viewLifecycleOwner, {
             it?.let { loadDetail(it) }
         })
         setupViewPager()

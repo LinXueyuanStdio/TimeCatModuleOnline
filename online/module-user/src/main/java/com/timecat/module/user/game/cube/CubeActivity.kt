@@ -16,6 +16,9 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.game.cube.fragment.*
 import com.timecat.module.user.game.cube.vm.CubeViewModel
+import com.timecat.module.user.social.common.CommentListFragment
+import com.timecat.module.user.social.common.LikeListFragment
+import com.timecat.module.user.social.common.MomentListFragment
 import com.timecat.module.user.view.TopicCard
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -95,8 +98,8 @@ class CubeActivity : BaseDetailCollapseActivity() {
             return when (position) {
                 0 -> CubeDetailFragment()
                 1 -> CommentListFragment()
-                2 -> PostListFragment()
-                3 -> MomentListFragment()
+                2 -> MomentListFragment()
+                3 -> LikeListFragment()
                 else -> FallBackFragment()
             }
         }
@@ -105,8 +108,8 @@ class CubeActivity : BaseDetailCollapseActivity() {
             return when (position) {
                 0 -> "详情"
                 1 -> "讨论"
-                2 -> "帖子"
-                3 -> "动态"
+                2 -> "动态"
+                3 -> "赞"
                 else -> super.getPageTitle(position)
             }
         }
