@@ -16,6 +16,7 @@ import com.timecat.data.bmob.ext.isFollowed
 import com.timecat.data.bmob.ext.isUnFollowed
 import com.timecat.data.bmob.ext.net.allFollowBlock
 import com.timecat.element.alert.ToastUtil
+import com.timecat.layout.ui.drawabe.roundRectSelector
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 
@@ -96,14 +97,16 @@ fun setupFollowBlockButton(
     button.apply {
         text = "关注"
         isEnabled = false
+        val accentColor = Attr.getAccentColor(context)
+        background = roundRectSelector(accentColor)
         val onActive = {
             text = "已关注"
-            setBackgroundResource(R.drawable.shape_4)
-            setTextColor(Attr.getBackgroundDarkColor(context))
+            isSelected = false
+            setTextColor(Attr.getSecondaryTextColor(context))
         }
         val onInActive = {
             text = "关注"
-            setBackgroundResource(R.drawable.shape_3)
+            isSelected = true
             setTextColor(Attr.getPrimaryTextColor(context))
         }
         setupFollowBlock(block, needRefresh, onActive, onInActive)

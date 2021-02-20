@@ -14,6 +14,7 @@ import com.timecat.data.bmob.ext.bmob.saveUserRelation
 import com.timecat.data.bmob.ext.follow
 import com.timecat.data.bmob.ext.net.allFollow
 import com.timecat.element.alert.ToastUtil
+import com.timecat.layout.ui.drawabe.roundRectSelector
 import com.timecat.layout.ui.layout.setShakelessClickListener
 
 /**
@@ -90,12 +91,16 @@ fun setupFollowUserButton(
     button.apply {
         text = "关注"
         isEnabled = false
+        val accentColor = Attr.getAccentColor(context)
+        background = roundRectSelector(accentColor)
         val onActive = {
             text = "已关注"
+            isSelected = false
             setTextColor(Attr.getSecondaryTextColor(context))
         }
         val onInActive = {
             text = "关注"
+            isSelected = true
             setTextColor(Attr.getPrimaryTextColor(context))
         }
         setupFollowUser(user, null, onActive, onInActive)
