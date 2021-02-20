@@ -6,8 +6,8 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.block.BlockItem
-import com.timecat.module.user.adapter.block.BlockSmallItem
 import com.timecat.module.user.adapter.detail.BaseDetailVH
+import io.reactivex.disposables.Disposable
 
 /**
  * @author 林学渊
@@ -21,8 +21,10 @@ abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
     abstract fun name(): String
     abstract fun query(): AVQuery<Block>
 
+    var current: Disposable? = null
     override fun loadFirst() {
-        requestBlock {
+        current?.dispose()
+        current = requestBlock {
             query = query().apply {
                 setLimit(pageSize)
                 setSkip(offset)
@@ -49,7 +51,7 @@ abstract class BaseEndlessBlockFragment : BaseEndlessListFragment() {
     }
 
     override fun loadMore() {
-        requestBlock {
+        current = requestBlock {
             query = query().apply {
                 setLimit(pageSize)
                 setSkip(offset)

@@ -15,7 +15,7 @@ import com.timecat.module.user.base.GO
  */
 class MomentListFragment : BaseBlockListFragment() {
     override fun name(): String = "动态"
-    override fun query() = viewModel.block.value!!.findAllMoment()
+    override fun query() = blockViewModel.block.value!!.findAllMoment()
     override fun bindView(view: View) {
         super.bindView(view)
         response.text = "转发到动态"

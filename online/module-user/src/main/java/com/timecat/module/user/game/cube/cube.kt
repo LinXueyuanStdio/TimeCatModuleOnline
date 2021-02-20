@@ -1,7 +1,5 @@
 package com.timecat.module.user.game.cube
 
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.forEach
@@ -26,17 +24,12 @@ import com.timecat.layout.ui.business.form.wrapContext
 import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.business.setting.RewardItem
 import com.timecat.layout.ui.business.setting.RewardListItem
-import com.timecat.layout.ui.drawabe.COLOR_DEFAULT
 import com.timecat.layout.ui.drawabe.roundRectSelector
-import com.timecat.layout.ui.layout.dp
 import com.timecat.layout.ui.layout.padding
 import com.timecat.module.user.R
 import com.timecat.module.user.game.core.Level
 import com.timecat.module.user.view.item.CounterItem
 import com.timecat.module.user.view.item.CubeLevelItem
-import top.defaults.drawabletoolbox.DrawableBuilder
-import top.defaults.drawabletoolbox.LayerDrawableBuilder
-import top.defaults.drawabletoolbox.StateListDrawableBuilder
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -116,6 +109,10 @@ object CubeLevel {
 }
 
 fun OwnCube.reachMaxExp(): Boolean {
+    return reachMaxExp(exp, maxLevel)
+}
+
+fun reachMaxExp(exp: Long, maxLevel: Int): Boolean {
     return CubeLevel.needExpToMax(exp, maxLevel) <= 1
 }
 

@@ -2,11 +2,9 @@ package com.timecat.module.user.social.common
 
 
 import androidx.fragment.app.FragmentActivity
-import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.asBlock
 import com.timecat.data.bmob.ext.bmob.findAllComments
-import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.net.findAllComment
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.block.CommentItem
@@ -22,9 +20,10 @@ import com.timecat.module.user.base.GO
  */
 class CommentListFragment : BaseBlockListFragment() {
     override fun name(): String = "讨论"
-    override fun query() = viewModel.block.value!!.findAllComment()
+    override fun query() = blockViewModel.block.value!!.findAllComment()
     override fun loadFirst() {
-        findAllComments(offset, pageSize, viewModel.block.value!!.objectId) {
+        current?.dispose()
+        current = findAllComments(offset, pageSize, blockViewModel.block.value!!.objectId) {
             onSuccess = {
                 if (it.isEmpty()) {
                     emptyCallback()
@@ -44,7 +43,7 @@ class CommentListFragment : BaseBlockListFragment() {
     }
 
     override fun loadMore() {
-        findAllComments(offset, pageSize, viewModel.block.value!!.objectId) {
+        current = findAllComments(offset, pageSize, blockViewModel.block.value!!.objectId) {
             onSuccess = {
                 if (it.isEmpty()) {
                     emptyCallback()
@@ -62,6 +61,7 @@ class CommentListFragment : BaseBlockListFragment() {
             onError = errorCallback
         }
     }
+
     override fun addNew(block: Block) {
         GO.addCommentFor(block)
     }

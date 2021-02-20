@@ -14,7 +14,7 @@ import com.timecat.module.user.social.common.BaseBlockListFragment
  */
 class RecommendListFragment : BaseBlockListFragment() {
     override fun name(): String = "推荐"
-    override fun query() = viewModel.block.value!!.findAllComment() //TODO
+    override fun query() = blockViewModel.block.value!!.findAllComment() //TODO
     override fun addNew(block: Block) {
         GO.addCommentFor(block) // TODO
     }

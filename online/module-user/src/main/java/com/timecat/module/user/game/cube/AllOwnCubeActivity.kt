@@ -8,6 +8,7 @@ import cn.leancloud.AVQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnCube
 import com.timecat.data.bmob.ext.bmob.requestOwnCube
 import com.timecat.data.bmob.ext.net.allOwnCube
@@ -16,7 +17,7 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.standard.navi.BottomBar
 import com.timecat.layout.ui.standard.navi.BottomBarIvTextTab
 import com.timecat.module.user.R
-import com.timecat.module.user.base.BaseBlockDetailActivity
+import com.timecat.module.user.base.BaseBlockCollapseActivity
 import com.timecat.module.user.game.cube.fragment.*
 import com.timecat.module.user.game.cube.vm.CubeViewModel
 import com.timecat.module.user.social.common.CommentListFragment
@@ -33,7 +34,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AllOwnCubeActivity)
-class AllOwnCubeActivity : BaseBlockDetailActivity() {
+class AllOwnCubeActivity : BaseBlockCollapseActivity() {
     lateinit var cubeViewModel: CubeViewModel
     lateinit var card: TopicCard
     lateinit var mBottomBar: BottomBar
@@ -107,6 +108,18 @@ class AllOwnCubeActivity : BaseBlockDetailActivity() {
         }
     }
 
+    override fun setupTabs(block: Block) {
+        tabs.getTabAt(1)?.let {
+            it.text = "评论${block.comments}"
+        }
+        tabs.getTabAt(2)?.let {
+            it.text = "转发${block.relays}"
+        }
+        tabs.getTabAt(3)?.let {
+            it.text = "赞${block.likes}"
+        }
+    }
+
     override fun fetch() {
         mStatefulLayout?.showLoading()
         requestOwnCube {
@@ -132,9 +145,7 @@ class AllOwnCubeActivity : BaseBlockDetailActivity() {
     }
 
     class DetailAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getCount(): Int {
-            return 4
-        }
+        override fun getCount(): Int = 4
 
         override fun getItem(position: Int): Fragment {
             return when (position) {

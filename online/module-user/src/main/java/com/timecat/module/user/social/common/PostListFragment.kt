@@ -3,7 +3,6 @@ package com.timecat.module.user.social.common
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.findAllPost
 import com.timecat.module.user.base.GO
-import com.timecat.module.user.social.common.BaseBlockListFragment
 
 /**
  * @author 林学渊
@@ -14,7 +13,7 @@ import com.timecat.module.user.social.common.BaseBlockListFragment
  */
 class PostListFragment : BaseBlockListFragment() {
     override fun name(): String = "帖子"
-    override fun query() = viewModel.block.value!!.findAllPost()
+    override fun query() = blockViewModel.block.value!!.findAllPost()
     override fun addNew(block: Block) {
         GO.addPostFor(block)
     }

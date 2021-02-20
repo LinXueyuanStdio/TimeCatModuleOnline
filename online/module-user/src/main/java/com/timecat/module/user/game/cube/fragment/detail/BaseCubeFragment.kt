@@ -19,7 +19,7 @@ import com.timecat.module.user.game.cube.vm.CubeViewModel
  */
 abstract class BaseCubeFragment : BaseLoginScrollContainerFragment() {
 
-    abstract fun loadDetail(ownCube: OwnCube)
+    protected open fun loadDetail(ownCube: OwnCube) {}
 
     lateinit var cubeViewModel: CubeViewModel
     override fun initViewAfterLogin() {

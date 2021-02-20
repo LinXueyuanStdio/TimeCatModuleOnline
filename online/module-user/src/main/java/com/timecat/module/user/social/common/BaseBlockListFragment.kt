@@ -20,11 +20,11 @@ abstract class BaseBlockListFragment : BaseEndlessBlockFragment() {
     override fun layout(): Int = R.layout.user_base_refresh_list
     lateinit var response: TextView
 
-    lateinit var viewModel: BlockViewModel
+    lateinit var blockViewModel: BlockViewModel
     override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(BlockViewModel::class.java)
-        viewModel.block.observe(viewLifecycleOwner, {
-            load()
+        blockViewModel = ViewModelProvider(requireActivity()).get(BlockViewModel::class.java)
+        blockViewModel.block.observe(viewLifecycleOwner, {
+            loadData()
         })
     }
 
@@ -32,7 +32,7 @@ abstract class BaseBlockListFragment : BaseEndlessBlockFragment() {
         super.bindView(view)
         response = view.findViewById(R.id.write_response)
         response.setShakelessClickListener {
-            viewModel.block.value?.let {
+            blockViewModel.block.value?.let {
                 addNew(it)
             }
         }

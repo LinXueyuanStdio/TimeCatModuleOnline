@@ -29,10 +29,7 @@ import com.timecat.module.user.view.ToolbarHeadView
  * @description 动态、评论
  * @usage null
  */
-abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
-    override fun routerInject() = NAV.inject(this)
-
-    lateinit var blockViewModel: BlockViewModel
+abstract class BaseBlockDetailActivity : BaseBlockCollapseActivity() {
     lateinit var userHerf: ToolbarHeadView
     lateinit var footer: CommentFooterView
     lateinit var more: View
@@ -44,18 +41,8 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
         more = findViewById(R.id.more_dialog)
     }
 
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
-        blockViewModel = ViewModelProvider(this).get(BlockViewModel::class.java)
-        blockViewModel.block.observe(this, {
-            it?.let { loadDetail(it) }
-        })
-    }
-
-    protected open fun loadDetail(block: Block) {
-        mStatefulLayout?.showContent()
-        LogUtil.e(block.parent)
-        titleString = block.title
+    override fun loadDetail(block: Block) {
+        super.loadDetail(block)
         userHerf.head.bindBlock(block.user)
         footer.bindBlock(this, block)
         footer.response.setShakelessClickListener {
@@ -66,15 +53,6 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
         }
         more.setShakelessClickListener {
             showMore(supportFragmentManager, block)
-        }
-        tabs.getTabAt(0)?.let {
-            it.text = "转发${block.relays}"
-        }
-        tabs.getTabAt(1)?.let {
-            it.text = "评论${block.comments}"
-        }
-        tabs.getTabAt(2)?.let {
-            it.text = "赞${block.likes}"
         }
     }
 
@@ -89,48 +67,4 @@ abstract class BaseBlockDetailActivity : BaseDetailCollapseActivity() {
             userHerf.displayedChild = if (Math.abs(i) >= visHeight()) 1 else 0
         })
     }
-
-    fun fetch(blockId: String) {
-        mStatefulLayout?.showLoading()
-        blockViewModel attach requestOneBlock {
-            query = oneBlockOf(blockId)
-            onSuccess = {
-                blockViewModel.block.postValue(it)
-            }
-            onError = {
-                mStatefulLayout?.showError("出错啦") {
-                    fetch()
-                }
-            }
-        }
-    }
-
-    override fun getAdapter(): FragmentStatePagerAdapter {
-        return DetailAdapter(supportFragmentManager)
-    }
-
-    class DetailAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getCount(): Int {
-            return 3
-        }
-
-        override fun getItem(position: Int): Fragment {
-            return when (position) {
-                0 -> MomentListFragment()
-                1 -> CommentListFragment()
-                2 -> LikeListFragment()
-                else -> FallBackFragment()
-            }
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            return when (position) {
-                0 -> "转发"
-                1 -> "讨论"
-                2 -> "点赞"
-                else -> super.getPageTitle(position)
-            }
-        }
-    }
-
 }

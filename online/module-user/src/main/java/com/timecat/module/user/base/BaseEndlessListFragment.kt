@@ -62,6 +62,7 @@ abstract class BaseEndlessListFragment : BaseLoginListFragment() {
 
 
     override fun loadData() {
+        mRefreshLayout.isRefreshing = true
         load()
     }
 
