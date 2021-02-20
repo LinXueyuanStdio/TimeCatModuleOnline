@@ -73,7 +73,7 @@ class CubeAttrFragment : BaseCubeFragment() {
             contentItem = Content("")
             button = MaterialButton("升级") {}
         }
-        cubeViewModel.cubeLevelBar.observe(viewLifecycleOwner) {
+        cubeViewModel.cubeLevelBar.observe(this) {
             val (maxLevel, exp) = it
             cubeLevelBar.maxLevel = maxLevel
             cubeLevelBar.exp = exp
@@ -89,7 +89,7 @@ class CubeAttrFragment : BaseCubeFragment() {
                 }
             }
         }
-        cubeViewModel.cube.observe(viewLifecycleOwner) {
+        cubeViewModel.cube.observe(this) {
             contentItem.setRichText(it.content)
         }
     }

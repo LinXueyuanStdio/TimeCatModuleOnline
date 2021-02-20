@@ -2,6 +2,7 @@ package com.timecat.module.user.game.cube.vm
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.timecat.component.commonsdk.utils.override.LogUtil
 
 /**
  * @author 林学渊
@@ -23,6 +24,7 @@ class CubeLevelBarLiveData(
         val currentMaxLevel: Int = maxLevel.value ?: 1
         val currentExp: Long = exp.value ?: 0
         val v = currentMaxLevel to currentExp
+        LogUtil.e(v)
         postValue(v)
     }
 }

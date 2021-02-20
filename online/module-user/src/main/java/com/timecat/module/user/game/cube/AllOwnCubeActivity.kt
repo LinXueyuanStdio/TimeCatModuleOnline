@@ -85,8 +85,7 @@ class AllOwnCubeActivity : BaseBlockCollapseActivity() {
                 LogUtil.sd("select $position, $prePosition")
                 //选中时触发
                 val cube = cubeViewModel.ownCubes.value!![position]
-                cubeViewModel.ownCube.postValue(cube)
-                cubeViewModel.cube.postValue(cube.cube)
+                cubeViewModel.loadCube(cube)
             }
 
             override fun onTabUnselected(position: Int) {}
