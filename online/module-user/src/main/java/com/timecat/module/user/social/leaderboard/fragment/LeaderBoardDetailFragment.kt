@@ -7,10 +7,9 @@ import com.timecat.identity.data.block.LeaderBoardBlock
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.adapter.detail.ActionItem
-import com.timecat.module.user.adapter.detail.NinePhotoItem
 import com.timecat.module.user.adapter.detail.SimpleContentItem
 import com.timecat.module.user.base.login.BaseLoginListFragment
-import com.timecat.module.user.social.leaderboard.vm.LeaderBoardViewModel
+import com.timecat.module.user.social.common.BlockViewModel
 import java.util.*
 
 /**
@@ -32,10 +31,10 @@ class LeaderBoardDetailFragment : BaseLoginListFragment() {
         adapter.reload(list)
     }
 
-    lateinit var viewModel: LeaderBoardViewModel
+    lateinit var viewModel: BlockViewModel
     override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(LeaderBoardViewModel::class.java)
-        viewModel.board.observe(viewLifecycleOwner, {
+        viewModel = ViewModelProvider(requireActivity()).get(BlockViewModel::class.java)
+        viewModel.block.observe(viewLifecycleOwner, {
             it?.let { loadDetail(it) }
         })
     }
@@ -45,14 +44,5 @@ class LeaderBoardDetailFragment : BaseLoginListFragment() {
     override fun getAdapter(): RecyclerView.Adapter<*> {
         adapter = DetailAdapter(ArrayList())
         return adapter
-    }
-
-    //第一次不加载啦，交给 ViewModel
-    override fun loadData() {
-        mRefreshLayout.isRefreshing = false
-    }
-
-    override fun onRefresh() {
-        viewModel.board.value?.let { loadDetail(it) }
     }
 }

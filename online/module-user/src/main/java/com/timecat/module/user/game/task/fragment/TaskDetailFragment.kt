@@ -7,6 +7,7 @@ import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.base.login.BaseLoginListFragment
 import com.timecat.module.user.game.task.vm.TaskViewModel
+import com.timecat.module.user.social.common.BaseBlockDetailFragment
 import java.util.*
 
 /**
@@ -17,7 +18,7 @@ import java.util.*
  * 创建者，关注，点赞数等
  * @usage null
  */
-class TaskDetailFragment : BaseLoginListFragment() {
+class TaskDetailFragment : BaseBlockDetailFragment() {
 
     private fun loadDetail(task: OwnActivity) {
         val list = mutableListOf<BaseItem<*>>()
@@ -29,17 +30,11 @@ class TaskDetailFragment : BaseLoginListFragment() {
 
     lateinit var viewModel: TaskViewModel
     override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
         viewModel = ViewModelProvider(requireActivity()).get(TaskViewModel::class.java)
         viewModel.ownActivity.observe(viewLifecycleOwner, {
             it?.let { loadDetail(it) }
         })
-    }
-
-    lateinit var adapter: DetailAdapter
-
-    override fun getAdapter(): RecyclerView.Adapter<*> {
-        adapter = DetailAdapter(ArrayList())
-        return adapter
     }
 
     //第一次不加载啦，交给 ViewModel

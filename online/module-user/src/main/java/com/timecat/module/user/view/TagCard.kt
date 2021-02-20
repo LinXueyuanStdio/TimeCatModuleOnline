@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import com.timecat.component.identity.Attr
 import com.timecat.layout.ui.layout.*
 import com.timecat.layout.ui.utils.IconLoader
@@ -135,6 +136,12 @@ class TagCard  @JvmOverloads constructor(
 
             setTextColor(Attr.getPrimaryTextColor(context))
             backgroundTintList = ColorStateList.valueOf(Attr.getPrimaryColor(context))
+        }
+    }
+
+    fun setPlaceholderHeight(height: Int) {
+        placeholder.updateLayoutParams<LayoutParams> {
+            this.height = height
         }
     }
 }

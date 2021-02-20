@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.timecat.data.bmob.ext.net.findAllItemsInLeaderBoard
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseEndlessBlock2BlockFragment
-import com.timecat.module.user.social.leaderboard.vm.LeaderBoardViewModel
+import com.timecat.module.user.social.common.BlockViewModel
 
 /**
  * @author 林学渊
@@ -16,13 +16,13 @@ import com.timecat.module.user.social.leaderboard.vm.LeaderBoardViewModel
 class LeaderBoardListFragment : BaseEndlessBlock2BlockFragment() {
     override fun layout(): Int = R.layout.user_base_refresh_list
     override fun name(): String = "讨论"
-    override fun query() = viewModel.board.value!!.findAllItemsInLeaderBoard()
+    override fun query() = blockViewModel.block.value!!.findAllItemsInLeaderBoard()
 
-    lateinit var viewModel: LeaderBoardViewModel
+    lateinit var blockViewModel: BlockViewModel
     override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(LeaderBoardViewModel::class.java)
-        viewModel.board.observe(viewLifecycleOwner, {
-            load()
+        blockViewModel = ViewModelProvider(requireActivity()).get(BlockViewModel::class.java)
+        blockViewModel.block.observe(viewLifecycleOwner, {
+            loadData()
         })
     }
 }

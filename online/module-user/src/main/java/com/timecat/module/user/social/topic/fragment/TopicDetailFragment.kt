@@ -1,16 +1,11 @@
 package com.timecat.module.user.social.topic.fragment
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.block.TopicBlock
 import com.timecat.layout.ui.entity.BaseItem
-import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.adapter.detail.ActionItem
 import com.timecat.module.user.adapter.detail.SimpleContentItem
-import com.timecat.module.user.base.login.BaseLoginListFragment
-import com.timecat.module.user.social.topic.vm.TopicViewModel
-import java.util.*
+import com.timecat.module.user.social.common.BaseBlockDetailFragment
 
 /**
  * @author 林学渊
@@ -20,38 +15,14 @@ import java.util.*
  * 创建者，关注，点赞数等
  * @usage null
  */
-class TopicDetailFragment : BaseLoginListFragment() {
+class TopicDetailFragment : BaseBlockDetailFragment() {
 
-    private fun loadDetail(forum: Block) {
+    override fun loadDetail(block: Block) {
         val list = mutableListOf<BaseItem<*>>()
 //        list.add(SingleAuthorItem(forum.user))TODO 不要显示创建着
-        val head = TopicBlock.fromJson(forum.structure)
-        list.add(SimpleContentItem(requireActivity(), forum.content, head.atScope, head.topicScope))
-        list.add(ActionItem(forum))
+        val head = TopicBlock.fromJson(block.structure)
+        list.add(SimpleContentItem(requireActivity(), block.content, head.atScope, head.topicScope))
+        list.add(ActionItem(block))
         adapter.reload(list)
-    }
-
-    lateinit var viewModel: TopicViewModel
-    override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(TopicViewModel::class.java)
-        viewModel.topic.observe(viewLifecycleOwner, {
-            it?.let { loadDetail(it) }
-        })
-    }
-
-    lateinit var adapter: DetailAdapter
-
-    override fun getAdapter(): RecyclerView.Adapter<*> {
-        adapter = DetailAdapter(ArrayList())
-        return adapter
-    }
-
-    //第一次不加载啦，交给 ViewModel
-    override fun loadData() {
-        mRefreshLayout.isRefreshing = false
-    }
-
-    override fun onRefresh() {
-        viewModel.topic.value?.let { loadDetail(it) }
     }
 }

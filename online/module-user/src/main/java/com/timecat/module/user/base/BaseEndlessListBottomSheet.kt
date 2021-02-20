@@ -66,7 +66,7 @@ abstract class BaseEndlessListBottomSheet : BaseLoginListFragment() {
     }
 
     override fun onRefresh() {
-        mRefreshLayout.isRefreshing = false
+        loadData()
     }
 
     var errorCallback: (DataError) -> Unit = {

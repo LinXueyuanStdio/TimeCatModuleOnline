@@ -20,7 +20,6 @@ class MomentListFragment : BaseBlockListFragment() {
         super.bindView(view)
         response.text = "转发到动态"
     }
-
     override fun addNew(block: Block) {
         GO.addMomentFor(block)
     }

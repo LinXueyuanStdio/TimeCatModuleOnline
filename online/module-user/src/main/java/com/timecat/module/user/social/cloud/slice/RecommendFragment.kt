@@ -14,4 +14,8 @@ class RecommendFragment : BaseEndlessActionFragment() {
     override fun query() = globalRecommendBlock().apply {
         include("block")
     }
+
+    override fun initViewAfterLogin() {
+        loadData()
+    }
 }

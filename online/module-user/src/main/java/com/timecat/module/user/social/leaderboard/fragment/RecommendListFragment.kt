@@ -3,6 +3,7 @@ package com.timecat.module.user.social.leaderboard.fragment
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.findAllComment
 import com.timecat.module.user.base.GO
+import com.timecat.module.user.social.common.BaseBlockListFragment
 
 /**
  * @author 林学渊
@@ -11,9 +12,9 @@ import com.timecat.module.user.base.GO
  * @description 推荐制，有身份的人来推荐
  * @usage null
  */
-class RecommendListFragment : BaseListFragment() {
+class RecommendListFragment : BaseBlockListFragment() {
     override fun name(): String = "推荐"
-    override fun query() = viewModel.board.value!!.findAllComment() //TODO
+    override fun query() = viewModel.block.value!!.findAllComment() //TODO
     override fun addNew(block: Block) {
         GO.addCommentFor(block) // TODO
     }

@@ -1,15 +1,10 @@
 package com.timecat.module.user.game.shop.fragment
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.layout.ui.entity.BaseItem
-import com.timecat.module.user.adapter.DetailAdapter
 import com.timecat.module.user.adapter.detail.ActionItem
 import com.timecat.module.user.adapter.detail.SimpleContentItem
-import com.timecat.module.user.base.login.BaseLoginListFragment
-import com.timecat.module.user.game.shop.vm.ShopViewModel
-import java.util.*
+import com.timecat.module.user.social.common.BaseBlockDetailFragment
 
 /**
  * @author 林学渊
@@ -20,37 +15,13 @@ import java.util.*
  * 2. 有什么商品
  * @usage null
  */
-class ShopDetailFragment : BaseLoginListFragment() {
+class ShopDetailFragment : BaseBlockDetailFragment() {
 
-    private fun loadDetail(forum: Block) {
+    override fun loadDetail(block: Block) {
         val list = mutableListOf<BaseItem<*>>()
 //        list.add(SingleAuthorItem(forum.user))TODO 不要显示创建着
-        list.add(SimpleContentItem(requireActivity(), forum.content))
-        list.add(ActionItem(forum))
+        list.add(SimpleContentItem(requireActivity(), block.content))
+        list.add(ActionItem(block))
         adapter.reload(list)
-    }
-
-    lateinit var viewModel: ShopViewModel
-    override fun initViewAfterLogin() {
-        viewModel = ViewModelProvider(requireActivity()).get(ShopViewModel::class.java)
-        viewModel.shop.observe(viewLifecycleOwner, {
-            it?.let{loadDetail(it)}
-        })
-    }
-
-    lateinit var adapter: DetailAdapter
-
-    override fun getAdapter(): RecyclerView.Adapter<*> {
-        adapter = DetailAdapter(ArrayList())
-        return adapter
-    }
-
-    //第一次不加载啦，交给 ViewModel
-    override fun loadData() {
-        mRefreshLayout.isRefreshing = false
-    }
-
-    override fun onRefresh() {
-        viewModel.shop.value?.let { loadDetail(it) }
     }
 }

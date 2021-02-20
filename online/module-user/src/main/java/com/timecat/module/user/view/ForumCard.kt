@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import com.timecat.component.identity.Attr
 import com.timecat.layout.ui.layout.*
 import com.timecat.layout.ui.utils.IconLoader
@@ -140,4 +141,9 @@ class ForumCard @JvmOverloads constructor(
             button.setShakelessClickListener(onClick = value)
         }
 
+    fun setPlaceholderHeight(height: Int) {
+        placeholder.updateLayoutParams<LayoutParams> {
+            this.height = height
+        }
+    }
 }

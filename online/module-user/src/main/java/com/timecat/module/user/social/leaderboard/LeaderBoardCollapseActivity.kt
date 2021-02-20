@@ -8,28 +8,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data.common.Action
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.*
-import com.timecat.data.bmob.ext.follow
-import com.timecat.data.bmob.ext.net.allFollowBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.LeaderBoardBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.R
+import com.timecat.module.user.base.BaseBlockDetailActivity
 import com.timecat.module.user.base.BaseDetailCollapseActivity
 import com.timecat.module.user.base.GO
-import com.timecat.module.user.social.forum.fragment.CommentListFragment
+import com.timecat.module.user.social.common.CommentListFragment
 import com.timecat.module.user.social.leaderboard.fragment.LeaderBoardDetailFragment
 import com.timecat.module.user.social.leaderboard.fragment.LeaderBoardListFragment
 import com.timecat.module.user.social.leaderboard.fragment.RecommendListFragment
 import com.timecat.module.user.social.leaderboard.vm.LeaderBoardViewModel
 import com.timecat.module.user.view.ForumCard
+import com.timecat.module.user.view.TopicCard
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
@@ -42,30 +38,23 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_LeaderBoardDetailActivity)
-class LeaderBoardCollapseActivity : BaseDetailCollapseActivity() {
+class LeaderBoardCollapseActivity : BaseBlockDetailActivity() {
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
-    lateinit var viewModel: LeaderBoardViewModel
-    lateinit var card: ForumCard
+    lateinit var card: TopicCard
     override fun routerInject() = NAV.inject(this)
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        viewModel = ViewModelProvider(this).get(LeaderBoardViewModel::class.java)
-        viewModel.board.observe(this, {
-            it?.let { loadDetail(it) }
-        })
-        card = ForumCard(this)
-        card.placeholder.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            height = getStatusBarHeightPlusToolbarHeight()
-        }
+        card = TopicCard(this)
+        card.setPlaceholderHeight(getStatusBarHeightPlusToolbarHeight())
         setupHeaderCard(card)
         setupCollapse()
         setupViewPager()
         fetch()
     }
 
-    private fun loadDetail(block: Block) {
+    override fun loadDetail(block: Block) {
         // 1. 加载头部卡片
         val headerBlock = LeaderBoardBlock.fromJson(block.structure)
         titleString = block.title
@@ -78,17 +67,7 @@ class LeaderBoardCollapseActivity : BaseDetailCollapseActivity() {
     }
 
     override fun fetch() {
-        requestOneBlock {
-            query = oneBlockOf(blockId)
-            onSuccess = {
-                viewModel.board.postValue(it)
-            }
-            onError = {
-                mStatefulLayout?.showError("出错啦") {
-                    fetch()
-                }
-            }
-        }
+        fetch(blockId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -103,7 +82,7 @@ class LeaderBoardCollapseActivity : BaseDetailCollapseActivity() {
             return true
         }
         if (i == R.id.add) {
-            viewModel.board.value?.let {
+            blockViewModel.block.value?.let {
                 GO.addRecommendFor(it)
             }
             return true

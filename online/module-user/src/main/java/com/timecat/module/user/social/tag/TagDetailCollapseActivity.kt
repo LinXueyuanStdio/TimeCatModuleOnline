@@ -1,24 +1,18 @@
 package com.timecat.module.user.social.tag
 
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.lifecycle.ViewModelProvider
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.*
-import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.data.block.TagBlock
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.module.user.base.BaseDetailCollapseActivity
-import com.timecat.module.user.social.tag.fragment.CommentListFragment
-import com.timecat.module.user.social.tag.fragment.MomentListFragment
-import com.timecat.module.user.social.tag.fragment.PostListFragment
+import com.timecat.module.user.base.BaseBlockDetailActivity
+import com.timecat.module.user.social.common.CommentListFragment
+import com.timecat.module.user.social.common.MomentListFragment
+import com.timecat.module.user.social.common.PostListFragment
 import com.timecat.module.user.social.tag.fragment.TagDetailFragment
-import com.timecat.module.user.social.tag.vm.TagViewModel
 import com.timecat.module.user.view.TagCard
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -32,30 +26,23 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_TagDetailActivity)
-class TagDetailCollapseActivity : BaseDetailCollapseActivity() {
+class TagDetailCollapseActivity : BaseBlockDetailActivity() {
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
-    lateinit var viewModel: TagViewModel
     lateinit var card: TagCard
     override fun routerInject() = NAV.inject(this)
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        viewModel = ViewModelProvider(this).get(TagViewModel::class.java)
-        viewModel.tag.observe(this, {
-            it?.let { loadDetail(it) }
-        })
         card = TagCard(this)
-        card.placeholder.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            height = getStatusBarHeightPlusToolbarHeight()
-        }
+        card.setPlaceholderHeight(getStatusBarHeightPlusToolbarHeight())
         setupHeaderCard(card)
         setupCollapse()
         setupViewPager()
         fetch()
     }
 
-    private fun loadDetail(block: Block) {
+    override fun loadDetail(block: Block) {
         // 1. 加载头部卡片
         val headerBlock = TagBlock.fromJson(block.structure)
         titleString = block.title
@@ -68,17 +55,7 @@ class TagDetailCollapseActivity : BaseDetailCollapseActivity() {
     }
 
     override fun fetch() {
-        requestOneBlock {
-            query = oneBlockOf(blockId)
-            onSuccess = {
-                viewModel.tag.postValue(it)
-            }
-            onError = {
-                mStatefulLayout?.showError("出错啦") {
-                    fetch()
-                }
-            }
-        }
+        fetch(blockId)
     }
 
     override fun getAdapter(): FragmentStatePagerAdapter {

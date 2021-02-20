@@ -15,7 +15,7 @@ import com.xiaojinzi.component.anno.FragmentAnno
  * @date 2020/10/3
  * @description 足迹
  * Trace 是 log，指向 string 的 target id，持有一个 type 和 target type
- * @usage null
+ * @usage 监听 ViewModel 被动调用 loadData()，不需要自己手动调用
  */
 @FragmentAnno(RouterHub.USER_TraceFragment)
 class TraceFragment : BaseEndlessActionFragment() {
@@ -30,4 +30,8 @@ class TraceFragment : BaseEndlessActionFragment() {
 
     override fun name() = "足迹"
     override fun query() = user?.allAction() ?: I().allAction()
+
+    override fun loadDetail(user: User) {
+        loadData()
+    }
 }

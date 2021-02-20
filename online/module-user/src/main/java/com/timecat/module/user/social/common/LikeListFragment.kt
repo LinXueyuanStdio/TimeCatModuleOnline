@@ -17,7 +17,7 @@ import com.timecat.module.user.adapter.user.UserItem
  */
 class LikeListFragment : BaseActionListFragment() {
     override fun name(): String = "点赞"
-    override fun query() = viewModel.block.value!!.allLikes().apply {
+    override fun query() = blockViewModel.block.value!!.allLikes().apply {
         include("user")
     }
     override fun action2Item(activity: FragmentActivity, action: Action): BaseItem<out BaseDetailVH> {

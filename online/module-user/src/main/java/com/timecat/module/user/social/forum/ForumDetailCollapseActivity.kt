@@ -1,30 +1,18 @@
 package com.timecat.module.user.social.forum
 
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.lifecycle.ViewModelProvider
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data.common.Action
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.*
-import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.follow
-import com.timecat.data.bmob.ext.net.*
-import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.ForumBlock
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.module.user.base.BaseDetailCollapseActivity
-import com.timecat.module.user.social.forum.fragment.CommentListFragment
+import com.timecat.module.user.base.BaseBlockDetailActivity
+import com.timecat.module.user.social.common.CommentListFragment
+import com.timecat.module.user.social.common.MomentListFragment
+import com.timecat.module.user.social.common.PostListFragment
 import com.timecat.module.user.social.forum.fragment.ForumDetailFragment
-import com.timecat.module.user.social.forum.fragment.MomentListFragment
-import com.timecat.module.user.social.forum.fragment.PostListFragment
-import com.timecat.module.user.social.forum.vm.ForumViewModel
 import com.timecat.module.user.view.ForumCard
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -39,30 +27,23 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_ForumDetailActivity)
-class ForumDetailCollapseActivity : BaseDetailCollapseActivity() {
+class ForumDetailCollapseActivity : BaseBlockDetailActivity() {
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
-    lateinit var viewModel: ForumViewModel
     lateinit var card: ForumCard
     override fun routerInject() = NAV.inject(this)
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        viewModel = ViewModelProvider(this).get(ForumViewModel::class.java)
-        viewModel.forum.observe(this, {
-            it?.let { loadDetail(it) }
-        })
         card = ForumCard(this)
-        card.placeholder.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            height = getStatusBarHeightPlusToolbarHeight()
-        }
+        card.setPlaceholderHeight(getStatusBarHeightPlusToolbarHeight())
         setupHeaderCard(card)
         setupCollapse()
         setupViewPager()
         fetch()
     }
 
-    private fun loadDetail(block: Block) {
+    override fun loadDetail(block: Block) {
         // 1. 加载头部卡片
         val headerBlock = ForumBlock.fromJson(block.structure)
         titleString = block.title
@@ -75,17 +56,7 @@ class ForumDetailCollapseActivity : BaseDetailCollapseActivity() {
     }
 
     override fun fetch() {
-        requestOneBlock {
-            query = oneBlockOf(blockId)
-            onSuccess = {
-                viewModel.forum.postValue(it)
-            }
-            onError = {
-                mStatefulLayout?.showError("出错啦") {
-                    fetch()
-                }
-            }
-        }
+        fetch(blockId)
     }
 
     override fun getAdapter(): FragmentStatePagerAdapter {
