@@ -1,7 +1,5 @@
 package com.timecat.module.user.social.comment
 
-import com.shuyu.textutillib.model.TopicModel
-import com.shuyu.textutillib.model.UserModel
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Comment
@@ -55,19 +53,17 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
     override fun currentBlock(): Block? = comment
 
     override fun subtype(): Int {
-        if (relay != null) {
-            return COMMENT_REPLY
-        } else if (parent?.isComment() == true) {
-            return COMMENT_REPLY
+        return if (relay != null) {
+            COMMENT_REPLY
         } else {
-            return COMMENT_SIMPLE
+            COMMENT_SIMPLE
         }
     }
 
     override fun savableBlock(): Block = I() create Comment {
         title = relay?.let { it.title / it.objectId }
             ?: this@CommentEditorActivity.parent!!.objectId
-        content = formData.content
+        content = relay?.let { "回复 @${it.user.nickName} ：${formData.content}" } ?: formData.content
         parent = this@CommentEditorActivity.parent
         subtype = subtype()
         headerBlock = getHeadBlock()
@@ -82,11 +78,12 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
 
     fun getHeadBlock(): CommentBlock {
         return CommentBlock(
-            content = NoteBody(),
             mediaScope = formData.attachments,
             atScope = formData.atScope,
             topicScope = formData.topicScope,
-            structure = SimpleComment().toJsonObject()
+            structure = relay?.let {
+                ReplyComment(it.user.objectId).toJsonObject()
+            }
         )
     }
 
@@ -97,15 +94,10 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
             container.addView(block_herf, 0)
             block_herf.bindBlock(relay ?: parent)
             if (relay == null) {
-                emojiEditText.hint = "评论 @${parent.user.nickName}"
+                emojiEditText.hint = "评论 @${parent.user.nickName} "
             } else {
                 relay?.let {
-                    emojiEditText.hint = "转发 @${it.user.nickName}"
-                    val content = "//@${it.user.nickName}：${it.content}"
-                    formData.setContent(context, content,
-                        listOf(UserModel(it.user.nickName, it.user.objectId)),
-                        listOf(TopicModel(parent.title, parent.objectId)))
-                    emojiEditText.setSelection(0)
+                    emojiEditText.hint = "回复 @${it.user.nickName} "
                 }
             }
         }

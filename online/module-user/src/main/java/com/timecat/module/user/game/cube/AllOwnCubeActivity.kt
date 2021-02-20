@@ -106,6 +106,7 @@ class AllOwnCubeActivity : BaseDetailCollapseActivity() {
     }
 
     override fun fetch() {
+        mStatefulLayout?.showLoading()
         requestOwnCube {
             query = I().allOwnCube().apply {
                 cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE

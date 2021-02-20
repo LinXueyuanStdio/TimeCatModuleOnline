@@ -4,22 +4,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
+import cn.leancloud.json.JSONObject
 import com.shuyu.textutillib.RichTextView
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
+import com.timecat.component.commonsdk.extension.beVisible
 import com.timecat.component.commonsdk.extension.beVisibleIf
 import com.timecat.component.commonsdk.helper.HERF
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.asUser
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.form.H3
 import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
@@ -78,7 +83,7 @@ open class CommentItem(
         super.bindViewHolder(adapter, holder, position, payloads)
         holder.itemView.tag = block.objectId
         holder.main_flag.beVisibleIf(isMain)
-        holder.userHead.bindBlock(block.user)
+        holder.userHead.bindBlock(block.get("user").asUser())
         val timeString: String = block.friendlyCreateTimeText()
         holder.userHead.content = timeString
         holder.userHead.moreView.setShakelessClickListener {
@@ -94,6 +99,29 @@ open class CommentItem(
             showMore(activity.supportFragmentManager, block)
             true
         }
+        block.getJSONArray("hot_children")?.let { subcomments ->
+            holder.subs.apply {
+                beVisible()
+                for (comment in subcomments) {
+                    LogUtil.e(comment)
+                    val obj = comment as JSONObject?
+                    obj?.let {
+                        val author = it.getJSONObject("user").getString("nickName")
+                        val content = it.getString("content")
+                        val type = it.getIntValue("type")
+                        if (type == COMMENT_REPLY) {
+                            H3("$author$content")
+                        } else {
+                            H3("$author：$content")
+                        }
+                    }
+                }
+                if (subcomments.size >= 3) {
+                    H3("查看全部 ${block.comments} 回复")
+                }
+            }
+        }
+
         holder.subs.setShakelessClickListener {
             showSubComments(activity.supportFragmentManager, block)
         }

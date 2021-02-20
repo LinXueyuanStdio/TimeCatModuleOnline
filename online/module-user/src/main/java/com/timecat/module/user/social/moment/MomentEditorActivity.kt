@@ -1,5 +1,7 @@
 package com.timecat.module.user.social.moment
 
+import com.shuyu.textutillib.model.TopicModel
+import com.shuyu.textutillib.model.UserModel
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
@@ -50,12 +52,22 @@ class MomentEditorActivity : BaseArticleBlockEditorActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        parent?.let {
-            LogUtil.e(it)
+        parent?.let {parent->
             val block_herf = BlockHerfView(context)
             container.addView(block_herf, 0)
-            block_herf.bindBlock(it)
-            emojiEditText.hint = relay?.let { "@${it.user.nickName}" } ?: "@${it.user.nickName}"
+            block_herf.bindBlock(relay ?: parent)
+            if (relay == null) {
+                emojiEditText.hint = "评论 @${parent.user.nickName} "
+            } else {
+                relay?.let {
+                    emojiEditText.hint = "转发 @${it.user.nickName} "
+                    val content = "//@${it.user.nickName} ：${it.content}"
+                    formData.setContent(context, content,
+                        listOf(UserModel("@${it.user.nickName}", it.user.objectId)),
+                        listOf(TopicModel("#${parent.title}#", parent.objectId)))
+                    emojiEditText.setSelection(0)
+                }
+            }
         }
     }
 

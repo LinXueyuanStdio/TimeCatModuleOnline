@@ -10,17 +10,18 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.core.view.setMargins
 import cn.leancloud.AVLogger
 import cn.leancloud.AVOSCloud
+import cn.leancloud.AVObject
+import cn.leancloud.Transformer
+import cn.leancloud.json.JSONObject
 import com.google.android.material.button.MaterialButton
-import com.timecat.component.commonsdk.utils.ScreenUtil.setMargins
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.ext.bmob.requestOneBlock
-import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.element.alert.ToastUtil
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.asBlock
+import com.timecat.data.bmob.ext.bmob.asUser
+import com.timecat.data.bmob.ext.bmob.findAllComments
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.dp
 import com.xiaojinzi.component.impl.*
@@ -42,6 +43,32 @@ class MainActivity : Activity() {
             Router.with().hostAndPath(RouterHub.USER_UserDetailActivity)
                 .putString("userId", user?.objectId)
                 .forward()
+        })
+        linearLayout.addView(createButton("测试") {
+            findAllComments(1, 10, "602f42689c05de4254617ef0") {
+                onSuccess = {
+                    LogUtil.se(it::class)
+                    LogUtil.se(it[0]::class)
+                    LogUtil.se(it[0].keys)
+//                    val rawObject = AVObject.parseAVObject(it[0].toString())
+//                    val block= Transformer.transform(rawObject, Block::class.java)
+//                    LogUtil.e(block)
+//                    LogUtil.e(block::class.java)
+                    for (i in it) {
+                        LogUtil.se(i.asBlock())
+                        LogUtil.se(i["parent"]!!::class.java)
+                        LogUtil.se(i["user"]!!.asUser())
+                        val hot_children = i["hot_children"] as ArrayList<*>
+                        for (j in hot_children) {
+                            val block= j.asBlock()
+                            LogUtil.e(block)
+                        }
+                    }
+                }
+                onError = {
+                    LogUtil.e(it)
+                }
+            }
         })
         linearLayout.addView(createPathButton(RouterHub.USER_AllUserActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllTraceActivity))
@@ -158,7 +185,7 @@ class MainActivity : Activity() {
     private fun createButton(name: String): Button {
         val button = MaterialButton(this)
         button.text = name
-        val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply{
+        val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             marginStart = 10.dp
             marginEnd = 10.dp
         }
@@ -167,6 +194,7 @@ class MainActivity : Activity() {
         button.isAllCaps = false
         return button
     }
+
     private fun createText(name: String): TextView {
         val button = TextView(this)
         button.text = name

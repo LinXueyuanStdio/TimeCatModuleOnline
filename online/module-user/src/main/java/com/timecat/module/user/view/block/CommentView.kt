@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.block.*
 
@@ -25,24 +26,27 @@ class CommentView @JvmOverloads constructor(
         this.activity = activity
         setHead(block)
         val head = CommentBlock.fromJson(block.structure)
-        setRichTextView(root, block.content, head.atScope, head.topicScope)
         setMediaScope(root, head.mediaScope)
         setPosScope(root, head.posScope)
-        when (block.subtype) {
-            COMMENT_SIMPLE -> {
-                val sc = SimpleComment.fromJson(head.structure)
-            }
-            COMMENT_REPLY -> {
+        head.structure?.let {
+            when (block.subtype) {
+                COMMENT_SIMPLE -> {
+                    setRichTextView(root, block.content, head.atScope, head.topicScope)
+                }
+                COMMENT_REPLY -> {
+                    val reply = ReplyComment.fromJson(it)
+                    LogUtil.e(reply)
+                    setRichTextView(root, block.content, head.atScope, head.topicScope)
+                }
+                COMMENT_SCORE -> {
 
-            }
-            COMMENT_SCORE -> {
+                }
+                COMMENT_TEXT -> {
 
-            }
-            COMMENT_TEXT -> {
+                }
+                COMMENT_VIDEO -> {
 
-            }
-            COMMENT_VIDEO -> {
-
+                }
             }
         }
         setShare(block)

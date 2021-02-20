@@ -257,9 +257,10 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
         val data: MutableList<Int> = ArrayList()
         val strings: MutableList<String> = ArrayList()
         for (i in 1..67) {
-            val resId = resources.getIdentifier(String.format("im_emotion_%2d", i), "drawable", packageName)
+            val resName = String.format("im_emotion_%2d", i);
+            val resId = resources.getIdentifier(resName, "drawable", packageName)
             data.add(resId)
-            strings.add("[e$i]")
+            strings.add("[$resName]")
         }
         /**初始化为自己的 */
         SmileUtils.addPatternAll(SmileUtils.getEmoticons(), strings, data)

@@ -1,5 +1,6 @@
 package com.timecat.module.user.view.dsl
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
@@ -7,6 +8,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showProgress
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.identity.Attr
 import com.timecat.data.bmob.dao.UserDao
@@ -46,7 +49,7 @@ fun setupLikeBlockButton(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     TextViewCompat.setCompoundDrawableTintList(iv, ColorStateList.valueOf(Attr.getAccentColor(context)))
                 }
-                text = "${block.likes + 1}"
+                text = "${if (block.likes == 0) "点赞" else block.likes}"
             }
         }
         val onInActive = {
@@ -129,7 +132,6 @@ fun View.setupLikeBlock(
                     needRefresh?.invoke()
                     relation = it
                     block.isLiked()
-                    block.likes += 1
                     onActive()
                     ToastUtil.ok("点赞成功")
                 }
@@ -145,7 +147,6 @@ fun View.setupLikeBlock(
                     needRefresh?.invoke()
                     relation = null
                     block.isUnLiked()
-                    block.likes -= 1
                     onInActive()
                     ToastUtil.ok("解除点赞成功")
                 }
@@ -159,7 +160,7 @@ fun View.setupLikeBlock(
 }
 
 fun setupLikeBlockButton(
-    context: Context,
+    context: Activity,
     container: View,
     iv: ImageView,
     tv: TextView,
@@ -167,10 +168,13 @@ fun setupLikeBlockButton(
     needRefresh: (() -> Unit)? = null
 ) {
     iv.apply {
+
+        tv.showProgress()
         val onActive = {
             if (container.tag == block.objectId) {
                 setImageResource(R.drawable.user_ic_favorite_24dp)
                 imageTintList = ColorStateList.valueOf(Attr.getAccentColor(context))
+                tv.hideProgress()
                 tv.text = "${if (block.likes == 0) "点赞" else block.likes}"
             }
         }
@@ -178,6 +182,7 @@ fun setupLikeBlockButton(
             if (container.tag == block.objectId) {
                 setImageResource(R.drawable.user_ic_love)
                 imageTintList = ColorStateList.valueOf(Attr.getIconColor(context))
+                tv.hideProgress()
                 tv.text = "${if (block.likes == 0) "点赞" else block.likes}"
             }
         }

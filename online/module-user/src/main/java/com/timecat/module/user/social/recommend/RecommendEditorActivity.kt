@@ -1,7 +1,5 @@
 package com.timecat.module.user.social.recommend
 
-import com.shuyu.textutillib.model.TopicModel
-import com.shuyu.textutillib.model.UserModel
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Comment
@@ -13,7 +11,7 @@ import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.COMMENT_REPLY
 import com.timecat.identity.data.block.COMMENT_SIMPLE
 import com.timecat.identity.data.block.CommentBlock
-import com.timecat.identity.data.block.SimpleComment
+import com.timecat.identity.data.block.ReplyComment
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.timecat.module.user.view.BlockHerfView
@@ -82,11 +80,13 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
 
     fun getHeadBlock(): CommentBlock {
         return CommentBlock(
-            content = NoteBody(),
             mediaScope = formData.attachments,
             atScope = formData.atScope,
             topicScope = formData.topicScope,
-            structure = SimpleComment().toJsonObject()
+            structure =  relay?.let {
+                val obj = ReplyComment(it.user.objectId).toJsonObject()
+                obj
+            }
         )
     }
 
