@@ -1,6 +1,7 @@
 package com.timecat.module.user.social.user.fragment
 
 import com.timecat.data.bmob.ext.net.findAllComment
+import com.timecat.module.user.base.BaseEndlessBlockFragment
 
 /**
  * @author 林学渊
@@ -9,7 +10,7 @@ import com.timecat.data.bmob.ext.net.findAllComment
  * @description 话题讨论
  * @usage null
  */
-class CommentListFragment : BaseListFragment() {
+class CommentListFragment : BaseEndlessBlockFragment() {
     override fun name(): String = "讨论"
-    override fun query() = viewModel.user.value!!.findAllComment()
+    override fun query() = userViewModel.user.value!!.findAllComment()
 }

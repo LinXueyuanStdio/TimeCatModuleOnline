@@ -67,4 +67,9 @@ class FocusFragment : BaseEndlessBlockFragment() {
             .include("parent")
             .order("-createdAt")
     }
+
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        loadData()
+    }
 }

@@ -11,9 +11,10 @@ import com.xiaojinzi.component.anno.FragmentAnno
 @FragmentAnno(RouterHub.USER_WorldFragment)
 class WorldFragment : BaseEndlessBlockFragment() {
     override fun name() = "动态"
-    override fun query() = allMoment().apply {
-        //世界动态是没有父节点的动态
-        //有父节点的动态，可能是论坛里的动态
-        whereDoesNotExist("parent")
+    override fun query() = allMoment()
+
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        loadData()
     }
 }

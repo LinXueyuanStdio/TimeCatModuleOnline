@@ -80,6 +80,11 @@ abstract class BaseEndlessListFragment : BaseLoginListFragment() {
         ToastUtil.e("查询失败")
         it.printStackTrace()
     }
+    var firstEmptyCallback: () -> Unit = {
+        mRefreshLayout.isRefreshing = false
+        mStatefulLayout?.showEmpty()
+        adapter.updateItem(notMoreItem, Payload.NO_MORE_LOAD)
+    }
     var emptyCallback: () -> Unit = {
         mRefreshLayout.isRefreshing = false
         mStatefulLayout?.showContent()

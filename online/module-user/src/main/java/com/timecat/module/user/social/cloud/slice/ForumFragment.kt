@@ -12,4 +12,8 @@ import com.xiaojinzi.component.anno.FragmentAnno
 class ForumFragment : BaseEndlessBlockFragment() {
     override fun name(): String = "论坛"
     override fun query() = allForum()
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        loadData()
+    }
 }

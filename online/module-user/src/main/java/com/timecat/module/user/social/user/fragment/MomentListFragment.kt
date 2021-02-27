@@ -1,6 +1,7 @@
 package com.timecat.module.user.social.user.fragment
 
 import com.timecat.data.bmob.ext.net.findAllMoment
+import com.timecat.module.user.base.BaseEndlessBlockFragment
 
 /**
  * @author 林学渊
@@ -9,7 +10,7 @@ import com.timecat.data.bmob.ext.net.findAllMoment
  * @description 转发的动态
  * @usage null
  */
-class MomentListFragment : BaseListFragment() {
+class MomentListFragment : BaseEndlessBlockFragment() {
     override fun name(): String = "转发的动态"
-    override fun query() = viewModel.user.value!!.findAllMoment()
+    override fun query() = userViewModel.user.value!!.findAllMoment()
 }
