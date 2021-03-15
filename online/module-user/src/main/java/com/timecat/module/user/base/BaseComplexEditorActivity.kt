@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.View
 import android.widget.Button
 import com.effective.android.panel.PanelSwitchHelper
+import com.effective.android.panel.view.PanelSwitchLayout
 import com.effective.android.panel.view.panel.PanelView
 import com.shuyu.textutillib.EmojiLayout
 import com.shuyu.textutillib.RichEditBuilder
@@ -59,6 +60,7 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
 
     lateinit var emojiEditText: RichEditText
 
+    lateinit var panel_switch_layout: PanelSwitchLayout
     lateinit var photo: View
     lateinit var at: View
     lateinit var topic: View
@@ -74,6 +76,7 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
         emojiEditText = findViewById(R.id.emojiEditText)
         formData.emojiEditText = emojiEditText
 
+        panel_switch_layout = findViewById(R.id.panel_switch_layout)
         photo = findViewById(R.id.photo)
         at = findViewById(R.id.at)
         topic = findViewById(R.id.topic)
@@ -144,7 +147,7 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
                 }
                 .contentScrollOutsideEnable(true)  //可选，默认为true
                 .logTrack(true)                   //可选，默认false，是否开启log信息输出
-                .build(true)                      //可选，默认false，是否默认打开输入法
+                .build(panel_switch_layout, true)                      //可选，默认false，是否默认打开输入法
         }
     }
 

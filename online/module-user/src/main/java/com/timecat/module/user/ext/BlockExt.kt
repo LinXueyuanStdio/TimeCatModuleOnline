@@ -30,7 +30,7 @@ fun Block.simpleAvatar(): String {
         BLOCK_NOVEL -> {
             "R.drawable.ic_comment"
         }
-        BLOCK_ACCOUNT -> {
+        BLOCK_MARKDOWN -> {
             "R.drawable.ic_comment"
         }
         BLOCK_MESSAGE -> {
