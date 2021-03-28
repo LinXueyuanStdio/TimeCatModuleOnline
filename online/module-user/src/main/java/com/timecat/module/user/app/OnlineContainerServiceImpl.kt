@@ -16,7 +16,6 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.service.ContainerService
 import com.timecat.middle.block.service.HomeService
-import com.timecat.module.user.adapter.block.BlockItem
 import com.timecat.module.user.adapter.block.MomentItem
 import com.timecat.module.user.adapter.block.NotMoreItem
 import com.xiaojinzi.component.anno.ServiceAnno
@@ -32,7 +31,7 @@ import java.util.*
  */
 @ServiceAnno(ContainerService::class, name = [RouterHub.GLOBAL_OnlineContainerService])
 class OnlineContainerServiceImpl : ContainerService {
-    val pageSize :Int = 10
+    val pageSize: Int = 10
     private val notMoreItem: NotMoreItem = NotMoreItem()
     override fun loadContainerButton(context: Context, parentUuid: String, homeService: HomeService, callback: ContainerService.LoadButton) {
         callback.onLoadSuccess(listOf(Chip(context).apply {
@@ -48,6 +47,7 @@ class OnlineContainerServiceImpl : ContainerService {
     }
 
     var focus_ids: List<User> = mutableListOf()
+    var disposable:Disposable?=null
 
     override fun loadForVirtualPath(context: Context,
                                     parentUuid: String,
@@ -60,28 +60,26 @@ class OnlineContainerServiceImpl : ContainerService {
             }
         } else {
             homeService.itemCommonListener().configAdapter(true, pageSize, 4, notMoreItem)
-            requestUserRelation {
+            callback.onLoading("正在连接服务器") {
+                disposable?.dispose()
+                callback.onVirtualLoadSuccess(listOf())
+            }
+            disposable = requestUserRelation {
                 query = I().allFollow()
                 onError = {
-                    callback.onError("加载失败"){
+                    callback.onError("加载失败") {
                         homeService.databaseReload()
                     }
                     focus_ids = mutableListOf()
                     LogUtil.se(it)
                 }
                 onEmpty = {
-                    callback.onEmpty("空数据，请重新加载"){
-                        homeService.databaseReload()
-                    }
                     focus_ids = mutableListOf()
+                    loadFirst(context, parentUuid, homeService, callback)
                 }
                 onSuccess = {
-                    val users: MutableList<User> = ArrayList()
-                    for (f in it) {
-                        users.add(f.target)
-                    }
-                    focus_ids = users
-
+                    focus_ids = it.map { it.target }
+                    loadFirst(context, parentUuid, homeService, callback)
                 }
             }
         }
@@ -108,6 +106,7 @@ class OnlineContainerServiceImpl : ContainerService {
             }
         }
     }
+
     fun query(): AVQuery<Block> {
         // 合并两个条件，进行"或"查询
         // 查询 我关注的人的动态 和 自己的动态
@@ -121,6 +120,7 @@ class OnlineContainerServiceImpl : ContainerService {
             .include("parent")
             .order("-createdAt")
     }
+
     override fun loadMoreForVirtualPath(context: Context, parentUuid: String, offset: Int, homeService: HomeService, callback: ContainerService.LoadMoreCallback) {
         requestBlock {
             query = query().apply {
