@@ -160,7 +160,7 @@ fun View.setupLikeBlock(
 }
 
 fun setupLikeBlockButton(
-    context: Activity,
+    context: Context,
     container: View,
     iv: ImageView,
     tv: TextView,

@@ -30,13 +30,12 @@ class FocusFragment : BaseEndlessBlockFragment() {
                 mStatefulLayout?.showError("没有关注的用户") {
                     loadData()
                 }
-                ToastUtil.e("关注列表查询失败")
+                focus_ids = mutableListOf()
                 LogUtil.se(it)
             }
             onEmpty = {
                 mRefreshLayout.isRefreshing = false
                 mStatefulLayout?.showContent()
-                ToastUtil.e("还没关注任何人哦")
                 focus_ids = mutableListOf()
                 load()
             }

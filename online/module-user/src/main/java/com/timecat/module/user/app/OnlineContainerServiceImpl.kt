@@ -1,10 +1,27 @@
 package com.timecat.module.user.app
 
 import android.content.Context
+import cn.leancloud.AVQuery
+import com.google.android.material.chip.Chip
+import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
+import com.timecat.data.bmob.data.User
+import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.bmob.requestUserRelation
+import com.timecat.data.bmob.ext.net.allFollow
+import com.timecat.data.bmob.ext.net.findAllMoment
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.service.ContainerService
 import com.timecat.middle.block.service.HomeService
+import com.timecat.module.user.adapter.block.BlockItem
+import com.timecat.module.user.adapter.block.MomentItem
+import com.timecat.module.user.adapter.block.NotMoreItem
 import com.xiaojinzi.component.anno.ServiceAnno
+import io.reactivex.disposables.Disposable
+import java.util.*
 
 /**
  * @author 林学渊
@@ -15,10 +32,109 @@ import com.xiaojinzi.component.anno.ServiceAnno
  */
 @ServiceAnno(ContainerService::class, name = [RouterHub.GLOBAL_OnlineContainerService])
 class OnlineContainerServiceImpl : ContainerService {
+    val pageSize :Int = 10
+    private val notMoreItem: NotMoreItem = NotMoreItem()
+    override fun loadContainerButton(context: Context, parentUuid: String, homeService: HomeService, callback: ContainerService.LoadButton) {
+        callback.onLoadSuccess(listOf(Chip(context).apply {
+            text = "进入社区"
+            setShakelessClickListener {
+                NAV.go(RouterHub.USER_CloudActivity)
+            }
+        }))
+    }
+
+    fun I(): User {
+        return UserDao.getCurrentUser() ?: throw Exception()
+    }
+
+    var focus_ids: List<User> = mutableListOf()
+
     override fun loadForVirtualPath(context: Context,
                                     parentUuid: String,
                                     homeService: HomeService,
                                     callback: ContainerService.LoadCallback) {
-        TODO("Not yet implemented")
+
+        if (UserDao.getCurrentUser() == null) {
+            callback.onError("请登录") {
+                NAV.go(RouterHub.LOGIN_LoginActivity)
+            }
+        } else {
+            homeService.itemCommonListener().configAdapter(true, pageSize, 4, notMoreItem)
+            requestUserRelation {
+                query = I().allFollow()
+                onError = {
+                    callback.onError("加载失败"){
+                        homeService.databaseReload()
+                    }
+                    focus_ids = mutableListOf()
+                    LogUtil.se(it)
+                }
+                onEmpty = {
+                    callback.onEmpty("空数据，请重新加载"){
+                        homeService.databaseReload()
+                    }
+                    focus_ids = mutableListOf()
+                }
+                onSuccess = {
+                    val users: MutableList<User> = ArrayList()
+                    for (f in it) {
+                        users.add(f.target)
+                    }
+                    focus_ids = users
+
+                }
+            }
+        }
+    }
+
+    var current: Disposable? = null
+    fun loadFirst(context: Context,
+                  parentUuid: String,
+                  homeService: HomeService,
+                  callback: ContainerService.LoadCallback) {
+        current?.dispose()
+        current = requestBlock {
+            query = query().apply {
+                setLimit(pageSize)
+                setSkip(0)
+                order("-createdAt")
+                cachePolicy = AVQuery.CachePolicy.NETWORK_ONLY
+            }
+            onSuccess = {
+                val items = it.map {
+                    MomentItem(context, it)
+                }
+                callback.onVirtualLoadSuccess(items)
+            }
+        }
+    }
+    fun query(): AVQuery<Block> {
+        // 合并两个条件，进行"或"查询
+        // 查询 我关注的人的动态 和 自己的动态
+        val queries: MutableList<AVQuery<Block>> = ArrayList()
+        for (user in focus_ids) {
+            queries.add(user.findAllMoment())
+        }
+        queries.add(I().findAllMoment())
+        return AVQuery.or(queries)
+            .include("user")
+            .include("parent")
+            .order("-createdAt")
+    }
+    override fun loadMoreForVirtualPath(context: Context, parentUuid: String, offset: Int, homeService: HomeService, callback: ContainerService.LoadMoreCallback) {
+        requestBlock {
+            query = query().apply {
+                setLimit(pageSize)
+                setSkip(offset)
+                order("-createdAt")
+                cachePolicy = AVQuery.CachePolicy.NETWORK_ONLY
+            }
+            onSuccess = {
+                val items = it.map {
+                    MomentItem(context, it)
+                }
+                callback.onVirtualLoadSuccess(items)
+            }
+        }
     }
 }

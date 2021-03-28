@@ -1,9 +1,9 @@
 package com.timecat.module.user.adapter.block
 
+import android.content.Context
 import android.text.TextUtils
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
-import androidx.fragment.app.FragmentActivity
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
@@ -19,13 +19,10 @@ import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.element.alert.ToastUtil
-import com.timecat.extend.image.IMG
 import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.BLOCK_COMMENT
-import com.timecat.identity.data.block.type.BLOCK_FORUM
 import com.timecat.identity.data.block.type.BLOCK_MOMENT
-import com.timecat.identity.data.block.type.BLOCK_POST
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.layout.ui.layout.setShakelessClickListener
@@ -36,7 +33,6 @@ import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.*
 import com.timecat.module.user.permission.PermissionValidator
-import com.timecat.module.user.social.comment.showSubComments
 import com.timecat.module.user.view.MomentHerfView
 import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
@@ -53,10 +49,11 @@ import kotlinx.android.synthetic.main.user_moment_item_main.view.*
  * @description null
  * @usage null
  */
-class BlockItem(
-    val activity: FragmentActivity,
-    var block: Block
-) : BaseDetailItem<BlockItem.DetailVH>(block.objectId) {
+class MomentItem(
+    val context: Context,
+    var block: Block,
+    var preview: (position: Int, urls: MutableList<String>) -> Unit = { pos, urls -> }
+) : BaseDetailItem<MomentItem.DetailVH>(block.objectId) {
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
         val headView: UserHeadView = root.findViewById(R.id.head)
@@ -78,28 +75,9 @@ class BlockItem(
     ) {
         super.bindViewHolder(adapter, holder, position, payloads)
         holder.itemView.tag = block.objectId
-        when (block.type) {
-            BLOCK_MOMENT -> {
-                setHeader(holder, block)
-                setMomentContent(holder, block)
-                setFooter(adapter, holder, block)
-            }
-            BLOCK_FORUM -> {
-                setForumHeader(holder, block)
-                setForumContent(holder, block)
-                setFooter(adapter, holder, block)
-            }
-            BLOCK_POST -> {
-                setHeader(holder, block)
-                setPostContent(holder, block)
-                setFooter(adapter, holder, block)
-            }
-            BLOCK_COMMENT -> {
-                setHeader(holder, block)
-                setCommentContent(holder, block)
-                setFooter(adapter, holder, block)
-            }
-        }
+        setHeader(holder, block)
+        setMomentContent(holder, block)
+        setFooter(adapter, holder, block)
     }
 
     var timeString: String = block.friendlyCreateTimeText()
@@ -149,61 +127,6 @@ class BlockItem(
         }
     }
 
-    private fun setForumHeader(holder: DetailVH, block: Block) {
-        val b = ForumBlock.fromJson(block.structure)
-        holder.headView.apply {
-            b.header?.let {
-                icon = it.avatar
-            }
-            avatarView.setShakelessClickListener {
-                GO.forumDetail(block.objectId)
-            }
-            title = block.title
-            titleView.setShakelessClickListener {
-                GO.forumDetail(block.objectId)
-            }
-            content = updateTimeString
-            contentView.setShakelessClickListener {
-                GO.forumDetail(block.objectId)
-            }
-            moreView.setShakelessClickListener {
-                PopupMenu(it.context, it).apply {
-                    inflate(R.menu.social_head)
-                    PermissionValidator.checkById("delete_block") {
-                        onAllowed = {
-                            menu.findItem(R.id.delete)?.setVisible(true)
-                        }
-                    }
-                    setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.copy -> {
-                                LetMeKnow.report(LetMeKnow.CLICK_TIMECAT_COPY)
-                                CopyToClipboard.copy(moreView.context, block.title)
-                                true
-                            }
-                            R.id.delete -> {
-                                deleteBlock {
-                                    target = block
-                                    onError = {
-                                        LogUtil.e(it)
-                                        ToastUtil.e("删除出错")
-                                    }
-                                    onSuccess = {
-                                        LogUtil.e(it)
-                                        ToastUtil.ok("删除成功")
-                                    }
-                                }
-                                true
-                            }
-                            else -> false
-                        }
-                    }
-                    show()
-                }
-            }
-        }
-    }
-
     private fun setMomentContent(holder: DetailVH, block: Block) {
         val b = MomentBlock.fromJson(block.structure)
         setRichTextView(holder, block.content, b.atScope, b.topicScope)
@@ -212,35 +135,6 @@ class BlockItem(
         setPosScope(holder, block, b.posScope)
         setOnItemClick(holder) {
             GO.momentDetail(block.objectId)
-        }
-    }
-
-    private fun setForumContent(holder: DetailVH, block: Block) {
-        val b = ForumBlock.fromJson(block.structure)
-        setRichTextView(holder, block.content, null, null)
-        setMediaScope(holder, block, b.mediaScope)
-        setOnItemClick(holder) {
-            GO.forumDetail(block.objectId)
-        }
-    }
-
-    private fun setPostContent(holder: DetailVH, block: Block) {
-        val b = PostBlock.fromJson(block.structure)
-        setRichTextView(holder, block.content, b.atScope, b.topicScope)
-        setMediaScope(holder, block, b.mediaScope)
-        setPosScope(holder, block, b.posScope)
-        setOnItemClick(holder) {
-            GO.postDetail(block.objectId)
-        }
-    }
-
-    private fun setCommentContent(holder: DetailVH, block: Block) {
-        val head = CommentBlock.fromJson(block.structure)
-        setRichTextView(holder, block.content, head.atScope, head.topicScope)
-        setMediaScope(holder, block, head.mediaScope)
-        setPosScope(holder, block, head.posScope)
-        setOnItemClick(holder) {
-            showSubComments(activity.supportFragmentManager, block)
         }
     }
 
@@ -301,10 +195,7 @@ class BlockItem(
                 setUrls(datas)
                 setCallback(object : NineGridView.SimpleCallback() {
                     override fun onImageItemClicked(position: Int, urls: MutableList<String>) {
-                        IMG.preview(activity)
-                            .setIndex(position)
-                            .setImageList(urls)
-                            .start()
+                        preview(position, urls)
                     }
                 })
             }
@@ -379,8 +270,8 @@ class BlockItem(
                 if (it == null) {
                     ToastUtil.e("发生错误")
                 } else {
-                    this@BlockItem.block = it
-                    adapter.updateItem(this@BlockItem)
+                    this@MomentItem.block = it
+                    adapter.updateItem(this@MomentItem)
                 }
             }
             onError = {
