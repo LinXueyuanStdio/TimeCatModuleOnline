@@ -89,13 +89,14 @@ class UserDetailCollapseActivity : BaseDetailCollapseActivity() {
                     .start()
             }
         }
+        onContentLoaded()
     }
 
     override fun fetch() {
         if (userId == I().objectId) {
             viewModel.loadUser(I())
         } else {
-            requestOneUser {
+            viewModel attach requestOneUser {
                 query = oneUserOf(userId)
                 onSuccess = {
                     viewModel.loadUser(it)

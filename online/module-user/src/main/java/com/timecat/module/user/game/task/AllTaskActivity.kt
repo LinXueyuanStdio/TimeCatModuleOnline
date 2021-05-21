@@ -37,6 +37,9 @@ class AllTaskActivity : BaseLoginMainActivity() {
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
 
+        viewModel.activities.observe(this) {
+
+        }
         initBottomBar()
         refreshChannel(ActivityContext.channels)
     }

@@ -33,20 +33,23 @@ abstract class BaseMainActivity : BaseSupportActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutId())
 
-        mini = findViewById(R.id.mini)
-        background = findViewById(R.id.background)
-        background.background = Attr.getWindowBackground(this)
-        mini.background = Attr.getMiniBackground(this)
-
-        mBottomBar = findViewById(R.id.bottomBar)
-
+        bindView()
         initView()
         val end = System.currentTimeMillis()
         LogUtil.sd("结束加载 view $end ms")
         LogUtil.sd("总耗时 " + (end - start) + " ms")
     }
 
-    abstract fun initView()
+    protected open fun bindView() {
+        mini = findViewById(R.id.mini)
+        background = findViewById(R.id.background)
+        mBottomBar = findViewById(R.id.bottomBar)
+    }
+
+    protected open fun initView() {
+        background.background = Attr.getWindowBackground(this)
+        mini.background = Attr.getMiniBackground(this)
+    }
 
     override fun applySkin() {
         super.applySkin()

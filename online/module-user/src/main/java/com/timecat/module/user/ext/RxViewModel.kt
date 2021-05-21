@@ -23,6 +23,10 @@ open class RxViewModel : ViewModel() {
         attachLifecycle = disposable
     }
 
+    fun stopAllTask() {
+        disposables.dispose()
+    }
+
     override fun onCleared() {
         disposables.clear()
         super.onCleared()

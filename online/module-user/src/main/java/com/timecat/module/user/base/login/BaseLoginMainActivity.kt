@@ -26,25 +26,40 @@ abstract class BaseLoginMainActivity : BaseMainActivity() {
 
     lateinit var userViewModel: UserViewModel
 
+    override fun bindView() {
+        super.bindView()
+        mStatefulLayout = findViewById(R.id.ll_stateful)
+    }
+
     override fun initView() {
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         userViewModel.user.observe(this, {
             it?.let { loadDetail(it) }
         })
-        mStatefulLayout = findViewById(R.id.ll_stateful)
-        mStatefulLayout?.showLoading()
         val I = UserDao.getCurrentUser()
         if (I == null) {
             mStatefulLayout?.showError("请登录") {
                 NAV.go(RouterHub.LOGIN_LoginActivity)
             }
         } else {
-            mStatefulLayout?.showContent()
             userViewModel.loadUser(I)
             initViewAfterLogin()
         }
     }
 
-    protected open fun initViewAfterLogin() {}
-    protected open fun loadDetail(user: User) {}
+    open fun onPrepareContent() {
+        mStatefulLayout?.showLoading()
+    }
+
+    open fun onContentLoaded() {
+        mStatefulLayout?.showContent()
+    }
+
+    protected open fun initViewAfterLogin() {
+        onPrepareContent()
+    }
+
+    protected open fun loadDetail(user: User) {
+        onContentLoaded()
+    }
 }

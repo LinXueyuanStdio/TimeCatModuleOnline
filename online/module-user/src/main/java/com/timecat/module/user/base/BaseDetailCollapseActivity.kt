@@ -40,6 +40,7 @@ abstract class BaseDetailCollapseActivity : BaseLoginDetailActivity() {
     }
 
     override fun initViewAfterLogin() {
+        onPrepareContent()
     }
 
     protected open fun setupCollapse() {

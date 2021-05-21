@@ -1,5 +1,6 @@
 package com.timecat.module.user.game.cube
 
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -14,11 +15,10 @@ import com.timecat.data.bmob.ext.bmob.requestOwnCube
 import com.timecat.data.bmob.ext.net.allOwnCube
 import com.timecat.identity.data.block.IdentityBlock
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.standard.navi.BottomBar
 import com.timecat.layout.ui.standard.navi.BottomBarIvTextTab
-import com.timecat.module.user.R
-import com.timecat.module.user.base.BaseBlockCollapseActivity
+import com.timecat.module.user.base.BaseNavCollapseActivity
 import com.timecat.module.user.game.cube.fragment.*
+import com.timecat.module.user.game.cube.fragment.detail.*
 import com.timecat.module.user.game.cube.vm.CubeViewModel
 import com.timecat.module.user.social.common.CommentListFragment
 import com.timecat.module.user.social.common.LikeListFragment
@@ -34,23 +34,19 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @usage null
  */
 @RouterAnno(hostAndPath = RouterHub.USER_AllOwnCubeActivity)
-class AllOwnCubeActivity : BaseBlockCollapseActivity() {
+class AllOwnCubeActivity : BaseNavCollapseActivity() {
     lateinit var cubeViewModel: CubeViewModel
     lateinit var card: TopicCard
-    lateinit var mBottomBar: BottomBar
     override fun routerInject() = NAV.inject(this)
-    override fun layout(): Int = R.layout.user_detail_collapse_viewpager_bottombar
 
-    override fun bindView() {
-        super.bindView()
-        mBottomBar = findViewById(R.id.bottomBar)
-    }
-
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
+    override fun initViewModel() {
+        super.initViewModel()
         cubeViewModel = ViewModelProvider(this).get(CubeViewModel::class.java)
         cubeViewModel.ownCube.observe(this, {
-            it?.let { loadDetail(it) }
+            it?.let {
+                loadDetail(it)
+                onContentLoaded()
+            }
         })
         cubeViewModel.cube.observe(this) {
             blockViewModel.block.postValue(it)
@@ -73,26 +69,18 @@ class AllOwnCubeActivity : BaseBlockCollapseActivity() {
                 mBottomBar.addItem(tab)
             }
         })
+    }
+
+    override fun providerHeaderCard(): View {
         card = TopicCard(this)
         card.setPlaceholderHeight(getStatusBarHeightPlusToolbarHeight())
-        setupHeaderCard(card)
-        setupCollapse()
-        setupViewPager()
-        viewPager.currentItem = 0
+        return card
+    }
 
-        mBottomBar.setOnTabSelectedListener(object : BottomBar.OnTabSelectedListener {
-            override fun onTabSelected(position: Int, prePosition: Int) {
-                LogUtil.sd("select $position, $prePosition")
-                //选中时触发
-                val cube = cubeViewModel.ownCubes.value!![position]
-                cubeViewModel.loadCube(cube)
-            }
-
-            override fun onTabUnselected(position: Int) {}
-            override fun onTabLongSelected(position: Int) {}
-            override fun onTabReselected(position: Int) {}
-        })
-        fetch()
+    override fun onTabSelected(position: Int, prePosition: Int) {
+        super.onTabSelected(position, prePosition)
+        val cube = cubeViewModel.ownCubes.value!![position]
+        cubeViewModel.loadCube(cube)
     }
 
     private fun loadDetail(ownCube: OwnCube) {
@@ -120,8 +108,7 @@ class AllOwnCubeActivity : BaseBlockCollapseActivity() {
     }
 
     override fun fetch() {
-        mStatefulLayout?.showLoading()
-        requestOwnCube {
+        cubeViewModel attach requestOwnCube {
             query = I().allOwnCube().apply {
                 cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
             }
@@ -144,24 +131,32 @@ class AllOwnCubeActivity : BaseBlockCollapseActivity() {
     }
 
     class DetailAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getCount(): Int = 4
+        override fun getCount(): Int = 8
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> CubeDetailFragment()
-                1 -> CommentListFragment()
-                2 -> MomentListFragment()
-                3 -> LikeListFragment()
+                0 -> CubeAttrFragment()
+                1 -> CubeRolesFragment()
+                2 -> CubeSettingFragment()
+                3 -> CubeSkillFragment()
+                4 -> CubeEquipFragment()
+                5 -> CommentListFragment()
+                6 -> MomentListFragment()
+                7 -> LikeListFragment()
                 else -> FallBackFragment()
             }
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
             return when (position) {
-                0 -> "详情"
-                1 -> "讨论"
-                2 -> "动态"
-                3 -> "赞"
+                0 -> "属性"
+                1 -> "权柄"
+                2 -> "设置"
+                3 -> "技能"
+                4 -> "装备"
+                5 -> "讨论"
+                6 -> "动态"
+                7 -> "赞"
                 else -> super.getPageTitle(position)
             }
         }

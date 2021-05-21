@@ -9,7 +9,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020/10/9
- * @description 论坛服务
+ * @description 游戏任务初始化
  * @usage null
  */
 @ServiceAnno(ActivityTaskService::class)

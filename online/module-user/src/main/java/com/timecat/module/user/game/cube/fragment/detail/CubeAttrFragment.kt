@@ -50,7 +50,7 @@ class CubeAttrFragment : BaseCubeFragment() {
             val exp = cubeViewModel.exp.value ?: 0L
             val id = cubeViewModel.objectId.value ?: ""
             requireActivity().showLevelUpDialog(level, exp, it) { dialog, btn, expOwnItem, count ->
-                cubeViewModel.attachLifecycle = useItem<Any?>(expOwnItem.objectId, count, id) {
+                cubeViewModel attach useItem<Any?>(expOwnItem.objectId, count, id) {
                     onSuccess = {
                         val fakeExp = id2exp(expOwnItem.objectId) * count
                         val trueExp = cubeViewModel.exp.value ?: 0L + fakeExp

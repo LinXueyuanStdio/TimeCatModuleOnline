@@ -25,10 +25,19 @@ abstract class BaseLoginDetailActivity : BaseCollapseDetailActivity() {
                 NAV.go(RouterHub.LOGIN_LoginActivity)
             }
         } else {
-            mStatefulLayout?.showContent()
             initViewAfterLogin()
         }
     }
 
-    abstract fun initViewAfterLogin()
+    open fun onPrepareContent() {
+        mStatefulLayout?.showLoading()
+    }
+
+    open fun onContentLoaded() {
+        mStatefulLayout?.showContent()
+    }
+
+    open fun initViewAfterLogin() {
+        onContentLoaded()
+    }
 }

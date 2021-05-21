@@ -29,14 +29,20 @@ abstract class BaseBlockCollapseActivity : BaseDetailCollapseActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
+        initViewModel()
+    }
+
+    protected open fun initViewModel() {
         blockViewModel = ViewModelProvider(this).get(BlockViewModel::class.java)
         blockViewModel.block.observe(this, {
-            it?.let { loadDetail(it) }
+            it?.let {
+                loadDetail(it)
+                onContentLoaded()
+            }
         })
     }
 
     protected open fun loadDetail(block: Block) {
-        mStatefulLayout?.showContent()
         LogUtil.e(block.parent)
         titleString = block.title
         setupTabs(block)
@@ -54,8 +60,11 @@ abstract class BaseBlockCollapseActivity : BaseDetailCollapseActivity() {
         }
     }
 
+    /**
+     * 继承者需要的时候再调用，获取block，默认不调用
+     * 且只能在重写 fetch() 中调用
+     */
     fun fetch(blockId: String) {
-        mStatefulLayout?.showLoading()
         blockViewModel attach requestOneBlock {
             query = oneBlockOf(blockId)
             onSuccess = {

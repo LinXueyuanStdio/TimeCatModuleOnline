@@ -1,5 +1,8 @@
 package com.timecat.module.user.game.task.rule
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import cn.leancloud.AVQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.dao.UserDao
@@ -18,6 +21,9 @@ import com.timecat.identity.data.block.type.*
 import com.timecat.module.user.game.task.channal.ChannelState
 import com.timecat.module.user.game.task.channal.TaskChannel
 import com.timecat.module.user.social.cloud.channel.TabChannel
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import java.lang.ref.WeakReference
 
 /**
  * @author 林学渊
@@ -29,7 +35,7 @@ import com.timecat.module.user.social.cloud.channel.TabChannel
  * 拥有3个60级方块 ---|   |---条件3 /---/
  * @usage null
  */
-object ActivityContext {
+object ActivityContext: LoadableContext() {
     @JvmStatic
     var I: User? = UserDao.getCurrentUser()
 
@@ -66,7 +72,7 @@ object ActivityContext {
     @JvmStatic
     private fun loadOwnActivity(user: User) {
         LogUtil.sd(user)
-        requestOwnActivity {
+        this attach requestOwnActivity {
             query = user.allOwnActivity().apply {
                 cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
             }
@@ -169,7 +175,7 @@ object ActivityContext {
     }
 
     private fun loadTasks(ids: List<String>) {
-        requestBlock {
+        this attach requestBlock {
             query = allTask().apply {
                 whereContainedIn("objectId", ids)
             }
@@ -185,7 +191,7 @@ object ActivityContext {
                 progressTasks(it)
             }
         }
-        requestOwnTask {
+        this attach requestOwnTask {
             query = I!!.allOwnTask().apply {
                 whereContainedIn("task.objectId", ids)
             }
@@ -225,5 +231,41 @@ object ActivityContext {
         }
         rules.clear()
         rules.addAll(taskRules)
+    }
+}
+
+abstract class LoadableContext {
+    val disposables = CompositeDisposable()
+    var attachLifecycle: Disposable? = null
+        set(value) {
+            value?.let { disposables.add(it) }
+            field = value
+        }
+
+    infix fun attach(disposable: Disposable?) {
+        attachLifecycle = disposable
+    }
+
+    fun stopAllTask() {
+        disposables.dispose()
+    }
+
+    fun onDestroy() {
+        disposables.clear()
+    }
+}
+
+fun LifecycleOwner.bindActivityContext(context: LoadableContext) {
+    lifecycle.addObserver(ContextHolder(WeakReference(context)))
+}
+
+private class ContextHolder(
+    private val weakReference: WeakReference<LoadableContext>
+) : LifecycleEventObserver {
+
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        if (event == Lifecycle.Event.ON_DESTROY) {
+            weakReference.get()?.onDestroy()
+        }
     }
 }
