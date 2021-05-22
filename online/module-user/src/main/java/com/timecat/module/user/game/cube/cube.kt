@@ -17,10 +17,7 @@ import com.timecat.data.bmob.data.game.OwnItem
 import com.timecat.data.bmob.ext.net.allDataItem
 import com.timecat.data.bmob.ext.net.allOwnItem
 import com.timecat.identity.data.block.ItemBlock
-import com.timecat.layout.ui.business.form.CenterBody
-import com.timecat.layout.ui.business.form.MaterialButton
-import com.timecat.layout.ui.business.form.add
-import com.timecat.layout.ui.business.form.wrapContext
+import com.timecat.layout.ui.business.form.*
 import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.business.setting.RewardItem
 import com.timecat.layout.ui.business.setting.RewardListItem
@@ -28,7 +25,6 @@ import com.timecat.layout.ui.drawabe.roundRectSelector
 import com.timecat.layout.ui.layout.padding
 import com.timecat.module.user.R
 import com.timecat.module.user.game.core.Level
-import com.timecat.module.user.view.item.CounterItem
 import com.timecat.module.user.view.item.CubeLevelItem
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -126,20 +122,6 @@ fun ViewGroup.CubeLevelBar(
     this.exp = exp
 }.also { if (autoAdd) addView(it) }
 
-fun ViewGroup.StepCounter(
-    step: Int = 1,
-    defaultValue: Int = 1,
-    style: Int? = null,
-    autoAdd: Boolean = true,
-    SetValue: (Int) -> Unit = {}
-): CounterItem = CounterItem(style.wrapContext(context)).apply {
-    stepSize = step.toFloat()
-    this.intValue = defaultValue
-    onIntCount = { value ->
-        SetValue(value)
-    }
-}.also { if (autoAdd) addView(it) }
-
 /**
  * 显示突破窗口
  */
@@ -193,10 +175,10 @@ fun FragmentActivity.showLevelUpDialog(
         padding = 10
 
         val expBar = CubeLevelBar(maxLevel, exp, autoAdd = false)
-        val stepCounter = StepCounter(1, 1, autoAdd = false)
+        val stepCounter = StepCounter(1, 1, 0, 1, autoAdd = false)
         val usage = CenterBody("获得经验", autoAdd = false)
         val button = MaterialButton("使用 1 个", autoAdd = false) {
-            onUsed(dialog, it as TextView, currentOwnExpItem, stepCounter.intValue)
+            onUsed(dialog, it as TextView, currentOwnExpItem, stepCounter.value)
         }
         bindProgressButton(button)
 
@@ -204,32 +186,26 @@ fun FragmentActivity.showLevelUpDialog(
             if (count <= 0) {
                 //希望使用0个经验物品
                 button.isEnabled = false
-                stepCounter.minusView.isEnabled = false
-                stepCounter.plusView.isEnabled = maxNeedExp > 1
-
                 expBar.fakeExp = 0
                 usage.text = "至少使用 1 个"
                 button.text = "无法使用"
             } else {
                 val useExp = count * expUnit
                 val (fakeLevel, fakeExp) = CubeLevel.getLevel(exp + useExp)
-
                 button.isEnabled = true
-                stepCounter.minusView.isEnabled = true
-                stepCounter.plusView.isEnabled = maxNeedExp - useExp > 1
-
                 expBar.fakeExp = useExp
                 button.text = "使用 $count"
                 val levelUp = if (fakeLevel > currentLevel) "，等级 +${min(fakeLevel, maxLevel) - currentLevel}" else ""
-                val exceedExp = if (fakeLevel >= maxLevel) "\n溢出经验 ${useExp - maxNeedExp}" else ""
-                usage.text = "使用 $count 个，经验 +${count * expUnit}$levelUp$exceedExp"
+                val exceedExp = if (fakeLevel >= maxLevel) "\n溢出经验 ${useExp - maxNeedExp} 将丢弃" else ""
+                usage.text = "使用 $count 个，经验 +$useExp$levelUp$exceedExp"
             }
         }
 
         fun refresh() {
-            stepCounter.intValue = 1
-            val count = stepCounter.intValue
+            stepCounter.value = 1
+            val count = stepCounter.value
             val expUnit = id2exp(currentExpItem.objectId)
+            stepCounter.max = if (maxNeedExp > expUnit) (maxNeedExp / expUnit).toInt() + 1 else 0
             useExpItem(expUnit, count)
         }
 
@@ -255,7 +231,7 @@ fun FragmentActivity.showLevelUpDialog(
         }
         expItemSelector.container.get(0).isSelected = true
 
-        stepCounter.onIntCount = { count ->
+        stepCounter.onCount = { count ->
             val expUnit = id2exp(currentExpItem.objectId)
             useExpItem(expUnit, count)
         }
@@ -267,7 +243,7 @@ fun FragmentActivity.showLevelUpDialog(
             button
         )
 
-        val count = stepCounter.intValue
+        val count = stepCounter.value
         val expUnit = id2exp(currentExpItem.objectId)
         useExpItem(expUnit, count)
     }

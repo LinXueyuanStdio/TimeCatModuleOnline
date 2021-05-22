@@ -11,12 +11,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.buyItem
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.PackageItemBlock
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.CenterBody
 import com.timecat.layout.ui.business.form.Divider
+import com.timecat.layout.ui.business.form.MaterialButton
+import com.timecat.layout.ui.business.form.StepCounter
 import com.timecat.layout.ui.business.setting.CenterIconItem
 import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.layout.dp
@@ -41,6 +44,10 @@ open class BuyItemFragment : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("value")
     @JvmField
     var value: Int = 99999999
+
+    @AttrValueAutowiredAnno("max")
+    @JvmField
+    var max: Int = 0
 
     lateinit var shopViewModel: ShopViewModel
 
@@ -119,7 +126,22 @@ open class BuyItemFragment : BottomSheetDialogFragment() {
     }
 
     open fun ViewGroup.Buy() {
+        val counter = StepCounter(1, 1, 1, max)
+        MaterialButton("购买") {
+            val count = counter.value
+            buy(item!!.objectId, count, value, shopViewModel.money.value!!.objectId)
+        }
+    }
 
+    fun buy(
+        goodId: String,
+        count: Int,
+        value: Int,
+        moneyId: String
+    ) {
+        shopViewModel attach buyItem<Any?>(goodId, count, value, moneyId) {
+
+        }
     }
 
     open fun ViewGroup.Icon(head: ItemBlock) {

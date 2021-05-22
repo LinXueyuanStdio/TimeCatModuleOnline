@@ -76,5 +76,9 @@ data class GoodBlock(
     /**
      * 价格
      */
-    val value: Int
+    val value: Int,
+    /**
+     * 限购
+     */
+    val max: Int
 )

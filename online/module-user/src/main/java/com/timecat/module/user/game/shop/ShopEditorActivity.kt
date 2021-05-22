@@ -16,7 +16,10 @@ import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.PageHeader
-import com.timecat.identity.data.block.*
+import com.timecat.identity.data.block.BasicShopBlock
+import com.timecat.identity.data.block.Good
+import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.ShopBlock
 import com.timecat.identity.data.block.type.SHOP_Basic
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Image
@@ -25,7 +28,6 @@ import com.timecat.layout.ui.business.form.OneLineInput
 import com.timecat.layout.ui.business.form.add
 import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.business.setting.NextItem
-import com.timecat.layout.ui.business.setting.OwnCountItem
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.timecat.module.user.ext.chooseAvatar
@@ -33,6 +35,7 @@ import com.timecat.module.user.ext.receieveImage
 import com.timecat.module.user.game.cube.SendCubeActivity
 import com.timecat.module.user.game.item.showItemDialog
 import com.timecat.module.user.search.SelectActivity
+import com.timecat.module.user.view.item.TriInputItem
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -53,14 +56,9 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
     override fun title(): String = "商店"
     override fun routerInject() = NAV.inject(this)
 
-    var formItems: MutableMap<String, Long> = mutableMapOf()
-    var formRewardListItems: List<Reward>
-        get() = formItems.toList().map { Reward(it.first, it.second) }
-        set(value) {
-            formItems = mutableMapOf(*value.map {
-                it.uuid to it.count
-            }.toTypedArray())
-        }
+    var goodValues: MutableMap<String, Long> = mutableMapOf()
+    var goodLimits: MutableMap<String, Int> = mutableMapOf()
+    var goodIds: MutableList<String> = mutableListOf()
 
     lateinit var packageItem: NextItem
     lateinit var packageDetailContainer: LinearLayout
@@ -72,7 +70,14 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
         formData.setContentScope(context, content, head.atScope, head.topicScope)
         formData.icon = head.header.avatar
         val h2 = BasicShopBlock.fromJson(head.structure)
-        formRewardListItems = h2.goods.map { Reward(it.itemId, it.value) }
+        goodIds.clear()
+        for (good in h2.goods) {
+            val id = good.itemId
+            goodIds.add(id)
+            goodValues[id] = good.value
+            goodLimits[id] = good.max
+        }
+
         formData.blockId = h2.moneyId
     }
 
@@ -89,8 +94,8 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
             selectBlock(it)
         }
         packageItem = Next("商品",
-            hint = formItems.toString(),
-            initialText = "${formItems.size}",
+            hint = goodValues.toString(),
+            initialText = "${goodValues.size}",
             autoAdd = false
         ) {
             selectItems()
@@ -119,7 +124,7 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
 
     fun setItems() {
         requestBlock {
-            query = allItem().whereContainedIn("objectId", formItems.keys)
+            query = allItem().whereContainedIn("objectId", goodValues.keys)
             onSuccess = {
                 setBlockItems(it)
             }
@@ -131,7 +136,7 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
         packageDetailContainer.removeAllViews()
         for (block in items) {
             val head = ItemBlock.fromJson(block.structure)
-            val itemView = OwnCountItem(this).apply {
+            val itemView = TriInputItem(this).apply {
                 icon = head.header.icon
                 left_field = {
                     hint = "物品"
@@ -140,19 +145,22 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
                 }
                 right_field = {
                     hint = "单价"
-                    text = "${formItems[block.objectId]}"
+                    text = "${goodValues[block.objectId]}"
                     inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
                     onTextChange = {
                         val count = it?.toLongOrNull() ?: 0L
-                        formItems[block.objectId] = count
+                        goodValues[block.objectId] = count
                     }
+                }
+                onCount = {
+                    goodLimits[block.objectId] = it
                 }
                 closeIcon = "R.drawable.ic_close"
                 onIconClick {
                     showItemDialog(block)
                 }
                 onCloseIconClick {
-                    formItems.remove(block.objectId)
+                    goodValues.remove(block.objectId)
                     packageDetailContainer.removeView(this)
                 }
             }
@@ -199,10 +207,16 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
             val texts = items.map { it.title }
             listItemsMultiChoice(items = texts) { _, intArr, _ ->
                 val blocks = items.filterIndexed { index, block -> index in intArr }
-                formRewardListItems = blocks.map { Reward(it.objectId, 1) }
+                goodIds.clear()
+                blocks.forEach {
+                    val id = it.uuid
+                    goodIds.add(id)
+                    goodValues[id] = 1
+                    goodLimits[id] = 1
+                }
                 setBlockItems(blocks)
-                packageItem.hint = formItems.toString()
-                packageItem.text = "${formItems.size}"
+                packageItem.hint = goodValues.toString()
+                packageItem.text = "${goodValues.size}"
             }
         }
     }
@@ -243,8 +257,8 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
             mediaScope = formData.attachments,
             structure = BasicShopBlock(
                 formData.blockId,
-                formRewardListItems.map {
-                    Good(it.uuid, it.count)
+                goodIds.map {
+                    Good(it, goodValues[it]!!, goodLimits[it]!!)
                 }
             ).toJsonObject()
         )

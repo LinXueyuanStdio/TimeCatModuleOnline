@@ -51,7 +51,7 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
                 val goods = mutableListOf<GoodItem>()
                 for (good in h2.goods) {
                     val item = itemContext.itemsMap[good.itemId] ?: continue
-                    val goodBlock = GoodBlock(item, good.value.toInt())
+                    val goodBlock = GoodBlock(item, good.value.toInt(), good.max)
                     val goodItem = GoodItem(requireActivity(), goodBlock) {
                         buy(goodBlock)
                     }
@@ -64,7 +64,7 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
     }
 
     fun buy(goodBlock: GoodBlock) {
-        requireActivity().showBuyItemDialog(goodBlock.item, goodBlock.value)
+        requireActivity().showBuyItemDialog(goodBlock.item, goodBlock.value, goodBlock.max)
     }
 
 }

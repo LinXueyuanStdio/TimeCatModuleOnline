@@ -1,13 +1,14 @@
 package com.timecat.module.user.view.item
 
 import android.content.Context
-import android.text.TextUtils
 import android.util.AttributeSet
+import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
-import com.google.android.material.chip.Chip
-import com.timecat.component.identity.Attr
+import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.layout.*
+import com.timecat.layout.ui.utils.IconLoader
+import it.sephiroth.android.library.numberpicker.NumberPicker
+import it.sephiroth.android.library.numberpicker.doOnProgressChanged
 
 /**
  * @author 林学渊
@@ -16,93 +17,99 @@ import com.timecat.layout.ui.layout.*
  * @description null
  * @usage null
  */
-class CounterItem @JvmOverloads constructor(
+class TriInputItem @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    var slider: TextView
-    var minusView: Chip
-    var plusView: Chip
+    var imageView: ImageView
+    var closeView: ImageView
+    var left: InputItem
+    var right: InputItem
+    var limit: NumberPicker
 
     init {
         orientation = HORIZONTAL
-        layout_width = wrap_content
+        layout_width = match_parent
         layout_height = wrap_content
-        padding = 4
-        margin = 4
-        minusView = Chip(context).apply {
+        imageView = ImageView {
+            layout_width = 36
+            layout_height = 36
+            margin = 4
+            padding = 4
+            layout_gravity = gravity_center_vertical
+        }
+        left = InputItem(context).apply {
             layout_width = wrap_content
             layout_height = wrap_content
-            padding = 8
-            margin = 4
-            layout_gravity = gravity_center
-            gravity = gravity_center
-            setTextColor(Attr.getSecondaryTextColor(context))
-            setTextSize(24f)
-            maxLines = 1
-            ellipsize = TextUtils.TruncateAt.MIDDLE
-            text = "-"
-            onClick = {
-                value -= stepSize
-                intValue -= stepSize.toInt()
+            weight = 4f
+            padding = 4
+        }.also {
+            addView(it)
+        }
+        right = InputItem(context).apply {
+            layout_width = wrap_content
+            layout_height = wrap_content
+            weight = 4f
+            padding = 4
+        }.also {
+            addView(it)
+        }
+        limit = NumberPicker(context).apply {
+            layout_width = wrap_content
+            layout_height = wrap_content
+            weight = 4f
+            padding = 4
+            minValue = 1
+            maxValue = 999
+            stepSize = 1
+            progress = 1
+            doOnProgressChanged { numberPicker, progress, formUser ->
+                onCount(progress)
             }
         }.also {
             addView(it)
         }
-
-        slider = TextView {
-            layout_width = wrap_content
-            layout_height = wrap_content
-            padding = 8
+        closeView = ImageView {
+            layout_width = 36
+            layout_height = 36
             margin = 4
-            layout_gravity = gravity_center
-            gravity = gravity_center
-            setTextColor(Attr.getSecondaryTextColor(context))
-            setTextSize(24f)
-            maxLines = 1
-            ellipsize = TextUtils.TruncateAt.MIDDLE
-        }
-
-        plusView = Chip(context).apply {
-            layout_width = wrap_content
-            layout_height = wrap_content
-            padding = 8
-            margin = 4
-            layout_gravity = gravity_center
-            gravity = gravity_center
-            isClickable = false
-            setTextColor(Attr.getSecondaryTextColor(context))
-            setTextSize(24f)
-            maxLines = 1
-            ellipsize = TextUtils.TruncateAt.MIDDLE
-            text = "+"
-            onClick = {
-                value += stepSize
-                intValue += stepSize.toInt()
-            }
-        }.also {
-            addView(it)
+            padding = 4
+            layout_gravity = gravity_center_vertical
         }
     }
 
-    var stepSize: Float = 1f
-
-    var value: Float = 1f
+    var closeIcon: String = "R.drawable.ic_close"
         set(value) {
-            slider.text = "${value.toInt()}"
+            IconLoader.loadIcon(context, closeView, value)
             field = value
-            onCount(value)
         }
-
-    var intValue: Int = 1
+    var icon: String = "R.drawable.ic_launcher"
         set(value) {
-            slider.text = "${value}"
+            IconLoader.loadIcon(context, imageView, value)
             field = value
-            onIntCount(value)
         }
+    var left_field: InputItem.() -> Unit = {}
+        set(value) {
+            left.apply(value)
+        }
+    var right_field: InputItem.() -> Unit = {}
+        set(value) {
+            right.apply(value)
+        }
+    var onCount: (Int) -> Unit = {}
 
-    var onCount: (Float)->Unit={}
-    var onIntCount: (Int)->Unit={}
+    fun onIconClick(onClick: (item: ImageView) -> Unit) {
+        imageView.setShakelessClickListener {
+            onClick(imageView)
+        }
+    }
+
+    fun onCloseIconClick(onClick: (item: ImageView) -> Unit) {
+        closeView.setShakelessClickListener {
+            onClick(closeView)
+        }
+    }
+
 }
