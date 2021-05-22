@@ -97,7 +97,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
             NAV.go(RouterHub.USER_AllOwnCubeActivity)
         }
         bag.setShakelessClickListener {
-            NAV.go(RouterHub.USER_BagActivity)
+            NAV.go(RouterHub.USER_AllOwnItemActivity)
         }
         mail.setShakelessClickListener {
             NAV.go(RouterHub.USER_AllOwnMailActivity)
@@ -109,7 +109,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
             NAV.go(RouterHub.USER_CardActivity)
         }
         shop.setShakelessClickListener {
-            NAV.go(RouterHub.USER_AllShopActivity)
+            NAV.go(RouterHub.USER_AllOwnShopActivity)
         }
         exp_bar.progressColor = Attr.getAccentColor(_mActivity)
         exp_bar.setBackgroundColor(Attr.getBackgroundDarkColor(_mActivity))

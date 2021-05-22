@@ -36,7 +36,6 @@ class MainActivity : Activity() {
         linearLayout.orientation = LinearLayout.VERTICAL
         linearLayout.addView(createButton("登录", RouterHub.LOGIN_LoginActivity))
         linearLayout.addView(createButton("游戏化", RouterHub.USER_GameHomeActivity))
-        linearLayout.addView(createButton("背包", RouterHub.USER_BagActivity))
 
         linearLayout.addView(createButton("用户") {
             val user = UserDao.getCurrentUser()
@@ -74,8 +73,8 @@ class MainActivity : Activity() {
         linearLayout.addView(createPathButton(RouterHub.USER_AllTraceActivity))
 
         linearLayout.addView(createText("物品"))
+        linearLayout.addView(createPathButton(RouterHub.USER_AllOwnItemActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllItemActivity))
-
         linearLayout.addView(createPathButton(RouterHub.USER_ThingItemEditorActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_PackageItemEditorActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_DataItemEditorActivity))
@@ -84,8 +83,8 @@ class MainActivity : Activity() {
         linearLayout.addView(createPathButton(RouterHub.USER_CubeItemEditorActivity))
 
         linearLayout.addView(createText("邮件"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllMailActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllOwnMailActivity))
+        linearLayout.addView(createPathButton(RouterHub.USER_AllMailActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_MailEditorActivity))
 
         linearLayout.addView(createText("方块"))
@@ -125,6 +124,11 @@ class MainActivity : Activity() {
         linearLayout.addView(createText("任务"))
         linearLayout.addView(createPathButton(RouterHub.USER_AllTaskActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_DataTaskEditorActivity))
+
+        linearLayout.addView(createText("商店"))
+        linearLayout.addView(createPathButton(RouterHub.USER_AllOwnShopActivity))
+        linearLayout.addView(createPathButton(RouterHub.USER_AllShopActivity))
+        linearLayout.addView(createPathButton(RouterHub.USER_ShopEditorActivity))
 
         linearLayout.addView(createText("动态"))
         linearLayout.addView(createPathButton(RouterHub.USER_AllMomentActivity))

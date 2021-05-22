@@ -18,7 +18,7 @@ import com.xiaojinzi.component.anno.FragmentAnno
  * @description 背包
  * @usage null
  */
-@FragmentAnno(RouterHub.USER_BagFragment)
+@FragmentAnno(RouterHub.USER_AllOwnItemFragment)
 class BagFragment : BaseEndlessOwnItemFragment() {
     @AttrValueAutowiredAnno("user")
     @JvmField

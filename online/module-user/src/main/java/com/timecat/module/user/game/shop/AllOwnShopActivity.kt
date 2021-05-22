@@ -17,7 +17,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description null
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_AllShopActivity)
+@RouterAnno(hostAndPath = RouterHub.USER_AllOwnShopActivity)
 class AllOwnShopActivity : BaseEndlessBlockActivity() {
     override fun title(): String = "商店"
     override fun query() = allShop()

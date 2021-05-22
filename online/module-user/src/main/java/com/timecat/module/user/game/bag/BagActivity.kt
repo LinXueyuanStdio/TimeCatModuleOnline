@@ -17,7 +17,7 @@ import com.xiaojinzi.component.impl.Router
  * @description 背包的所有物品
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_BagActivity)
+@RouterAnno(hostAndPath = RouterHub.USER_AllOwnItemActivity)
 class BagActivity : BaseLoginToolbarFragmentActivity() {
 
     @AttrValueAutowiredAnno("user")
@@ -27,7 +27,7 @@ class BagActivity : BaseLoginToolbarFragmentActivity() {
     override fun title(): String = "背包"
     override fun routerInject() = NAV.inject(this)
     override fun createFragment(): Fragment {
-        return Router.with(RouterHub.USER_BagFragment)
+        return Router.with(RouterHub.USER_AllOwnItemFragment)
             .putParcelable("user", user)
             .navigate() ?: FallBackFragment()
     }
