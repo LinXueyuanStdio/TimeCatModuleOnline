@@ -3,13 +3,13 @@ package com.timecat.module.user.game.task.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnActivity
 import com.timecat.identity.data.base.IStatus
 import com.timecat.identity.data.block.type.*
 import com.timecat.module.user.ext.RxViewModel
 import com.timecat.module.user.game.task.channal.TaskChannel
+import com.timecat.module.user.social.cloud.channel.TabChannel
 
 /**
  * @author 林学渊
@@ -75,7 +75,7 @@ class TaskViewModel : RxViewModel() {
         }
         state
     }
-    val channels: LiveData<List<TaskChannel>> = Transformations.map(channelState) {
+    val taskChannels: LiveData<List<TaskChannel>> = Transformations.map(channelState) {
         val ans = mutableListOf<TaskChannel>()
         if (it.isStatusEnabled(TaskChannel.Home.id)) {
             ans.add(TaskChannel.Home)
@@ -105,6 +105,9 @@ class TaskViewModel : RxViewModel() {
             ans.add(TaskChannel.Get_back)
         }
         ans
+    }
+    val channels: LiveData<List<TabChannel>> = Transformations.map(taskChannels) {
+        it.map { it.asTabChannel() }
     }
 
     private fun isMain(subtype: Int): Boolean = subtype == ACTIVITY_One_task ||
@@ -148,10 +151,14 @@ class TaskViewModel : RxViewModel() {
         it.filter { it.activity.subtype == ACTIVITY_Price }
     }
 
+    val selectOwnActivityIndex: MutableLiveData<Int> = MutableLiveData(0)
+
     /**
      * 当前选中的活动
      */
-    val ownActivity: MutableLiveData<OwnActivity?> = MutableLiveData()
+    val ownActivity = Transformations.map(selectOwnActivityIndex) {
+        activities.value?.get(it)
+    }
 
     val block: MutableLiveData<Block?> = MutableLiveData()
 }

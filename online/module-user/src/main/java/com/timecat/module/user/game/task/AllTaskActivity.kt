@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject
 import com.cheng.channel.Channel
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.system.model.eventbus.TabReselectedEvent
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.standard.navi.BottomBar
@@ -13,7 +14,9 @@ import com.timecat.module.user.base.login.BaseLoginMainActivity
 import com.timecat.module.user.game.task.channal.TaskChannel
 import com.timecat.module.user.game.task.fragment.*
 import com.timecat.module.user.game.task.rule.ActivityContext
+import com.timecat.module.user.game.task.rule.GameService
 import com.timecat.module.user.game.task.vm.TaskViewModel
+import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -33,15 +36,27 @@ import java.util.*
 @RouterAnno(hostAndPath = RouterHub.USER_AllTaskActivity)
 class AllTaskActivity : BaseLoginMainActivity() {
     lateinit var viewModel: TaskViewModel
+
+    @AttrValueAutowiredAnno
+    lateinit var gameService: GameService
+
     override fun routerInject() = NAV.inject(this)
+
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
+        gameService.activityContext(this, I(), {
+            onPrepareContent()
+        }) {
+            initByActivityContext(it)
+        }
+    }
 
-        viewModel.activities.observe(this) {
-
+    fun initByActivityContext(activityContext:ActivityContext) {
+        viewModel.channels.observe(this) {
+            refreshChannel(it)
         }
         initBottomBar()
-        refreshChannel(ActivityContext.channels)
+        viewModel.activities.postValue(activityContext.ownActivity)
     }
 
     //region bottom bar
@@ -61,6 +76,7 @@ class AllTaskActivity : BaseLoginMainActivity() {
                     val item = tab.item
                     showByTabBlockItem(item)
                 }
+                viewModel.selectOwnActivityIndex.postValue(position)
             }
 
             override fun onTabUnselected(position: Int) {}

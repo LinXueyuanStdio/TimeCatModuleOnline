@@ -5,24 +5,25 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import cn.leancloud.AVQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnActivity
 import com.timecat.data.bmob.data.game.OwnTask
-import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.requestOwnActivity
-import com.timecat.data.bmob.ext.bmob.requestOwnTask
 import com.timecat.data.bmob.ext.net.allOwnActivity
 import com.timecat.data.bmob.ext.net.allOwnTask
 import com.timecat.data.bmob.ext.net.allTask
+import com.timecat.data.bmob.ext.toDataError
 import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.*
 import com.timecat.module.user.game.task.channal.ChannelState
 import com.timecat.module.user.game.task.channal.TaskChannel
 import com.timecat.module.user.social.cloud.channel.TabChannel
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
 
 /**
@@ -35,41 +36,25 @@ import java.lang.ref.WeakReference
  * 拥有3个60级方块 ---|   |---条件3 /---/
  * @usage null
  */
-object ActivityContext: LoadableContext() {
-    @JvmStatic
-    var I: User? = UserDao.getCurrentUser()
-
-    @JvmStatic
+class ActivityContext(
+    private val owner: LifecycleOwner,
+    val user: User,
+    private val onLoading: () -> Unit,
+    private val onLoaded: (ActivityContext) -> Unit
+) : LoadableContext() {
     val ownActivity: MutableList<OwnActivity> = mutableListOf()
-
-    @JvmStatic
     val main: MutableList<OwnActivity> = mutableListOf()
-
-    @JvmStatic
     val card: MutableList<OwnActivity> = mutableListOf()
-
-    @JvmStatic
     val tasks: MutableList<Block> = mutableListOf()
-
-    @JvmStatic
     val taskProgress: MutableList<OwnTask> = mutableListOf()
-
-    @JvmStatic
     val taskRewardProgress: MutableMap<String, Boolean> = mutableMapOf()
-
-    @JvmStatic
     val rules: MutableList<TaskRule> = mutableListOf()
-
-    @JvmStatic
-    val channels: MutableList<TabChannel> = mutableListOf()
-
-    @JvmStatic
-    fun loadByUser(user: User?) {
-        I = user ?: return
+    fun load() {
+        onLoading()
+        owner.bindLoadableContext(this)
         loadOwnActivity(user)
     }
 
-    @JvmStatic
     private fun loadOwnActivity(user: User) {
         LogUtil.sd(user)
         this attach requestOwnActivity {
@@ -91,49 +76,34 @@ object ActivityContext: LoadableContext() {
 
     private fun progressOwnActivities(owns: List<OwnActivity>) {
         val taskIds = mutableListOf<String>()
-        val state = ChannelState()
         for (own in owns) {
             val activity = own.activity
             when (activity.subtype) {
                 ACTIVITY_Url -> {
-                    state.addStatus(TaskChannel.Home.id)
                 }
                 ACTIVITY_Text_url -> {
-                    state.addStatus(TaskChannel.Home.id)
                 }
                 ACTIVITY_Custom -> {
-                    //TODO
-                    state.addStatus(TaskChannel.Custom.id)
                 }
                 ACTIVITY_Dream -> {
-                    state.addStatus(TaskChannel.Dream.id)
                 }
                 ACTIVITY_Double -> {
-                    state.addStatus(TaskChannel.Double.id)
                 }
                 ACTIVITY_Card -> {
-                    state.addStatus(TaskChannel.Card.id)
                 }
                 ACTIVITY_Price -> {
-                    state.addStatus(TaskChannel.Price.id)
                 }
                 ACTIVITY_Life -> {
-                    state.addStatus(TaskChannel.Life.id)
                 }
                 ACTIVITY_Achievement -> {
-                    state.addStatus(TaskChannel.Achievement.id)
                 }
                 ACTIVITY_Get_back -> {
-                    state.addStatus(TaskChannel.Get_back.id)
                 }
                 ACTIVITY_Seven_day_sign -> {
-                    state.addStatus(TaskChannel.Home.id)
                 }
                 ACTIVITY_Everyday_main -> {
-                    state.addStatus(TaskChannel.Home.id)
                 }
                 ACTIVITY_One_task -> {
-                    state.addStatus(TaskChannel.Home.id)
                     val head = ActivityBlock.fromJson(activity.structure)
                     val head2 = ActivityOneTaskBlock.fromJson(head.structure)
                     val taskId = head2.taskId
@@ -141,72 +111,43 @@ object ActivityContext: LoadableContext() {
                 }
             }
         }
-        val ans = mutableListOf<TaskChannel>()
-        if (state.isStatusEnabled(TaskChannel.Home.id)) {
-            ans.add(TaskChannel.Home)
-        }
-        if (state.isStatusEnabled(TaskChannel.Custom.id)) {
-            ans.add(TaskChannel.Custom)
-        }
-        if (state.isStatusEnabled(TaskChannel.Dream.id)) {
-            ans.add(TaskChannel.Dream)
-        }
-        if (state.isStatusEnabled(TaskChannel.Double.id)) {
-            ans.add(TaskChannel.Double)
-        }
-        if (state.isStatusEnabled(TaskChannel.Card.id)) {
-            ans.add(TaskChannel.Card)
-        }
-        if (state.isStatusEnabled(TaskChannel.Price.id)) {
-            ans.add(TaskChannel.Price)
-        }
-        if (state.isStatusEnabled(TaskChannel.Life.id)) {
-            ans.add(TaskChannel.Life)
-        }
-        if (state.isStatusEnabled(TaskChannel.Achievement.id)) {
-            ans.add(TaskChannel.Achievement)
-        }
-        if (state.isStatusEnabled(TaskChannel.Get_back.id)) {
-            ans.add(TaskChannel.Get_back)
-        }
-        channels.clear()
-        channels.addAll(ans.map { it.asTabChannel() })
         loadTasks(taskIds)
     }
 
+    data class TasksAndOwnTasks(
+        val tasks: List<Block>? = null,
+        val ownTasks: List<OwnTask>? = null,
+    )
+
     private fun loadTasks(ids: List<String>) {
-        this attach requestBlock {
-            query = allTask().apply {
-                whereContainedIn("objectId", ids)
-            }
-            onEmpty = {
+        val getAllTasks = allTask().apply {
+            whereContainedIn("objectId", ids)
+        }.findInBackground()
+        val getAllOwnTasks = user.allOwnTask().apply {
+            whereContainedIn("task.objectId", ids)
+        }.findInBackground()
+        this attach Observable.zip(getAllTasks, getAllOwnTasks) { tasks, ownTasks ->
+            TasksAndOwnTasks(tasks, ownTasks)
+        }.map {
+            if (it.tasks.isNullOrEmpty()) {
                 tasks.clear()
-            }
-            onError = {
-                LogUtil.e(it)
-            }
-            onSuccess = {
+            } else {
                 tasks.clear()
-                tasks.addAll(it)
-                progressTasks(it)
+                tasks.addAll(it.tasks)
+                progressTasks(it.tasks)
             }
-        }
-        this attach requestOwnTask {
-            query = I!!.allOwnTask().apply {
-                whereContainedIn("task.objectId", ids)
-            }
-            onEmpty = {
+            if (it.ownTasks.isNullOrEmpty()) {
                 taskProgress.clear()
-            }
-            onError = {
-                LogUtil.e(it)
-            }
-            onSuccess = {
+            } else {
                 taskProgress.clear()
-                taskProgress.addAll(it)
-                progressOwnTasks(it)
+                taskProgress.addAll(it.ownTasks)
+                progressOwnTasks(it.ownTasks)
             }
+            true
         }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ onLoaded(this) }, { LogUtil.e(it.toDataError()) })
     }
 
     private fun progressOwnTasks(owns: List<OwnTask>) {
@@ -234,6 +175,17 @@ object ActivityContext: LoadableContext() {
     }
 }
 
+interface GameService {
+    fun init(user: User?)
+
+    fun activityContext(
+        owner: LifecycleOwner,
+        user: User,
+        onLoading: () -> Unit,
+        onLoaded: (ActivityContext) -> Unit
+    )
+}
+
 abstract class LoadableContext {
     val disposables = CompositeDisposable()
     var attachLifecycle: Disposable? = null
@@ -255,7 +207,7 @@ abstract class LoadableContext {
     }
 }
 
-fun LifecycleOwner.bindActivityContext(context: LoadableContext) {
+fun LifecycleOwner.bindLoadableContext(context: LoadableContext) {
     lifecycle.addObserver(ContextHolder(WeakReference(context)))
 }
 

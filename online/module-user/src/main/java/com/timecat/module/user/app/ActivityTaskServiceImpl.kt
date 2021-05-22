@@ -1,8 +1,6 @@
 package com.timecat.module.user.app
 
-import com.timecat.data.bmob.dao.UserDao
 import com.timecat.identity.service.ActivityTaskService
-import com.timecat.module.user.game.task.rule.ActivityContext
 import com.xiaojinzi.component.anno.ServiceAnno
 
 /**
@@ -15,6 +13,5 @@ import com.xiaojinzi.component.anno.ServiceAnno
 @ServiceAnno(ActivityTaskService::class)
 class ActivityTaskServiceImpl : ActivityTaskService {
     override fun init() {
-        ActivityContext.loadByUser(UserDao.getCurrentUser())
     }
 }
