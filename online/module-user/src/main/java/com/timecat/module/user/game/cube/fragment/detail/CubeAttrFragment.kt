@@ -37,33 +37,6 @@ class CubeAttrFragment : BaseCubeFragment() {
     lateinit var cubeLevelBar: CubeLevelItem
     lateinit var button: Button
 
-    fun onLevelBreak() {
-        val level = cubeViewModel.maxLevel.value ?: 1
-        val exp = cubeViewModel.exp.value ?: 0L
-        requireActivity().showLevelBreakDialog(level, exp)
-    }
-
-    fun onLevelUp(button: TextView) {
-        fetchExpItems(button, I()) {
-            button.hideProgress()
-            val level = cubeViewModel.maxLevel.value ?: 1
-            val exp = cubeViewModel.exp.value ?: 0L
-            val id = cubeViewModel.objectId.value ?: ""
-            requireActivity().showLevelUpDialog(level, exp, it) { dialog, btn, expOwnItem, count ->
-                cubeViewModel attach useItem<Any?>(expOwnItem.objectId, count, id) {
-                    onSuccess = {
-                        val fakeExp = id2exp(expOwnItem.objectId) * count
-                        val trueExp = cubeViewModel.exp.value ?: 0L + fakeExp
-                        cubeViewModel.exp.postValue(trueExp)
-                        dialog.dismiss()
-                    }
-                    onError = simpleErrorCallback
-                    onComplete = { btn.hideProgress() }
-                }
-            }
-        }
-    }
-
     override fun loadDetail(ownCube: OwnCube) {
     }
 
@@ -96,6 +69,33 @@ class CubeAttrFragment : BaseCubeFragment() {
         }
     }
 
+
+    fun onLevelBreak() {
+        val level = cubeViewModel.maxLevel.value ?: 1
+        val exp = cubeViewModel.exp.value ?: 0L
+        requireActivity().showLevelBreakDialog(level, exp)
+    }
+
+    fun onLevelUp(button: TextView) {
+        fetchExpItems(button, I()) {
+            button.hideProgress()
+            val level = cubeViewModel.maxLevel.value ?: 1
+            val exp = cubeViewModel.exp.value ?: 0L
+            val id = cubeViewModel.objectId.value ?: ""
+            requireActivity().showLevelUpDialog(level, exp, it) { dialog, btn, expOwnItem, count ->
+                cubeViewModel attach useItem<Any?>(expOwnItem.objectId, count, id) {
+                    onSuccess = {
+                        val fakeExp = id2exp(expOwnItem.objectId) * count
+                        val trueExp = cubeViewModel.exp.value ?: 0L + fakeExp
+                        cubeViewModel.exp.postValue(trueExp)
+                        dialog.dismiss()
+                    }
+                    onError = simpleErrorCallback
+                    onComplete = { btn.hideProgress() }
+                }
+            }
+        }
+    }
     fun fetchExpItems(button: TextView, user: User, useItems: (List<OwnItem>) -> Unit) {
         button.showProgress()
         cubeViewModel attach requestOwnItem {

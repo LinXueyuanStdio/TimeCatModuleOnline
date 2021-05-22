@@ -76,6 +76,8 @@ open class BuyItemFragment : BottomSheetDialogFragment() {
         Icon(head)
         Title()
         Content()
+
+        Buy()
     }
 
     open fun pack(head: ItemBlock): ViewGroup.() -> Unit = {
@@ -86,6 +88,8 @@ open class BuyItemFragment : BottomSheetDialogFragment() {
         val head2 = PackageItemBlock.fromJson(head.structure)
         val items = head2.items
         RewardList(requireActivity(), items)
+
+        Buy()
     }
 
     open fun data(head: ItemBlock): ViewGroup.() -> Unit = {
@@ -110,6 +114,12 @@ open class BuyItemFragment : BottomSheetDialogFragment() {
         Icon(head)
         Title()
         Content()
+
+        Buy()
+    }
+
+    open fun ViewGroup.Buy() {
+
     }
 
     open fun ViewGroup.Icon(head: ItemBlock) {
