@@ -166,6 +166,6 @@ fun FragmentActivity.showOwnMailDialog(ownMail: OwnMail) {
         .putParcelable("ownMail", ownMail)
         .navigate() ?: FallBackFragment()
     if (fragment is DialogFragment) {
-        fragment.show(supportFragmentManager, ownMail.uuid)
+        fragment.show(supportFragmentManager, ownMail.objectId)
     }
 }

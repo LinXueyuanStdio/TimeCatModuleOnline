@@ -47,7 +47,7 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
             LogUtil.se("h2 : $h2")
             gameService.itemContext(viewLifecycleOwner, I(), { onPrepareContent() }) { itemContext ->
                 LogUtil.se("load item context success")
-                LogUtil.se("item context : itemsMap(${itemContext.itemsMap.size})=${itemContext.itemsMap}")
+                LogUtil.e("item context : itemsMap(${itemContext.itemsMap.size})=${itemContext.itemsMap.keys}")
                 val money: Block = itemContext.itemsMap[h2.moneyId] ?: return@itemContext
                 LogUtil.se("money : $money")
                 shopViewModel.money.postValue(money)

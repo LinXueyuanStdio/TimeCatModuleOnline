@@ -98,7 +98,7 @@ class ForumCard @JvmOverloads constructor(
             button = this
             layout_id = "button"
             layout_width = wrap_content
-            layout_height = 40
+            layout_height = wrap_content
 
             margin_start = 10
             padding = 2

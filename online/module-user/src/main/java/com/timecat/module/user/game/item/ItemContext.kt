@@ -77,13 +77,13 @@ class ItemContext(
 
     private fun progressOwnItems(ownItems: List<OwnItem>) {
         for (i in ownItems) {
-            ownItemsMap[i.item.uuid] = i.count
+            ownItemsMap[i.item.objectId] = i.count
         }
     }
 
     private fun progressItems(items: List<Block>) {
         for (i in items) {
-            itemsMap[i.uuid] = i
+            itemsMap[i.objectId] = i
         }
     }
 }
