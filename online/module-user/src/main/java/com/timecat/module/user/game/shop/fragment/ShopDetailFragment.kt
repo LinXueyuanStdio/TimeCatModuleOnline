@@ -1,11 +1,14 @@
 package com.timecat.module.user.game.shop.fragment
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.block.BasicShopBlock
+import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.ShopBlock
 import com.timecat.identity.data.block.type.SHOP_Basic
 import com.timecat.layout.ui.entity.BaseItem
@@ -50,11 +53,12 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
                 shopViewModel.money.postValue(money)
                 val haveMoney: Int = itemContext.ownItemsMap[h2.moneyId] ?: 0
                 shopViewModel.haveMoney.postValue(haveMoney)
+                val moneyIcon = ItemBlock.fromJson(money.structure).header.icon
                 //从物品缓存中将id映射成block
                 val goods = mutableListOf<GoodItem>()
                 for (good in h2.goods) {
                     val item = itemContext.itemsMap[good.itemId] ?: continue
-                    val goodBlock = GoodBlock(item, good.value.toInt(), good.max)
+                    val goodBlock = GoodBlock(moneyIcon, item, good.value.toInt(), good.max)
                     val goodItem = GoodItem(requireActivity(), goodBlock) {
                         buy(goodBlock)
                     }
@@ -68,6 +72,10 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
 
     fun buy(goodBlock: GoodBlock) {
         requireActivity().showBuyItemDialog(goodBlock.item, goodBlock.value, goodBlock.max)
+    }
+
+    override fun getLayoutManager(): RecyclerView.LayoutManager {
+        return GridLayoutManager(context, 4)
     }
 
 }

@@ -4,10 +4,12 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.chip.Chip
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.LOAD
@@ -30,10 +32,12 @@ class GoodItem(
 ) : BaseHeaderItem<GoodItem.DetailVH>(good.item.objectId) {
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
         val iv_avatar: ImageView = root.findViewById(R.id.iv_avatar)
+        val tv_count: TextView = root.findViewById(R.id.tv_count)
+        val value: Chip = root.findViewById(R.id.value)
         val tv_name: TextView = root.findViewById(R.id.tv_name)
     }
 
-    override fun getLayoutRes(): Int = R.layout.user_item_item
+    override fun getLayoutRes(): Int = R.layout.user_item_good
 
     override fun createViewHolder(
         view: View,
@@ -54,6 +58,12 @@ class GoodItem(
         val structure = item.structure
         val head = ItemBlock.fromJson(structure)
         LOAD.image(head.header.avatar, holder.iv_avatar)
+
+        holder.tv_count.setText("0 / ${good.max}")
+        holder.value.setText("${good.value}")
+        holder.value.chipIcon
+        //TODO 限购、货币图标。需要改IconLoader为加载drawable
+
         holder.root.safeClick {
             activity.showItemDialog(item)
         }
@@ -69,6 +79,10 @@ class GoodItem(
 }
 
 data class GoodBlock(
+    /**
+     * 货币图标
+     */
+    val moneyIcon: String,
     /**
      * 商品
      */

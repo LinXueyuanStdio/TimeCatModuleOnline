@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.buyItem
@@ -132,6 +133,7 @@ open class BuyItemFragment : BottomSheetDialogFragment() {
     }
 
     open fun ViewGroup.Buy() {
+        LogUtil.se("${max}")
         val counter = StepCounter(1, 1, 1, max)
         MaterialButton("购买") {
             val count = counter.value
