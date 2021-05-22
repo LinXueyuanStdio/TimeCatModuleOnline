@@ -67,11 +67,13 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
 
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        val head = MailBlock.fromJson(structure)
+        val head = ShopBlock.fromJson(structure)
         formData.attachments = head.mediaScope
         formData.setContentScope(context, content, head.atScope, head.topicScope)
         formData.icon = head.header.avatar
-        formRewardListItems = head.rewards
+        val h2 = BasicShopBlock.fromJson(head.structure)
+        formRewardListItems = h2.goods.map { Reward(it.itemId, it.value) }
+        formData.blockId = h2.moneyId
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
@@ -86,7 +88,7 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
         formData.blockItem = Next("货币") {
             selectBlock(it)
         }
-        packageItem = Next("附件",
+        packageItem = Next("商品",
             hint = formItems.toString(),
             initialText = "${formItems.size}",
             autoAdd = false
@@ -98,8 +100,9 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
         add(
             formData.iconItem to 0,
             formData.titleItem to 1,
-            packageItem to 2,
-            packageDetailContainer to 3,
+            formData.blockItem to 2,
+            packageItem to 3,
+            packageDetailContainer to 4,
         )
     }
 
