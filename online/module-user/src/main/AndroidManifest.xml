@@ -231,6 +231,7 @@
         <activity android:name=".game.cube.CubeRolesEditorActivity" />
         <activity android:name=".game.task.AllOwnActivityActivity" />
         <activity android:name=".game.task.AllActivityActivity" />
+        <activity android:name=".game.task.SendActivityActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

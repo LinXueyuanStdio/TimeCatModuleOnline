@@ -14,10 +14,8 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2020/10/4
- * @description 方块（人物）
- * @usage 方块相关的评论、帖子、动态等等，不包括方块的养成方面
- * 如果要访问方块的养成，可以访问 AllCubeActivity
- * 这个页面一般用来展示用户未拥有的那些方块的详情
+ * @description
+ * @usage
  */
 @RouterAnno(hostAndPath = RouterHub.USER_TaskActivity)
 class TaskActivity : BaseLoginToolbarFragmentActivity() {

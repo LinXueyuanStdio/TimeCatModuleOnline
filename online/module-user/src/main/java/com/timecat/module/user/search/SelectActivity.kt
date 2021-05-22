@@ -54,5 +54,7 @@ class SelectActivity : SearchActivity() {
         Identity("身份", RouterHub.SEARCH_SelectIdentityFragment),
         Mail("邮件", RouterHub.SEARCH_SelectMailFragment),
         App("应用", RouterHub.SEARCH_SelectAppFragment),
+        Activity("活动", RouterHub.SEARCH_SelectActivityFragment),
+        Task("任务", RouterHub.SEARCH_SelectTaskFragment),
     }
 }
