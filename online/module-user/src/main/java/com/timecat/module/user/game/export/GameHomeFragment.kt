@@ -109,7 +109,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
             NAV.go(RouterHub.USER_CardActivity)
         }
         shop.setShakelessClickListener {
-            NAV.go(RouterHub.USER_ShopActivity)
+            NAV.go(RouterHub.USER_AllShopActivity)
         }
         exp_bar.progressColor = Attr.getAccentColor(_mActivity)
         exp_bar.setBackgroundColor(Attr.getBackgroundDarkColor(_mActivity))

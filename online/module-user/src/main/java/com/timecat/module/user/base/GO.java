@@ -12,6 +12,7 @@ import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_FORUM;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_LEADER_BOARD;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_MOMENT;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_POST;
+import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_SHOP;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_TAG;
 import static com.timecat.identity.data.block.type.BlockTypeKt.BLOCK_TOPIC;
 
@@ -56,6 +57,9 @@ public class GO {
             case BLOCK_LEADER_BOARD:
                 leaderBoardDetail(id);
                 break;
+            case BLOCK_SHOP:
+                shopDetail(id);
+                break;
         }
     }
 
@@ -65,6 +69,10 @@ public class GO {
 
     public static void forumDetail(String blockId) {
         NAV.go(RouterHub.USER_ForumDetailActivity, "blockId", blockId);
+    }
+
+    public static void shopDetail(String blockId) {
+        NAV.go(RouterHub.USER_ShopActivity, "blockId", blockId);
     }
 
     public static void topicDetail(String blockId) {

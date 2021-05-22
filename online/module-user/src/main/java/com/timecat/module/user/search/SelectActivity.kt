@@ -56,5 +56,6 @@ class SelectActivity : SearchActivity() {
         App("应用", RouterHub.SEARCH_SelectAppFragment),
         Activity("活动", RouterHub.SEARCH_SelectActivityFragment),
         Task("任务", RouterHub.SEARCH_SelectTaskFragment),
+        Item("物品", RouterHub.SEARCH_SelectItemFragment),
     }
 }
