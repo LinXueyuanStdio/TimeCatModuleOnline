@@ -53,7 +53,9 @@ class AllOwnActivityActivity : BaseLoginMainActivity() {
     }
 
     fun initByActivityContext(activityContext: ActivityContext) {
+        LogUtil.sd(activityContext.ownActivity)
         viewModel.channels.observe(this) {
+            LogUtil.sd(it)
             refreshChannel(it)
         }
         initBottomBar()
@@ -184,7 +186,7 @@ class AllOwnActivityActivity : BaseLoginMainActivity() {
             val obj: Array<ISupportFragment> = supportFragmentList.toArray(arrayOfNulls<ISupportFragment>(0))
             if (obj.isNotEmpty()) {
                 withContext(Dispatchers.Main) {
-                    loadMultipleRootFragment(R.id.container, -1, *obj)
+                    loadMultipleRootFragment(R.id.container, 0, *obj)
                 }
             }
         }

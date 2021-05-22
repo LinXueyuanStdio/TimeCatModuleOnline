@@ -76,7 +76,7 @@ class ActivityItem(
         }
         holder.root.setOnLongClickListener {
             //distribute to user
-            NAV.go(RouterHub.USER_SendCubeActivity, "block", item)
+            NAV.go(RouterHub.USER_SendActivityActivity, "block", item)
             true
         }
 

@@ -39,6 +39,7 @@ open class SearchUserFragment : BaseSearchFragment() {
             onError = errorCallback
             onEmpty = emptyCallback
             onSuccess = {
+                LogUtil.sd(it)
                 offset += it.size
                 mRefreshLayout.isRefreshing = false
                 val activity = requireActivity()

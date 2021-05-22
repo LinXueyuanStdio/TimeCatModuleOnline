@@ -16,6 +16,11 @@ abstract class BaseSearchFragment : BaseEndlessListFragment() {
 
     lateinit var searchViewModel: SearchViewModel
     var disposable: Disposable? = null
+
+    override fun initViewAfterLogin() {
+        loadData()
+    }
+
     override fun loadData() {
         searchViewModel = ViewModelProvider(requireActivity()).get(SearchViewModel::class.java)
         searchViewModel.searchText.observe(this, {

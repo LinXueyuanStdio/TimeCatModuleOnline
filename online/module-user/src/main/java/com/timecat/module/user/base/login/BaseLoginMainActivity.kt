@@ -32,6 +32,7 @@ abstract class BaseLoginMainActivity : BaseMainActivity() {
     }
 
     override fun initView() {
+        super.initView()
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         userViewModel.user.observe(this, {
             it?.let { loadDetail(it) }

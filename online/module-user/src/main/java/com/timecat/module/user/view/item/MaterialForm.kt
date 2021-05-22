@@ -10,6 +10,7 @@ import com.timecat.identity.data.base.*
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.layout.ui.business.setting.InputItem
 import com.timecat.layout.ui.business.setting.NextItem
+import org.joda.time.DateTime
 
 /**
  * @author 林学渊
@@ -61,7 +62,7 @@ class MaterialForm {
     lateinit var blockItem: NextItem
     //endregion
 
-    //region userItem -> userId
+    //region userItem -> userId, user
     var user: User? = null
         set(value) {
             value?.let { userId = it.objectId }
@@ -135,6 +136,7 @@ class MaterialForm {
                 it.topics.map { TopicModel(it.name, it.objectId) }
             })
     }
+
     fun setContent(context: Context, content: String, userModels: List<UserModel>?, topicModels: List<TopicModel>?) {
         emojiEditText.resolveInsertText(context, content, userModels, topicModels)
     }
@@ -149,6 +151,21 @@ class MaterialForm {
     }
 
     lateinit var emojiEditText: RichEditText
+    //endregion
+
+    //region activeDateTimeItem, expireDateTimeItem -> activeDateTime, expireDateTime
+    var activeDateTime: DateTime = DateTime()
+        set(value) {
+            activeDateTimeItem.text = value.toString("yyyy-MM-dd")
+            field = value
+        }
+    var expireDateTime: DateTime = DateTime()
+        set(value) {
+            expireDateTimeItem.text = value.toString("yyyy-MM-dd")
+            field = value
+        }
+    lateinit var activeDateTimeItem: NextItem
+    lateinit var expireDateTimeItem: NextItem
     //endregion
 
     var attachments: AttachmentTail? = null

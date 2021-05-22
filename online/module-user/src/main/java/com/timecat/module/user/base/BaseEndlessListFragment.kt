@@ -3,6 +3,7 @@ package com.timecat.module.user.base
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.service.DataError
 import com.timecat.layout.ui.entity.BaseAdapter
@@ -71,6 +72,7 @@ abstract class BaseEndlessListFragment : BaseLoginListFragment() {
     }
 
     var errorCallback: (DataError) -> Unit = {
+        LogUtil.sd("error")
         mRefreshLayout.isRefreshing = false
         mStatefulLayout?.showError("查询失败") {
             mRefreshLayout.isRefreshing = true
@@ -81,11 +83,13 @@ abstract class BaseEndlessListFragment : BaseLoginListFragment() {
         it.printStackTrace()
     }
     var firstEmptyCallback: () -> Unit = {
+        LogUtil.sd("empty")
         mRefreshLayout.isRefreshing = false
         mStatefulLayout?.showEmpty()
         adapter.updateItem(notMoreItem, Payload.NO_MORE_LOAD)
     }
     var emptyCallback: () -> Unit = {
+        LogUtil.sd("empty")
         mRefreshLayout.isRefreshing = false
         mStatefulLayout?.showContent()
         adapter.updateItem(notMoreItem, Payload.NO_MORE_LOAD)

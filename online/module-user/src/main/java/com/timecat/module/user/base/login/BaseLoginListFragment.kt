@@ -30,12 +30,22 @@ abstract class BaseLoginListFragment : BaseStatefulRefreshListFragment() {
                 NAV.go(RouterHub.LOGIN_LoginActivity)
             }
         } else {
-            mStatefulLayout?.showContent()
             userViewModel.loadUser(I)
             initViewAfterLogin()
         }
     }
 
-    protected open fun initViewAfterLogin() {}
+
+    open fun onPrepareContent() {
+        mStatefulLayout?.showLoading()
+    }
+
+    open fun onContentLoaded() {
+        mStatefulLayout?.showContent()
+    }
+
+    protected open fun initViewAfterLogin() {
+        onContentLoaded()
+    }
     protected open fun loadDetail(user: User) {}
 }

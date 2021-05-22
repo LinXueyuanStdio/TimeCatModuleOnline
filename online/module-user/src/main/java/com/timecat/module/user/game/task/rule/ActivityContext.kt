@@ -43,8 +43,6 @@ class ActivityContext(
     private val onLoaded: (ActivityContext) -> Unit
 ) : LoadableContext() {
     val ownActivity: MutableList<OwnActivity> = mutableListOf()
-    val main: MutableList<OwnActivity> = mutableListOf()
-    val card: MutableList<OwnActivity> = mutableListOf()
     val tasks: MutableList<Block> = mutableListOf()
     val taskProgress: MutableList<OwnTask> = mutableListOf()
     val taskRewardProgress: MutableMap<String, Boolean> = mutableMapOf()
@@ -75,6 +73,7 @@ class ActivityContext(
     }
 
     private fun progressOwnActivities(owns: List<OwnActivity>) {
+        LogUtil.sd("progressOwnActivities")
         val taskIds = mutableListOf<String>()
         for (own in owns) {
             val activity = own.activity
@@ -110,6 +109,11 @@ class ActivityContext(
                     taskIds.add(taskId)
                 }
             }
+        }
+        LogUtil.sd(taskIds)
+        if (taskIds.isEmpty()) {
+            onLoaded(this)
+            return
         }
         loadTasks(taskIds)
     }
