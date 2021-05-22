@@ -37,6 +37,7 @@ abstract class BaseBlockDetailActivity : BaseBlockCollapseActivity() {
         } else {
             userHerf.head.bindBlock(block)
         }
+        userHerf.title.text = title()
         footer.bindBlock(this, block)
         footer.response.setShakelessClickListener {
             GO.addCommentFor(block)

@@ -245,6 +245,7 @@ fun FragmentActivity.showLevelUpDialog(
 
         val count = stepCounter.value
         val expUnit = id2exp(currentExpItem.objectId)
+        stepCounter.max = if (maxNeedExp > expUnit) (maxNeedExp / expUnit).toInt() + 1 else 0
         useExpItem(expUnit, count)
     }
     dialog.show {

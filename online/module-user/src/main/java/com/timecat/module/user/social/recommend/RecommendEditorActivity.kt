@@ -11,7 +11,6 @@ import com.timecat.identity.data.base.*
 import com.timecat.identity.data.block.COMMENT_REPLY
 import com.timecat.identity.data.block.COMMENT_SIMPLE
 import com.timecat.identity.data.block.CommentBlock
-import com.timecat.identity.data.block.ReplyComment
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.timecat.module.user.view.BlockHerfView

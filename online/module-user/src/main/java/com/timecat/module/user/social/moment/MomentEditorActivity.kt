@@ -2,7 +2,6 @@ package com.timecat.module.user.social.moment
 
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.Moment

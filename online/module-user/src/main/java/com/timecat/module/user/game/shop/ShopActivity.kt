@@ -46,11 +46,11 @@ class ShopActivity : BaseBlockDetailActivity() {
         fetch()
     }
 
+    override fun focusCreatorInHeader(): Boolean = false
     override fun loadDetail(block: Block) {
         super.loadDetail(block)
         // 1. 加载头部卡片
         val headerBlock = ForumBlock.fromJson(block.structure)
-        titleString = block.title
         card.apply {
             title = block.title
             desc = "点赞 ${block.likes}  讨论 ${block.comments}  分享 ${block.relays}"

@@ -41,6 +41,7 @@ class CubeActivity : BaseBlockDetailActivity() {
         fetch()
     }
 
+    override fun focusCreatorInHeader(): Boolean = false
     override fun loadDetail(block: Block) {
         super.loadDetail(block)
         // 1. 加载头部卡片

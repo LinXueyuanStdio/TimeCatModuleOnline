@@ -46,6 +46,8 @@ class TopicDetailCollapseActivity : BaseBlockDetailActivity() {
         fetch()
     }
 
+    override fun focusCreatorInHeader(): Boolean = false
+
     override fun loadDetail(block: Block) {
         super.loadDetail(block)
         val headerBlock = TopicBlock.fromJson(block.structure)

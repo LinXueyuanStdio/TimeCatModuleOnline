@@ -43,7 +43,6 @@ abstract class BaseBlockCollapseActivity : BaseDetailCollapseActivity() {
     }
 
     protected open fun loadDetail(block: Block) {
-        LogUtil.e(block.parent)
         titleString = block.title
         setupTabs(block)
     }

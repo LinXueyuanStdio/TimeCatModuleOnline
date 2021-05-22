@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
+import com.google.android.material.chip.Chip
 import com.timecat.component.identity.Attr
 import com.timecat.layout.ui.layout.*
 import com.timecat.layout.ui.utils.IconLoader
@@ -93,7 +94,7 @@ class ForumCard @JvmOverloads constructor(
             text_size = 12
             setTextColor(Attr.getSecondaryTextColor(context))
         }
-        Button {
+        Chip(context).apply {
             button = this
             layout_id = "button"
             layout_width = wrap_content
@@ -106,7 +107,10 @@ class ForumCard @JvmOverloads constructor(
             bottom_toBottomOf = parent_id
 
             setTextColor(Attr.getPrimaryTextColor(context))
-            backgroundTintList = ColorStateList.valueOf(Attr.getPrimaryColor(context))
+            setChipIconResource(R.drawable.ic_done)
+            chipIconTint = ColorStateList.valueOf(Attr.getIconColor(context))
+        }.also {
+            addView(it)
         }
     }
 
