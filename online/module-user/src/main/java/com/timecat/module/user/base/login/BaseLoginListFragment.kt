@@ -49,6 +49,7 @@ abstract class BaseLoginListFragment : BaseStatefulRefreshListFragment() {
 
     open fun onContentLoaded() {
         mStatefulLayout?.showContent()
+        mRefreshLayout.isRefreshing = false
     }
 
     protected open fun initViewAfterLogin() {

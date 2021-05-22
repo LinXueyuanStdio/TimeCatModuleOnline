@@ -2,6 +2,7 @@ package com.timecat.module.user.game.shop.fragment
 
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.block.BasicShopBlock
@@ -40,9 +41,11 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
     override fun loadDetail(block: Block) {
         val list = mutableListOf<BaseItem<*>>()
         val header = ShopBlock.fromJson(block.structure)
+        LogUtil.se(block)
         if (block.subtype == SHOP_Basic) {
             val h2 = BasicShopBlock.fromJson(header.structure)
             gameService.itemContext(viewLifecycleOwner, I(), { onPrepareContent() }) { itemContext ->
+                LogUtil.se("load item context success")
                 val money: Block = itemContext.itemsMap[h2.moneyId] ?: return@itemContext
                 shopViewModel.money.postValue(money)
                 val haveMoney: Int = itemContext.ownItemsMap[h2.moneyId] ?: 0

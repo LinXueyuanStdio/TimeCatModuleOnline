@@ -18,7 +18,7 @@ class ToolbarHeadView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : ViewFlipper(context, attrs) {
     var title: TextView = H1("动态")
-    var head: UserHerfView = UserHerfView(context)
+    var head: BlockHerfView = BlockHerfView(context)
 
     init {
         addView(head)

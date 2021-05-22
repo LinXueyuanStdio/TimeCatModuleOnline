@@ -25,7 +25,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  */
 @RouterAnno(hostAndPath = RouterHub.APP_DETAIL_AppDetailActivity)
 class AppDetailActivity : BaseBlockDetailActivity() {
-    override fun title(): String = "动态"
+    override fun title(): String = "应用"
 
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
@@ -60,6 +60,18 @@ class AppDetailActivity : BaseBlockDetailActivity() {
 
     override fun fetch() {
         fetch(blockId)
+    }
+
+    override fun setupTabs(block:Block) {
+        tabs.getTabAt(1)?.let {
+            it.text = "评论${block.comments}"
+        }
+        tabs.getTabAt(2)?.let {
+            it.text = "赞${block.likes}"
+        }
+        tabs.getTabAt(3)?.let {
+            it.text = "转发${block.relays}"
+        }
     }
 
     override fun getAdapter(): FragmentStatePagerAdapter {

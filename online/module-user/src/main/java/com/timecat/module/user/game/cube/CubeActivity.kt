@@ -23,6 +23,8 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_CubeActivity)
 class CubeActivity : BaseBlockDetailActivity() {
 
+    override fun title(): String = "方块"
+
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
 
@@ -40,6 +42,7 @@ class CubeActivity : BaseBlockDetailActivity() {
     }
 
     override fun loadDetail(block: Block) {
+        super.loadDetail(block)
         // 1. 加载头部卡片
         val headerBlock = ForumBlock.fromJson(block.structure)
         titleString = block.title

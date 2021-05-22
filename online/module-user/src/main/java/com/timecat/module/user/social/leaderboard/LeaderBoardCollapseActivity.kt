@@ -31,6 +31,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  */
 @RouterAnno(hostAndPath = RouterHub.USER_LeaderBoardDetailActivity)
 class LeaderBoardCollapseActivity : BaseBlockDetailActivity() {
+    override fun title(): String = "排行榜"
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
     lateinit var card: TopicCard
@@ -47,6 +48,7 @@ class LeaderBoardCollapseActivity : BaseBlockDetailActivity() {
     }
 
     override fun loadDetail(block: Block) {
+        super.loadDetail(block)
         // 1. 加载头部卡片
         val headerBlock = LeaderBoardBlock.fromJson(block.structure)
         titleString = block.title
@@ -62,6 +64,17 @@ class LeaderBoardCollapseActivity : BaseBlockDetailActivity() {
         fetch(blockId)
     }
 
+    override fun setupTabs(block:Block) {
+        tabs.getTabAt(1)?.let {
+            it.text = "评论${block.comments}"
+        }
+        tabs.getTabAt(2)?.let {
+            it.text = "赞${block.likes}"
+        }
+        tabs.getTabAt(3)?.let {
+            it.text = "转发${block.relays}"
+        }
+    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.leaderboard_recommend, menu)
         return super.onCreateOptionsMenu(menu)

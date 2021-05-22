@@ -23,67 +23,65 @@ class TriInputItem @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : HorizontalScrollView(context, attrs, defStyleAttr) {
+) : LinearLayout(context, attrs, defStyleAttr) {
 
     lateinit var imageView: ImageView
     lateinit var closeView: ImageView
     lateinit var leftView: InputItem
     lateinit var rightView: InputItem
     lateinit var limit: NumberPicker
-    var container: LinearLayout
 
     init {
+        orientation = HORIZONTAL
         layout_width = match_parent
         layout_height = wrap_content
-
-        container = LinearLayout {
-            orientation = HORIZONTAL
-            layout_width = match_parent
+        gravity = gravity_center_vertical
+        weightSum = 2f
+        imageView = ImageView {
+            layout_width = 36
+            layout_height = 36
+            margin = 4
+            padding = 4
+        }
+        leftView = InputItem(context).apply {
+            layout_width = wrap_content
             layout_height = wrap_content
-            imageView = ImageView {
-                layout_width = 36
-                layout_height = 36
-                margin = 4
-                padding = 4
-                layout_gravity = gravity_center_vertical
+            margin = 4
+            padding = 4
+            weight = 1f
+        }.also {
+            addView(it)
+        }
+        rightView = InputItem(context).apply {
+            layout_width = wrap_content
+            layout_height = wrap_content
+            margin = 4
+            padding = 4
+            weight = 1f
+        }.also {
+            addView(it)
+        }
+        limit = NumberPicker(context).apply {
+            layout_width = wrap_content
+            layout_height = wrap_content
+            margin = 4
+            weight = 1f
+
+            minValue = 1
+            maxValue = 999
+            stepSize = 1
+            progress = 1
+            doOnProgressChanged { numberPicker, progress, formUser ->
+                onCount(progress)
             }
-            leftView = InputItem(context).apply {
-                layout_width = wrap_content
-                layout_height = wrap_content
-                minimumWidth = 50.dp
-            }.also {
-                addView(it)
-            }
-            rightView = InputItem(context).apply {
-                layout_width = wrap_content
-                layout_height = wrap_content
-                minimumWidth = 50.dp
-            }.also {
-                addView(it)
-            }
-            limit = NumberPicker(context).apply {
-                layout_width = wrap_content
-                layout_height = wrap_content
-                weight = 4f
-                padding = 4
-                minValue = 1
-                maxValue = 999
-                stepSize = 1
-                progress = 1
-                layout_gravity = gravity_bottom
-                doOnProgressChanged { numberPicker, progress, formUser ->
-                    onCount(progress)
-                }
-            }.also {
-                addView(it)
-            }
-            closeView = ImageView {
-                layout_width = 36
-                layout_height = 36
-                margin = 4
-                padding = 4
-                layout_gravity = gravity_center_vertical
-            }
+        }.also {
+            addView(it)
+        }
+        closeView = ImageView {
+            layout_width = 36
+            layout_height = 36
+            margin = 4
+            padding = 4
         }
     }
 

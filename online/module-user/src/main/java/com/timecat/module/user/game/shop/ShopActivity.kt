@@ -27,6 +27,8 @@ import com.xiaojinzi.component.anno.RouterAnno
  */
 @RouterAnno(hostAndPath = RouterHub.USER_ShopActivity)
 class ShopActivity : BaseBlockDetailActivity() {
+    override fun title(): String = "商店"
+
     @AttrValueAutowiredAnno("blockId")
     lateinit var blockId: String
 
@@ -45,6 +47,7 @@ class ShopActivity : BaseBlockDetailActivity() {
     }
 
     override fun loadDetail(block: Block) {
+        super.loadDetail(block)
         // 1. 加载头部卡片
         val headerBlock = ForumBlock.fromJson(block.structure)
         titleString = block.title
@@ -58,6 +61,18 @@ class ShopActivity : BaseBlockDetailActivity() {
 
     override fun fetch() {
         fetch(blockId)
+    }
+
+    override fun setupTabs(block:Block) {
+        tabs.getTabAt(1)?.let {
+            it.text = "评论${block.comments}"
+        }
+        tabs.getTabAt(2)?.let {
+            it.text = "赞${block.likes}"
+        }
+        tabs.getTabAt(3)?.let {
+            it.text = "转发${block.relays}"
+        }
     }
 
     override fun getAdapter(): FragmentStatePagerAdapter {
