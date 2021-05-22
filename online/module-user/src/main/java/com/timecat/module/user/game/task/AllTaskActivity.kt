@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject
 import com.cheng.channel.Channel
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.system.model.eventbus.TabReselectedEvent
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.standard.navi.BottomBar
@@ -17,8 +16,8 @@ import com.timecat.module.user.game.task.fragment.*
 import com.timecat.module.user.game.task.rule.ActivityContext
 import com.timecat.module.user.game.task.rule.GameService
 import com.timecat.module.user.game.task.vm.TaskViewModel
-import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
+import com.xiaojinzi.component.anno.ServiceAutowiredAnno
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -38,7 +37,7 @@ import java.util.*
 class AllTaskActivity : BaseLoginMainActivity() {
     lateinit var viewModel: TaskViewModel
 
-    @AttrValueAutowiredAnno
+    @ServiceAutowiredAnno
     lateinit var gameService: GameService
 
     override fun routerInject() = NAV.inject(this)
@@ -53,7 +52,7 @@ class AllTaskActivity : BaseLoginMainActivity() {
         }
     }
 
-    fun initByActivityContext(activityContext:ActivityContext) {
+    fun initByActivityContext(activityContext: ActivityContext) {
         viewModel.channels.observe(this) {
             refreshChannel(it)
         }
