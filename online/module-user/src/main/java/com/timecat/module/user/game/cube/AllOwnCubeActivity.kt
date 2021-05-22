@@ -96,13 +96,13 @@ class AllOwnCubeActivity : BaseNavCollapseActivity() {
     }
 
     override fun setupTabs(block: Block) {
-        tabs.getTabAt(1)?.let {
+        tabs.getTabAt(5)?.let {
             it.text = "评论${block.comments}"
         }
-        tabs.getTabAt(2)?.let {
+        tabs.getTabAt(6)?.let {
             it.text = "转发${block.relays}"
         }
-        tabs.getTabAt(3)?.let {
+        tabs.getTabAt(7)?.let {
             it.text = "赞${block.likes}"
         }
     }

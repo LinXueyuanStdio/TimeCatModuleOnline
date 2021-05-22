@@ -25,6 +25,7 @@ import com.timecat.layout.ui.business.form.OneLineInput
 import com.timecat.layout.ui.business.form.add
 import com.timecat.layout.ui.business.setting.*
 import com.timecat.module.user.R
+import com.timecat.module.user.ext.chooseAvatar
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -70,7 +71,7 @@ class PackageItemEditorActivity : BaseItemAddActivity() {
 
     override fun initFormView(): ViewGroup.() -> Unit = {
         formData.iconItem = Image("图标", "fontawesome://solid/fa_gift_solid", autoAdd = false) {
-            chooseImage(isAvatar = true) { path ->
+            chooseAvatar { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }

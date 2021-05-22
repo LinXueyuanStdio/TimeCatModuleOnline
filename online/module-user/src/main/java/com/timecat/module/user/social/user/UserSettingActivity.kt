@@ -14,6 +14,8 @@ import com.timecat.layout.ui.business.form.Image
 import com.timecat.layout.ui.business.form.Next
 import com.timecat.layout.ui.business.setting.ImageItem
 import com.timecat.middle.setting.BaseSettingActivity
+import com.timecat.module.user.ext.ImageAspectRatio
+import com.timecat.module.user.ext.chooseAvatar
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -49,7 +51,7 @@ class UserSettingActivity : BaseSettingActivity() {
             LogUtil.e(user.toJSONString())
 
             avatarItem = container.Image("头像", user.avatar) { avatarItem ->
-                chooseImage(isAvatar = true) { path ->
+                chooseAvatar { path ->
                     receieveImage(user, listOf(path), false) {
                         for (i in it) {
                             val file = AVFile("avatar", i)
@@ -63,7 +65,7 @@ class UserSettingActivity : BaseSettingActivity() {
                 }
             }
             coverItem = container.Image("封面", user.cover) { coverItem ->
-                chooseImage(isAvatar = false) { path ->
+                chooseImage(ImageAspectRatio.Horiz_3_4) { path ->
                     receieveImage(user, listOf(path), false) {
                         for (i in it) {
                             val file = AVFile("cover", i)

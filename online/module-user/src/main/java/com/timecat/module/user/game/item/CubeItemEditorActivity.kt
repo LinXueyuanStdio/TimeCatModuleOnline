@@ -22,6 +22,7 @@ import com.timecat.layout.ui.business.form.Next
 import com.timecat.layout.ui.business.form.OneLineInput
 import com.timecat.layout.ui.business.form.add
 import com.timecat.module.user.R
+import com.timecat.module.user.ext.chooseAvatar
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -54,7 +55,7 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
 
     override fun initFormView(): ViewGroup.() -> Unit = {
         formData.iconItem = Image("图标", "fontawesome://regular/fa_user", autoAdd = false) {
-            chooseImage(isAvatar = true) { path ->
+            chooseAvatar { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }

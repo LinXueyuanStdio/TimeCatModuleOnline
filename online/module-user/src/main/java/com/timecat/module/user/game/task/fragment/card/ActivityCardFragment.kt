@@ -4,6 +4,7 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.R
 import com.timecat.module.user.base.login.BaseLoginMainFragment
 import com.timecat.module.user.game.task.fragment.BaseActivityFragment
+import com.xiaojinzi.component.anno.FragmentAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -13,7 +14,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description 主要活动
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_ActivityCardFragment)
+@FragmentAnno(RouterHub.USER_ActivityCardFragment)
 class ActivityCardFragment : BaseActivityFragment() {
     override fun layout(): Int = R.layout.user_fragment_game_activity_card
 

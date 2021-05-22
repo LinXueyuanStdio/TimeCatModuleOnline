@@ -8,11 +8,14 @@ import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.ActivityBlock
 import com.timecat.identity.data.block.ActivityUrlBlock
 import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.type.ACTIVITY_Dream
 import com.timecat.identity.data.block.type.ACTIVITY_Url
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Image
 import com.timecat.layout.ui.business.form.OneLineInput
 import com.timecat.layout.ui.business.form.add
+import com.timecat.module.user.ext.ImageAspectRatio
+import com.timecat.module.user.ext.chooseAvatar
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -31,7 +34,7 @@ class DreamActivityEditorActivity : BaseActivityAddActivity() {
     @AttrValueAutowiredAnno("block")
     @JvmField
     var task: Block? = null
-    override fun title(): String = "外部链接活动"
+    override fun title(): String = "梦境"
     override fun routerInject() = NAV.inject(this)
 
     override fun loadFromExistingBlock(): Block.() -> Unit = {
@@ -40,18 +43,19 @@ class DreamActivityEditorActivity : BaseActivityAddActivity() {
         formData.attachments = head.mediaScope
         formData.setContentScope(context, content, head.atScope, head.topicScope)
         formData.icon = head.header.avatar
+        formData.cover = head.header.cover
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
         formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(isAvatar = true) { path ->
+            chooseAvatar { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }
             }
         }
         formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(isAvatar = false) { path ->
+            chooseImage(ImageAspectRatio.Wallpaper_4_3) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.cover = it.first()
                 }
@@ -89,7 +93,7 @@ class DreamActivityEditorActivity : BaseActivityAddActivity() {
         return 0
     }
 
-    override fun subtype(): Int = ACTIVITY_Url
+    override fun subtype(): Int = ACTIVITY_Dream
     override fun getItemBlock(): ActivityBlock {
         return ActivityBlock(
             type = subtype(),

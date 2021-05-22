@@ -127,7 +127,8 @@ fun Activity.uploadImageByUser(
 //endregion
 
 //region 图片处理逻辑
-fun Activity.chooseImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
+
+fun Activity.chooseAvatar(onSuccess: (String) -> Unit) {
     MaterialDialog(this).show {
         val choice = listOf(
             "拍照",
@@ -141,35 +142,88 @@ fun Activity.chooseImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) 
             when (index) {
                 0 -> {
                     //拍照
-                    takeOnePhoto(isAvatar, onSuccess)
+                    takeOnePhoto(ImageAspectRatio.Avatar_1_1, onSuccess)
                 }
                 1 -> {
                     //本地相册
-                    selectOneLocalImage(isAvatar, onSuccess)
+                    selectOneLocalImage(ImageAspectRatio.Avatar_1_1, onSuccess)
                 }
                 2 -> {
                     //内置图标
-                    selectOneLocalIcon(isAvatar, onSuccess)
+                    selectOneLocalIcon(onSuccess)
                 }
                 3 -> {
                     //随机图标
-                    selectOneRandomImage(isAvatar, onSuccess)
+                    selectOneRandomImage(ImageAspectRatio.Avatar_1_1, onSuccess)
                 }
                 4 -> {
                     //我的在线相册
-                    selectOneOnlineImage(isAvatar, onSuccess)
+                    selectOneOnlineImage(ImageAspectRatio.Avatar_1_1, onSuccess)
                 }
             }
         }
     }
 }
 
-fun Activity.takeOnePhoto(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
+enum class ImageAspectRatio {
+    Avatar_1_1, Wallpaper_4_3, Horiz_3_4
+}
+
+fun Activity.chooseImage(aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar_1_1, onSuccess: (String) -> Unit) {
+    if (aspectRatio == ImageAspectRatio.Avatar_1_1) {
+        chooseAvatar(onSuccess)
+        return
+    }
+    MaterialDialog(this).show {
+        val choice = listOf(
+            "拍照",
+            "本地相册",
+            "随机图标",
+//                "我的在线相册" TODO
+        )
+        positiveButton(R.string.ok)
+        listItemsSingleChoice(items = choice, initialSelection = 2) { dialog, index, text ->
+            when (index) {
+                0 -> {
+                    //拍照
+                    takeOnePhoto(aspectRatio, onSuccess)
+                }
+                1 -> {
+                    //本地相册
+                    selectOneLocalImage(aspectRatio, onSuccess)
+                }
+                2 -> {
+                    //随机图标
+                    selectOneRandomImage(aspectRatio, onSuccess)
+                }
+                3 -> {
+                    //我的在线相册
+                    selectOneOnlineImage(aspectRatio, onSuccess)
+                }
+            }
+        }
+    }
+}
+
+fun Activity.takeOnePhoto(
+    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar_1_1,
+    onSuccess: (String) -> Unit
+) {
     var aspect_ratio_x = 1
     var aspect_ratio_y = 1
-    if (!isAvatar) {
-        aspect_ratio_x = 3
-        aspect_ratio_y = 2
+    when (aspectRatio) {
+        ImageAspectRatio.Avatar_1_1 -> {
+            aspect_ratio_x = 1
+            aspect_ratio_y = 1
+        }
+        ImageAspectRatio.Wallpaper_4_3 -> {
+            aspect_ratio_x = 2
+            aspect_ratio_y = 3
+        }
+        ImageAspectRatio.Horiz_3_4 -> {
+            aspect_ratio_x = 3
+            aspect_ratio_y = 2
+        }
     }
     IMG.select(PictureSelector.create(this).openCamera(PictureMimeType.ofImage()))
         .maxSelectNum(1)
@@ -189,12 +243,25 @@ fun Activity.takeOnePhoto(isAvatar: Boolean = true, onSuccess: (String) -> Unit)
         }
 }
 
-fun Activity.selectOneLocalImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
+fun Activity.selectOneLocalImage(
+    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar_1_1,
+    onSuccess: (String) -> Unit
+) {
     var aspect_ratio_x = 1
     var aspect_ratio_y = 1
-    if (!isAvatar) {
-        aspect_ratio_x = 3
-        aspect_ratio_y = 2
+    when (aspectRatio) {
+        ImageAspectRatio.Avatar_1_1 -> {
+            aspect_ratio_x = 1
+            aspect_ratio_y = 1
+        }
+        ImageAspectRatio.Wallpaper_4_3 -> {
+            aspect_ratio_x = 2
+            aspect_ratio_y = 3
+        }
+        ImageAspectRatio.Horiz_3_4 -> {
+            aspect_ratio_x = 3
+            aspect_ratio_y = 2
+        }
     }
     IMG.select(PictureSelector.create(this).openGallery(PictureMimeType.ofImage()))
         .maxSelectNum(1)
@@ -214,11 +281,50 @@ fun Activity.selectOneLocalImage(isAvatar: Boolean = true, onSuccess: (String) -
         }
 }
 
-fun Activity.selectOneRandomImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
+fun Activity.selectOneRandomImage(
+    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar_1_1,
+    onSuccess: (String) -> Unit
+) {
+    var aspect_ratio_x = 1
+    var aspect_ratio_y = 1
+    when (aspectRatio) {
+        ImageAspectRatio.Avatar_1_1 -> {
+            aspect_ratio_x = 1
+            aspect_ratio_y = 1
+        }
+        ImageAspectRatio.Wallpaper_4_3 -> {
+            aspect_ratio_x = 2
+            aspect_ratio_y = 3
+        }
+        ImageAspectRatio.Horiz_3_4 -> {
+            aspect_ratio_x = 3
+            aspect_ratio_y = 2
+        }
+    }
     onSuccess(IconLoader.randomAvatar(UUID.randomUUID().toString()))
 }
 
-fun Activity.selectOneOnlineImage(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {}
+fun Activity.selectOneOnlineImage(
+    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar_1_1,
+    onSuccess: (String) -> Unit
+) {
+    var aspect_ratio_x = 1
+    var aspect_ratio_y = 1
+    when (aspectRatio) {
+        ImageAspectRatio.Avatar_1_1 -> {
+            aspect_ratio_x = 1
+            aspect_ratio_y = 1
+        }
+        ImageAspectRatio.Wallpaper_4_3 -> {
+            aspect_ratio_x = 2
+            aspect_ratio_y = 3
+        }
+        ImageAspectRatio.Horiz_3_4 -> {
+            aspect_ratio_x = 3
+            aspect_ratio_y = 2
+        }
+    }
+}
 
 class FontAwesomeGridItem(val context: Context, val font: Typeface, val iconRes: Int) : GridItem {
     override val title: String
@@ -241,7 +347,7 @@ class FontAwesomeGridItem(val context: Context, val font: Typeface, val iconRes:
 
 }
 
-fun Activity.selectOneLocalIcon(isAvatar: Boolean = true, onSuccess: (String) -> Unit) {
+fun Activity.selectOneLocalIcon(onSuccess: (String) -> Unit) {
     GlobalScope.launch(Dispatchers.IO) {
         val regularFont = FontAwesome.getFontAwesomeRegular(this@selectOneLocalIcon)
         val regularIcons = FontAwesome.regularIcons().map {

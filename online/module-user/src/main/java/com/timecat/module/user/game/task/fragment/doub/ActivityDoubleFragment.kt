@@ -1,9 +1,8 @@
 package com.timecat.module.user.game.task.fragment.doub
 
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.module.user.base.login.BaseLoginMainFragment
 import com.timecat.module.user.game.task.fragment.BaseActivityFragment
-import com.xiaojinzi.component.anno.RouterAnno
+import com.xiaojinzi.component.anno.FragmentAnno
 
 /**
  * @author 林学渊
@@ -12,7 +11,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description 主要活动
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_ActivityDoubleFragment)
+@FragmentAnno(RouterHub.USER_ActivityDoubleFragment)
 class ActivityDoubleFragment : BaseActivityFragment() {
     override fun layout(): Int {
         return super.layout()

@@ -15,7 +15,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
  */
 @ServiceAnno(GameService::class)
 class GameServiceImpl : GameService {
-    var activityContextPool:MutableMap<String, ActivityContext> = mutableMapOf()
+    var activityContextPool: MutableMap<String, ActivityContext> = mutableMapOf()
     override fun init(user: User?) {
 
     }
@@ -28,5 +28,6 @@ class GameServiceImpl : GameService {
         }
         activityContext = ActivityContext(owner, user, onLoading, onLoaded)
         activityContext.load()
+        activityContextPool[user.objectId] = activityContext
     }
 }

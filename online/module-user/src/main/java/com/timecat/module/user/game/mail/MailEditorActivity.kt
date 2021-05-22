@@ -29,6 +29,7 @@ import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.layout.ui.business.setting.OwnCountItem
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.timecat.module.user.ext.chooseAvatar
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.timecat.module.user.game.item.showItemDialog
@@ -75,7 +76,7 @@ class MailEditorActivity : BaseBlockEditorActivity() {
 
     override fun initFormView(): ViewGroup.() -> Unit = {
         formData.iconItem = Image("图标", "fontawesome://regular/fa_envelope", autoAdd = false) {
-            chooseImage(isAvatar = true) { path ->
+            chooseAvatar { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }

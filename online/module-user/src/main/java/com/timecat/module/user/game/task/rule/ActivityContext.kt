@@ -16,9 +16,6 @@ import com.timecat.data.bmob.ext.net.allTask
 import com.timecat.data.bmob.ext.toDataError
 import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.*
-import com.timecat.module.user.game.task.channal.ChannelState
-import com.timecat.module.user.game.task.channal.TaskChannel
-import com.timecat.module.user.social.cloud.channel.TabChannel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -47,6 +44,7 @@ class ActivityContext(
     val taskProgress: MutableList<OwnTask> = mutableListOf()
     val taskRewardProgress: MutableMap<String, Boolean> = mutableMapOf()
     val rules: MutableList<TaskRule> = mutableListOf()
+
     fun load() {
         onLoading()
         owner.bindLoadableContext(this)
@@ -56,12 +54,13 @@ class ActivityContext(
     private fun loadOwnActivity(user: User) {
         LogUtil.sd(user)
         this attach requestOwnActivity {
-            query = user.allOwnActivity().apply {
-                cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
-            }
+            query = user.allOwnActivity()
             onEmpty = {
                 LogUtil.sd("empty")
                 ownActivity.clear()
+            }
+            onError = {
+                LogUtil.se(it)
             }
             onSuccess = {
                 LogUtil.d(it)

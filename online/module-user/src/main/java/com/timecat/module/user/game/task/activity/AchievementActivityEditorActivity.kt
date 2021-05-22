@@ -13,6 +13,8 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Image
 import com.timecat.layout.ui.business.form.OneLineInput
 import com.timecat.layout.ui.business.form.add
+import com.timecat.module.user.ext.ImageAspectRatio
+import com.timecat.module.user.ext.chooseAvatar
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -31,7 +33,7 @@ class AchievementActivityEditorActivity : BaseActivityAddActivity() {
     @AttrValueAutowiredAnno("block")
     @JvmField
     var task: Block? = null
-    override fun title(): String = "外部链接活动"
+    override fun title(): String = "成就"
     override fun routerInject() = NAV.inject(this)
 
     override fun loadFromExistingBlock(): Block.() -> Unit = {
@@ -40,18 +42,19 @@ class AchievementActivityEditorActivity : BaseActivityAddActivity() {
         formData.attachments = head.mediaScope
         formData.setContentScope(context, content, head.atScope, head.topicScope)
         formData.icon = head.header.avatar
+        formData.cover = head.header.cover
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
         formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(isAvatar = true) { path ->
+            chooseAvatar { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }
             }
         }
         formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(isAvatar = false) { path ->
+            chooseImage(ImageAspectRatio.Wallpaper_4_3) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.cover = it.first()
                 }

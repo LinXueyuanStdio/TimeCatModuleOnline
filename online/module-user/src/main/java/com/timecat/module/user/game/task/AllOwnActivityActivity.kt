@@ -11,17 +11,12 @@ import com.timecat.layout.ui.standard.navi.BottomBar
 import com.timecat.layout.ui.standard.navi.TabBlockItem
 import com.timecat.module.user.R
 import com.timecat.module.user.base.login.BaseLoginMainActivity
-import com.timecat.module.user.game.task.channal.TaskChannel
 import com.timecat.module.user.game.task.fragment.*
 import com.timecat.module.user.game.task.rule.ActivityContext
 import com.timecat.module.user.game.task.rule.GameService
 import com.timecat.module.user.game.task.vm.TaskViewModel
 import com.xiaojinzi.component.anno.RouterAnno
 import com.xiaojinzi.component.anno.ServiceAutowiredAnno
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import me.yokeyword.eventbusactivityscope.EventBusActivityScope
 import me.yokeyword.fragmentation.ISupportFragment
 import java.util.*
@@ -110,7 +105,7 @@ class AllOwnActivityActivity : BaseLoginMainActivity() {
         report(item.title)
         if (selected == null) {
             LogUtil.sd("${item.fragmentRouterPath}")
-            val a: Any = NAV.fragment(item.fragmentRouterPath)
+            val a = NAV.fragment(item.fragmentRouterPath)
             LogUtil.sd(a)
             if (a is ISupportFragment) {
                 selected = a
@@ -124,33 +119,12 @@ class AllOwnActivityActivity : BaseLoginMainActivity() {
 
     private fun destroyActionMode() {}
 
-    /**
-     * 刷新 除固定的tab以外的 自定义tab
-     *
-     * @param list
-     */
-    private fun refreshCustom(list: List<Channel>?) {
-        if (list != null && list.size > 1) {
-            mBottomBar.clearContainer()
-            for (i in 1 until list.size) {
-                val c = list[i]
-                val obj = c.obj
-                if (obj is TabBlockItem) {
-                    addTabBlockItem(obj)
-                } else if (obj is JSONObject) {
-                    val item = obj.toJavaObject(TabBlockItem::class.java)
-                    addTabBlockItem(item)
-                }
-            }
-        }
-    }
-
-    private fun addTabBlockItem(item: TabBlockItem): Any? {
+    private fun addTabBlockItem(item: TabBlockItem): Any {
         mBottomBar.addItem(item.createTabView(this))
         return mFragments[item.key] ?: addToFragmentMap(item.key, item.fragmentRouterPath)
     }
 
-    private fun addToFragmentMap(key: String, path: String): Any? {
+    private fun addToFragmentMap(key: String, path: String): Any {
         val f = NAV.fragment(path)
         if (f is ISupportFragment) {
             mFragments[key] = f as ISupportFragment
@@ -158,37 +132,28 @@ class AllOwnActivityActivity : BaseLoginMainActivity() {
         return f
     }
 
-    private fun refreshStatic() {
-        addToFragmentMap(TaskChannel.Home.getKey(), TaskChannel.Home.fragmentRouterPath)
-    }
-
     private fun refreshChannel(list: List<Channel>) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val keysBefore: Set<String> = HashSet(mFragments.keys)
-            val primaryKey = TaskChannel.Home.getKey()
-            if (!keysBefore.contains(primaryKey)) {
-                refreshStatic()
-            }
-            withContext(Dispatchers.Main) {
-                refreshCustom(list)
-            }
-            val keysAfter: MutableSet<String> = HashSet(mFragments.keys)
-            keysAfter.removeAll(keysBefore)
-            val supportFragmentList: ArrayList<ISupportFragment?> = ArrayList()
-            if (keysAfter.contains(primaryKey)) {
-                supportFragmentList.add(0, mFragments[primaryKey])
-                keysAfter.remove(primaryKey)
-            }
-            for (s in keysAfter) {
-                supportFragmentList.add(mFragments[s])
-            }
-            LogUtil.sd(keysAfter)
-            val obj: Array<ISupportFragment> = supportFragmentList.toArray(arrayOfNulls<ISupportFragment>(0))
-            if (obj.isNotEmpty()) {
-                withContext(Dispatchers.Main) {
-                    loadMultipleRootFragment(R.id.container, 0, *obj)
+        val loadingFragments = mutableListOf<ISupportFragment>()
+        mBottomBar.clearContainer()
+        for (element in list) {
+            val c = element
+            val obj = c.obj
+            if (obj is TabBlockItem) {
+                val f = addTabBlockItem(obj)
+                if (f is ISupportFragment) {
+                    loadingFragments.add(f)
+                }
+            } else if (obj is JSONObject) {
+                val item = obj.toJavaObject(TabBlockItem::class.java)
+                val f = addTabBlockItem(item)
+                if (f is ISupportFragment) {
+                    loadingFragments.add(f)
                 }
             }
+        }
+        LogUtil.se("${loadingFragments.size}")
+        if (loadingFragments.isNotEmpty()) {
+            loadMultipleRootFragment(R.id.container, 0, *loadingFragments.toTypedArray())
         }
     }
     //endregion

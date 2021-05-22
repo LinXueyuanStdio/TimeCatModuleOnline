@@ -12,6 +12,7 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Image
 import com.timecat.layout.ui.business.form.OneLineInput
 import com.timecat.layout.ui.business.form.add
+import com.timecat.module.user.ext.chooseAvatar
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -43,7 +44,7 @@ class ThingItemEditorActivity : BaseItemAddActivity() {
 
     override fun initFormView(): ViewGroup.() -> Unit = {
         formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(isAvatar = true) { path ->
+            chooseAvatar { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }

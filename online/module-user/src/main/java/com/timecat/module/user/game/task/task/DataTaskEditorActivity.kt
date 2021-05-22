@@ -32,6 +32,8 @@ import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.layout.ui.business.setting.OwnCountItem
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
+import com.timecat.module.user.ext.ImageAspectRatio
+import com.timecat.module.user.ext.chooseAvatar
 import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
 import com.timecat.module.user.game.item.showItemDialog
@@ -77,7 +79,7 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
 
     override fun loadFromExistingBlock(): Block.() -> Unit = {
         formData.title = title
-        val head = MailBlock.fromJson(structure)
+        val head = TaskBlock.fromJson(structure)
         formData.attachments = head.mediaScope
         formData.setContentScope(context, content, head.atScope, head.topicScope)
         formData.icon = head.header.avatar
@@ -87,20 +89,6 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
-        formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(isAvatar = true) { path ->
-                receieveImage(I(), listOf(path), false) {
-                    formData.icon = it.first()
-                }
-            }
-        }
-        formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(isAvatar = true) { path ->
-                receieveImage(I(), listOf(path), false) {
-                    formData.cover = it.first()
-                }
-            }
-        }
         formData.titleItem = OneLineInput("标题", "新任务", autoAdd = false)
         rulesItem = Next("任务完成条件",
             hint = formRuleItems.toString(),

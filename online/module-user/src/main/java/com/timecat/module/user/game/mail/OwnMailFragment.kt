@@ -29,6 +29,4 @@ class OwnMailFragment : BaseEndlessOwnMailFragment() {
 
     override fun name() = "邮件"
     override fun query() = user?.allOwnMail() ?: I().allOwnMail()
-    override fun initViewAfterLogin() {
-    }
 }

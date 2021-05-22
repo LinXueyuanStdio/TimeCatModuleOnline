@@ -41,6 +41,7 @@ class ActivityUrlView @JvmOverloads constructor(
             layout_id = "cover"
             layout_width = match_parent
             layout_height = match_parent
+            scaleType = scale_center_crop
         }
     }
 }

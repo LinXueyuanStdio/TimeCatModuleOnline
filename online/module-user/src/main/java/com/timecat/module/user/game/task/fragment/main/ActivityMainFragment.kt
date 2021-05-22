@@ -5,9 +5,12 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import com.google.android.material.chip.Chip
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.game.OwnActivity
+import com.timecat.data.system.network.WEB
 import com.timecat.identity.data.block.ActivityBlock
 import com.timecat.identity.data.block.ActivityOneTaskBlock
 import com.timecat.identity.data.block.ActivityUrlBlock
@@ -20,6 +23,7 @@ import com.timecat.layout.ui.layout.*
 import com.timecat.module.user.R
 import com.timecat.module.user.game.task.fragment.BaseActivityFragment
 import com.timecat.module.user.game.task.rule.ActivityContext
+import com.xiaojinzi.component.anno.FragmentAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
 /**
@@ -29,7 +33,7 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description 主要活动
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_ActivityMainFragment)
+@FragmentAnno(RouterHub.USER_ActivityMainFragment)
 class ActivityMainFragment : BaseActivityFragment() {
     override fun layout(): Int = R.layout.user_fragment_game_activity_main
 
@@ -55,14 +59,17 @@ class ActivityMainFragment : BaseActivityFragment() {
             for (own in owns) {
                 linear.addView(buildText(own))
             }
+            showActivityDetail(owns[0])
+            onContentLoaded()
         }
     }
 
     private fun buildText(ownActivity: OwnActivity): View {
-        return TextView(_mActivity).apply {
+        return Chip(_mActivity).apply {
             layout_width = match_parent
             layout_height = wrap_content
             layout_gravity = gravity_center_horizontal
+            margin = 2
             setTextColor(Attr.getPrimaryTextColor(_mActivity))
             text_size = 18
             text = ownActivity.activity.title
@@ -102,7 +109,8 @@ class ActivityMainFragment : BaseActivityFragment() {
                     layout_height = match_parent
                     this.cover = cover
                     onClick = {
-                        NAV.go(url)
+//                        NAV.go(RouterHub.ARTIFACT_MainActivity, "mUrl", url)
+                        LogUtil.sd(url)
                     }
                 }
             }

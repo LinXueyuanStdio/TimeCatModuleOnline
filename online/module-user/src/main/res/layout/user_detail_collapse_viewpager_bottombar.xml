@@ -74,6 +74,7 @@
                     app:tabIndicatorColor="@color/master_colorPrimary"
                     app:tabIndicatorFullWidth="false"
                     app:tabIndicatorHeight="4dp"
+                    app:tabMode="auto"
                     app:tabSelectedTextColor="@color/master_colorPrimary"
                     app:tabTextColor="@color/master_textColorSecondary" />
 
