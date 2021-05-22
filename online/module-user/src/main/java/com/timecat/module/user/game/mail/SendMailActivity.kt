@@ -88,8 +88,8 @@ class SendMailActivity : BaseLoginEditActivity() {
                     formData.user = it
                 }
             } else if (requestCode == SEARCH_MAIL) {
-                val user = data?.getParcelableExtra("data") as Block?
-                user?.let {
+                val block = data?.getParcelableExtra("data") as Block?
+                block?.let {
                     formData.block = it
                 }
             }

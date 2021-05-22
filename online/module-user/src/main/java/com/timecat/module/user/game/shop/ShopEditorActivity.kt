@@ -1,5 +1,6 @@
 package com.timecat.module.user.game.shop
 
+import android.content.Intent
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -30,9 +31,10 @@ import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.business.setting.NextItem
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditorActivity
+import com.timecat.module.user.ext.ImageAspectRatio
 import com.timecat.module.user.ext.chooseAvatar
+import com.timecat.module.user.ext.chooseImage
 import com.timecat.module.user.ext.receieveImage
-import com.timecat.module.user.game.cube.SendCubeActivity
 import com.timecat.module.user.game.item.showItemDialog
 import com.timecat.module.user.search.SelectActivity
 import com.timecat.module.user.view.item.TriInputItem
@@ -89,13 +91,20 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
                 }
             }
         }
-        formData.titleItem = OneLineInput("标题", "新邮件", autoAdd = false)
-        formData.blockItem = Next("货币") {
+        formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
+            chooseImage(ImageAspectRatio.Horiz_3_4) { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.cover = it.first()
+                }
+            }
+        }
+        formData.titleItem = OneLineInput("标题", "新商店", autoAdd = false)
+        formData.blockItem = Next("货币", autoAdd = false) {
             selectBlock(it)
         }
         packageItem = Next("商品",
-            hint = goodValues.toString(),
-            initialText = "${goodValues.size}",
+            hint = goodIds.toString(),
+            initialText = "${goodIds.size}",
             autoAdd = false
         ) {
             selectItems()
@@ -123,8 +132,10 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
     }
 
     fun setItems() {
+        if (goodIds.isEmpty())
+            return
         requestBlock {
-            query = allItem().whereContainedIn("objectId", goodValues.keys)
+            query = allItem().whereContainedIn("objectId", goodIds)
             onSuccess = {
                 setBlockItems(it)
             }
@@ -137,6 +148,7 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
         for (block in items) {
             val head = ItemBlock.fromJson(block.structure)
             val itemView = TriInputItem(this).apply {
+                val id = block.objectId
                 icon = head.header.icon
                 left_field = {
                     hint = "物品"
@@ -145,22 +157,25 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
                 }
                 right_field = {
                     hint = "单价"
-                    text = "${goodValues[block.objectId]}"
+                    text = "${goodValues[id]}"
                     inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
                     onTextChange = {
                         val count = it?.toLongOrNull() ?: 0L
-                        goodValues[block.objectId] = count
+                        goodValues[id] = count
                     }
                 }
                 onCount = {
-                    goodLimits[block.objectId] = it
+                    goodLimits[id] = it
                 }
+                limit.progress = goodLimits[id] ?: 1
                 closeIcon = "R.drawable.ic_close"
                 onIconClick {
                     showItemDialog(block)
                 }
                 onCloseIconClick {
-                    goodValues.remove(block.objectId)
+                    goodIds.remove(id)
+                    goodValues.remove(id)
+                    goodLimits.remove(id)
                     packageDetailContainer.removeView(this)
                 }
             }
@@ -173,8 +188,24 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
         types.add(SelectActivity.SelectType.Item.title)
         NAV.raw(this, RouterHub.SEARCH_SelectActivity)
             .withStringArrayList("types", types)
-            .requestCode(SendCubeActivity.SEARCH_IDENTITY)
+            .requestCode(SEARCH_ITEM)
             .navigation()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SEARCH_ITEM) {
+                val block = data?.getParcelableExtra("data") as Block?
+                block?.let {
+                    formData.block = it
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    companion object {
+        const val SEARCH_ITEM = 1
     }
 
     fun selectItems() {
@@ -209,14 +240,14 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
                 val blocks = items.filterIndexed { index, block -> index in intArr }
                 goodIds.clear()
                 blocks.forEach {
-                    val id = it.uuid
+                    val id = it.objectId
                     goodIds.add(id)
                     goodValues[id] = 1
                     goodLimits[id] = 1
                 }
                 setBlockItems(blocks)
-                packageItem.hint = goodValues.toString()
-                packageItem.text = "${goodValues.size}"
+                packageItem.hint = goodIds.toString()
+                packageItem.text = "${goodIds.size}"
             }
         }
     }
@@ -250,7 +281,7 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
             header = PageHeader(
                 icon = formData.icon,
                 avatar = formData.icon,
-                cover = formData.icon,
+                cover = formData.cover,
             ),
             topicScope = formData.topicScope,
             atScope = formData.atScope,

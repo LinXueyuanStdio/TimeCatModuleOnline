@@ -232,6 +232,9 @@
         <activity android:name=".game.task.AllOwnActivityActivity" />
         <activity android:name=".game.task.AllActivityActivity" />
         <activity android:name=".game.task.SendActivityActivity" />
+        <activity android:name=".game.shop.ShopEditorActivity" />
+        <activity android:name=".game.shop.AllShopActivity" />
+        <activity android:name=".game.shop.AllOwnShopActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

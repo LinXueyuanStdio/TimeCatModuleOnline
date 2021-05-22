@@ -103,18 +103,24 @@ open class BuyItemFragment : BottomSheetDialogFragment() {
         Icon(head)
         Title()
         Content()
+
+        Buy()
     }
 
     open fun equip(head: ItemBlock): ViewGroup.() -> Unit = {
         Icon(head)
         Title()
         Content()
+
+        Buy()
     }
 
     open fun buff(head: ItemBlock): ViewGroup.() -> Unit = {
         Icon(head)
         Title()
         Content()
+
+        Buy()
     }
 
     open fun cube(head: ItemBlock): ViewGroup.() -> Unit = {
@@ -129,11 +135,11 @@ open class BuyItemFragment : BottomSheetDialogFragment() {
         val counter = StepCounter(1, 1, 1, max)
         MaterialButton("购买") {
             val count = counter.value
-            buy(item!!.objectId, count, value, shopViewModel.money.value!!.objectId)
+            buyIt(item!!.objectId, count, value, shopViewModel.money.value!!.objectId)
         }
     }
 
-    fun buy(
+    fun buyIt(
         goodId: String,
         count: Int,
         value: Int,
