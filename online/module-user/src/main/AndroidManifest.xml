@@ -229,6 +229,8 @@
         <activity android:name=".game.bag.SendItemActivity" />
         <activity android:name=".game.cube.CubeAttrEditorActivity" />
         <activity android:name=".game.cube.CubeRolesEditorActivity" />
+        <activity android:name=".game.task.AllOwnActivityActivity" />
+        <activity android:name=".game.task.AllActivityActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"

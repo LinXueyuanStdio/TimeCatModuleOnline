@@ -103,7 +103,7 @@ class GameHomeFragment : BaseLoginMainFragment() {
             NAV.go(RouterHub.USER_AllOwnMailActivity)
         }
         activity.setShakelessClickListener {
-            NAV.go(RouterHub.USER_AllTaskActivity)
+            NAV.go(RouterHub.USER_AllOwnActivityActivity)
         }
         card.setShakelessClickListener {
             NAV.go(RouterHub.USER_CardActivity)

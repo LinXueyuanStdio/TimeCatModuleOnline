@@ -107,7 +107,8 @@ class MainActivity : Activity() {
         linearLayout.addView(createPathButton(RouterHub.USER_AddAuthActivity))
 
         linearLayout.addView(createText("活动"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllTaskActivity))
+        linearLayout.addView(createPathButton(RouterHub.USER_AllActivityActivity))
+        linearLayout.addView(createPathButton(RouterHub.USER_AllOwnActivityActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_UrlActivityEditorActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_TextUrlActivityEditorActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_OneTaskActivityEditorActivity))
@@ -122,6 +123,7 @@ class MainActivity : Activity() {
         linearLayout.addView(createPathButton(RouterHub.USER_PriceActivityEditorActivity))
 
         linearLayout.addView(createText("任务"))
+        linearLayout.addView(createPathButton(RouterHub.USER_AllTaskActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_DataTaskEditorActivity))
 
         linearLayout.addView(createText("动态"))
