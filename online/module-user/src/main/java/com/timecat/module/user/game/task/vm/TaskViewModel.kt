@@ -110,7 +110,8 @@ class TaskViewModel : RxViewModel() {
         it.map { it.asTabChannel() }
     }
 
-    private fun isMain(subtype: Int): Boolean = subtype == ACTIVITY_One_task ||
+    private fun isMain(subtype: Int): Boolean =
+        subtype == ACTIVITY_One_task ||
         subtype == ACTIVITY_Text_url ||
         subtype == ACTIVITY_Url ||
         subtype == ACTIVITY_Seven_day_sign ||

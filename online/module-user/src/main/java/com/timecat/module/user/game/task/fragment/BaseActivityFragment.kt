@@ -1,8 +1,10 @@
 package com.timecat.module.user.game.task.fragment
 
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.timecat.module.user.R
 import com.timecat.module.user.base.login.BaseLoginMainFragment
+import com.timecat.module.user.game.task.vm.TaskViewModel
 import com.timecat.page.base.view.BlurringToolbar
 
 /**
@@ -13,6 +15,7 @@ import com.timecat.page.base.view.BlurringToolbar
  * @usage null
  */
 abstract class BaseActivityFragment : BaseLoginMainFragment() {
+    lateinit var viewModel: TaskViewModel
 
     override fun layout(): Int = R.layout.user_fragment_game_activity_main
 
@@ -22,5 +25,10 @@ abstract class BaseActivityFragment : BaseLoginMainFragment() {
         val background: View = view.findViewById(R.id.background)
         toolbar.setBlurredView(background)
         toolbar.setPaddingStatusBar(_mActivity)
+    }
+
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        viewModel = ViewModelProvider(requireActivity()).get(TaskViewModel::class.java)
     }
 }

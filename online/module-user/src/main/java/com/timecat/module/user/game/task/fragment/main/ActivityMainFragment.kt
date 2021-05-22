@@ -47,14 +47,14 @@ class ActivityMainFragment : BaseActivityFragment() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-
-        val owns = ActivityContext.main
-        if (owns.isEmpty()) {
-            mStatefulLayout?.showEmpty("没有正在进行的活动喵～")
-            return
-        }
-        for (own in owns) {
-            linear.addView(buildText(own))
+        viewModel.mainActivities.observe(this) { owns ->
+            if (owns.isEmpty()) {
+                mStatefulLayout?.showEmpty("没有正在进行的活动喵～")
+                return@observe
+            }
+            for (own in owns) {
+                linear.addView(buildText(own))
+            }
         }
     }
 
@@ -123,11 +123,12 @@ class ActivityMainFragment : BaseActivityFragment() {
             ACTIVITY_One_task -> {
                 val block = ActivityOneTaskBlock.fromJson(head.structure)
                 val taskId = block.taskId
-                val receive = ActivityContext.taskRewardProgress[taskId]
+//                val receive = ActivityContext.taskRewardProgress[taskId]
                 return ActivityOneTaskView(_mActivity).apply {
                     layout_width = match_parent
                     layout_height = match_parent
                     this.cover = cover
+//                    taskCard.rewards = block.taskId
                 }
             }
             else -> return ActivityUrlView(_mActivity).apply {

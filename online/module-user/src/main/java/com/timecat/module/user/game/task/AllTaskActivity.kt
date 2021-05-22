@@ -1,5 +1,6 @@
 package com.timecat.module.user.game.task
 
+import androidx.lifecycle.ViewModelProvider
 import com.alibaba.fastjson.JSONObject
 import com.cheng.channel.Channel
 import com.timecat.component.commonsdk.utils.override.LogUtil
@@ -44,6 +45,7 @@ class AllTaskActivity : BaseLoginMainActivity() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
+        viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
         gameService.activityContext(this, I(), {
             onPrepareContent()
         }) {

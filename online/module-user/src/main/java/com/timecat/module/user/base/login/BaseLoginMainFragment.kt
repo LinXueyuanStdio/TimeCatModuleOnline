@@ -40,12 +40,24 @@ abstract class BaseLoginMainFragment : BaseMainFragment() {
                 NAV.go(RouterHub.LOGIN_LoginActivity)
             }
         } else {
-            mStatefulLayout?.showContent()
             userViewModel.loadUser(I)
             initViewAfterLogin()
         }
     }
 
-    protected open fun initViewAfterLogin() {}
-    protected open fun loadDetail(user: User) {}
+    open fun onPrepareContent() {
+        mStatefulLayout?.showLoading()
+    }
+
+    open fun onContentLoaded() {
+        mStatefulLayout?.showContent()
+    }
+
+    protected open fun initViewAfterLogin() {
+        onPrepareContent()
+    }
+
+    protected open fun loadDetail(user: User) {
+        onContentLoaded()
+    }
 }
