@@ -1,5 +1,6 @@
 package com.timecat.module.user.base.login
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
@@ -17,6 +18,12 @@ import com.timecat.page.base.friend.list.BaseStatefulRefreshListFragment
  */
 abstract class BaseLoginListFragment : BaseStatefulRefreshListFragment() {
     fun I(): User = UserDao.getCurrentUser() ?: throw Exception("未登录")
+
+    open fun routerInject() {}
+    override fun onCreate(savedInstanceState: Bundle?) {
+        routerInject()
+        super.onCreate(savedInstanceState)
+    }
 
     lateinit var userViewModel: UserViewModel
     override fun lazyInit() {
@@ -47,5 +54,6 @@ abstract class BaseLoginListFragment : BaseStatefulRefreshListFragment() {
     protected open fun initViewAfterLogin() {
         onContentLoaded()
     }
+
     protected open fun loadDetail(user: User) {}
 }

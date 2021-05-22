@@ -3,7 +3,6 @@ package com.timecat.module.user.game.task.rule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import cn.leancloud.AVQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
@@ -16,6 +15,7 @@ import com.timecat.data.bmob.ext.net.allTask
 import com.timecat.data.bmob.ext.toDataError
 import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.*
+import com.timecat.module.user.game.item.ItemContext
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -186,6 +186,12 @@ interface GameService {
         user: User,
         onLoading: () -> Unit,
         onLoaded: (ActivityContext) -> Unit
+    )
+
+    fun itemContext(
+        owner: LifecycleOwner,
+        user: User, onLoading: () -> Unit,
+        onLoaded: (ItemContext) -> Unit
     )
 }
 

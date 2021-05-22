@@ -22,9 +22,13 @@ open class BaseBlockDetailFragment : BaseLoginListFragment() {
 
     lateinit var blockViewModel: BlockViewModel
     override fun initViewAfterLogin() {
+        onPrepareContent()
         blockViewModel = ViewModelProvider(requireActivity()).get(BlockViewModel::class.java)
         blockViewModel.block.observe(viewLifecycleOwner, {
-            it?.let { loadDetail(it) }
+            it?.let {
+                loadDetail(it)
+                onContentLoaded()
+            }
         })
     }
 

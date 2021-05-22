@@ -135,6 +135,15 @@ fun ViewGroup.StepSliderButton(
     return button
 }
 
+fun FragmentActivity.showBuyItemDialog(item: Block, value:Int) {
+    val fragment: Fragment = NAV.rawFragment(RouterHub.USER_BuyItemFragment)
+        .putParcelable("item", item)
+        .putInt("value", value)
+        .navigate() ?: FallBackFragment()
+    if (fragment is DialogFragment) {
+        fragment.show(supportFragmentManager, item.objectId)
+    }
+}
 fun FragmentActivity.showItemDialog(item: Block) {
     val fragment: Fragment = NAV.rawFragment(RouterHub.USER_ItemDetailFragment)
         .putParcelable("item", item)

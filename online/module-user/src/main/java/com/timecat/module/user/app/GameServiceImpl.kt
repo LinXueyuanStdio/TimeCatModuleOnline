@@ -2,6 +2,7 @@ package com.timecat.module.user.app
 
 import androidx.lifecycle.LifecycleOwner
 import com.timecat.data.bmob.data.User
+import com.timecat.module.user.game.item.ItemContext
 import com.timecat.module.user.game.task.rule.ActivityContext
 import com.timecat.module.user.game.task.rule.GameService
 import com.xiaojinzi.component.anno.ServiceAnno
@@ -16,18 +17,33 @@ import com.xiaojinzi.component.anno.ServiceAnno
 @ServiceAnno(GameService::class)
 class GameServiceImpl : GameService {
     var activityContextPool: MutableMap<String, ActivityContext> = mutableMapOf()
+    var itemContextPool: MutableMap<String, ItemContext> = mutableMapOf()
+
     override fun init(user: User?) {
 
     }
 
     override fun activityContext(owner: LifecycleOwner, user: User, onLoading: () -> Unit, onLoaded: (ActivityContext) -> Unit) {
-        var activityContext = activityContextPool[user.objectId]
-        if (activityContext != null) {
-            onLoaded(activityContext)
+        val context = activityContextPool[user.objectId]
+        if (context != null) {
+            onLoaded(context)
             return
         }
-        activityContext = ActivityContext(owner, user, onLoading, onLoaded)
-        activityContext.load()
-        activityContextPool[user.objectId] = activityContext
+        ActivityContext(owner, user, onLoading) {
+            activityContextPool[user.objectId] = it
+            onLoaded(it)
+        }.load()
+    }
+
+    override fun itemContext(owner: LifecycleOwner, user: User, onLoading: () -> Unit, onLoaded: (ItemContext) -> Unit) {
+        val context = itemContextPool[user.objectId]
+        if (context != null) {
+            onLoaded(context)
+            return
+        }
+        ItemContext(owner, user, onLoading) {
+            itemContextPool[user.objectId] = it
+            onLoaded(it)
+        }.load()
     }
 }
