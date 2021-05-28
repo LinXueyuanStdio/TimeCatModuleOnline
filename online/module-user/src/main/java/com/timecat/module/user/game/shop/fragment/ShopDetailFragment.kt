@@ -3,10 +3,13 @@ package com.timecat.module.user.game.shop.fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.afollestad.materialdialogs.MaterialDialog
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.data.game.Pay
+import com.timecat.data.bmob.ext.bmob.requestPay
+import com.timecat.data.bmob.ext.game.pay
+import com.timecat.data.bmob.ext.net.paysInShopOf
 import com.timecat.identity.data.block.BasicShopBlock
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.ShopBlock
@@ -42,10 +45,18 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
     }
 
     override fun loadDetail(block: Block) {
+        shopViewModel.stopAllTask()
+        loadPays(block) {
+            loadWithShopAndPays(block, it)
+        }
+    }
+
+    fun loadWithShopAndPays(shop: Block, pays:List<Pay>) {
         val list = mutableListOf<BaseItem<*>>()
-        val header = ShopBlock.fromJson(block.structure)
-        LogUtil.se(block)
-        if (block.subtype == SHOP_Basic) {
+        val header = ShopBlock.fromJson(shop.structure)
+        LogUtil.se(shop)
+        val g = pays.groupBy { it.good.objectId }.mapValues { it.value.sumBy { it.pay } }
+        if (shop.subtype == SHOP_Basic) {
             val h2 = BasicShopBlock.fromJson(header.structure)
             LogUtil.se("h2 : $h2")
             gameService.itemContext(viewLifecycleOwner, I(), { onPrepareContent() }) { itemContext ->
@@ -58,7 +69,8 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
                 val goods = mutableListOf<GoodItem>()
                 for (good in h2.goods) {
                     val item = itemContext.itemsMap[good.itemId] ?: continue
-                    val goodBlock = GoodBlock(moneyIcon, item, good.value.toInt(), good.max)
+                    val paid = g[good.itemId] ?: 0
+                    val goodBlock = GoodBlock(moneyIcon, item, good.value.toInt(), good.max, paid)
                     val goodItem = GoodItem(requireActivity(), goodBlock) {
                         buy(goodBlock)
                     }
@@ -70,8 +82,22 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
         }
     }
 
+    fun loadPays(shop: Block, load:(List<Pay>)->Unit) {
+        shopViewModel attach requestPay {
+            query = paysInShopOf(I(), shop)
+            onSuccess = {
+                load(it)
+            }
+            onError = {
+                mStatefulLayout?.showError("出错啦") {
+                    loadPays(shop, load)
+                }
+            }
+        }
+    }
+
     fun buy(goodBlock: GoodBlock) {
-        requireActivity().showBuyItemDialog(goodBlock.item, goodBlock.value, goodBlock.max)
+        requireActivity().showBuyItemDialog(goodBlock.item, goodBlock.value, goodBlock.max - goodBlock.paid)
     }
 
     override fun getLayoutManager(): RecyclerView.LayoutManager {

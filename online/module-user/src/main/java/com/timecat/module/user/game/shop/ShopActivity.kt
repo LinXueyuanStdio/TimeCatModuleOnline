@@ -6,6 +6,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.ext.bmob.requestOneBlock
+import com.timecat.data.bmob.ext.bmob.requestPay
+import com.timecat.data.bmob.ext.game.pay
+import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.data.block.ForumBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.base.BaseBlockDetailActivity
@@ -33,6 +37,7 @@ class ShopActivity : BaseBlockDetailActivity() {
     lateinit var blockId: String
 
     lateinit var card: TopicCard
+    lateinit var payViewModel: PayViewModel
     override fun routerInject() = NAV.inject(this)
 
     override fun initViewAfterLogin() {

@@ -2,6 +2,7 @@ package com.timecat.module.user.game.shop.fragment
 
 import androidx.lifecycle.MutableLiveData
 import com.timecat.data.bmob.data.common.Block
+import com.timecat.data.bmob.data.game.Pay
 import com.timecat.module.user.ext.RxViewModel
 
 /**
@@ -14,4 +15,5 @@ import com.timecat.module.user.ext.RxViewModel
 class ShopViewModel : RxViewModel() {
     val money: MutableLiveData<Block> = MutableLiveData()
     val haveMoney: MutableLiveData<Int> = MutableLiveData()
+    val paies: MutableLiveData<List<Pay>> = MutableLiveData()
 }
