@@ -128,12 +128,13 @@ class ActivityMainFragment : BaseActivityFragment() {
                 val block = ActivityOneTaskBlock.fromJson(head.structure)
                 val taskId = block.taskId
                 viewModel.tasks.value?.let {
-                    it.find { it.objectId == taskId }?.let {
-                        val taskHeader = TaskBlock.fromJson(it.structure)
+                    it.find { it.objectId == taskId }?.let { task->
+                        val taskHeader = TaskBlock.fromJson(task.structure)
                         return ActivityOneTaskView(_mActivity, TaskCard.Task(taskHeader.rewards)).apply {
                             layout_width = match_parent
                             layout_height = match_parent
                             this.cover = cover
+                            taskCard.title = task.title
                             val recieve = viewModel.taskRewardProgress.value?.let { it[taskId] }
                             if (recieve == false) {
                                 taskCard.buttonText = "领取"

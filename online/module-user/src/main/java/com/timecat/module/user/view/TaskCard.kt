@@ -95,6 +95,8 @@ class TaskCard @JvmOverloads constructor(
         }
         buildRewardListItem(context, task.rewards).apply {
             rewardView = this
+            layout_width = 0
+            layout_height = wrap_content
 
             start_toStartOf = parent_id
             top_toBottomOf = "title"
