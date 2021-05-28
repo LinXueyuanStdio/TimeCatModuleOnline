@@ -14,6 +14,7 @@ import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.ext.friendlyCreateTimeText
+import com.timecat.module.user.game.item.showBuyItemDialog
 import com.timecat.module.user.game.item.showItemDialog
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -25,7 +26,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
  * @description 需要传入货币，表示用什么货币来购买本货物
  * @usage null
  */
-class GoodItem(
+open class GoodItem(
     val activity: FragmentActivity,
     val good: GoodBlock,
     val onClick: ((View) -> Unit)? = null
@@ -57,15 +58,15 @@ class GoodItem(
 
         val structure = item.structure
         val head = ItemBlock.fromJson(structure)
-        LOAD.image(head.header.avatar, holder.iv_avatar)
+        LOAD.image(activity, head.header.avatar, holder.iv_avatar)
 
         holder.tv_count.setText("0 / ${good.max}")
         holder.value.setText("${good.value}")
-        holder.value.chipIcon
+        IconLoader.loadIcon(activity, { holder.value.chipIcon = it }, good.moneyIcon)
         //TODO 限购、货币图标。需要改IconLoader为加载drawable
 
         holder.root.safeClick {
-            activity.showItemDialog(item)
+            activity.showBuyItemDialog(item, good.value, good.max)
         }
         holder.root.setOnLongClickListener {
             activity.showItemDialog(item)
@@ -76,6 +77,14 @@ class GoodItem(
     private fun View.safeClick(defaultClick: (View) -> Unit) {
         setShakelessClickListener(onClick = onClick ?: defaultClick)
     }
+}
+
+class BigGoodItem(
+    activity: FragmentActivity,
+    good: GoodBlock,
+    onClick: ((View) -> Unit)? = null
+) : GoodItem(activity, good, onClick) {
+    override fun getLayoutRes(): Int = R.layout.user_item_good_big
 }
 
 data class GoodBlock(
@@ -94,5 +103,9 @@ data class GoodBlock(
     /**
      * 限购
      */
-    val max: Int
+    val max: Int,
+    /**
+     * 已购
+     */
+    val paid: Int = 0
 )

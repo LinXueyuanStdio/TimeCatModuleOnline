@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
@@ -19,7 +20,32 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/spacing_micro"
         android:contentDescription="@string/avatar_click_hint"
-        android:src="@drawable/ic_artifact" />
+        android:src="@drawable/ic_artifact"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/master_textColorPrimary"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="10" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/master_textColorPrimary"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toEndOf="@id/iv_avatar"
+        app:layout_constraintTop_toBottomOf="@id/tv_name"
+        tools:text="10" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -29,24 +55,7 @@
         android:layout_margin="@dimen/spacing_micro"
         android:textColor="@color/master_textColorPrimary"
         android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toEndOf="@id/iv_avatar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="物品" />
-
-    <com.google.android.material.chip.Chip
-        android:id="@+id/value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@color/master_textColorPrimary"
-        android:textSize="@dimen/text_size_small"
-        tools:text="10" />
-
-    <TextView
-        android:id="@+id/tv_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@color/master_textColorPrimary"
-        android:textSize="@dimen/text_size_small"
-        tools:text="10" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
