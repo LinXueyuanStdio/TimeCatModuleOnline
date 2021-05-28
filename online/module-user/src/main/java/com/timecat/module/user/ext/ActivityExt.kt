@@ -170,8 +170,8 @@ enum class ImageAspectRatio(
     val aspect_ratio_y: Int
 ) {
     Avatar(1, 1),
-    Wallpaper(4, 3),
-    Horiz(3, 4)
+    Wallpaper(9, 16),
+    Horizon(16, 9)
 }
 
 fun Activity.chooseImage(aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar, onSuccess: (String) -> Unit) {

@@ -1,14 +1,11 @@
 package com.timecat.module.user.game.task
 
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.allActivity
-import com.timecat.data.bmob.ext.net.allTask
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.module.user.adapter.game.ActivityItem
-import com.timecat.module.user.adapter.game.TaskItem
 import com.timecat.module.user.base.BaseEndlessBlockActivity
 import com.xiaojinzi.component.anno.RouterAnno
 

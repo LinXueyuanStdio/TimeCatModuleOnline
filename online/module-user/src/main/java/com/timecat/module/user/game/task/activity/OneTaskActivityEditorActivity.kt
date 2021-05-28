@@ -11,10 +11,7 @@ import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.net.allTask
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.PageHeader
-import com.timecat.identity.data.block.ActivityBlock
-import com.timecat.identity.data.block.ActivityOneTaskBlock
-import com.timecat.identity.data.block.IdentityBlock
-import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.ACTIVITY_One_task
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.*
@@ -103,16 +100,12 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
 
     fun showSelectDialog(items: List<Block>) {
         MaterialDialog(this, BottomSheet()).show {
-            title(text = "选择方块")
+            title(text = "选择任务")
             positiveButton(R.string.ok)
             val texts = items.map { it.title }
             listItemsSingleChoice(items = texts) { _, idx, _ ->
-                val cube = items[idx]
-                formData.title = cube.title
-                formData.blockId = cube.objectId
-                val head = IdentityBlock.fromJson(cube.structure)
-                val content = cube.content
-                formData.setContentScope(context, content, head.atScope, head.topicScope)
+                val task = items[idx]
+                formData.block = task
             }
         }
     }
@@ -121,7 +114,7 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
         inputLayout(formData.titleItem.inputLayout) {
             isNotEmpty().description("请输入名称!")
         }
-        next(formData.blockItem) {
+        next(formData.blockItem, "任务") {
             isNotEmpty().description("必须选择一个任务!")
         }
     }
@@ -132,8 +125,6 @@ class OneTaskActivityEditorActivity : BaseActivityAddActivity() {
         var h = formData.iconItem.height + formData.coverItem.height
         if (formData.titleItem.inputEditText.hasFocus()) return h
         h += formData.titleItem.height
-        if (formData.urlItem.inputEditText.hasFocus()) return h
-        h += formData.urlItem.height
         if (emojiEditText.hasFocus()) return h
         return 0
     }

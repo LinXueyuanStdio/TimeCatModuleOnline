@@ -4,16 +4,12 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
-import android.widget.TextView
 import com.google.android.material.chip.Chip
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.identity.Attr
-import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.game.OwnActivity
-import com.timecat.data.system.network.WEB
-import com.timecat.identity.data.block.ActivityBlock
-import com.timecat.identity.data.block.ActivityOneTaskBlock
-import com.timecat.identity.data.block.ActivityUrlBlock
+import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.ACTIVITY_Everyday_main
 import com.timecat.identity.data.block.type.ACTIVITY_One_task
 import com.timecat.identity.data.block.type.ACTIVITY_Seven_day_sign
@@ -22,9 +18,8 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.*
 import com.timecat.module.user.R
 import com.timecat.module.user.game.task.fragment.BaseActivityFragment
-import com.timecat.module.user.game.task.rule.ActivityContext
+import com.timecat.module.user.view.TaskCard
 import com.xiaojinzi.component.anno.FragmentAnno
-import com.xiaojinzi.component.anno.RouterAnno
 
 /**
  * @author 林学渊
@@ -40,6 +35,8 @@ class ActivityMainFragment : BaseActivityFragment() {
     private lateinit var sv: ScrollView
     private lateinit var container: FrameLayout
     private lateinit var linear: LinearLayout
+
+
     override fun bindView(view: View) {
         super.bindView(view)
         sv = view.findViewById(R.id.sv)
@@ -95,6 +92,13 @@ class ActivityMainFragment : BaseActivityFragment() {
         return view
     }
 
+    private fun buildDefaultActivityView(cover: String): View {
+        return ActivityUrlView(_mActivity).apply {
+            layout_width = match_parent
+            layout_height = match_parent
+            this.cover = cover
+        }
+    }
     private fun buildActivityView(ownActivity: OwnActivity): View {
         val activity = ownActivity.activity
         val head = ActivityBlock.fromJson(activity.structure)
@@ -115,35 +119,36 @@ class ActivityMainFragment : BaseActivityFragment() {
                 }
             }
             ACTIVITY_Seven_day_sign -> {
-                return ActivityUrlView(_mActivity).apply {
-                    layout_width = match_parent
-                    layout_height = match_parent
-                    this.cover = cover
-                }
+                return buildDefaultActivityView(cover)
             }
             ACTIVITY_Everyday_main -> {
-                return ActivityUrlView(_mActivity).apply {
-                    layout_width = match_parent
-                    layout_height = match_parent
-                    this.cover = cover
-                }
+                return buildDefaultActivityView(cover)
             }
             ACTIVITY_One_task -> {
                 val block = ActivityOneTaskBlock.fromJson(head.structure)
                 val taskId = block.taskId
-//                val receive = ActivityContext.taskRewardProgress[taskId]
-                return ActivityOneTaskView(_mActivity).apply {
-                    layout_width = match_parent
-                    layout_height = match_parent
-                    this.cover = cover
-//                    taskCard.rewards = block.taskId
-                }
+                viewModel.tasks.value?.let {
+                    it.find { it.objectId == taskId }?.let {
+                        val taskHeader = TaskBlock.fromJson(it.structure)
+                        return ActivityOneTaskView(_mActivity, TaskCard.Task(taskHeader.rewards)).apply {
+                            layout_width = match_parent
+                            layout_height = match_parent
+                            this.cover = cover
+                            val recieve = viewModel.taskRewardProgress.value?.let { it[taskId] }
+                            if (recieve == false) {
+                                taskCard.buttonText = "领取"
+                                taskCard.buttonClick = {
+                                    ToastUtil.w_long("领取")
+                                    taskCard.buttonText = "已领取"
+                                }
+                            } else {
+                                taskCard.buttonText = "已领取"
+                            }
+                        }
+                    }
+                } ?: return buildDefaultActivityView(cover)
             }
-            else -> return ActivityUrlView(_mActivity).apply {
-                layout_width = match_parent
-                layout_height = match_parent
-                this.cover = cover
-            }
+            else -> return buildDefaultActivityView(cover)
         }
     }
 }

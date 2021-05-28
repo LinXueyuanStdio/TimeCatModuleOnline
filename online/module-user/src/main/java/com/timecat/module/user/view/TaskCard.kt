@@ -11,7 +11,10 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.timecat.component.identity.Attr
 import com.timecat.identity.data.block.Reward
+import com.timecat.layout.ui.business.setting.RewardListItem
 import com.timecat.layout.ui.layout.*
+import com.timecat.module.user.game.item.RewardList
+import com.timecat.module.user.game.item.buildRewardListItem
 
 /**
  * @author 林学渊
@@ -22,14 +25,19 @@ import com.timecat.layout.ui.layout.*
  */
 class TaskCard @JvmOverloads constructor(
     context: Context,
+    var task: Task = Task(listOf()),
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
+    data class Task(
+        val rewards: List<Reward>
+    )
+
     lateinit var titleView: TextView
     lateinit var button: Button
     lateinit var placeholder: View
-    lateinit var rewardView: RewardView
+    lateinit var rewardView: RewardListItem
 
     var title: String = ""
         set(value) {
@@ -37,11 +45,6 @@ class TaskCard @JvmOverloads constructor(
             field = value
         }
 
-    var rewards: List<Reward> = listOf()
-        set(value) {
-            rewardView.rewards = value
-            field = value
-        }
     var buttonText: String = ""
         set(value) {
             button.text = value
@@ -90,7 +93,7 @@ class TaskCard @JvmOverloads constructor(
             ellipsize = TextUtils.TruncateAt.END
             setTextColor(Attr.getPrimaryTextColor(context))
         }
-        RewardView(context).apply {
+        buildRewardListItem(context, task.rewards).apply {
             rewardView = this
 
             start_toStartOf = parent_id

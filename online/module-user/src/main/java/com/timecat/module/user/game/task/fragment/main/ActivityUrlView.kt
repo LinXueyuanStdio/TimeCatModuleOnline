@@ -32,6 +32,7 @@ class ActivityUrlView @JvmOverloads constructor(
         set(value) {
             coverView.setShakelessClickListener(onClick = value)
         }
+
     init {
         layout_width = match_parent
         layout_height = wrap_content

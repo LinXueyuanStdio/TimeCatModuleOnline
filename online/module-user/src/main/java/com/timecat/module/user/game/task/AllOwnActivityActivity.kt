@@ -55,6 +55,11 @@ class AllOwnActivityActivity : BaseLoginMainActivity() {
         }
         initBottomBar()
         viewModel.activities.postValue(activityContext.ownActivity)
+
+        viewModel.tasks.postValue(activityContext.tasks)
+        viewModel.taskProgress.postValue(activityContext.taskProgress)
+        viewModel.taskRewardProgress.postValue(activityContext.taskRewardProgress)
+        viewModel.rules.postValue(activityContext.rules)
     }
 
     //region bottom bar

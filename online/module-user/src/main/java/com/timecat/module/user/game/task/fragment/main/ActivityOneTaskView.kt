@@ -18,6 +18,7 @@ import com.timecat.module.user.view.TaskCard
  */
 class ActivityOneTaskView @JvmOverloads constructor(
     context: Context,
+    var task: TaskCard.Task = TaskCard.Task(listOf()),
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
@@ -45,7 +46,7 @@ class ActivityOneTaskView @JvmOverloads constructor(
             layout_width = match_parent
             layout_height = match_parent
         }
-        TaskCard(context).apply {
+        TaskCard(context, task).apply {
             taskCard = this
             layout_id = "task"
             layout_width = 250.dp

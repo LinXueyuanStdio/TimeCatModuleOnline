@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnActivity
+import com.timecat.data.bmob.data.game.OwnTask
 import com.timecat.identity.data.base.IStatus
+import com.timecat.identity.data.block.TaskRule
 import com.timecat.identity.data.block.type.*
 import com.timecat.module.user.ext.RxViewModel
 import com.timecat.module.user.game.task.channal.TaskChannel
@@ -112,10 +114,10 @@ class TaskViewModel : RxViewModel() {
 
     private fun isMain(subtype: Int): Boolean =
         subtype == ACTIVITY_One_task ||
-        subtype == ACTIVITY_Text_url ||
-        subtype == ACTIVITY_Url ||
-        subtype == ACTIVITY_Seven_day_sign ||
-        subtype == ACTIVITY_Everyday_main
+            subtype == ACTIVITY_Text_url ||
+            subtype == ACTIVITY_Url ||
+            subtype == ACTIVITY_Seven_day_sign ||
+            subtype == ACTIVITY_Everyday_main
 
     /**
      * 主要活动
@@ -162,4 +164,9 @@ class TaskViewModel : RxViewModel() {
     }
 
     val block: MutableLiveData<Block?> = MutableLiveData()
+
+    val tasks: MutableLiveData<MutableList<Block>> = MutableLiveData(mutableListOf())
+    val taskProgress: MutableLiveData<MutableList<OwnTask>> = MutableLiveData(mutableListOf())
+    val taskRewardProgress: MutableLiveData<MutableMap<String, Boolean>> = MutableLiveData(mutableMapOf())
+    val rules: MutableLiveData<MutableList<TaskRule>> = MutableLiveData(mutableListOf())
 }

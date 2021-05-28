@@ -92,7 +92,7 @@ class ShopEditorActivity : BaseBlockEditorActivity() {
             }
         }
         formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(ImageAspectRatio.Horiz) { path ->
+            chooseImage(ImageAspectRatio.Horizon) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.cover = it.first()
                 }

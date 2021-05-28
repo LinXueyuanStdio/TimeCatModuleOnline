@@ -3,7 +3,6 @@ package com.timecat.module.user.game.item
 import android.content.Context
 import android.text.TextUtils
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
@@ -11,7 +10,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import cn.leancloud.AVQuery
-import com.google.android.material.button.MaterialButton
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
@@ -24,7 +22,6 @@ import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.Reward
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.CenterH1
-import com.timecat.layout.ui.business.form.H1
 import com.timecat.layout.ui.business.form.MaterialButton
 import com.timecat.layout.ui.business.form.StepSlide
 import com.timecat.layout.ui.business.setting.RewardItem
@@ -37,7 +34,7 @@ import com.timecat.layout.ui.business.setting.RewardListItem
  * @description null
  * @usage null
  */
-fun buildRewardListItem(activity: FragmentActivity, items: List<Reward>): RewardListItem {
+fun buildRewardListItem(activity: Context, items: List<Reward>): RewardListItem {
     val rewardListItem = RewardListItem(activity)
     val itemId2Count = mutableMapOf<String, Long>()
     for (i in items) {
@@ -63,7 +60,8 @@ fun buildRewardListItem(activity: FragmentActivity, items: List<Reward>): Reward
                 val id = reward.uuid
                 val block = blockMap[id]
                 if (block != null) {
-                    activity.showItemDialog(block)
+                    if (activity is FragmentActivity)
+                        activity.showItemDialog(block)
                 }
             }
 
@@ -73,7 +71,7 @@ fun buildRewardListItem(activity: FragmentActivity, items: List<Reward>): Reward
     return rewardListItem
 }
 
-fun buildOwnRewardListItem(activity: Context, items: List<OwnItem>, onSelect:(RewardItem, Block, Int)->Unit): RewardListItem {
+fun buildOwnRewardListItem(activity: Context, items: List<OwnItem>, onSelect: (RewardItem, Block, Int) -> Unit): RewardListItem {
     val rewardListItem = RewardListItem(activity)
     val id2Item = mutableMapOf<String, OwnItem>()
     for (i in items) {
@@ -135,7 +133,7 @@ fun ViewGroup.StepSliderButton(
     return button
 }
 
-fun FragmentActivity.showBuyItemDialog(item: Block, value:Int, maxCount:Int) {
+fun FragmentActivity.showBuyItemDialog(item: Block, value: Int, maxCount: Int) {
     val fragment: Fragment = NAV.rawFragment(RouterHub.USER_BuyItemFragment)
         .putParcelable("item", item)
         .putInt("value", value)
@@ -145,6 +143,7 @@ fun FragmentActivity.showBuyItemDialog(item: Block, value:Int, maxCount:Int) {
         fragment.show(supportFragmentManager, item.objectId)
     }
 }
+
 fun FragmentActivity.showItemDialog(item: Block) {
     val fragment: Fragment = NAV.rawFragment(RouterHub.USER_ItemDetailFragment)
         .putParcelable("item", item)
@@ -153,6 +152,7 @@ fun FragmentActivity.showItemDialog(item: Block) {
         fragment.show(supportFragmentManager, item.objectId)
     }
 }
+
 fun FragmentActivity.showOwnItemDialog(ownItem: OwnItem) {
     val fragment: Fragment = NAV.rawFragment(RouterHub.USER_OwnItemDetailFragment)
         .putParcelable("ownItem", ownItem)
@@ -161,6 +161,7 @@ fun FragmentActivity.showOwnItemDialog(ownItem: OwnItem) {
         fragment.show(supportFragmentManager, ownItem.objectId)
     }
 }
+
 fun FragmentActivity.showOwnMailDialog(ownMail: OwnMail) {
     val fragment: Fragment = NAV.rawFragment(RouterHub.USER_MailDetailFragment)
         .putParcelable("ownMail", ownMail)

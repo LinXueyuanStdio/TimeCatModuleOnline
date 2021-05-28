@@ -51,10 +51,18 @@ class MaterialForm {
     //region blockItem -> blockId
     var block: Block? = null
         set(value) {
-            value?.let { blockId = it.objectId }
+            value?.let {
+                blockId = it.objectId
+                blockName = it.title
+            }
             field = value
         }
     var blockId: String
+        get() = blockItem.hint ?: ""
+        set(value) {
+            blockItem.hint = value
+        }
+    var blockName: String
         get() = blockItem.text
         set(value) {
             blockItem.text = value

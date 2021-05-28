@@ -118,7 +118,7 @@ class CubeItemEditorActivity : BaseItemAddActivity() {
             listItemsSingleChoice(items = texts) { _, idx, _ ->
                 val cube = items[idx]
                 formData.title = cube.title
-                formData.blockId = cube.objectId
+                formData.block = cube
                 val content = "${cube.content}\n使用后获得方块：#${cube.title}"
                 formData.setContent(context, content, null, listOf(TopicModel(cube.title, cube.objectId)))
                 val head = IdentityBlock.fromJson(cube.structure)
