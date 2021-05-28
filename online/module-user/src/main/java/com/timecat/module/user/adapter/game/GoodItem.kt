@@ -63,7 +63,6 @@ open class GoodItem(
         holder.tv_count.setText("0 / ${good.max}")
         holder.value.setText("${good.value}")
         IconLoader.loadIcon(activity, { holder.value.chipIcon = it }, good.moneyIcon)
-        //TODO 限购、货币图标。需要改IconLoader为加载drawable
 
         holder.root.safeClick {
             activity.showBuyItemDialog(item, good.value, good.max)

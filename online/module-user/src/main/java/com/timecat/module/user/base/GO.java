@@ -31,6 +31,7 @@ public class GO {
     }
 
     public static void toAnyDetail(Block block) {
+        if (block == null) return;
         String id = block.getObjectId();
         switch (block.getType()) {
             case BLOCK_MOMENT:

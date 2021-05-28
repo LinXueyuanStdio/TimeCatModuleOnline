@@ -8,7 +8,6 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.Pay
 import com.timecat.data.bmob.ext.bmob.requestPay
-import com.timecat.data.bmob.ext.game.pay
 import com.timecat.data.bmob.ext.net.paysInShopOf
 import com.timecat.identity.data.block.BasicShopBlock
 import com.timecat.identity.data.block.ItemBlock
@@ -45,13 +44,13 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
     }
 
     override fun loadDetail(block: Block) {
-        shopViewModel.stopAllTask()
+        LogUtil.se(block)
         loadPays(block) {
             loadWithShopAndPays(block, it)
         }
     }
 
-    fun loadWithShopAndPays(shop: Block, pays:List<Pay>) {
+    fun loadWithShopAndPays(shop: Block, pays: List<Pay>) {
         val list = mutableListOf<BaseItem<*>>()
         val header = ShopBlock.fromJson(shop.structure)
         LogUtil.se(shop)
@@ -60,6 +59,7 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
             val h2 = BasicShopBlock.fromJson(header.structure)
             LogUtil.se("h2 : $h2")
             gameService.itemContext(viewLifecycleOwner, I(), { onPrepareContent() }) { itemContext ->
+                onContentLoaded()
                 val money: Block = itemContext.itemsMap[h2.moneyId] ?: return@itemContext
                 shopViewModel.money.postValue(money)
                 val haveMoney: Int = itemContext.ownItemsMap[h2.moneyId] ?: 0
@@ -82,13 +82,22 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
         }
     }
 
-    fun loadPays(shop: Block, load:(List<Pay>)->Unit) {
+    fun loadPays(shop: Block, load: (List<Pay>) -> Unit) {
+//        shopViewModel.stopAllTask()
         shopViewModel attach requestPay {
-            query = paysInShopOf(I(), shop)
+            query = paysInShopOf(I(), shop).apply {
+                include("good")
+            }
             onSuccess = {
+                LogUtil.e(it)
                 load(it)
             }
+            onEmpty = {
+                LogUtil.e("onEmpty")
+                load(listOf())
+            }
             onError = {
+                LogUtil.e(it)
                 mStatefulLayout?.showError("出错啦") {
                     loadPays(shop, load)
                 }

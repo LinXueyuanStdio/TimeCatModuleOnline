@@ -37,7 +37,7 @@ class ShopActivity : BaseBlockDetailActivity() {
     lateinit var blockId: String
 
     lateinit var card: TopicCard
-    lateinit var payViewModel: PayViewModel
+
     override fun routerInject() = NAV.inject(this)
 
     override fun initViewAfterLogin() {
