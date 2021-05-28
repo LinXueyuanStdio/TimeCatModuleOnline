@@ -6,7 +6,6 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.APP_Plugin
-import com.timecat.identity.data.block.AndroidApp
 import com.timecat.identity.data.block.AppBlock
 import com.timecat.identity.data.block.PluginApp
 import com.timecat.identity.readonly.RouterHub
@@ -55,7 +54,7 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
             }
         }
         formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(ImageAspectRatio.Wallpaper_4_3) { path ->
+            chooseImage(ImageAspectRatio.Wallpaper) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.cover = it.first()
                 }

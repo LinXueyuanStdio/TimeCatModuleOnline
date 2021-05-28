@@ -9,7 +9,6 @@ import com.timecat.identity.data.block.ActivityBlock
 import com.timecat.identity.data.block.ActivityUrlBlock
 import com.timecat.identity.data.block.ItemBlock
 import com.timecat.identity.data.block.type.ACTIVITY_Dream
-import com.timecat.identity.data.block.type.ACTIVITY_Url
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Image
 import com.timecat.layout.ui.business.form.OneLineInput
@@ -55,7 +54,7 @@ class DreamActivityEditorActivity : BaseActivityAddActivity() {
             }
         }
         formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(ImageAspectRatio.Wallpaper_4_3) { path ->
+            chooseImage(ImageAspectRatio.Wallpaper) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.cover = it.first()
                 }

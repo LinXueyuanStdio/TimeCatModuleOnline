@@ -142,11 +142,11 @@ fun Activity.chooseAvatar(onSuccess: (String) -> Unit) {
             when (index) {
                 0 -> {
                     //拍照
-                    takeOnePhoto(ImageAspectRatio.Avatar_1_1, onSuccess)
+                    takeOnePhoto(ImageAspectRatio.Avatar, onSuccess)
                 }
                 1 -> {
                     //本地相册
-                    selectOneLocalImage(ImageAspectRatio.Avatar_1_1, onSuccess)
+                    selectOneLocalImage(ImageAspectRatio.Avatar, onSuccess)
                 }
                 2 -> {
                     //内置图标
@@ -154,23 +154,28 @@ fun Activity.chooseAvatar(onSuccess: (String) -> Unit) {
                 }
                 3 -> {
                     //随机图标
-                    selectOneRandomImage(ImageAspectRatio.Avatar_1_1, onSuccess)
+                    selectOneRandomImage(ImageAspectRatio.Avatar, onSuccess)
                 }
                 4 -> {
                     //我的在线相册
-                    selectOneOnlineImage(ImageAspectRatio.Avatar_1_1, onSuccess)
+                    selectOneOnlineImage(ImageAspectRatio.Avatar, onSuccess)
                 }
             }
         }
     }
 }
 
-enum class ImageAspectRatio {
-    Avatar_1_1, Wallpaper_4_3, Horiz_3_4
+enum class ImageAspectRatio(
+    val aspect_ratio_x: Int,
+    val aspect_ratio_y: Int
+) {
+    Avatar(1, 1),
+    Wallpaper(4, 3),
+    Horiz(3, 4)
 }
 
-fun Activity.chooseImage(aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar_1_1, onSuccess: (String) -> Unit) {
-    if (aspectRatio == ImageAspectRatio.Avatar_1_1) {
+fun Activity.chooseImage(aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar, onSuccess: (String) -> Unit) {
+    if (aspectRatio == ImageAspectRatio.Avatar) {
         chooseAvatar(onSuccess)
         return
     }
@@ -206,25 +211,11 @@ fun Activity.chooseImage(aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar
 }
 
 fun Activity.takeOnePhoto(
-    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar_1_1,
+    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar,
     onSuccess: (String) -> Unit
 ) {
-    var aspect_ratio_x = 1
-    var aspect_ratio_y = 1
-    when (aspectRatio) {
-        ImageAspectRatio.Avatar_1_1 -> {
-            aspect_ratio_x = 1
-            aspect_ratio_y = 1
-        }
-        ImageAspectRatio.Wallpaper_4_3 -> {
-            aspect_ratio_x = 2
-            aspect_ratio_y = 3
-        }
-        ImageAspectRatio.Horiz_3_4 -> {
-            aspect_ratio_x = 3
-            aspect_ratio_y = 2
-        }
-    }
+    val aspect_ratio_x = aspectRatio.aspect_ratio_x
+    val aspect_ratio_y = aspectRatio.aspect_ratio_y
     IMG.select(PictureSelector.create(this).openCamera(PictureMimeType.ofImage()))
         .maxSelectNum(1)
         .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
@@ -244,25 +235,11 @@ fun Activity.takeOnePhoto(
 }
 
 fun Activity.selectOneLocalImage(
-    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar_1_1,
+    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar,
     onSuccess: (String) -> Unit
 ) {
-    var aspect_ratio_x = 1
-    var aspect_ratio_y = 1
-    when (aspectRatio) {
-        ImageAspectRatio.Avatar_1_1 -> {
-            aspect_ratio_x = 1
-            aspect_ratio_y = 1
-        }
-        ImageAspectRatio.Wallpaper_4_3 -> {
-            aspect_ratio_x = 2
-            aspect_ratio_y = 3
-        }
-        ImageAspectRatio.Horiz_3_4 -> {
-            aspect_ratio_x = 3
-            aspect_ratio_y = 2
-        }
-    }
+    val aspect_ratio_x = aspectRatio.aspect_ratio_x
+    val aspect_ratio_y = aspectRatio.aspect_ratio_y
     IMG.select(PictureSelector.create(this).openGallery(PictureMimeType.ofImage()))
         .maxSelectNum(1)
         .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
@@ -282,48 +259,20 @@ fun Activity.selectOneLocalImage(
 }
 
 fun Activity.selectOneRandomImage(
-    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar_1_1,
+    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar,
     onSuccess: (String) -> Unit
 ) {
-    var aspect_ratio_x = 1
-    var aspect_ratio_y = 1
-    when (aspectRatio) {
-        ImageAspectRatio.Avatar_1_1 -> {
-            aspect_ratio_x = 1
-            aspect_ratio_y = 1
-        }
-        ImageAspectRatio.Wallpaper_4_3 -> {
-            aspect_ratio_x = 2
-            aspect_ratio_y = 3
-        }
-        ImageAspectRatio.Horiz_3_4 -> {
-            aspect_ratio_x = 3
-            aspect_ratio_y = 2
-        }
-    }
+    val aspect_ratio_x = aspectRatio.aspect_ratio_x
+    val aspect_ratio_y = aspectRatio.aspect_ratio_y
     onSuccess(IconLoader.randomAvatar(UUID.randomUUID().toString()))
 }
 
 fun Activity.selectOneOnlineImage(
-    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar_1_1,
+    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar,
     onSuccess: (String) -> Unit
 ) {
-    var aspect_ratio_x = 1
-    var aspect_ratio_y = 1
-    when (aspectRatio) {
-        ImageAspectRatio.Avatar_1_1 -> {
-            aspect_ratio_x = 1
-            aspect_ratio_y = 1
-        }
-        ImageAspectRatio.Wallpaper_4_3 -> {
-            aspect_ratio_x = 2
-            aspect_ratio_y = 3
-        }
-        ImageAspectRatio.Horiz_3_4 -> {
-            aspect_ratio_x = 3
-            aspect_ratio_y = 2
-        }
-    }
+    val aspect_ratio_x = aspectRatio.aspect_ratio_x
+    val aspect_ratio_y = aspectRatio.aspect_ratio_y
 }
 
 class FontAwesomeGridItem(val context: Context, val font: Typeface, val iconRes: Int) : GridItem {

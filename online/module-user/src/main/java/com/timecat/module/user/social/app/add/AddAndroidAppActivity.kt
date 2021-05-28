@@ -54,7 +54,7 @@ class AddAndroidAppActivity : BaseAddAppActivity() {
             }
         }
         formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
-            chooseImage(ImageAspectRatio.Wallpaper_4_3) { path ->
+            chooseImage(ImageAspectRatio.Wallpaper) { path ->
                 receieveImage(I(), listOf(path), false) {
                     formData.cover = it.first()
                 }

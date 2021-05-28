@@ -136,7 +136,7 @@ class TagCard  @JvmOverloads constructor(
             bottom_toBottomOf = parent_id
 
             setTextColor(Attr.getPrimaryTextColor(context))
-            setChipIconResource(R.drawable.ic_done)
+            setChipIconResource(R.drawable.ic_eye)
             chipIconTint = ColorStateList.valueOf(Attr.getIconColor(context))
         }.also {
             addView(it)

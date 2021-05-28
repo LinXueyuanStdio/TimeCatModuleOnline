@@ -65,7 +65,7 @@ class UserSettingActivity : BaseSettingActivity() {
                 }
             }
             coverItem = container.Image("封面", user.cover) { coverItem ->
-                chooseImage(ImageAspectRatio.Horiz_3_4) { path ->
+                chooseImage(ImageAspectRatio.Horiz) { path ->
                     receieveImage(user, listOf(path), false) {
                         for (i in it) {
                             val file = AVFile("cover", i)

@@ -10,15 +10,10 @@ import com.afollestad.vvalidator.form.Form
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.Task
 import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.bmob.saveBlock
-import com.timecat.data.bmob.ext.bmob.updateBlock
-import com.timecat.data.bmob.ext.create
 import com.timecat.data.bmob.ext.game.allTaskRules
 import com.timecat.data.bmob.ext.net.allItem
 import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.data.base.AttachmentTail
 import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.TASK_Data
@@ -89,6 +84,20 @@ class DataTaskEditorActivity : BaseTaskAddActivity() {
     }
 
     override fun initFormView(): ViewGroup.() -> Unit = {
+        formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
+            chooseAvatar { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.icon = it.first()
+                }
+            }
+        }
+        formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
+            chooseImage(ImageAspectRatio.Horiz) { path ->
+                receieveImage(I(), listOf(path), false) {
+                    formData.cover = it.first()
+                }
+            }
+        }
         formData.titleItem = OneLineInput("标题", "新任务", autoAdd = false)
         rulesItem = Next("任务完成条件",
             hint = formRuleItems.toString(),
