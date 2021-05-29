@@ -166,12 +166,13 @@ fun Activity.chooseAvatar(onSuccess: (String) -> Unit) {
 }
 
 enum class ImageAspectRatio(
+    val id: Int,
     val aspect_ratio_x: Int,
     val aspect_ratio_y: Int
 ) {
-    Avatar(1, 1),
-    Wallpaper(9, 16),
-    Horizon(16, 9)
+    Avatar(0, 1, 1),
+    Wallpaper(1, 9, 16),
+    Horizon(2, 16, 9)
 }
 
 fun Activity.chooseImage(aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar, onSuccess: (String) -> Unit) {
@@ -298,24 +299,25 @@ class FontAwesomeGridItem(val context: Context, val font: Typeface, val iconRes:
 
 fun Activity.selectOneLocalIcon(onSuccess: (String) -> Unit) {
     GlobalScope.launch(Dispatchers.IO) {
-        val regularFont = FontAwesome.getFontAwesomeRegular(this@selectOneLocalIcon)
+        val ctx = this@selectOneLocalIcon
+        val regularFont = FontAwesome.getFontAwesomeRegular(ctx)
         val regularIcons = FontAwesome.regularIcons().map {
-            FontAwesomeGridItem(this@selectOneLocalIcon, regularFont, it)
+            FontAwesomeGridItem(ctx, regularFont, it)
         }
         val maxRegularCount = regularIcons.size
-        val solidFont = FontAwesome.getFontAwesomeSolid(this@selectOneLocalIcon)
+        val solidFont = FontAwesome.getFontAwesomeSolid(ctx)
         val solidIcons = FontAwesome.solidIcons().map {
-            FontAwesomeGridItem(this@selectOneLocalIcon, solidFont, it)
+            FontAwesomeGridItem(ctx, solidFont, it)
         }.plus(regularIcons)
         val maxSolidCount = solidIcons.size + maxRegularCount
-        val brandFont = FontAwesome.getFontAwesomeBrand(this@selectOneLocalIcon)
+        val brandFont = FontAwesome.getFontAwesomeBrand(ctx)
         val brandIcons = FontAwesome.brandIcons().map {
-            FontAwesomeGridItem(this@selectOneLocalIcon, brandFont, it)
+            FontAwesomeGridItem(ctx, brandFont, it)
         }
         val maxBrandCount = brandIcons.size + maxSolidCount
         val icons = regularIcons.plus(solidIcons).plus(brandIcons)
         withContext(Dispatchers.Main) {
-            MaterialDialog(this@selectOneLocalIcon, BottomSheet()).show {
+            MaterialDialog(ctx, BottomSheet()).show {
                 positiveButton(R.string.ok)
                 negativeButton(R.string.cancel)
                 gridItems(icons, R.integer.icon_row_count) { _, idx, item ->
