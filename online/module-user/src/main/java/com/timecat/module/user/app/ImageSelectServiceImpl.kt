@@ -18,6 +18,10 @@ class ImageSelectServiceImpl : ImageSelectService {
         activity.chooseAvatar(onSuccess)
     }
 
+    override fun selectImage(activity: Activity, onSuccess: (String) -> Unit) {
+        activity.chooseImage(onSuccess)
+    }
+
     override fun selectImage(activity: Activity, cropId: Int, onSuccess: (String) -> Unit) {
         val iar = ImageAspectRatio.values().find { it.id == cropId } ?: ImageAspectRatio.Avatar
         activity.chooseImage(iar, onSuccess)
@@ -39,7 +43,7 @@ class ImageSelectServiceImpl : ImageSelectService {
 
     override fun selectOneRandomImage(activity: Activity, cropId: Int, onSuccess: (String) -> Unit) {
         val iar = ImageAspectRatio.values().find { it.id == cropId } ?: ImageAspectRatio.Avatar
-        activity.selectOneRandomImage(iar, onSuccess)
+        activity.selectOneRandomImage(onSuccess)
     }
 
     override fun takeOnePhoto(activity: Activity, cropId: Int, onSuccess: (String) -> Unit) {

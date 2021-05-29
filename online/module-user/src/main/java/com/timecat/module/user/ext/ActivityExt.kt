@@ -154,11 +154,48 @@ fun Activity.chooseAvatar(onSuccess: (String) -> Unit) {
                 }
                 3 -> {
                     //随机图标
-                    selectOneRandomImage(ImageAspectRatio.Avatar, onSuccess)
+                    selectOneRandomImage(onSuccess)
                 }
                 4 -> {
                     //我的在线相册
                     selectOneOnlineImage(ImageAspectRatio.Avatar, onSuccess)
+                }
+            }
+        }
+    }
+}
+
+fun Activity.chooseImage(onSuccess: (String) -> Unit) {
+    MaterialDialog(this).show {
+        val choice = listOf(
+            "拍照",
+            "本地相册",
+            "内置图标",
+            "随机图标",
+//                "我的在线相册" TODO
+        )
+        positiveButton(R.string.ok)
+        listItemsSingleChoice(items = choice, initialSelection = 2) { dialog, index, text ->
+            when (index) {
+                0 -> {
+                    //拍照
+                    takeOnePhoto(onSuccess)
+                }
+                1 -> {
+                    //本地相册
+                    selectOneLocalImage(onSuccess)
+                }
+                2 -> {
+                    //内置图标
+                    selectOneLocalIcon(onSuccess)
+                }
+                3 -> {
+                    //随机图标
+                    selectOneRandomImage(onSuccess)
+                }
+                4 -> {
+                    //我的在线相册
+                    selectOneOnlineImage(onSuccess)
                 }
             }
         }
@@ -200,7 +237,7 @@ fun Activity.chooseImage(aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar
                 }
                 2 -> {
                     //随机图标
-                    selectOneRandomImage(aspectRatio, onSuccess)
+                    selectOneRandomImage(onSuccess)
                 }
                 3 -> {
                     //我的在线相册
@@ -220,6 +257,26 @@ fun Activity.takeOnePhoto(
     IMG.select(PictureSelector.create(this).openCamera(PictureMimeType.ofImage()))
         .maxSelectNum(1)
         .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
+        .isGif(false)
+        .isEnableCrop(true)
+        .selectForResult {
+            if (it.isNotEmpty()) {
+                val media = it[0]
+                val path = media.savablePath()
+                if (path == null) {
+                    ToastUtil.e_long("图片路径错误！")
+                } else {
+                    onSuccess(path)
+                }
+            }
+        }
+}
+
+fun Activity.takeOnePhoto(
+    onSuccess: (String) -> Unit
+) {
+    IMG.select(PictureSelector.create(this).openCamera(PictureMimeType.ofImage()))
+        .maxSelectNum(1)
         .isGif(false)
         .isEnableCrop(true)
         .selectForResult {
@@ -259,12 +316,29 @@ fun Activity.selectOneLocalImage(
         }
 }
 
-fun Activity.selectOneRandomImage(
-    aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar,
+fun Activity.selectOneLocalImage(
     onSuccess: (String) -> Unit
 ) {
-    val aspect_ratio_x = aspectRatio.aspect_ratio_x
-    val aspect_ratio_y = aspectRatio.aspect_ratio_y
+    IMG.select(PictureSelector.create(this).openGallery(PictureMimeType.ofImage()))
+        .maxSelectNum(1)
+        .isGif(false)
+        .isEnableCrop(true)
+        .selectForResult {
+            if (it.isNotEmpty()) {
+                val media = it[0]
+                val path = media.savablePath()
+                if (path == null) {
+                    ToastUtil.e_long("图片路径错误！")
+                } else {
+                    onSuccess(path)
+                }
+            }
+        }
+}
+
+fun Activity.selectOneRandomImage(
+    onSuccess: (String) -> Unit
+) {
     onSuccess(IconLoader.randomAvatar(UUID.randomUUID().toString()))
 }
 
@@ -274,6 +348,10 @@ fun Activity.selectOneOnlineImage(
 ) {
     val aspect_ratio_x = aspectRatio.aspect_ratio_x
     val aspect_ratio_y = aspectRatio.aspect_ratio_y
+}
+fun Activity.selectOneOnlineImage(
+    onSuccess: (String) -> Unit
+) {
 }
 
 class FontAwesomeGridItem(val context: Context, val font: Typeface, val iconRes: Int) : GridItem {
