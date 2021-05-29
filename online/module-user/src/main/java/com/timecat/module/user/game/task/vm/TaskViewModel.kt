@@ -91,9 +91,7 @@ class TaskViewModel : RxViewModel() {
         if (it.isStatusEnabled(TaskChannel.Double.id)) {
             ans.add(TaskChannel.Double)
         }
-        if (it.isStatusEnabled(TaskChannel.Card.id)) {
-            ans.add(TaskChannel.Card)
-        }
+        ans.add(TaskChannel.Card)
         if (it.isStatusEnabled(TaskChannel.Price.id)) {
             ans.add(TaskChannel.Price)
         }
