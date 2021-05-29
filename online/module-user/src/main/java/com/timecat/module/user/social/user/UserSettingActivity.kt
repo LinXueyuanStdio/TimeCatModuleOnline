@@ -17,7 +17,7 @@ import com.timecat.middle.setting.BaseSettingActivity
 import com.timecat.module.user.ext.ImageAspectRatio
 import com.timecat.module.user.ext.chooseAvatar
 import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.receieveImage
+import com.timecat.module.user.ext.receiveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -52,7 +52,7 @@ class UserSettingActivity : BaseSettingActivity() {
 
             avatarItem = container.Image("头像", user.avatar) { avatarItem ->
                 chooseAvatar { path ->
-                    receieveImage(user, listOf(path), false) {
+                    receiveImage(user, listOf(path), false) {
                         for (i in it) {
                             val file = AVFile("avatar", i)
                             user.headPortrait = file
@@ -66,7 +66,7 @@ class UserSettingActivity : BaseSettingActivity() {
             }
             coverItem = container.Image("封面", user.cover) { coverItem ->
                 chooseImage(ImageAspectRatio.Horizon) { path ->
-                    receieveImage(user, listOf(path), false) {
+                    receiveImage(user, listOf(path), false) {
                         for (i in it) {
                             val file = AVFile("cover", i)
                             user.coverPage = file

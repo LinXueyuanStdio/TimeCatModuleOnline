@@ -336,7 +336,7 @@ fun Activity.selectOneLocalIcon(onSuccess: (String) -> Unit) {
 //endregion
 
 //region 图像保存逻辑
-fun Activity.receieveImage(
+fun Activity.receiveImage(
     currentUser: User,
     filePaths: List<String>,
     isCompress: Boolean,

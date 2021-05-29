@@ -16,7 +16,7 @@ import com.timecat.layout.ui.business.form.add
 import com.timecat.module.user.ext.ImageAspectRatio
 import com.timecat.module.user.ext.chooseAvatar
 import com.timecat.module.user.ext.chooseImage
-import com.timecat.module.user.ext.receieveImage
+import com.timecat.module.user.ext.receiveImage
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -48,14 +48,14 @@ class DreamActivityEditorActivity : BaseActivityAddActivity() {
     override fun initFormView(): ViewGroup.() -> Unit = {
         formData.iconItem = Image("图标", "R.drawable.ic_folder", autoAdd = false) {
             chooseAvatar { path ->
-                receieveImage(I(), listOf(path), false) {
+                receiveImage(I(), listOf(path), false) {
                     formData.icon = it.first()
                 }
             }
         }
         formData.coverItem = Image("背景图", "R.drawable.ic_folder", autoAdd = false) {
             chooseImage(ImageAspectRatio.Wallpaper) { path ->
-                receieveImage(I(), listOf(path), false) {
+                receiveImage(I(), listOf(path), false) {
                     formData.cover = it.first()
                 }
             }
