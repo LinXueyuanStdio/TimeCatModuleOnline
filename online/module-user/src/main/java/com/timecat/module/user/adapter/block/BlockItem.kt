@@ -27,6 +27,7 @@ import com.timecat.identity.data.block.type.BLOCK_FORUM
 import com.timecat.identity.data.block.type.BLOCK_MOMENT
 import com.timecat.identity.data.block.type.BLOCK_POST
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.identity.service.PermissionService
 import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.util.CopyToClipboard
@@ -45,6 +46,10 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import kotlinx.android.synthetic.main.user_base_item_footer.view.*
 import kotlinx.android.synthetic.main.user_base_item_moment.view.*
 import kotlinx.android.synthetic.main.user_moment_item_main.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * @author 林学渊
@@ -115,10 +120,21 @@ class BlockItem(
         holder.headView.moreView.setShakelessClickListener {
             PopupMenu(it.context, it).apply {
                 inflate(R.menu.social_head)
-                PermissionValidator.checkById("delete_block") {
-                    onAllowed = {
-                        menu.findItem(R.id.delete)?.setVisible(true)
-                    }
+                GlobalScope.launch(Dispatchers.IO) {
+                    val s = NAV.service(PermissionService::class.java)
+                    s?.validate("delete_block", object :PermissionService.Callback{
+                        override fun onPass() {
+                            GlobalScope.launch(Dispatchers.Main) {
+                                menu.findItem(R.id.delete)?.setVisible(true)
+                            }
+                        }
+
+                        override fun onReject() {
+                            GlobalScope.launch(Dispatchers.Main) {
+                                menu.findItem(R.id.delete)?.setVisible(false)
+                            }
+                        }
+                    })
                 }
                 setOnMenuItemClickListener {
                     when (it.itemId) {
@@ -169,10 +185,21 @@ class BlockItem(
             moreView.setShakelessClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.social_head)
-                    PermissionValidator.checkById("delete_block") {
-                        onAllowed = {
-                            menu.findItem(R.id.delete)?.setVisible(true)
-                        }
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val s = NAV.service(PermissionService::class.java)
+                        s?.validate("delete_block", object :PermissionService.Callback{
+                            override fun onPass() {
+                                GlobalScope.launch(Dispatchers.Main) {
+                                    menu.findItem(R.id.delete)?.setVisible(true)
+                                }
+                            }
+
+                            override fun onReject() {
+                                GlobalScope.launch(Dispatchers.Main) {
+                                    menu.findItem(R.id.delete)?.setVisible(false)
+                                }
+                            }
+                        })
                     }
                     setOnMenuItemClickListener {
                         when (it.itemId) {

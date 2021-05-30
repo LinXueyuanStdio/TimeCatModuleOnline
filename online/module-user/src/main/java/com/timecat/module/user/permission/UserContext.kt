@@ -7,8 +7,10 @@ import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnCube
-import com.timecat.data.bmob.ext.bmob.requestBlockRelation
-import com.timecat.data.bmob.ext.net.*
+import com.timecat.data.bmob.ext.net.allMetaPermission
+import com.timecat.data.bmob.ext.net.allOwnCube
+import com.timecat.data.bmob.ext.net.findAllHunPermission
+import com.timecat.data.bmob.ext.net.findAllRoles
 import com.timecat.data.bmob.ext.toDataError
 import com.timecat.middle.block.permission.HunPermission
 import com.timecat.middle.block.permission.MetaPermission
@@ -91,6 +93,10 @@ class UserContext(
                     identity.add(it.cube)
                 }
             }
+            LogUtil.sd("identity: len=${identity.size}")
+            for (i in identity) {
+                LogUtil.sd("${i.title} -> ${i.content}")
+            }
             identity
         }.flatMap {
             if (it.isEmpty()) {
@@ -106,6 +112,10 @@ class UserContext(
             if (!it.isNullOrEmpty()) {
                 roleOfIdentity.addAll(it.map { it.to })
                 role.addAll(roleOfIdentity)
+            }
+            LogUtil.sd("role: len=${role.size}")
+            for (i in role) {
+                LogUtil.sd("${i.title} -> ${i.content}")
             }
             role
         }.flatMap {
@@ -124,106 +134,21 @@ class UserContext(
                 hunPermissionOfRole.addAll(it.map { it.to })
                 hunPermission.addAll(hunPermissionOfRole)
             }
-            LogUtil.d(hunPermissionOfRole)
             ownsPermission.addAll(hunPermission.map {
                 HunPermission(it.content.toRegex(), it.content, Why("您拥有权限 ${it.title}"))
             })
-            LogUtil.d(ownsPermission)
+            LogUtil.sd("Hun: len=${ownsPermission.size}")
+            for (i in ownsPermission) {
+                LogUtil.sd("${i.uri} -> ${i.checker}")
+            }
         }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ onLoaded(this) }, { LogUtil.e(it.toDataError()) })
-//        this attach requestOwnCube {
-//            query = user.allOwnCube().apply {
-//                cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
-//            }
-//            onEmpty = {
-//                LogUtil.sd("empty")
-//                clearInterAction()
-//            }
-//            onSuccess = {
-//                LogUtil.d(it)
-//                clearInterAction()
-//                it.forEach {
-//                    loadInterAction(it)
-//                }
-//                loadRole()
-//            }
-//        }
-    }
-
-    private fun clearInterAction() {
-        identity.clear()
-    }
-
-    private fun loadInterAction(data: OwnCube) {
-        identity.add(data.cube)
-    }
-
-    private fun loadRole() {
-        LogUtil.sd(identity)
-        if (identity.isEmpty()) {
-            onLoaded(this)
-            return
-        }
-        requestBlockRelation {
-            query = identity.findAllRoles().apply {
-                cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
-            }
-            onEmpty = {
-                LogUtil.sd("empty")
-                onLoaded(this@UserContext)
-                roleOfIdentity.clear()
-            }
-            onSuccess = {
-                LogUtil.d(it)
-                roleOfIdentity.clear()
-                roleOfIdentity.addAll(it.map { it.to })
-                loadHunPermission()
-            }
-        }
-    }
-
-    private fun loadHunPermission() {
-        role.clear()
-        role.addAll(roleOfIdentity)
-        LogUtil.d(role)
-        if (role.isEmpty()) {
-            onLoaded(this)
-            return
-        }
-        requestBlockRelation {
-            query = role.findAllHunPermission().apply {
-                cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
-            }
-            onEmpty = {
-                LogUtil.sd("empty")
-                onLoaded(this@UserContext)
-                hunPermissionOfRole.clear()
-            }
-            onSuccess = {
-                LogUtil.d(it)
-                hunPermissionOfRole.clear()
-                hunPermissionOfRole.addAll(it.map { it.to })
-                loadOwnsPermission()
-            }
-        }
-    }
-
-    private fun loadOwnsPermission() {
-        hunPermission.clear()
-        hunPermission.addAll(hunPermissionOfRole)
-        LogUtil.d(hunPermissionOfRole)
-        ownsPermission.clear()
-        ownsPermission.addAll(hunPermission.map {
-            HunPermission(it.content.toRegex(), it.content, Why("您拥有权限 ${it.title}"))
-        })
-        LogUtil.d(ownsPermission)
-        onLoaded(this)
     }
 
     fun of(UiId: String): MetaPermission? {
-        LogUtil.d("$UiId in $pool")
+        LogUtil.d("$UiId \nin\n$pool")
         return pool[UiId]
     }
 }

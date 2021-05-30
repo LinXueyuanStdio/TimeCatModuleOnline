@@ -26,8 +26,11 @@ class PermissionServiceImpl : PermissionService {
                 onAllowed = {
                     callback.onPass()
                 }
+                onBanned = {
+                    callback.onReject()
+                }
             }
-        }
+        } ?: callback.onReject()
     }
 
     override fun initPermission(owner: LifecycleOwner) {

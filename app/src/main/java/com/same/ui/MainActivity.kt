@@ -79,9 +79,15 @@ class MainActivity : AppCompatActivity() {
             permissionService?.initPermission(this)
         })
         linearLayout.addView(createButton("测试权限") {
-            permissionService?.validate(UiHub.MASTER_MainActivity_drawer_manager) {
-                ToastUtil.ok("拥有权限 ${UiHub.MASTER_MainActivity_drawer_manager}")
-            }
+            permissionService?.validate(UiHub.MASTER_MainActivity_drawer_manager, object : PermissionService.Callback {
+                override fun onPass() {
+                    ToastUtil.ok("拥有权限 ${UiHub.MASTER_MainActivity_drawer_manager}")
+                }
+
+                override fun onReject() {
+                    ToastUtil.ok("莫得权限 ${UiHub.MASTER_MainActivity_drawer_manager}")
+                }
+            })
         })
 
         linearLayout.addView(createText("物品"))

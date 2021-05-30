@@ -23,6 +23,7 @@ import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.data.bmob.ext.net.allRole
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.identity.service.PermissionService
 import com.timecat.layout.ui.business.form.Next
 import com.timecat.layout.ui.business.form.Spinner
 import com.timecat.layout.ui.business.setting.NextItem
@@ -30,10 +31,12 @@ import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditActivity
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.base.login.BaseLoginEditActivity
+import com.timecat.module.user.game.task.rule.GameService
 import com.timecat.module.user.permission.UserContext
 import com.timecat.module.user.search.SelectActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
+import com.xiaojinzi.component.anno.ServiceAutowiredAnno
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -60,6 +63,10 @@ class AddAuthEditActivity : BaseLoginEditActivity() {
     @AttrValueAutowiredAnno("target")
     @JvmField
     var target: User? = null
+
+    @ServiceAutowiredAnno
+    @JvmField
+    var gameService: GameService ?= null
 
     override fun routerInject() = NAV.inject(this)
 
@@ -137,13 +144,17 @@ class AddAuthEditActivity : BaseLoginEditActivity() {
      * 3. 身份-角色-权限
      */
     private fun changeAuthSource(nextItem: NextItem) {
-        MaterialDialog(this, BottomSheet()).show {
-            lifecycleOwner(this@AddAuthEditActivity)
-            positiveButton(R.string.ok)
-            val choice = UserContext.hunPermission.map { it.title }
-            listItemsSingleChoice(items = choice, initialSelection = 0) { _, idx, title ->
-                formData.authSource = title.toString()
-                nextItem.text = title.toString()
+        gameService?.cubeContext(this, I(), {
+            ToastUtil.w("加载中")
+        }) {
+            MaterialDialog(this, BottomSheet()).show {
+                lifecycleOwner(this@AddAuthEditActivity)
+                positiveButton(R.string.ok)
+                val choice = it.hunPermission.map { it.title }
+                listItemsSingleChoice(items = choice, initialSelection = 0) { _, idx, title ->
+                    formData.authSource = title.toString()
+                    nextItem.text = title.toString()
+                }
             }
         }
     }
