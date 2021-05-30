@@ -35,6 +35,7 @@ class PermissionServiceImpl : PermissionService {
 
     override fun initPermission(owner: LifecycleOwner) {
         LogUtil.sd("init start")
+        if (userContext != null) return
         val service = NAV.service(GameService::class.java)
         val user = UserDao.getCurrentUser()
         user?.let {
