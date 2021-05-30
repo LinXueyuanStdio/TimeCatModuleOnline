@@ -148,6 +148,9 @@ class MainActivity : AppCompatActivity() {
         linearLayout.addView(createPathButton(RouterHub.USER_AllShopActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_ShopEditorActivity))
 
+        linearLayout.addView(createText("云"))
+        linearLayout.addView(createPathButton(RouterHub.USER_CloudActivity))
+
         linearLayout.addView(createText("动态"))
         linearLayout.addView(createPathButton(RouterHub.USER_AllMomentActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AddMomentActivity))
