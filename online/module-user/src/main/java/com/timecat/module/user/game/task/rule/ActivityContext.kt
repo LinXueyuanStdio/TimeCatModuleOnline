@@ -190,7 +190,15 @@ interface GameService {
 
     fun itemContext(
         owner: LifecycleOwner,
-        user: User, onLoading: () -> Unit,
+        user: User,
+        onLoading: () -> Unit,
+        onLoaded: (ItemContext) -> Unit
+    )
+
+    fun cubeContext(
+        owner: LifecycleOwner,
+        user: User,
+        onLoading: () -> Unit,
         onLoaded: (ItemContext) -> Unit
     )
 }

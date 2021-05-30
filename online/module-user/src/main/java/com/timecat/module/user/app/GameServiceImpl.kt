@@ -18,6 +18,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
 class GameServiceImpl : GameService {
     var activityContextPool: MutableMap<String, ActivityContext> = mutableMapOf()
     var itemContextPool: MutableMap<String, ItemContext> = mutableMapOf()
+    var cubeContextPool: MutableMap<String, ItemContext> = mutableMapOf()
 
     override fun init(user: User?) {
 
@@ -43,6 +44,18 @@ class GameServiceImpl : GameService {
         }
         ItemContext(owner, user, onLoading) {
             itemContextPool[user.objectId] = it
+            onLoaded(it)
+        }.load()
+    }
+
+    override fun cubeContext(owner: LifecycleOwner, user: User, onLoading: () -> Unit, onLoaded: (ItemContext) -> Unit) {
+        val context = cubeContextPool[user.objectId]
+        if (context != null) {
+            onLoaded(context)
+            return
+        }
+        ItemContext(owner, user, onLoading) {
+            cubeContextPool[user.objectId] = it
             onLoaded(it)
         }.load()
     }

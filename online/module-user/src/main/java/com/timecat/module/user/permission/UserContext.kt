@@ -1,6 +1,7 @@
 package com.timecat.module.user.permission
 
 
+import androidx.lifecycle.LifecycleOwner
 import cn.leancloud.AVQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.dao.UserDao
@@ -14,6 +15,9 @@ import com.timecat.data.bmob.ext.net.findAllHunPermission
 import com.timecat.data.bmob.ext.net.findAllRoles
 import com.timecat.middle.block.permission.HunPermission
 import com.timecat.middle.block.permission.Why
+import com.timecat.module.user.game.task.rule.ActivityContext
+import com.timecat.module.user.game.task.rule.LoadableContext
+import com.timecat.module.user.game.task.rule.bindLoadableContext
 
 /**
  * @author 林学渊
@@ -22,44 +26,38 @@ import com.timecat.middle.block.permission.Why
  * @description 用户上下文
  * @usage null
  */
-object UserContext {
-    @JvmStatic
+class UserContext(
+    private val owner: LifecycleOwner,
+    val user: User,
+    private val onLoading: () -> Unit,
+    private val onLoaded: (ActivityContext) -> Unit
+) : LoadableContext() {
     var I: User? = UserDao.getCurrentUser()
 
-    @JvmStatic
     val identity: MutableList<Block> = mutableListOf()
-
-    @JvmStatic
     val role: MutableList<Block> = mutableListOf()
 
     /**
      * 身份的角色
      */
-    @JvmStatic
     val roleOfIdentity: MutableList<Block> = mutableListOf()
-
-    @JvmStatic
     val hunPermission: MutableList<Block> = mutableListOf()
 
     /**
      * 角色的权限
      */
-    @JvmStatic
     val hunPermissionOfRole: MutableList<Block> = mutableListOf()
-
-    @JvmStatic
     var ownsPermission: MutableList<HunPermission> = mutableListOf()
 
-    @JvmStatic
-    fun loadByUser(user: User?) {
-        I = user ?: return
+    fun load() {
+        onLoading()
+        owner.bindLoadableContext(this)
         loadInterAction(user)
     }
 
-    @JvmStatic
     private fun loadInterAction(user: User) {
         LogUtil.sd(user)
-        requestOwnCube {
+        this attach requestOwnCube {
             query = user.allOwnCube().apply {
                 cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
             }
@@ -78,17 +76,14 @@ object UserContext {
         }
     }
 
-    @JvmStatic
     private fun clearInterAction() {
         identity.clear()
     }
 
-    @JvmStatic
     private fun loadInterAction(data: OwnCube) {
         identity.add(data.cube)
     }
 
-    @JvmStatic
     private fun loadRole() {
         LogUtil.sd(identity)
         if (identity.isEmpty()) {
@@ -111,7 +106,6 @@ object UserContext {
         }
     }
 
-    @JvmStatic
     private fun loadHunPermission() {
         role.clear()
         role.addAll(roleOfIdentity)
@@ -136,7 +130,6 @@ object UserContext {
         }
     }
 
-    @JvmStatic
     private fun loadOwnsPermission() {
         hunPermission.clear()
         hunPermission.addAll(hunPermissionOfRole)
