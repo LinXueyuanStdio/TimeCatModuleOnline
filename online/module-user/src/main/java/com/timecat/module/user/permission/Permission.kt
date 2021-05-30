@@ -1,9 +1,6 @@
 package com.timecat.module.user.permission
 
-import cn.leancloud.AVQuery
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.data.bmob.ext.net.allMetaPermission
 import com.timecat.middle.block.permission.HunPermission
 import com.timecat.middle.block.permission.MetaPermission
 import com.timecat.middle.block.permission.PermissionCallback
@@ -16,44 +13,6 @@ import com.timecat.middle.block.permission.Why
  * @description 权限相关的工具
  * @usage null
  */
-
-/**
- * 元权限池
- */
-object MetaPermissionPool {
-    var pool: MutableMap<String, MetaPermission> = HashMap()
-
-    /**
-     * 加载所有的元权限
-     */
-    private fun load() {
-        requestBlock {
-            query = allMetaPermission().apply {
-                cachePolicy = AVQuery.CachePolicy.CACHE_THEN_NETWORK
-            }
-            onSuccess = {
-                LogUtil.sd(it)
-                pool.clear()
-                it.forEach {
-                    pool[it.title] = it.content
-                }
-            }
-        }
-    }
-
-    @JvmStatic
-    fun ensureLoaded() {
-        if (pool.isEmpty()) {
-            load()
-        }
-    }
-
-    @JvmStatic
-    fun of(UiId: String): MetaPermission? {
-        LogUtil.d("$UiId in $pool")
-        return pool[UiId]
-    }
-}
 
 /**
  * 鉴权器
@@ -110,8 +69,8 @@ object PermissionValidator {
     }
 
     @JvmStatic
-    fun check(permission: MetaPermission, callback: PermissionCallback.() -> Unit) {
-        val ownsPermission = UserContext.ownsPermission
+    fun check(userContext: UserContext, permission: MetaPermission, callback: PermissionCallback.() -> Unit) {
+        val ownsPermission = userContext.ownsPermission
         checkPermission {
             target = mapOf(permission to PermissionCallback().apply(callback))
             owns = ownsPermission
@@ -119,14 +78,13 @@ object PermissionValidator {
     }
 
     @JvmStatic
-    fun checkById(permissionId: String, callback: PermissionCallback.() -> Unit) {
-        val p = MetaPermissionPool.of(permissionId) ?: return
-        check(p, callback)
+    fun checkById(userContext: UserContext, permissionId: String, callback: PermissionCallback.() -> Unit) {
+        val p = userContext.of(permissionId) ?: return
+        check(userContext, p, callback)
     }
 
     @JvmStatic
-    fun check(permissions: Map<MetaPermission, PermissionCallback>) {
-        val ownsPermission = UserContext.ownsPermission
+    fun check(ownsPermission: MutableList<HunPermission>, permissions: Map<MetaPermission, PermissionCallback>) {
         checkPermission {
             target = permissions
             owns = ownsPermission
@@ -134,14 +92,14 @@ object PermissionValidator {
     }
 
     @JvmStatic
-    fun checkById(permissions: Map<String, PermissionCallback>) {
+    fun checkById(userContext: UserContext, permissions: Map<String, PermissionCallback>) {
         val pMap = HashMap<MetaPermission, PermissionCallback>()
         for (permissionId in permissions.keys) {
-            val p = MetaPermissionPool.of(permissionId) ?: continue
+            val p = userContext.of(permissionId) ?: continue
             val pCallback = permissions[permissionId] ?: continue
             pMap[p] = pCallback
         }
-        check(pMap)
+        check(userContext.ownsPermission, pMap)
     }
 }
 

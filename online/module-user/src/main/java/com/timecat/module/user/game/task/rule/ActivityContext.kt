@@ -16,6 +16,7 @@ import com.timecat.data.bmob.ext.toDataError
 import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.*
 import com.timecat.module.user.game.item.ItemContext
+import com.timecat.module.user.permission.UserContext
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -199,7 +200,7 @@ interface GameService {
         owner: LifecycleOwner,
         user: User,
         onLoading: () -> Unit,
-        onLoaded: (ItemContext) -> Unit
+        onLoaded: (UserContext) -> Unit
     )
 }
 

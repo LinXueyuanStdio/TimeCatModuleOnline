@@ -5,6 +5,7 @@ import com.timecat.data.bmob.data.User
 import com.timecat.module.user.game.item.ItemContext
 import com.timecat.module.user.game.task.rule.ActivityContext
 import com.timecat.module.user.game.task.rule.GameService
+import com.timecat.module.user.permission.UserContext
 import com.xiaojinzi.component.anno.ServiceAnno
 
 /**
@@ -18,7 +19,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
 class GameServiceImpl : GameService {
     var activityContextPool: MutableMap<String, ActivityContext> = mutableMapOf()
     var itemContextPool: MutableMap<String, ItemContext> = mutableMapOf()
-    var cubeContextPool: MutableMap<String, ItemContext> = mutableMapOf()
+    var cubeContextPool: MutableMap<String, UserContext> = mutableMapOf()
 
     override fun init(user: User?) {
 
@@ -48,13 +49,13 @@ class GameServiceImpl : GameService {
         }.load()
     }
 
-    override fun cubeContext(owner: LifecycleOwner, user: User, onLoading: () -> Unit, onLoaded: (ItemContext) -> Unit) {
+    override fun cubeContext(owner: LifecycleOwner, user: User, onLoading: () -> Unit, onLoaded: (UserContext) -> Unit) {
         val context = cubeContextPool[user.objectId]
         if (context != null) {
             onLoaded(context)
             return
         }
-        ItemContext(owner, user, onLoading) {
+        UserContext(owner, user, onLoading) {
             cubeContextPool[user.objectId] = it
             onLoaded(it)
         }.load()

@@ -1,6 +1,5 @@
 package com.same.ui
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -10,33 +9,36 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import cn.leancloud.AVLogger
 import cn.leancloud.AVOSCloud
-import cn.leancloud.AVObject
-import cn.leancloud.Transformer
-import cn.leancloud.json.JSONObject
 import com.google.android.material.button.MaterialButton
 import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.asBlock
 import com.timecat.data.bmob.ext.bmob.asUser
 import com.timecat.data.bmob.ext.bmob.findAllComments
+import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.identity.readonly.UiHub
+import com.timecat.identity.service.PermissionService
 import com.timecat.layout.ui.layout.dp
 import com.xiaojinzi.component.impl.*
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
+    var permissionService: PermissionService? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AVOSCloud.setLogLevel(AVLogger.Level.DEBUG)
         LogUtil.DEBUG = true
         LogUtil.OPEN_LOG = true
+        permissionService = NAV.service(PermissionService::class.java)
         val linearLayout = LinearLayout(this)
         linearLayout.orientation = LinearLayout.VERTICAL
+
         linearLayout.addView(createButton("登录", RouterHub.LOGIN_LoginActivity))
         linearLayout.addView(createButton("游戏化", RouterHub.USER_GameHomeActivity))
-
         linearLayout.addView(createButton("用户") {
             val user = UserDao.getCurrentUser()
             Router.with().hostAndPath(RouterHub.USER_UserDetailActivity)
@@ -59,7 +61,7 @@ class MainActivity : Activity() {
                         LogUtil.se(i["user"]!!.asUser())
                         val hot_children = i["hot_children"] as ArrayList<*>
                         for (j in hot_children) {
-                            val block= j.asBlock()
+                            val block = j.asBlock()
                             LogUtil.e(block)
                         }
                     }
@@ -71,6 +73,16 @@ class MainActivity : Activity() {
         })
         linearLayout.addView(createPathButton(RouterHub.USER_AllUserActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AllTraceActivity))
+
+        linearLayout.addView(createText("权限"))
+        linearLayout.addView(createButton("初始化权限") {
+            permissionService?.initPermission(this)
+        })
+        linearLayout.addView(createButton("测试权限") {
+            permissionService?.validate(UiHub.MASTER_MainActivity_drawer_manager) {
+                ToastUtil.ok("拥有权限 ${UiHub.MASTER_MainActivity_drawer_manager}")
+            }
+        })
 
         linearLayout.addView(createText("物品"))
         linearLayout.addView(createPathButton(RouterHub.USER_AllOwnItemActivity))
