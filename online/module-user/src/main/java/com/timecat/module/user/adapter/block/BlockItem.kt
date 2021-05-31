@@ -27,6 +27,7 @@ import com.timecat.identity.data.block.type.BLOCK_FORUM
 import com.timecat.identity.data.block.type.BLOCK_MOMENT
 import com.timecat.identity.data.block.type.BLOCK_POST
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.identity.readonly.UiHub
 import com.timecat.identity.service.PermissionService
 import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.layout.ui.layout.setShakelessClickListener
@@ -122,7 +123,7 @@ class BlockItem(
                 inflate(R.menu.social_head)
                 GlobalScope.launch(Dispatchers.IO) {
                     val s = NAV.service(PermissionService::class.java)
-                    s?.validate("delete_block", object :PermissionService.Callback{
+                    s?.validate(UiHub.USER_ITEM_delete_block, object :PermissionService.Callback{
                         override fun onPass() {
                             GlobalScope.launch(Dispatchers.Main) {
                                 menu.findItem(R.id.delete)?.setVisible(true)
@@ -187,7 +188,7 @@ class BlockItem(
                     inflate(R.menu.social_head)
                     GlobalScope.launch(Dispatchers.IO) {
                         val s = NAV.service(PermissionService::class.java)
-                        s?.validate("delete_block", object :PermissionService.Callback{
+                        s?.validate(UiHub.USER_ITEM_delete_block, object :PermissionService.Callback{
                             override fun onPass() {
                                 GlobalScope.launch(Dispatchers.Main) {
                                     menu.findItem(R.id.delete)?.setVisible(true)

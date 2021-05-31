@@ -79,6 +79,7 @@ object PermissionValidator {
 
     @JvmStatic
     fun checkById(userContext: UserContext, permissionId: String, callback: PermissionCallback.() -> Unit) {
+        LogUtil.se("check: ${permissionId}")
         val p = userContext.of(permissionId) ?: return
         check(userContext, p, callback)
     }
