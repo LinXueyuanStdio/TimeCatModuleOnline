@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bed"
+        android:icon="@drawable/ic_image_black_24dp"
+        android:title="图床" />
+    <item
+        android:id="@+id/bedPlugin"
+        android:icon="@drawable/ic_image_black_24dp"
+        android:title="图床插件" />
+</menu>

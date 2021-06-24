@@ -1,6 +1,8 @@
 include ':app'
 include ':online:module-login'
 include ':online:module-user'
+include ':online:module-plugin'
+include ':online:module-theme'
 
 rootProject.name = "TimeCatModuleOnline"
 
