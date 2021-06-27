@@ -3,6 +3,7 @@ package com.timecat.module.plugin.manager
 import android.content.Context
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
+import com.timecat.identity.data.getStringList
 import java.io.File
 import java.io.Serializable
 
@@ -21,6 +22,7 @@ data class PluginModel(
 const val RemotePlugin = 0
 const val AssetsPlugin = 1
 const val LocalPlugin = 2
+
 data class PluginInfo(
     val uuid: String,
     val type: Int,
@@ -39,6 +41,8 @@ data class PluginInfo(
      * 动态加载的插件包，里面包含以下几个部分，插件apk，插件框架apk（loader apk和runtime apk）, apk信息配置关系json文件
      */
     val pluginZipFilename: String,
+    val activityList: List<String> = listOf(),
+    val serviceList: List<String> = listOf(),
 ) : Serializable {
     companion object {
         fun fromJson(json: String) = fromJson(JSON.parseObject(json))
@@ -52,8 +56,14 @@ data class PluginInfo(
             val managerFilename: String = jsonObject.getString("managerFilename")
             val pluginZipUrl: String = jsonObject.getString("pluginZipUrl")
             val pluginZipFilename: String = jsonObject.getString("pluginZipFilename")
+            val activityList = jsonObject.getStringList("activityList")
+            val serviceList = jsonObject.getStringList("serviceList")
             return PluginInfo(
-                uuid, type, name, versionCode, versionName, managerUrl, managerFilename, pluginZipUrl, pluginZipFilename
+                uuid, type, name,
+                versionCode, versionName,
+                managerUrl, managerFilename,
+                pluginZipUrl, pluginZipFilename,
+                activityList, serviceList,
             )
         }
     }
@@ -69,6 +79,8 @@ data class PluginInfo(
         jsonObject["managerFilename"] = managerFilename
         jsonObject["pluginZipUrl"] = pluginZipUrl
         jsonObject["pluginZipFilename"] = pluginZipFilename
+        jsonObject["activityList"] = activityList
+        jsonObject["serviceList"] = serviceList
         return jsonObject
     }
 
