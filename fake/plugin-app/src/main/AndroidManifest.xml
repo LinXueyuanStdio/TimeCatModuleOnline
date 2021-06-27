@@ -27,7 +27,7 @@
         android:usesCleartextTraffic="true"
         tools:replace="theme,allowBackup,supportsRtl,name">
         <activity
-            android:name="com.same.ui.MainActivity"
+            android:name="com.same.ui.PluginMainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
             android:hardwareAccelerated="false"
             android:launchMode="singleTask"

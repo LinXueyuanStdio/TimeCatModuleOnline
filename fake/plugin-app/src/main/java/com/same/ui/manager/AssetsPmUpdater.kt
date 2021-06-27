@@ -5,6 +5,7 @@ import com.tencent.shadow.dynamic.host.PluginManagerUpdater
 import com.timecat.component.commonsdk.utils.utils.FileUtil
 import com.timecat.fake.plugin.BuildConfig
 import com.timecat.module.plugin.manager.BasePluginManagerUpdater
+import com.timecat.module.plugin.manager.PartPlugin
 import com.timecat.module.plugin.manager.Plugin
 import com.timecat.module.plugin.manager.PluginInfo
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +35,12 @@ val assetPluginInfo = PluginInfo(
     "pluginmanager.apk",
     "",
     if (BuildConfig.DEBUG) "plugin-debug.zip" else "plugin-release.zip",
-    listOf("com.timecat.plugin.picturebed.github.MainActivity")
+    listOf(
+        PartPlugin(
+            "upload",
+            listOf("com.timecat.plugin.picturebed.github.MainActivity")
+        )
+    ),
 )
 
 class AssetsPmUpdater(

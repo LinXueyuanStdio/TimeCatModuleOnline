@@ -2,6 +2,7 @@ package com.timecat.module.plugin.manager
 
 import android.content.Context
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.timecat.identity.data.getStringList
 import java.io.File
@@ -23,6 +24,31 @@ const val RemotePlugin = 0
 const val AssetsPlugin = 1
 const val LocalPlugin = 2
 
+data class PartPlugin(
+    val partKey: String,
+    val activityList: List<String> = listOf(),
+    val serviceList: List<String> = listOf(),
+) : Serializable {
+    companion object {
+        fun fromJson(json: String) = fromJson(JSON.parseObject(json))
+        fun fromJson(jsonObject: JSONObject): PartPlugin {
+            val partKey: String = jsonObject.getString("partKey")
+            val activityList = jsonObject.getStringList("activityList")
+            val serviceList = jsonObject.getStringList("serviceList")
+            return PartPlugin(partKey, activityList, serviceList)
+        }
+    }
+
+    fun toJsonObject(): JSONObject {
+        val jsonObject = JSONObject()
+        jsonObject["partKey"] = partKey
+        jsonObject["activityList"] = activityList
+        jsonObject["serviceList"] = serviceList
+        return jsonObject
+    }
+
+}
+
 data class PluginInfo(
     val uuid: String,
     val type: Int,
@@ -41,8 +67,7 @@ data class PluginInfo(
      * 动态加载的插件包，里面包含以下几个部分，插件apk，插件框架apk（loader apk和runtime apk）, apk信息配置关系json文件
      */
     val pluginZipFilename: String,
-    val activityList: List<String> = listOf(),
-    val serviceList: List<String> = listOf(),
+    val parts: List<PartPlugin> = listOf(),
 ) : Serializable {
     companion object {
         fun fromJson(json: String) = fromJson(JSON.parseObject(json))
@@ -56,14 +81,13 @@ data class PluginInfo(
             val managerFilename: String = jsonObject.getString("managerFilename")
             val pluginZipUrl: String = jsonObject.getString("pluginZipUrl")
             val pluginZipFilename: String = jsonObject.getString("pluginZipFilename")
-            val activityList = jsonObject.getStringList("activityList")
-            val serviceList = jsonObject.getStringList("serviceList")
+            val parts = jsonObject.getPartPluginList("parts")
             return PluginInfo(
                 uuid, type, name,
                 versionCode, versionName,
                 managerUrl, managerFilename,
                 pluginZipUrl, pluginZipFilename,
-                activityList, serviceList,
+                parts,
             )
         }
     }
@@ -79,11 +103,22 @@ data class PluginInfo(
         jsonObject["managerFilename"] = managerFilename
         jsonObject["pluginZipUrl"] = pluginZipUrl
         jsonObject["pluginZipFilename"] = pluginZipFilename
-        jsonObject["activityList"] = activityList
-        jsonObject["serviceList"] = serviceList
+        jsonObject["parts"] = parts.map { it.toJsonObject() }
         return jsonObject
     }
 
     fun getPluginManagerFile(context: Context): File = File(Plugin.fileInPluginDir(context, managerFilename))
     fun getPluginZipFile(context: Context): File = File(Plugin.fileInPluginDir(context, pluginZipFilename))
+}
+
+fun JSONObject.getPartPluginList(key: String): MutableList<PartPlugin> {
+    return getJSONArray(key)?.toPartPluginList() ?: mutableListOf()
+}
+
+fun JSONArray.toPartPluginList(): MutableList<PartPlugin> {
+    val list: MutableList<PartPlugin> = mutableListOf()
+    for (i in this) {
+        list.add(PartPlugin.fromJson(i as JSONObject))
+    }
+    return list
 }

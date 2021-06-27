@@ -23,6 +23,8 @@ abstract class BasePluginManagerUpdater(val context: Context) : PluginManagerUpd
     fun prepare(callback: (PluginManagerUpdater) -> Unit) {
         if (latest == null) {
             onUpdate(callback)
+        } else {
+            callback(this)
         }
     }
     abstract fun onUpdate(callback: (PluginManagerUpdater) -> Unit)

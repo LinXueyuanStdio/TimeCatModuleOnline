@@ -26,7 +26,7 @@ import com.timecat.module.plugin.manager.Plugin
 import com.timecat.plugin.shared.HostUiLayerProvider
 import com.xiaojinzi.component.impl.*
 
-class MainActivity : AppCompatActivity() {
+class PluginMainActivity : AppCompatActivity() {
     lateinit var containerView: PluginContainerView
     val updater: AssetsPmUpdater by lazy { AssetsPmUpdater(this, assetPluginInfo, updateListener) }
 
@@ -42,13 +42,13 @@ class MainActivity : AppCompatActivity() {
             HostUiLayerProvider.init(this)
         })
         linearLayout.addView(createButton("测试插件") {
-            val partKey = ""
+            val part = assetPluginInfo.parts.first()
             updater.prepare {
                 val newManager = DynamicPluginManager(it)
                 val bundle = Bundle()
                 bundle.putString(PluginHub.KEY_PLUGIN_ZIP_PATH, assetPluginInfo.getPluginZipFile(this).absolutePath)
-                bundle.putString(PluginHub.KEY_PLUGIN_PART_KEY, partKey)
-                bundle.putString(PluginHub.KEY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.splash.SplashActivity")
+                bundle.putString(PluginHub.KEY_PLUGIN_PART_KEY, part.partKey)
+                bundle.putString(PluginHub.KEY_CLASSNAME, part.activityList.first())
 
                 newManager.enter(this, PluginHub.FROM_ID_START_ACTIVITY, bundle, object : EnterCallback by containerView {
 
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         linearLayout.addView(createButton("测试插件-跨进程") {
-            val partKey = ""
+            val partKey = "upload"
             updater.prepare {
                 val newManager = DynamicPluginManager(it)
                 val bundle = Bundle()
@@ -111,8 +111,8 @@ class MainActivity : AppCompatActivity() {
         val button = MaterialButton(this)
         button.text = name
         val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-            marginStart = ScreenUtil.dp2px(this@MainActivity, 10f)
-            marginEnd = ScreenUtil.dp2px(this@MainActivity, 10f)
+            marginStart = ScreenUtil.dp2px(this@PluginMainActivity, 10f)
+            marginEnd = ScreenUtil.dp2px(this@PluginMainActivity, 10f)
         }
         button.layoutParams = layoutParams
         button.gravity = Gravity.CENTER_VERTICAL
