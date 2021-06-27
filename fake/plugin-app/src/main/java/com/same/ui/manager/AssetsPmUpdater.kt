@@ -33,7 +33,8 @@ val assetPluginInfo = PluginInfo(
     "",
     "pluginmanager.apk",
     "",
-    if (BuildConfig.DEBUG) "plugin-debug.zip" else "plugin-release.zip"
+    if (BuildConfig.DEBUG) "plugin-debug.zip" else "plugin-release.zip",
+    listOf("com.timecat.plugin.picturebed.github.MainActivity")
 )
 
 class AssetsPmUpdater(
