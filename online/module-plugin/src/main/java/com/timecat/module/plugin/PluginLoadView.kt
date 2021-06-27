@@ -2,6 +2,7 @@ package com.timecat.module.plugin
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.ProgressBar
 import androidx.constraintlayout.widget.ConstraintLayout
 
 /**
@@ -16,4 +17,9 @@ class PluginLoadView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
+    init {
+        ProgressBar(context).apply {
+
+        }.also { addView(it) }
+    }
 }

@@ -2,7 +2,9 @@ package com.timecat.module.plugin.manager
 
 import android.content.Context
 import android.os.Environment
+import com.tencent.shadow.dynamic.host.DynamicPluginManager
 import com.tencent.shadow.dynamic.host.PluginManager
+import java.io.File
 
 /**
  * @author 林学渊
@@ -12,15 +14,36 @@ import com.tencent.shadow.dynamic.host.PluginManager
  * @usage null
  */
 object Plugin {
+    interface UpdateListener {
+        fun onStart()
+        fun onLoad()
+        fun onPause()
+        fun onResume()
+        fun onStop()
+        fun onComplete()
+    }
+
     val managerPool: MutableMap<String, PluginManager> = mutableMapOf()
 
     @JvmStatic
-    fun manager(uuid: String) :PluginManager? {
-        val m = managerPool[uuid]
-        if (m == null) {
-
+    fun manager(
+        context: Context,
+        pluginInfo: PluginInfo,
+        updateListener: UpdateListener,
+        onPrepared: (PluginManager) -> Unit,
+    ) {
+        val uuid = pluginInfo.uuid
+        val manager = managerPool[uuid]
+        if (manager == null) {
+            val updater = RemotePmUpdater(context, pluginInfo, updateListener)
+            updater.prepare {
+                val newManager = DynamicPluginManager(it)
+                managerPool[uuid] = newManager
+                onPrepared(newManager)
+            }
+        } else {
+            onPrepared(manager)
         }
-        return null
     }
 
     /**
@@ -37,5 +60,20 @@ object Plugin {
             }
         }
         return context.cacheDir.absolutePath
+    }
+
+    const val PLUGIN_DEPLOY_PATH = "plugins"
+
+    @JvmStatic
+    fun getPluginDir(context: Context): String? {
+        val pluginDir = File(getCacheDir(context), PLUGIN_DEPLOY_PATH)
+        return if (pluginDir.exists() || pluginDir.mkdirs()) {
+            pluginDir.absolutePath
+        } else null
+    }
+
+    @JvmStatic
+    fun fileInPluginDir(context: Context, filename: String): String {
+        return File(getPluginDir(context), filename).absolutePath
     }
 }

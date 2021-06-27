@@ -1,13 +1,9 @@
 package com.same.ui
 
 import android.Manifest
-import android.app.ActivityManager
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Process
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -18,17 +14,23 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
-import com.same.ui.manager.Shadow
-import com.tencent.shadow.dynamic.host.PluginManager
+import com.same.ui.manager.AssetsPmUpdater
+import com.same.ui.manager.assetPluginInfo
+import com.tencent.shadow.dynamic.host.DynamicPluginManager
+import com.tencent.shadow.dynamic.host.EnterCallback
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.PluginHub
 import com.timecat.layout.ui.layout.dp
+import com.timecat.module.plugin.PluginContainerView
+import com.timecat.module.plugin.manager.Plugin
 import com.timecat.plugin.shared.HostUiLayerProvider
 import com.xiaojinzi.component.impl.*
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
+    lateinit var containerView: PluginContainerView
+    val updater: AssetsPmUpdater by lazy { AssetsPmUpdater(this, assetPluginInfo, updateListener) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LogUtil.DEBUG = true
@@ -39,23 +41,39 @@ class MainActivity : AppCompatActivity() {
         linearLayout.addView(createText("插件"))
         linearLayout.addView(createButton("初始化插件系统") {
             HostUiLayerProvider.init(this)
-            PluginHelper.getInstance().init(this)
             ToastUtil.ok("初始化成功！")
         })
         linearLayout.addView(createButton("测试插件") {
-            val intent = Intent(this@MainActivity, PluginLoadActivity::class.java)
             val partKey = ""
-            intent.putExtra(PluginHub.KEY_PLUGIN_PART_KEY, partKey)
-            intent.putExtra(PluginHub.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.splash.SplashActivity")
-            startActivity(intent)
+            updater.prepare {
+                val newManager = DynamicPluginManager(it)
+                val bundle = Bundle()
+                bundle.putString(PluginHub.KEY_PLUGIN_ZIP_PATH, assetPluginInfo.getPluginZipFile(this).absolutePath)
+                bundle.putString(PluginHub.KEY_PLUGIN_PART_KEY, partKey)
+                bundle.putString(PluginHub.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.splash.SplashActivity")
+
+                newManager.enter(this, PluginHub.FROM_ID_START_ACTIVITY, bundle, object : EnterCallback by containerView {
+
+                })
+            }
         })
         linearLayout.addView(createButton("测试插件-跨进程") {
-            val intent = Intent(this@MainActivity, PluginLoadActivity::class.java)
             val partKey = ""
-            intent.putExtra(PluginHub.KEY_PLUGIN_PART_KEY, partKey)
-            intent.putExtra(PluginHub.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.splash.SplashActivity")
-            startActivity(intent)
+            updater.prepare {
+                val newManager = DynamicPluginManager(it)
+                val bundle = Bundle()
+                bundle.putString(PluginHub.KEY_PLUGIN_ZIP_PATH, assetPluginInfo.getPluginZipFile(this).absolutePath)
+                bundle.putString(PluginHub.KEY_PLUGIN_PART_KEY, partKey)
+                bundle.putString(PluginHub.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.splash.SplashActivity")
+
+                newManager.enter(this, PluginHub.FROM_ID_START_ACTIVITY, bundle, object : EnterCallback by containerView {
+                })
+            }
         })
+        containerView = PluginContainerView(this).apply {
+
+        }
+        linearLayout.addView(containerView)
 
         val sv = ScrollView(this)
         sv.addView(linearLayout)
@@ -67,29 +85,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    private var mPluginManager: PluginManager? = null
 
-    fun loadPluginManager(apk: File?) {
-        if (mPluginManager == null) {
-            mPluginManager = Shadow.getPluginManager(apk)
+    val updateListener: Plugin.UpdateListener
+        get() {
+            return containerView
         }
-    }
 
-    fun getPluginManager(): PluginManager? {
-        return mPluginManager
-    }
-
-    open fun isProcess(context: Context, processName: String): Boolean {
-        var currentProcName = ""
-        val manager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        for (processInfo in manager.runningAppProcesses) {
-            if (processInfo.pid == Process.myPid()) {
-                currentProcName = processInfo.processName
-                break
-            }
-        }
-        return currentProcName.endsWith(processName)
-    }
     private fun createButton(name: String, path: String): Button {
         val button = createButton(name)
         button.setOnClickListener { go(path) }

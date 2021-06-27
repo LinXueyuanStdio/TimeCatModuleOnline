@@ -44,11 +44,6 @@
             android:name="com.same.ui.GlobalConfiguration"
             android:value="ConfigModule" />
 
-        <activity
-            android:name="com.same.ui.PluginLoadActivity"
-            android:launchMode="standard"
-            android:screenOrientation="portrait"
-            />
         <meta-data
             android:name="android.max_aspect"
             android:value="2.5" />
