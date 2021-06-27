@@ -5,11 +5,16 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.withStyledAttributes
+import com.google.android.material.card.MaterialCardView
 import com.timecat.module.theme.R
-import kotlinx.android.synthetic.main.view_color_info_item.view.*
 
 class ColorInfoItemView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
+    private val titleTextView: AppCompatTextView by lazy { findViewById(R.id.titleTextView) }
+    private val cardView: MaterialCardView by lazy { findViewById(R.id.cardView) }
+    private val colorTextView: AppCompatTextView by lazy { findViewById(R.id.colorTextView) }
+
     init {
         View.inflate(context, R.layout.view_color_info_item, this)
 

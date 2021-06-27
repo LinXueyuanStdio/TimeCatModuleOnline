@@ -5,14 +5,13 @@ import android.accounts.AccountAuthenticatorActivity
 import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.os.Bundle
-import android.view.View
-import android.widget.TextView
+import android.widget.Button
+import android.widget.EditText
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.ext.bmob.EasyRequestUser
 import com.timecat.element.alert.ToastUtil
 import com.timecat.module.login.R
-import kotlinx.android.synthetic.main.login_activity_authenticator.*
 
 /**
  * @author dlink
@@ -23,6 +22,9 @@ import kotlinx.android.synthetic.main.login_activity_authenticator.*
  */
 class AuthenticatorActivity : AccountAuthenticatorActivity() {
     private var mAccountManager: AccountManager? = null
+    private val accountName: EditText by lazy { findViewById(R.id.accountName) }
+    private val accountPassword: EditText by lazy { findViewById(R.id.accountPassword) }
+    private val submit: Button by lazy { findViewById(R.id.submit) }
 
     /**
      * Called when the activity is first created.
@@ -31,11 +33,11 @@ class AuthenticatorActivity : AccountAuthenticatorActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity_authenticator)
         mAccountManager = AccountManager.get(baseContext)
-        val accountName = intent.getStringExtra(ARG_ACCOUNT_NAME)
-        if (accountName != null) {
-            (findViewById<View>(R.id.accountName) as TextView).text = accountName
+        val argAccountName = intent.getStringExtra(ARG_ACCOUNT_NAME)
+        if (argAccountName != null) {
+            accountName.setText(argAccountName)
         }
-        findViewById<View>(R.id.submit).setOnClickListener { submit() }
+        submit.setOnClickListener { submit() }
     }
 
     fun submit() {

@@ -44,12 +44,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/PluginContainerActivity" />
         <activity android:name=".picturebed.PictureBedActivity" />
-        <activity android:name=".picturebed.PictureBedPluginDetailActivity" />
-        <activity android:name=".picturebed.PictureBedPluginsActivity" />
 
         <provider
             android:name="com.tencent.shadow.core.runtime.container.PluginContainerContentProvider"
-            android:authorities="com.time.cat.contentprovider.authority.dynamic"
+            android:authorities="com.time.cat.contentprovider.authority.dynamic.picturebed"
             android:grantUriPermissions="true"
             android:process=":plugin" />
         <!--container 注册 end -->

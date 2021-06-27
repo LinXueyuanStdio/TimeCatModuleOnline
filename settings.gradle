@@ -8,6 +8,7 @@ rootProject.name = "TimeCatModuleOnline"
 
 // 引入composing的设置
 apply from: "gradle/composingConfig.gradle"
+apply from: "gradle/pluginConfig.gradle"
 // 遍历composing_dependencies中的所有配置
 ext.getProperty("composing_dependencies").each { projectConfig ->
     def isLocal = projectConfig["isLocal"]
@@ -24,3 +25,7 @@ ext.getProperty("composing_dependencies").each { projectConfig ->
         }
     }
 }
+
+includeBuild(ext.PictureBedPlugin["managerPath"])
+includeBuild(ext.PictureBedPlugin["pluginPath"])
+include ':fake:plugin-app'
