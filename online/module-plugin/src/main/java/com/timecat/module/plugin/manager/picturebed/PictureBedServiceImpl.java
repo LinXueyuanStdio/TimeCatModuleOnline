@@ -1,4 +1,4 @@
-package com.timecat.module.plugin.picturebed;
+package com.timecat.module.plugin.manager.picturebed;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.tencent.shadow.dynamic.host.EnterCallback;
 import com.tencent.shadow.dynamic.host.PluginManager;
-import com.timecat.identity.readonly.PluginManagerAgreement;
+import com.timecat.identity.readonly.PluginHub;
 import com.timecat.identity.service.PictureBedService;
 import com.timecat.module.plugin.core.InitApplication;
 import com.xiaojinzi.component.anno.ServiceAnno;
@@ -32,8 +32,8 @@ public class PictureBedServiceImpl implements PictureBedService {
         }
         Bundle bundle = new Bundle();
         ArrayList<String> urls = new ArrayList<>(url);
-        bundle.putStringArrayList(PluginManagerAgreement.KEY_PICTURE_PATH, urls);
-        pluginManager.enter(context, PluginManagerAgreement.FROM_ID_LOAD_PICTURE, bundle, new EnterCallback() {
+        bundle.putStringArrayList(PluginHub.KEY_PICTURE_PATH, urls);
+        pluginManager.enter(context, PluginHub.FROM_ID_LOAD_PICTURE, bundle, new EnterCallback() {
             @Override
             public void onShowLoadingView(View view) {
                 work.onShowLoadingView(view);

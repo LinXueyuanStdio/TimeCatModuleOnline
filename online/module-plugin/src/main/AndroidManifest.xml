@@ -8,8 +8,12 @@
             android:value="ConfigModule" />
 
         <service
-            android:name=".MainPluginProcessService"
+            android:name=".container.MainPluginProcessService"
             android:process=":plugin" />
+        <service
+            android:name=".container.SecondPluginProcessPPS"
+            android:process=":plugin2" />
+
 
         <!--container 注册
           注意configChanges需要全注册
@@ -43,11 +47,11 @@
             android:process=":plugin"
             android:screenOrientation="portrait"
             android:theme="@style/PluginContainerActivity" />
-        <activity android:name=".picturebed.PictureBedActivity" />
+
 
         <provider
             android:name="com.tencent.shadow.core.runtime.container.PluginContainerContentProvider"
-            android:authorities="com.time.cat.contentprovider.authority.dynamic.picturebed"
+            android:authorities="${applicationId}.contentprovider.authority.dynamic.picturebed"
             android:grantUriPermissions="true"
             android:process=":plugin" />
         <!--container 注册 end -->

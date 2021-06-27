@@ -1,6 +1,13 @@
 package com.same.ui
 
+import android.Manifest
+import android.app.ActivityManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.Process
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -11,148 +18,78 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
+import com.same.ui.manager.Shadow
+import com.tencent.shadow.dynamic.host.PluginManager
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.component.router.app.NAV
 import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.readonly.RouterHub
-import com.timecat.identity.readonly.UiHub
-import com.timecat.identity.service.PermissionService
+import com.timecat.identity.readonly.PluginHub
 import com.timecat.layout.ui.layout.dp
+import com.timecat.plugin.shared.HostUiLayerProvider
 import com.xiaojinzi.component.impl.*
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
-    var permissionService: PermissionService? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LogUtil.DEBUG = true
         LogUtil.OPEN_LOG = true
-        permissionService = NAV.service(PermissionService::class.java)
         val linearLayout = LinearLayout(this)
         linearLayout.orientation = LinearLayout.VERTICAL
 
-        linearLayout.addView(createButton("登录", RouterHub.LOGIN_LoginActivity))
-        linearLayout.addView(createButton("游戏化", RouterHub.USER_GameHomeActivity))
-
-        linearLayout.addView(createPathButton(RouterHub.USER_AllUserActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllTraceActivity))
-
-        linearLayout.addView(createText("权限"))
-        linearLayout.addView(createButton("初始化权限") {
-            permissionService?.initPermission(this)
+        linearLayout.addView(createText("插件"))
+        linearLayout.addView(createButton("初始化插件系统") {
+            HostUiLayerProvider.init(this)
+            PluginHelper.getInstance().init(this)
+            ToastUtil.ok("初始化成功！")
         })
-        linearLayout.addView(createButton("测试权限") {
-            permissionService?.validate(UiHub.MASTER_MainActivity_drawer_manager, object : PermissionService.Callback {
-                override fun onPass() {
-                    ToastUtil.ok("拥有权限 ${UiHub.MASTER_MainActivity_drawer_manager}")
-                }
-
-                override fun onReject() {
-                    ToastUtil.ok("莫得权限 ${UiHub.MASTER_MainActivity_drawer_manager}")
-                }
-            })
+        linearLayout.addView(createButton("测试插件") {
+            val intent = Intent(this@MainActivity, PluginLoadActivity::class.java)
+            val partKey = ""
+            intent.putExtra(PluginHub.KEY_PLUGIN_PART_KEY, partKey)
+            intent.putExtra(PluginHub.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.splash.SplashActivity")
+            startActivity(intent)
         })
-
-        linearLayout.addView(createText("物品"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllOwnItemActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllItemActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_ThingItemEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_PackageItemEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_DataItemEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_EquipItemEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_BuffItemEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_CubeItemEditorActivity))
-
-        linearLayout.addView(createText("邮件"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllOwnMailActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllMailActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_MailEditorActivity))
-
-        linearLayout.addView(createText("方块"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllOwnCubeActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllIdentityActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllMetaPermissionActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllHunPermissionActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllRoleActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllAuthActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_CubeSettingEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_CubeAttrEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_CubeRolesEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_CubeSkillEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_CubeStarEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddMetaPermissionActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddHunPermissionActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddRoleActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddIdentityActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddAuthActivity))
-
-        linearLayout.addView(createText("活动"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllActivityActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllOwnActivityActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_UrlActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_TextUrlActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_OneTaskActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_SevenDaySignActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AchievementActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_CardActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_DoubleActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_DreamActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_EveryDayMainActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_GetBackActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_LifeActivityEditorActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_PriceActivityEditorActivity))
-
-        linearLayout.addView(createText("任务"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllTaskActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_DataTaskEditorActivity))
-
-        linearLayout.addView(createText("商店"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllOwnShopActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllShopActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_ShopEditorActivity))
-
-        linearLayout.addView(createText("云"))
-        linearLayout.addView(createPathButton(RouterHub.USER_CloudActivity))
-
-        linearLayout.addView(createText("动态"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllMomentActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddMomentActivity))
-
-        linearLayout.addView(createText("评论"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddCommentActivity))
-
-        linearLayout.addView(createText("帖子"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllForumActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddPostActivity))
-
-        linearLayout.addView(createText("话题"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllTopicActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddTopicActivity))
-
-        linearLayout.addView(createText("标签"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllTagActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddTagActivity))
-
-        linearLayout.addView(createText("排行榜"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllLeaderBoardActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllRecommendActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddLeaderBoardActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddRecommendActivity))
-
-        linearLayout.addView(createText("App"))
-        linearLayout.addView(createPathButton(RouterHub.USER_AllAppActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddAndroidAppActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddiOSAppActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddMacAppActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddPluginAppActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddWebAppActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_AddWindowsAppActivity))
-        linearLayout.addView(createPathButton(RouterHub.USER_EditPluginAppActivity))
+        linearLayout.addView(createButton("测试插件-跨进程") {
+            val intent = Intent(this@MainActivity, PluginLoadActivity::class.java)
+            val partKey = ""
+            intent.putExtra(PluginHub.KEY_PLUGIN_PART_KEY, partKey)
+            intent.putExtra(PluginHub.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.splash.SplashActivity")
+            startActivity(intent)
+        })
 
         val sv = ScrollView(this)
         sv.addView(linearLayout)
         setContentView(sv)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            }
+        }
+    }
+    private var mPluginManager: PluginManager? = null
+
+    fun loadPluginManager(apk: File?) {
+        if (mPluginManager == null) {
+            mPluginManager = Shadow.getPluginManager(apk)
+        }
     }
 
+    fun getPluginManager(): PluginManager? {
+        return mPluginManager
+    }
+
+    open fun isProcess(context: Context, processName: String): Boolean {
+        var currentProcName = ""
+        val manager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        for (processInfo in manager.runningAppProcesses) {
+            if (processInfo.pid == Process.myPid()) {
+                currentProcName = processInfo.processName
+                break
+            }
+        }
+        return currentProcName.endsWith(processName)
+    }
     private fun createButton(name: String, path: String): Button {
         val button = createButton(name)
         button.setOnClickListener { go(path) }
@@ -204,5 +141,17 @@ class MainActivity : AppCompatActivity() {
                     Log.e("ui", errorResult.error.toString())
                 }
             })
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == 1) {
+            for (i in permissions.indices) {
+                if (permissions[i] == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        throw RuntimeException("必须赋予权限.")
+                    }
+                }
+            }
+        }
     }
 }

@@ -1,9 +1,9 @@
-package com.timecat.module.plugin.common;
+package com.timecat.module.plugin.manager.common;
 
 import android.content.Context;
-import android.os.Environment;
 
 import com.timecat.component.setting.DEF;
+import com.timecat.module.plugin.manager.Plugin;
 
 import java.io.File;
 
@@ -30,21 +30,10 @@ public class PluginConstants {
     }
 
     public static String getPluginDir(Context context) {
-        File pluginDir = new File(getCacheDir(context), PluginConstants.PLUGIN_DEPLOY_PATH);
-        if (!pluginDir.exists()) {
-            pluginDir.mkdirs();
+        File pluginDir = new File(Plugin.getCacheDir(context), PluginConstants.PLUGIN_DEPLOY_PATH);
+        if (pluginDir.exists() || pluginDir.mkdirs()) {
+            return pluginDir.getAbsolutePath();
         }
-        return pluginDir.getAbsolutePath();
-    }
-
-    private static String getCacheDir(Context context) {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            File cacheDir = context.getExternalCacheDir();
-            if (cacheDir != null && (cacheDir.exists() || cacheDir.mkdirs())) {
-                return cacheDir.getAbsolutePath();
-            }
-        }
-
-        return context.getCacheDir().getAbsolutePath();
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.timecat.module.plugin.core;
+package com.timecat.module.plugin.manager;
 
 import com.timecat.component.commonsdk.utils.override.LogUtil;
 

@@ -1,4 +1,4 @@
-package com.timecat.module.plugin.core;
+package com.timecat.module.plugin.manager;
 
 /**
  * @author 林学渊

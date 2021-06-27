@@ -14,6 +14,7 @@ dependencies {
     api rootProject.ext.timecat["plugin-agreement-window"]
     api rootProject.ext.timecat["middle-image"]
     api rootProject.ext.timecat["component-SelfRouter"]
+    api project(":plugin:shared-host")
 
     api rootProject.ext.dependencies["kotlinx-coroutines-android"]
     api rootProject.ext.dependencies["kotlinx-coroutines-core"]

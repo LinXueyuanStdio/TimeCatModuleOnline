@@ -1,7 +1,7 @@
-package com.timecat.module.plugin.common
+package com.timecat.module.plugin.manager.common
 
 import android.content.Context
-import com.timecat.module.plugin.core.RemotePathPmUpdater
+import com.timecat.module.plugin.manager.RemotePathPmUpdater
 
 /**
  * @author 林学渊

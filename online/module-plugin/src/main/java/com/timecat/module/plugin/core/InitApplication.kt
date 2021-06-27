@@ -9,8 +9,8 @@ import com.tencent.shadow.dynamic.host.DynamicPluginManager
 import com.tencent.shadow.dynamic.host.DynamicRuntime
 import com.tencent.shadow.dynamic.host.PluginManager
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.module.plugin.common.CommonPmUpdater
-import com.timecat.module.plugin.picturebed.PictureBedPmUpdater
+import com.timecat.module.plugin.manager.common.CommonPmUpdater
+import com.timecat.module.plugin.manager.picturebed.PictureBedPmUpdater
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

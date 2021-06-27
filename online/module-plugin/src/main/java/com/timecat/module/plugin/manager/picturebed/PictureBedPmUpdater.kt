@@ -1,7 +1,7 @@
-package com.timecat.module.plugin.picturebed
+package com.timecat.module.plugin.manager.picturebed
 
 import android.content.Context
-import com.timecat.module.plugin.core.RemotePathPmUpdater
+import com.timecat.module.plugin.manager.RemotePathPmUpdater
 
 /**
  * @author 林学渊

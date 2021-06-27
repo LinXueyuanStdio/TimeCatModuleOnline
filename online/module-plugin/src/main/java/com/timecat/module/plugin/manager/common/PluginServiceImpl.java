@@ -1,4 +1,4 @@
-package com.timecat.module.plugin.core;
+package com.timecat.module.plugin.manager.common;
 
 import android.content.Context;
 import android.net.Uri;
@@ -11,10 +11,12 @@ import com.tencent.shadow.dynamic.host.EnterCallback;
 import com.tencent.shadow.dynamic.host.PluginManager;
 import com.timecat.component.commonsdk.utils.override.LogUtil;
 import com.timecat.data.system.model.api.PluginDownloadService;
-import com.timecat.identity.readonly.PluginManagerAgreement;
-import com.timecat.identity.readonly.RouterHub;
+import com.timecat.identity.readonly.PluginHub;
 import com.timecat.identity.service.PluginService;
-import com.timecat.module.plugin.picturebed.PictureBedPluginConstants;
+import com.timecat.module.plugin.manager.DownloadListener;
+import com.timecat.module.plugin.manager.DownloadUtil;
+import com.timecat.module.plugin.core.InitApplication;
+import com.timecat.module.plugin.manager.picturebed.PictureBedPluginConstants;
 import com.xiaojinzi.component.anno.ServiceAnno;
 
 import java.io.File;
@@ -189,7 +191,7 @@ public class PluginServiceImpl implements PluginService {
         String filepath = PictureBedPluginConstants.getPluginAbsPath(context, pluginFileName);
         Bundle bundle = getBundle(filepath, partKey, activityClassName, extra, uri, action);
 
-        pluginManager.enter(context, PluginManagerAgreement.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
+        pluginManager.enter(context, PluginHub.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
             @Override
             public void onShowLoadingView(View view) {
                 //显示Manager传来的Loading页面
@@ -218,12 +220,12 @@ public class PluginServiceImpl implements PluginService {
         LogUtil.se(zipAbsPathForPlugin);
         LogUtil.se(partName);
         LogUtil.se(activity_class_name);
-        bundle.putString(PluginManagerAgreement.KEY_PLUGIN_ZIP_PATH, zipAbsPathForPlugin);
-        bundle.putString(PluginManagerAgreement.KEY_PLUGIN_PART_KEY, partName);
-        bundle.putString(PluginManagerAgreement.KEY_ACTIVITY_CLASSNAME, activity_class_name);
-        bundle.putBundle(PluginManagerAgreement.KEY_EXTRAS, extra);
-        bundle.putString(PluginManagerAgreement.KEY_ACTION, action);
-        bundle.putParcelable(PluginManagerAgreement.KEY_DATA, data);
+        bundle.putString(PluginHub.KEY_PLUGIN_ZIP_PATH, zipAbsPathForPlugin);
+        bundle.putString(PluginHub.KEY_PLUGIN_PART_KEY, partName);
+        bundle.putString(PluginHub.KEY_ACTIVITY_CLASSNAME, activity_class_name);
+        bundle.putBundle(PluginHub.KEY_EXTRAS, extra);
+        bundle.putString(PluginHub.KEY_ACTION, action);
+        bundle.putParcelable(PluginHub.KEY_DATA, data);
         return bundle;
     }
 

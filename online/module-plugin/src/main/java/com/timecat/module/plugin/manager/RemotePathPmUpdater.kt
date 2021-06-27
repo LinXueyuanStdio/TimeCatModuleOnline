@@ -1,13 +1,13 @@
-package com.timecat.module.plugin.core
+package com.timecat.module.plugin.manager
 
 import android.content.Context
 import com.blankj.utilcode.util.FileUtils
 import com.tencent.shadow.dynamic.host.PluginManagerUpdater
-import com.timecat.extend.arms.BaseApplication
 import com.timecat.component.commonsdk.utils.override.LogUtil
-import com.timecat.data.system.network.RetrofitHelper
 import com.timecat.component.setting.DEF
-import com.timecat.module.plugin.common.PluginConstants
+import com.timecat.data.system.network.RetrofitHelper
+import com.timecat.extend.arms.BaseApplication
+import com.timecat.module.plugin.manager.common.PluginConstants
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -156,6 +156,6 @@ abstract class RemotePathPmUpdater(context: Context) : PluginManagerUpdater {
     fun needWaitingUpdate(): Boolean {
         LogUtil.se("")
         return (wasUpdating()//之前正在更新中，暗示更新出错了，应该放弃之前的缓存
-                || latest == null)//没有本地缓存
+            || latest == null)//没有本地缓存
     }
 }

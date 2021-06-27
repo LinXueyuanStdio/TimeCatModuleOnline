@@ -1,9 +1,9 @@
-package com.timecat.module.plugin.picturebed;
+package com.timecat.module.plugin.manager.picturebed;
 
 import android.content.Context;
-import android.os.Environment;
 
 import com.timecat.component.setting.DEF;
+import com.timecat.module.plugin.manager.Plugin;
 
 import java.io.File;
 
@@ -50,26 +50,12 @@ public class PictureBedPluginConstants {
      * @return 插件目录
      */
     public static String getPluginDir(Context context) {
-        File pluginDir = new File(getCacheDir(context), PLUGIN_DEPLOY_PATH);
+        File pluginDir = new File(Plugin.getCacheDir(context), PLUGIN_DEPLOY_PATH);
         if (!pluginDir.exists()) {
             pluginDir.mkdirs();
         }
         return pluginDir.getAbsolutePath();
     }
 
-    /**
-     * 缓存目录
-     * @param context context
-     * @return 缓存目录
-     */
-    private static String getCacheDir(Context context) {
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            File cacheDir = context.getExternalCacheDir();
-            if (cacheDir != null && (cacheDir.exists() || cacheDir.mkdirs())) {
-                return cacheDir.getAbsolutePath();
-            }
-        }
 
-        return context.getCacheDir().getAbsolutePath();
-    }
 }
