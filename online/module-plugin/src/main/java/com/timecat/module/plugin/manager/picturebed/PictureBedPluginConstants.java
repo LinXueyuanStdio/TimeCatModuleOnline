@@ -2,7 +2,6 @@ package com.timecat.module.plugin.manager.picturebed;
 
 import android.content.Context;
 
-import com.timecat.component.setting.DEF;
 import com.timecat.module.plugin.manager.Plugin;
 
 import java.io.File;
@@ -38,10 +37,6 @@ public class PictureBedPluginConstants {
      */
     public static String getPluginManagerAbsPath(Context context, String versionCode) {
         return new File(getPluginDir(context), "manager" + versionCode + ".plugin").getAbsolutePath();
-    }
-
-    public static int getPluginManagerVersionCode(String name) {
-        return DEF.plugin().getInt(name, 0);
     }
 
     /**

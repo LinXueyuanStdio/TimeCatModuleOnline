@@ -10,32 +10,14 @@ import com.blankj.utilcode.util.FileUtils;
 import com.tencent.shadow.dynamic.host.EnterCallback;
 import com.tencent.shadow.dynamic.host.PluginManager;
 import com.timecat.component.commonsdk.utils.override.LogUtil;
-import com.timecat.data.system.model.api.PluginDownloadService;
 import com.timecat.identity.readonly.PluginHub;
 import com.timecat.identity.service.PluginService;
-import com.timecat.module.plugin.manager.DownloadListener;
-import com.timecat.module.plugin.manager.DownloadUtil;
 import com.timecat.module.plugin.core.InitApplication;
+import com.timecat.module.plugin.manager.DownloadListener;
 import com.timecat.module.plugin.manager.picturebed.PictureBedPluginConstants;
 import com.xiaojinzi.component.anno.ServiceAnno;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @author 林学渊
@@ -112,60 +94,34 @@ public class PluginServiceImpl implements PluginService {
     }
 
     private Thread mThread;
-
-    public static PluginDownloadService getPluginService() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://github.com/LinXueyuanStdio/TimeCatMaven/raw/master/")
-                .client(new OkHttpClient.Builder()
-                        .retryOnConnectionFailure(true)
-                        .connectTimeout(15, TimeUnit.SECONDS)
-                        .writeTimeout(20, TimeUnit.SECONDS)
-                        .readTimeout(20, TimeUnit.SECONDS)
-                        .addInterceptor(new Interceptor() {
-                            @Override
-                            public Response intercept(Chain chain) throws IOException {
-                                Request r = chain.request();
-                                LogUtil.se(r.toString());
-                                return chain.proceed(r);
-                            }
-                        })
-                        .cache(null)
-                        .build())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        return retrofit.create(PluginDownloadService.class);
-    }
-
     public void downloadFile(String fromUrl, String toFilePath, final DownloadListener downloadListener) {
         File mFile = new File(toFilePath);
         if (!FileUtils.isFileExists(mFile) && FileUtils.createOrExistsFile(mFile)) {
-            getPluginService().downloadFile(fromUrl)
-                    .subscribeOn(Schedulers.newThread())//请求在新的线程中执行
-                    .observeOn(AndroidSchedulers.mainThread())//最后在主线程中执行
-                    .subscribe(new Observer<ResponseBody>() {
-                        @Override
-                        public void onComplete() {
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            if (e != null) e.printStackTrace();
-                            downloadListener.onFailure(); //下载失败
-                        }
-
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                        }
-
-                        @Override
-                        public void onNext(ResponseBody response) {
-                            //下载文件放在子线程
-                            mThread = new Thread(() -> DownloadUtil.writeFile2Disk(response, mFile, downloadListener));
-                            mThread.start();
-                        }
-                    });
+//            getPluginService().downloadFile(fromUrl)
+//                    .subscribeOn(Schedulers.newThread())//请求在新的线程中执行
+//                    .observeOn(AndroidSchedulers.mainThread())//最后在主线程中执行
+//                    .subscribe(new Observer<ResponseBody>() {
+//                        @Override
+//                        public void onComplete() {
+//                        }
+//
+//                        @Override
+//                        public void onError(Throwable e) {
+//                            if (e != null) e.printStackTrace();
+//                            downloadListener.onFailure(); //下载失败
+//                        }
+//
+//                        @Override
+//                        public void onSubscribe(Disposable d) {
+//                        }
+//
+//                        @Override
+//                        public void onNext(ResponseBody response) {
+//                            //下载文件放在子线程
+//                            mThread = new Thread(() -> DownloadUtil.writeFile2Disk(response, mFile, downloadListener));
+//                            mThread.start();
+//                        }
+//                    });
         } else {
             downloadListener.onFinish(toFilePath); //下载完成
         }
@@ -222,7 +178,7 @@ public class PluginServiceImpl implements PluginService {
         LogUtil.se(activity_class_name);
         bundle.putString(PluginHub.KEY_PLUGIN_ZIP_PATH, zipAbsPathForPlugin);
         bundle.putString(PluginHub.KEY_PLUGIN_PART_KEY, partName);
-        bundle.putString(PluginHub.KEY_ACTIVITY_CLASSNAME, activity_class_name);
+        bundle.putString(PluginHub.KEY_CLASSNAME, activity_class_name);
         bundle.putBundle(PluginHub.KEY_EXTRAS, extra);
         bundle.putString(PluginHub.KEY_ACTION, action);
         bundle.putParcelable(PluginHub.KEY_DATA, data);
