@@ -73,7 +73,11 @@ object Plugin {
     }
 
     @JvmStatic
-    fun fileInPluginDir(context: Context, filename: String): String {
-        return File(getPluginDir(context), filename).absolutePath
+    fun fileInPluginDir(context: Context, name: String, filename: String): String {
+        val pluginHomeDir = File(getPluginDir(context), name)
+        if (!pluginHomeDir.exists()) {
+            pluginHomeDir.mkdirs()
+        }
+        return File(pluginHomeDir.absolutePath, filename).absolutePath
     }
 }

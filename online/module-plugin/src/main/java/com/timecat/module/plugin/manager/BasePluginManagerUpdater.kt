@@ -20,8 +20,8 @@ abstract class BasePluginManagerUpdater(val context: Context) : PluginManagerUpd
     override fun isAvailable(file: File?): Future<Boolean>? {
         return null
     }
-    fun prepare(callback: (PluginManagerUpdater) -> Unit) {
-        if (latest == null) {
+    open fun prepare(callback: (PluginManagerUpdater) -> Unit) {
+        if (latest == null || !latest.exists()) {
             onUpdate(callback)
         } else {
             callback(this)

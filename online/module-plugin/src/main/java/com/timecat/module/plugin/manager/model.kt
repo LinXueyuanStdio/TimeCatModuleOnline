@@ -4,7 +4,6 @@ import android.content.Context
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
-import com.timecat.identity.data.getStringList
 import java.io.File
 import java.io.Serializable
 
@@ -37,6 +36,18 @@ data class PartPlugin(
             val serviceList = jsonObject.getStringList("serviceList")
             return PartPlugin(partKey, activityList, serviceList)
         }
+
+        fun JSONObject.getStringList(key: String): MutableList<String> {
+            return getJSONArray(key)?.toListString() ?: mutableListOf()
+        }
+
+        fun JSONArray.toListString(): MutableList<String> {
+            val list: MutableList<String> = mutableListOf()
+            for (i in this) {
+                list.add(i.toString())
+            }
+            return list
+        }
     }
 
     fun toJsonObject(): JSONObject {
@@ -50,23 +61,23 @@ data class PartPlugin(
 }
 
 data class PluginInfo(
-    val uuid: String,
-    val type: Int,
-    val name: String,
-    val versionCode: Int,
-    val versionName: String,
+    var uuid: String,
+    var type: Int,
+    var name: String,
+    var versionCode: Int,
+    var versionName: String,
 
-    val managerUrl: String,
+    var managerUrl: String,
     /**
      * 动态加载的插件管理apk
      */
-    val managerFilename: String,
+    var managerFilename: String,
 
-    val pluginZipUrl: String,
+    var pluginZipUrl: String,
     /**
      * 动态加载的插件包，里面包含以下几个部分，插件apk，插件框架apk（loader apk和runtime apk）, apk信息配置关系json文件
      */
-    val pluginZipFilename: String,
+    var pluginZipFilename: String,
     val parts: List<PartPlugin> = listOf(),
 ) : Serializable {
     companion object {
@@ -107,8 +118,10 @@ data class PluginInfo(
         return jsonObject
     }
 
-    fun getPluginManagerFile(context: Context): File = File(Plugin.fileInPluginDir(context, managerFilename))
-    fun getPluginZipFile(context: Context): File = File(Plugin.fileInPluginDir(context, pluginZipFilename))
+    override fun toString(): String = toJsonObject().toJSONString()
+
+    fun getPluginManagerFile(context: Context): File = File(Plugin.fileInPluginDir(context, name, "a$uuid$managerFilename"))
+    fun getPluginZipFile(context: Context): File = File(Plugin.fileInPluginDir(context, name, "a$uuid$pluginZipFilename"))
 }
 
 fun JSONObject.getPartPluginList(key: String): MutableList<PartPlugin> {

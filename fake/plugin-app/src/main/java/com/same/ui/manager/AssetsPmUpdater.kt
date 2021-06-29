@@ -3,6 +3,7 @@ package com.same.ui.manager
 import android.content.Context
 import com.tencent.shadow.dynamic.host.PluginManagerUpdater
 import com.timecat.component.commonsdk.utils.utils.FileUtil
+import com.timecat.component.setting.DEF
 import com.timecat.fake.plugin.BuildConfig
 import com.timecat.module.plugin.manager.BasePluginManagerUpdater
 import com.timecat.module.plugin.manager.PartPlugin
@@ -62,23 +63,32 @@ class AssetsPmUpdater(
     }
 
     fun loadLatestVersion(callback: (PluginInfo) -> Unit) {
-        callback(pluginInfo)
+        val newPluginInfo = PluginInfo.fromJson(pluginInfo.toJsonObject())
+        newPluginInfo.uuid = UUID.randomUUID().toString()
+        newPluginInfo.versionCode++
+        DEF.plugin().putString("assets", newPluginInfo.toJsonObject().toJSONString())
+        callback(newPluginInfo)
     }
 
     fun updateBy(latestInfo: PluginInfo, currentInfo: PluginInfo, callback: (PluginManagerUpdater) -> Unit) {
-        forceUpdate(latestInfo, callback)
+        if (latestInfo.versionCode > currentInfo.versionCode) {
+            forceUpdate(latestInfo, callback)
+        } else {
+            callback(this)
+        }
     }
 
     fun forceUpdate(latestInfo: PluginInfo, callback: (PluginManagerUpdater) -> Unit) {
         updateListener.onStart()
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val pluginManagerFile = pluginInfo.getPluginManagerFile(context)
-                val pluginZipFile = pluginInfo.getPluginZipFile(context)
-                val inputStream = context.assets.open(latestInfo.managerFilename)
+                val pluginManagerFile = latestInfo.getPluginManagerFile(context)
+                val pluginZipFile = latestInfo.getPluginZipFile(context)
+
+                val inputStream = context.applicationContext.assets.open(latestInfo.managerFilename)
                 val out: OutputStream = FileOutputStream(pluginManagerFile)
                 FileUtil.copy(inputStream, out)
-                val zip = context.assets.open(latestInfo.pluginZipFilename)
+                val zip = context.applicationContext.assets.open(latestInfo.pluginZipFilename)
                 val outZip: OutputStream = FileOutputStream(pluginZipFile)
                 FileUtil.copy(zip, outZip)
                 withContext(Dispatchers.Main) {
@@ -86,10 +96,15 @@ class AssetsPmUpdater(
                     callback(this@AssetsPmUpdater)
                 }
             } catch (e: IOException) {
+                e.printStackTrace()
                 throw RuntimeException("从assets中复制apk出错", e)
             }
         }
     }
+
+//    override fun prepare(callback: (PluginManagerUpdater) -> Unit) {
+//        onUpdate(callback)
+//    }
 
     override fun onUpdate(callback: (PluginManagerUpdater) -> Unit) {
         loadLatestVersion {

@@ -80,7 +80,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api 'androidx.appcompat:appcompat:1.2.0'
     api project(':online:module-plugin')
-    api rootProject.ext.timecat["middle-block"]
+    api rootProject.ext.timecat["component-CommonSetting"]
 }
 
 
