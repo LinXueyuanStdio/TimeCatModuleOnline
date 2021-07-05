@@ -2,8 +2,8 @@ package com.timecat.module.plugin
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.constraintlayout.widget.ConstraintLayout
 
 /**
  * @author 林学渊
@@ -16,7 +16,7 @@ class PluginLoadView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr) {
+) : LinearLayout(context, attrs, defStyleAttr) {
     init {
         ProgressBar(context).apply {
 

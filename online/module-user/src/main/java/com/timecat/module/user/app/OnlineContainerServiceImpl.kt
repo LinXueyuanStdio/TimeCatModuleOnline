@@ -19,6 +19,7 @@ import com.timecat.middle.block.service.HomeService
 import com.timecat.module.user.adapter.block.MomentItem
 import com.timecat.module.user.adapter.block.NotMoreItem
 import com.xiaojinzi.component.anno.ServiceAnno
+import eu.davidea.flexibleadapter.FlexibleAdapter
 import io.reactivex.disposables.Disposable
 import java.util.*
 
@@ -47,7 +48,7 @@ class OnlineContainerServiceImpl : ContainerService {
     }
 
     var focus_ids: List<User> = mutableListOf()
-    var disposable:Disposable?=null
+    var disposable: Disposable? = null
 
     override fun loadForVirtualPath(context: Context,
                                     parentUuid: String,
@@ -59,7 +60,19 @@ class OnlineContainerServiceImpl : ContainerService {
                 NAV.go(RouterHub.LOGIN_LoginActivity)
             }
         } else {
-            homeService.itemCommonListener().configAdapter(true, pageSize, 4, notMoreItem)
+            val listener = homeService.itemCommonListener()
+            listener.adapter().apply {
+                endlessPageSize = pageSize
+                setEndlessScrollThreshold(4)
+                setEndlessScrollListener(object : FlexibleAdapter.EndlessScrollListener {
+                    override fun noMoreLoad(newItemsSize: Int) {
+                    }
+
+                    override fun onLoadMore(lastPosition: Int, currentPage: Int) {
+                        listener.loadMore(lastPosition, currentPage)
+                    }
+                }, notMoreItem)
+            }
             callback.onLoading("正在连接服务器") {
                 disposable?.dispose()
                 callback.onVirtualLoadSuccess(listOf())

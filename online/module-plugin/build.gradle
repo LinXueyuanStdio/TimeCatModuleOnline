@@ -10,7 +10,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api rootProject.ext.timecat["component-CommonStatic"]
-    api rootProject.ext.timecat["component-CommonResource"]
+//    api rootProject.ext.timecat["component-CommonResource"]
+    api rootProject.ext.timecat["identity-Resource"]
     api rootProject.ext.timecat["component-CommonSDK"]
     api rootProject.ext.timecat["component-SelfService"]
     api rootProject.ext.timecat["component-SelfData"]
