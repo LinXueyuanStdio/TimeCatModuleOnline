@@ -154,7 +154,7 @@ fun Activity.chooseAvatar(onSuccess: (String) -> Unit) {
                 }
                 3 -> {
                     //随机图标
-                    selectOneRandomImage(onSuccess)
+                    selectOneRandomAvatar(onSuccess)
                 }
                 4 -> {
                     //我的在线相册
@@ -171,7 +171,7 @@ fun Activity.chooseImage(onSuccess: (String) -> Unit) {
             "拍照",
             "本地相册",
             "内置图标",
-            "随机图标",
+            "随机大图",
 //                "我的在线相册" TODO
         )
         positiveButton(R.string.ok)
@@ -336,10 +336,16 @@ fun Activity.selectOneLocalImage(
         }
 }
 
-fun Activity.selectOneRandomImage(
+fun Activity.selectOneRandomAvatar(
     onSuccess: (String) -> Unit
 ) {
     onSuccess(IconLoader.randomAvatar(UUID.randomUUID().toString()))
+}
+
+fun Activity.selectOneRandomImage(
+    onSuccess: (String) -> Unit
+) {
+    onSuccess(IconLoader.randomCover(UUID.randomUUID().toString()))
 }
 
 fun Activity.selectOneOnlineImage(

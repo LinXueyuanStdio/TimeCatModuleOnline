@@ -41,6 +41,11 @@ class ImageSelectServiceImpl : ImageSelectService {
         activity.selectOneOnlineImage(iar, onSuccess)
     }
 
+    override fun selectOneRandomAvatar(activity: Activity, cropId: Int, onSuccess: (String) -> Unit) {
+        val iar = ImageAspectRatio.values().find { it.id == cropId } ?: ImageAspectRatio.Avatar
+        activity.selectOneRandomAvatar(onSuccess)
+    }
+
     override fun selectOneRandomImage(activity: Activity, cropId: Int, onSuccess: (String) -> Unit) {
         val iar = ImageAspectRatio.values().find { it.id == cropId } ?: ImageAspectRatio.Avatar
         activity.selectOneRandomImage(onSuccess)

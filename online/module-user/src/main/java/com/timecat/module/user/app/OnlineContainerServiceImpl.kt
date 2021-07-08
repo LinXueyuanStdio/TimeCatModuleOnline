@@ -12,7 +12,9 @@ import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.requestUserRelation
 import com.timecat.data.bmob.ext.net.allFollow
 import com.timecat.data.bmob.ext.net.findAllMoment
+import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.breadcrumb.Path
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.service.ContainerService
 import com.timecat.middle.block.service.HomeService
@@ -34,14 +36,6 @@ import java.util.*
 class OnlineContainerServiceImpl : ContainerService {
     val pageSize: Int = 10
     private val notMoreItem: NotMoreItem = NotMoreItem()
-    override fun loadContainerButton(context: Context, parentUuid: String, homeService: HomeService, callback: ContainerService.LoadButton) {
-        callback.onLoadSuccess(listOf(Chip(context).apply {
-            text = "进入社区"
-            setShakelessClickListener {
-                NAV.go(RouterHub.USER_CloudActivity)
-            }
-        }))
-    }
 
     fun I(): User {
         return UserDao.getCurrentUser() ?: throw Exception()
@@ -49,6 +43,14 @@ class OnlineContainerServiceImpl : ContainerService {
 
     var focus_ids: List<User> = mutableListOf()
     var disposable: Disposable? = null
+    override fun loadContext(path: Path, context: Context, parentUuid: String, record: RoomRecord?, homeService: HomeService) {
+        homeService.loadChipButtons(listOf(Chip(context).apply {
+            text = "进入社区"
+            setShakelessClickListener {
+                NAV.go(RouterHub.USER_CloudActivity)
+            }
+        }))
+    }
 
     override fun loadForVirtualPath(context: Context,
                                     parentUuid: String,
@@ -81,7 +83,7 @@ class OnlineContainerServiceImpl : ContainerService {
                 query = I().allFollow()
                 onError = {
                     callback.onError("加载失败") {
-                        homeService.databaseReload()
+                        homeService.reloadData()
                     }
                     focus_ids = mutableListOf()
                     LogUtil.se(it)
