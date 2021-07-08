@@ -14,6 +14,8 @@ import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockDetailActivity
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.social.common.CommentListFragment
+import com.timecat.module.user.social.common.LikeListFragment
+import com.timecat.module.user.social.common.MomentListFragment
 import com.timecat.module.user.social.leaderboard.fragment.LeaderBoardDetailFragment
 import com.timecat.module.user.social.leaderboard.fragment.LeaderBoardListFragment
 import com.timecat.module.user.social.leaderboard.fragment.RecommendListFragment
@@ -66,13 +68,13 @@ class LeaderBoardCollapseActivity : BaseBlockDetailActivity() {
     }
 
     override fun setupTabs(block:Block) {
-        tabs.getTabAt(1)?.let {
+        tabs.getTabAt(2)?.let {
             it.text = "评论${block.comments}"
         }
-        tabs.getTabAt(2)?.let {
+        tabs.getTabAt(4)?.let {
             it.text = "赞${block.likes}"
         }
-        tabs.getTabAt(3)?.let {
+        tabs.getTabAt(5)?.let {
             it.text = "转发${block.relays}"
         }
     }
@@ -109,8 +111,10 @@ class LeaderBoardCollapseActivity : BaseBlockDetailActivity() {
             return when (position) {
                 0 -> LeaderBoardDetailFragment()
                 1 -> LeaderBoardListFragment()
-                2 -> RecommendListFragment()
-                3 -> CommentListFragment()
+                2 -> CommentListFragment()
+                3 -> RecommendListFragment()
+                4 -> LikeListFragment()
+                5 -> MomentListFragment()
                 else -> FallBackFragment()
             }
         }
@@ -119,8 +123,10 @@ class LeaderBoardCollapseActivity : BaseBlockDetailActivity() {
             return when (position) {
                 0 -> "详情"
                 1 -> "排行榜"
-                2 -> "举荐"
-                3 -> "讨论"
+                2 -> "讨论"
+                3 -> "举荐"
+                4 -> "赞"
+                5 -> "转发"
                 else -> super.getPageTitle(position)
             }
         }

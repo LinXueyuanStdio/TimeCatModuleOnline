@@ -16,8 +16,7 @@ import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
 import com.timecat.layout.ui.layout.setShakelessClickListener
-import com.timecat.middle.block.service.ContainerService
-import com.timecat.middle.block.service.HomeService
+import com.timecat.middle.block.service.*
 import com.timecat.module.user.adapter.block.MomentItem
 import com.timecat.module.user.adapter.block.NotMoreItem
 import com.xiaojinzi.component.anno.ServiceAnno
@@ -44,12 +43,19 @@ class OnlineContainerServiceImpl : ContainerService {
     var focus_ids: List<User> = mutableListOf()
     var disposable: Disposable? = null
     override fun loadContext(path: Path, context: Context, parentUuid: String, record: RoomRecord?, homeService: HomeService) {
+        homeService.loadMenu(EmptyMenuContext())
+        homeService.loadHeader(listOf())
+        homeService.loadChipType(listOf())
+        homeService.loadPanel(EmptyPanelContext())
         homeService.loadChipButtons(listOf(Chip(context).apply {
             text = "进入社区"
             setShakelessClickListener {
                 NAV.go(RouterHub.USER_CloudActivity)
             }
         }))
+        homeService.loadCommand(EmptyCommandContext())
+        homeService.loadInputSend(EmptyInputContext())
+        homeService.reloadData()
     }
 
     override fun loadForVirtualPath(context: Context,

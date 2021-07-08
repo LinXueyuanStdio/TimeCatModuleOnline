@@ -27,6 +27,6 @@ ext.getProperty("composing_dependencies").each { projectConfig ->
     }
 }
 
-includeBuild(ext.PictureBedPlugin["managerPath"])
-includeBuild(ext.PictureBedPlugin["pluginPath"])
-include ':fake:plugin-app'
+//includeBuild(ext.PictureBedPlugin["managerPath"])
+//includeBuild(ext.PictureBedPlugin["pluginPath"])
+//include ':fake:plugin-app'
