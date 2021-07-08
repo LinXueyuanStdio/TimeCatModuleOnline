@@ -21,7 +21,6 @@ object ChannelManager {
     @JvmStatic
     private val channels = LinkedHashMap<String, List<Channel>>()
     private const val key = "UserChannelList2"
-    private val myChannel = arrayOf(UserChannel.Focus, UserChannel.World)
     private val recommendChannel1 = arrayOf(
         UserChannel.Recommend
     )
@@ -91,7 +90,9 @@ object ChannelManager {
                 }
             } else {
                 myChannelList.add(getChannelByEnum(UserChannel.Focus))
+                myChannelList.add(getChannelByEnum(UserChannel.Recommend))
                 myChannelList.add(getChannelByEnum(UserChannel.World))
+                myChannelList.add(getChannelByEnum(UserChannel.Forum))
             }
             return myChannelList
         }
