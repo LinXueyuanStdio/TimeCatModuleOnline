@@ -125,6 +125,16 @@ class OnlineContainerServiceImpl : ContainerService {
                 }
                 callback.onVirtualLoadSuccess(items)
             }
+            onEmpty = {
+                callback.onEmpty("空") {
+                    loadFirst(context, parentUuid, homeService, callback)
+                }
+            }
+            onError = {
+                callback.onError(it.localizedMessage ?: "") {
+                    loadFirst(context, parentUuid, homeService, callback)
+                }
+            }
         }
     }
 
@@ -155,6 +165,12 @@ class OnlineContainerServiceImpl : ContainerService {
                     MomentItem(context, it)
                 }
                 callback.onVirtualLoadSuccess(items)
+            }
+            onEmpty = {
+                callback.onEmpty("空")
+            }
+            onError = {
+                callback.onError(it.localizedMessage ?: "")
             }
         }
     }

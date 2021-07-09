@@ -30,8 +30,8 @@ class TaskDetailFragment : BaseBlockDetailFragment() {
 
     lateinit var viewModel: TaskViewModel
     override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
         viewModel = ViewModelProvider(requireActivity()).get(TaskViewModel::class.java)
+        super.initViewAfterLogin()
         viewModel.ownActivity.observe(viewLifecycleOwner, {
             it?.let { loadDetail(it) }
         })

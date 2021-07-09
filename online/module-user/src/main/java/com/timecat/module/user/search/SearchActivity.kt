@@ -164,9 +164,9 @@ open class SearchActivity : BaseStatusBarActivity() {
     private lateinit var mRecordsAdapter: TagAdapter<String>
     private lateinit var mRecordsDao: RecordsDao
     private fun setupSearchHistory() {
-        val user = UserDao.getCurrentUser() ?: return
+        val user = UserDao.getCurrentUser()
         //初始化数据库
-        mRecordsDao = RecordsDao(this, user.objectId)
+        mRecordsDao = RecordsDao(this, user?.objectId ?: "")
         //创建历史标签适配器
         //为标签设置对应的内容
         mRecordsAdapter = object : TagAdapter<String>(recordList) {
@@ -284,7 +284,7 @@ open class SearchActivity : BaseStatusBarActivity() {
                 recordList.addAll(s)
                 if (mRecordsAdapter != null) {
                     mRecordsAdapter.setData(recordList)
-                    mRecordsAdapter!!.notifyDataChanged()
+                    mRecordsAdapter.notifyDataChanged()
                 }
             }
     }

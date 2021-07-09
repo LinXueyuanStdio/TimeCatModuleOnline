@@ -39,8 +39,8 @@ class ShopDetailFragment : BaseBlockDetailFragment() {
     override fun routerInject() = NAV.inject(this)
 
     override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
         shopViewModel = ViewModelProvider(requireActivity()).get(ShopViewModel::class.java)
+        super.initViewAfterLogin()
     }
 
     override fun loadDetail(block: Block) {
