@@ -22,6 +22,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
 /**
@@ -226,7 +229,9 @@ abstract class LoadableContext {
 }
 
 fun LifecycleOwner.bindLoadableContext(context: LoadableContext) {
-    lifecycle.addObserver(ContextHolder(WeakReference(context)))
+    GlobalScope.launch(Dispatchers.Main) {
+        lifecycle.addObserver(ContextHolder(WeakReference(context)))
+    }
 }
 
 private class ContextHolder(
