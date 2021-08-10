@@ -40,6 +40,10 @@ class OnlineContainerServiceImpl : ContainerService {
         return UserDao.getCurrentUser() ?: throw Exception()
     }
 
+    override fun loadContextRecord(path: Path, context: Context, parentUuid: String, homeService: HomeService) {
+        homeService.loadContextRecord(null)
+    }
+
     var focus_ids: List<User> = mutableListOf()
     var disposable: Disposable? = null
     override fun loadContext(path: Path, context: Context, parentUuid: String, record: RoomRecord?, homeService: HomeService) {
