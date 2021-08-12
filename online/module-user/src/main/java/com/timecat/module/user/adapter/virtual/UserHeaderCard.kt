@@ -33,6 +33,8 @@
 //import com.timecat.middle.block.ext.selectImg
 //import com.timecat.middle.block.view.FlowableTextWatcher
 //import com.timecat.middle.block.adapter.vh.BaseRecordCardVH
+//import com.timecat.middle.block.ext.FloatMenuItem
+//import com.timecat.middle.block.ext.showFloatMenu
 //import com.timecat.module.user.R
 //import eu.davidea.flexibleadapter.FlexibleAdapter
 //import eu.davidea.flexibleadapter.items.IExpandable
@@ -207,12 +209,12 @@
 //
 //        fun bindChip(record: User, listener: Listener) {
 //            add_icon.setShakelessClickListener {
-//                record.icon = IconLoader.randomAvatar()
+//                record.avatar = IconLoader.randomAvatar()
 //                listener.update(record)
 //                loadIcon(record)
 //            }
 //            add_cover.setShakelessClickListener {
-//                record.coverImageUrl = IconLoader.randomCover()
+//                record.cover = IconLoader.randomCover()
 //                listener.update(record)
 //                loadCover(record)
 //            }
@@ -222,7 +224,7 @@
 //                ToastUtil.w_long("TODO")
 //            }
 //            share.setShakelessClickListener {
-//                ShareUtils.share(activity, record.content)
+//                ShareUtils.share(activity, record.uuid)
 //            }
 //            property.beGone()
 //            more.setShakelessClickListener {
@@ -237,9 +239,9 @@
 //                                true
 //                            }
 //                        }),
-//                        FloatMenuItem("移除头图", { !record.coverImageUrl.isNullOrEmpty() }, menuItemConfig = {
+//                        FloatMenuItem("移除头图", { !record.cover.isNullOrEmpty() }, menuItemConfig = {
 //                            setOnMenuItemClickListener {
-//                                record.coverImageUrl = ""
+//                                record.cover = ""
 //                                listener.update(record)
 //                                loadCover(record)
 //                                true
@@ -257,21 +259,21 @@
 //        ) {
 //            cover.setShakelessClickListener {
 //                onClick {
-//                    record.coverImageUrl = it
+//                    record.cover = it
 //                    listener.update(record)
 //                    loadCover(record)
 //                }
 //            }
 //            cover.setOnLongClickListener {
-//                val url = record.coverImageUrl ?: return@setOnLongClickListener false
+//                val url = record.cover ?: return@setOnLongClickListener false
 //                listener.showImage(url, record)
 //                true
 //            }
 //        }
 //
 //        fun loadCover(record: User) {
-//            if (record.coverImageUrl.isNullOrEmpty()) {
-//                if (record.icon.isNotEmpty()) {
+//            if (record.cover.isEmpty()) {
+//                if (record.avatar.isNotEmpty()) {
 //                    cover.beInvisible()
 //                } else {
 //                    cover.beGone()
@@ -280,7 +282,7 @@
 //            } else {
 //                cover.beVisible()
 //                add_cover.beGone()
-//                IconLoader.loadIcon(activity, cover, record.coverImageUrl)
+//                IconLoader.loadIcon(activity, cover, record.cover)
 //            }
 //        }
 //
@@ -291,26 +293,26 @@
 //        ) {
 //            icon.setShakelessClickListener {
 //                onClick {
-//                    record.icon = it
+//                    record.avatar = it
 //                    listener.update(record)
 //                    loadIcon(record)
 //                }
 //            }
 //            icon.setOnLongClickListener {
-//                val url = record.icon
+//                val url = record.avatar
 //                listener.showImage(url, record)
 //                true
 //            }
 //        }
 //
 //        fun loadIcon(record: User) {
-//            if (record.icon.isEmpty()) {
+//            if (record.avatar.isEmpty()) {
 //                icon.beGone()
 //                add_icon.beVisible()
 //            } else {
 //                icon.beVisible()
 //                add_icon.beGone()
-//                IconLoader.loadIcon(activity, icon, record.icon)
+//                IconLoader.loadIcon(activity, icon, record.avatar)
 //            }
 //        }
 //

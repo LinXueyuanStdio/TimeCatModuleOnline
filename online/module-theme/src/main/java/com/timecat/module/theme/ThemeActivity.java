@@ -7,28 +7,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
-import com.timecat.element.alert.ToastUtil;
-import com.timecat.page.base.friend.toolbar.BaseRefreshListActivity;
 import com.timecat.component.commonsdk.utils.override.LogUtil;
 import com.timecat.component.commonsdk.utils.snap.GravitySnapHelper;
+import com.timecat.component.router.app.NAV;
 import com.timecat.data.system.model.api.Skin;
 import com.timecat.data.system.model.api.SkinInfo;
 import com.timecat.data.system.model.api.SkinSeries;
-import com.timecat.module.theme.data.Shelf;
 import com.timecat.data.system.network.RetrofitHelper;
+import com.timecat.element.alert.ToastUtil;
 import com.timecat.identity.readonly.RouterHub;
-import com.timecat.component.router.app.NAV;
 import com.timecat.identity.skin.SkinManager;
+import com.timecat.module.theme.data.Shelf;
 import com.timecat.module.theme.info.ThemeInfoBottomSheetDialog;
+import com.timecat.page.base.friend.toolbar.BaseRefreshListActivity;
 import com.xiaojinzi.component.anno.RouterAnno;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +32,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -52,7 +51,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 @RouterAnno(hostAndPath = RouterHub.THEME_ThemeActivity)
 public class ThemeActivity extends BaseRefreshListActivity  {
-    ThemeAdapter themeAdapter;
+    ThemeAdapter<Shelf> themeAdapter;
 
     @Override
     protected void routerInject() {
@@ -84,19 +83,17 @@ public class ThemeActivity extends BaseRefreshListActivity  {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(@NotNull Throwable e) {
                         mRefreshLayout.setRefreshing(false);
-                        if (e != null) {
-                            ToastUtil.e_long(e.getMessage());
-                        }
+                        ToastUtil.e_long(e.getMessage());
                     }
 
                     @Override
-                    public void onSubscribe(Disposable d) {
+                    public void onSubscribe(@NotNull Disposable d) {
                     }
 
                     @Override
-                    public void onNext(Skin skin) {
+                    public void onNext(@NotNull Skin skin) {
                         List<Shelf> dataList = new ArrayList<>();
                         List<SkinInfo> skinInfos = new ArrayList<>();
                         skinInfos.add(new SkinInfo("恢复默认", "", "", "", "", "", "", "", ""));

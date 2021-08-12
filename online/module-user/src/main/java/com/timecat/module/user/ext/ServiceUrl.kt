@@ -11,4 +11,4 @@ import com.timecat.identity.readonly.RouterHub
  */
 const val GLOBAL_OnlineUserDetailService = RouterHub.GLOBAL + "user" + RouterHub.SERVICE + "/OnlineUserDetailServiceImpl"
 const val GLOBAL_OnlineHomeService = RouterHub.GLOBAL + "user" + RouterHub.SERVICE + "/OnlineHomeServiceImpl"
-const val GLOBAL_OnlineMomentService = RouterHub.GLOBAL + "user" + RouterHub.SERVICE + "/OnlineHomeServiceImpl"
+const val GLOBAL_OnlineMomentService = RouterHub.GLOBAL + "user" + RouterHub.SERVICE + "/OnlineMomentServiceImpl"

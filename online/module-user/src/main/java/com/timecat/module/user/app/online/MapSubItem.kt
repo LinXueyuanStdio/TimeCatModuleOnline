@@ -1,8 +1,8 @@
 package com.timecat.module.user.app.online
 
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.module.master.adapter.item.virtual.SubItem
-import com.timecat.module.master.adapter.item.virtual.TypeItem
+import com.timecat.middle.block.adapter.SubItem
+import com.timecat.middle.block.adapter.TypeItem
 
 /**
  * @author 林学渊
