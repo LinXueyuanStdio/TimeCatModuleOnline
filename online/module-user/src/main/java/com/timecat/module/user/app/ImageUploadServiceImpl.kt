@@ -3,7 +3,7 @@ package com.timecat.module.user.app
 import android.app.Activity
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.identity.service.ImageUploadService
-import com.timecat.identity.service.ImageUploadService.UploadCallback
+import com.timecat.identity.service.UploadCallback
 import com.timecat.module.user.ext.receiveImage
 import com.xiaojinzi.component.anno.ServiceAnno
 
