@@ -1,67 +1,7 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.xiaojinzi.component.plugin'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-
-//region 签名
-def keystorePSW = ''
-def keystoreAlias = ''
-def keystoreAliasPSW = ''
-// default keystore file, PLZ config file path in local.properties
-def keyfile = null
-
-Properties properties = new Properties()
-// local.properties file in the root director
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def keystoreFilepath = properties.getProperty("keystore.path")
-
-if (keystoreFilepath) {
-    keystorePSW = properties.getProperty("keystore.password")
-    keystoreAlias = properties.getProperty("keystore.alias")
-    keystoreAliasPSW = properties.getProperty("keystore.alias_password")
-    keyfile = file(keystoreFilepath)
-}
-//endregion
+apply from: "${gradle.ext.localGradleDir}/project/fake.gradle"
 
 android {
-    signingConfigs {
-        config {
-            storeFile keyfile
-            storePassword keystorePSW
-            keyAlias keystoreAlias
-            keyPassword keystoreAliasPSW
-            v1SigningEnabled true
-            v2SigningEnabled true
-        }
-    }
-    compileSdkVersion 29
-    buildToolsVersion '29.0.3'
     ndkVersion "21.3.6528147"
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
-        manifestPlaceholders = [
-                //AR76G1XB3HKJ 属于应用"测试"独有的 Android AppKey, 用于配置SDK
-                MTA_APPKEY : "AR76G1XB3HKJ",
-                //标注应用推广渠道用以区分新用户来源，可填写如应用宝，豌豆荚等
-                MTA_CHANNEL: "酷安"
-        ]
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            signingConfig signingConfigs.config
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
@@ -69,5 +9,14 @@ dependencies {
     api 'androidx.appcompat:appcompat:1.2.0'
     api project(':online:module-login')
     api project(':online:module-user')
+
+    api rootProject.ext.timecat["module-controller"]
+    api rootProject.ext.timecat["module-master"]
+    api rootProject.ext.timecat["module-scarlet"]
+    api rootProject.ext.timecat["module-note-org"]
+
+    api rootProject.ext.timecat["module-welcome"]
+//    api rootProject.ext.timecat["module-file"]
+
     api rootProject.ext.timecat["component-CommonSetting"]
 }

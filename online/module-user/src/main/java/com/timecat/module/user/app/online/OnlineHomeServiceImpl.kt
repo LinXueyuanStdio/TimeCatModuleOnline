@@ -1,4 +1,4 @@
-package com.timecat.module.user.app
+package com.timecat.module.user.app.online
 
 import android.content.Context
 import cn.leancloud.AVQuery
@@ -20,8 +20,8 @@ import com.timecat.middle.block.ext.configAdapterEndlessLoad
 import com.timecat.middle.block.service.*
 import com.timecat.module.user.adapter.block.MomentItem
 import com.timecat.module.user.adapter.block.NotMoreItem
+import com.timecat.module.user.ext.GLOBAL_OnlineHomeService
 import com.xiaojinzi.component.anno.ServiceAnno
-import eu.davidea.flexibleadapter.FlexibleAdapter
 import io.reactivex.disposables.Disposable
 import java.util.*
 
@@ -32,8 +32,8 @@ import java.util.*
  * @description null
  * @usage null
  */
-@ServiceAnno(ContainerService::class, name = [RouterHub.GLOBAL_OnlineContainerService])
-class OnlineContainerServiceImpl : ContainerService {
+@ServiceAnno(ContainerService::class, name = [GLOBAL_OnlineHomeService])
+class OnlineHomeServiceImpl : ContainerService {
     val pageSize: Int = 10
     private val notMoreItem: NotMoreItem = NotMoreItem()
 

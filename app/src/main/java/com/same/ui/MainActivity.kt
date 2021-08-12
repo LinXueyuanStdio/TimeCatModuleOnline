@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         linearLayout.addView(createButton("登录", RouterHub.LOGIN_LoginActivity))
         linearLayout.addView(createButton("游戏化", RouterHub.USER_GameHomeActivity))
+        linearLayout.addView(createButton("主页", RouterHub.MASTER_MainActivity))
         linearLayout.addView(createButton("用户") {
             val user = UserDao.getCurrentUser()
             Router.with().hostAndPath(RouterHub.USER_UserDetailActivity)
