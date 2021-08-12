@@ -2,9 +2,9 @@ buildscript {
     apply from: "${gradle.ext.localGradleDir}/settings/deps.gradle"
 
     repositories {
+        maven { url "file://${gradle.ext.localMavenDir.absolutePath}" }
         google()
         jcenter()
-        maven { url "file://${gradle.ext.localMavenDir.absolutePath}" }
         maven { url "https://jitpack.io" }
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://dl.bintray.com/umsdk/release" }

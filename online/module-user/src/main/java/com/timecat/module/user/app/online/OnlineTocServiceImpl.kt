@@ -1,4 +1,4 @@
-package com.timecat.module.user.app
+package com.timecat.module.user.app.online
 
 import android.content.Context
 import com.timecat.component.router.app.NAV
@@ -10,7 +10,6 @@ import com.timecat.middle.block.adapter.TypeCard
 import com.timecat.middle.block.service.*
 import com.timecat.module.master.adapter.item.virtual.SubItem
 import com.timecat.module.master.adapter.item.virtual.TypeItem
-import com.timecat.module.user.app.online.TimeCatOnline
 import com.timecat.module.user.ext.GLOBAL_OnlineHomeService
 import com.timecat.module.user.ext.GLOBAL_OnlineMomentService
 import com.xiaojinzi.component.anno.ServiceAnno
@@ -58,39 +57,6 @@ class OnlineTocServiceImpl : ContainerService {
     ) {
         callback.onVirtualLoadSuccess(listOf())
     }
-
-    /**
-     * 时光猫在线服务，路由地图
-     */
-    class MapSubItem(
-        title: String,
-        desc: String,
-        icon: String,
-        uuid: String
-    ) : SubItem(0, 0, title, desc, icon, "", RouterHub.ABOUT_HelpActivity, uuid)
-
-    fun Map(title: String) = TypeItem(0, title, title)
-
-    fun MapSubItems() = listOf(
-        MapSubItem(
-            "推荐",
-            "",
-            "R.drawable.every_drawer_note",
-            TimeCatOnline.TAB_recommend
-        ),
-        MapSubItem(
-            "热门",
-            "",
-            "R.drawable.every_drawer_note",
-            TimeCatOnline.TAB_hot
-        ),
-        MapSubItem(
-            "关注",
-            "",
-            "R.drawable.every_drawer_note",
-            TimeCatOnline.TAB_focus
-        ),
-    )
 
     fun mapSubItem2Card(context: Context, homeService: HomeService, subItem: MapSubItem): SubTypeCard {
         return SubTypeCard(subItem, context, object : SubTypeCard.Listener {

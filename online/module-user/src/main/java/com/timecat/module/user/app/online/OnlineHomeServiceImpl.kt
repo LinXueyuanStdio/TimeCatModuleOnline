@@ -48,8 +48,16 @@ class OnlineHomeServiceImpl : ContainerService {
     var focus_ids: List<User> = mutableListOf()
     var disposable: Disposable? = null
     override fun loadContext(path: Path, context: Context, parentUuid: String, record: RoomRecord?, homeService: HomeService) {
+        val tab = TimeCatOnline.parseTabPath(path.uuid)
         homeService.loadMenu(EmptyMenuContext())
-        homeService.loadHeader(listOf())
+        val allTabs = MapSubItems()
+        val tabIdx = allTabs.indexOfFirst { it.title == tab }
+        val selectedIdx = if (tabIdx == -1) 0 else tabIdx
+        val header = HomeHeaderCard(allTabs, selectedIdx, object :HomeHeaderCard.Listener{
+            override fun onSelect(item: MapSubItem) {
+            }
+        })
+        homeService.loadHeader(listOf(header))
         homeService.loadChipType(listOf())
         homeService.loadPanel(EmptyPanelContext())
         homeService.loadChipButtons(listOf(Chip(context).apply {
