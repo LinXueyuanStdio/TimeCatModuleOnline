@@ -44,7 +44,7 @@ open class HomeHeaderCard(
     ) {
         holder.front_view.removeAllTabs()
         tabs.withIndex().forEach {
-            val tab = TabLayout.Tab()
+            val tab = holder.front_view.newTab()
             tab.text = it.value.title
             holder.front_view.addTab(tab, it.index == selectedIdx)
         }

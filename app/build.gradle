@@ -15,6 +15,7 @@ dependencies {
     api project(':online:module-user')
     api project(':online:module-theme')
 
+    api rootProject.ext.timecat["identity-Resource"]
     api rootProject.ext.timecat["module-controller"]
     api rootProject.ext.timecat["module-master"]
     api rootProject.ext.timecat["module-scarlet"]
