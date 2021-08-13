@@ -145,12 +145,20 @@ object TimeCatOnline {
     }
 
     fun toPath(block: Block): Path {
-        val key = if (block.space == null) QUERY_RecordId else QUERY_SpaceId
+        val key = if (block.space == null) QUERY_SpaceId else QUERY_RecordId
         val url = rootUri()
             .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
             .appendQueryParameter(key, block.uuid)
             .build().toString()
         return Path(block.title, url, CONTAINER_BLOCK_UNIVERSAL)
+    }
+
+    fun toUrl(block: Block): String {
+        val key = if (block.space == null) QUERY_SpaceId else QUERY_RecordId
+        return rootUri()
+            .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
+            .appendQueryParameter(key, block.uuid)
+            .build().toString()
     }
 
     fun toNavigate(parentPath: Path, record: RoomRecord): Triple<String, String, Int> {

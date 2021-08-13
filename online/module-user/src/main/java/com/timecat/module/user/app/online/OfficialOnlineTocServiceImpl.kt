@@ -1,4 +1,4 @@
-package com.timecat.module.user.app
+package com.timecat.module.user.app.online
 
 import android.content.Context
 import com.timecat.data.room.record.RoomRecord
@@ -14,8 +14,8 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @description null
  * @usage null
  */
-@ServiceAnno(ContainerService::class, name = [RouterHub.GLOBAL_MineTocService])
-class MineTocServiceImpl : ContainerService {
+@ServiceAnno(ContainerService::class, name = [RouterHub.GLOBAL_OfficialOnlineTocService])
+class OfficialOnlineTocServiceImpl : ContainerService {
 
     override fun loadContextRecord(path: Path, context: Context, parentUuid: String, homeService: HomeService) {
 //        homeService.loadDatabase()

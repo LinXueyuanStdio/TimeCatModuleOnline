@@ -9,10 +9,10 @@ import com.timecat.identity.data.block.ForumBlock
 import com.timecat.identity.data.block.type.*
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
-import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.ext.friendlyCreateTimeText
 import com.timecat.module.user.ext.simpleAvatar
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -55,7 +55,7 @@ open class BlockSmallItem(
             BLOCK_LEADER_BOARD -> {
                 val leaderboard: Block = block
                 holder.tv_name.setText(leaderboard.title)
-                LOAD.image(leaderboard.simpleAvatar(), holder.iv_avatar)
+                IconLoader.loadIcon(activity, holder.iv_avatar, leaderboard.simpleAvatar())
                 holder.root.safeClick {
                     GO.leaderBoardDetail(leaderboard.objectId)
                 }
@@ -65,7 +65,7 @@ open class BlockSmallItem(
                 holder.tv_name.setText(forum.title)
                 val header = ForumBlock.fromJson(forum.structure)
                 val url = header.header?.icon ?: "R.drawable.ic_launcher"
-                LOAD.image(url, holder.iv_avatar)
+                IconLoader.loadIcon(activity, holder.iv_avatar, url)
                 holder.root.safeClick {
                     GO.forumDetail(block.objectId)
                 }
@@ -73,7 +73,7 @@ open class BlockSmallItem(
             BLOCK_APP -> {
                 val appBlock: Block = block
                 holder.tv_name.setText(appBlock.title)
-                LOAD.image(appBlock.simpleAvatar(), holder.iv_avatar)
+                IconLoader.loadIcon(activity, holder.iv_avatar, appBlock.simpleAvatar())
                 holder.root.safeClick {
                     GO.appDetail(appBlock.objectId)
                 }
@@ -81,7 +81,7 @@ open class BlockSmallItem(
             BLOCK_TOPIC -> {
                 val block: Block = block
                 holder.tv_name.setText(block.title)
-                LOAD.image(block.simpleAvatar(), holder.iv_avatar)
+                IconLoader.loadIcon(activity, holder.iv_avatar, block.simpleAvatar())
                 holder.root.safeClick {
                     GO.topicDetail(block.objectId)
                 }
@@ -89,7 +89,7 @@ open class BlockSmallItem(
             BLOCK_TAG -> {
                 val block: Block = block
                 holder.tv_name.setText(block.title)
-                LOAD.image(block.simpleAvatar(), holder.iv_avatar)
+                IconLoader.loadIcon(activity, holder.iv_avatar, block.simpleAvatar())
                 holder.root.safeClick {
                     GO.tagDetail(block.objectId)
                 }
@@ -97,7 +97,7 @@ open class BlockSmallItem(
             BLOCK_PERMISSION -> {
                 val block: Block = block
                 holder.tv_name.setText(block.title)
-                LOAD.image(block.simpleAvatar(), holder.iv_avatar)
+                IconLoader.loadIcon(activity, holder.iv_avatar, block.simpleAvatar())
                 holder.root.safeClick {
                     when (block.subtype) {
                         PERMISSION_Hun -> {
@@ -113,7 +113,7 @@ open class BlockSmallItem(
             BLOCK_ROLE -> {
                 val block: Block = block
                 holder.tv_name.setText(block.title)
-                LOAD.image(block.simpleAvatar(), holder.iv_avatar)
+                IconLoader.loadIcon(activity, holder.iv_avatar, block.simpleAvatar())
                 holder.root.safeClick {
                     GO.addRole(block)
                 }
@@ -121,7 +121,7 @@ open class BlockSmallItem(
             BLOCK_IDENTITY -> {
                 val block: Block = block
                 holder.tv_name.setText(block.title)
-                LOAD.image(block.simpleAvatar(), holder.iv_avatar)
+                IconLoader.loadIcon(activity, holder.iv_avatar, block.simpleAvatar())
                 holder.root.safeClick {
                     GO.addIdentity(block)
                 }

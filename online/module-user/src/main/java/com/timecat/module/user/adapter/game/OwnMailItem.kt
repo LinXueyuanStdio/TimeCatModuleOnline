@@ -12,6 +12,7 @@ import com.timecat.data.bmob.data.mail.OwnMail
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.LOAD
@@ -55,7 +56,7 @@ class OwnMailItem(
         val title = mail.title
         val type = mail.type
         holder.tv_name.setText(title)
-        LOAD.image("R.drawable.ic_launcher", holder.iv_avatar)
+        IconLoader.loadIcon(activity, holder.iv_avatar, "R.drawable.ic_launcher")
         holder.root.safeClick {
             activity.showOwnMailDialog(ownMail)
         }

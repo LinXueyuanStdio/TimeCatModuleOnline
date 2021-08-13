@@ -11,6 +11,7 @@ import com.timecat.identity.data.block.IdentityBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
@@ -60,7 +61,7 @@ class IdentityItem(
     ) {
         holder.tv_name.setText(block.title)
         val head = IdentityBlock.fromJson(block.structure)
-        LOAD.image(head.header.avatar, holder.iv_avatar)
+        IconLoader.loadIcon(activity, holder.iv_avatar, head.header.avatar)
         val head2 = CubeBlock.fromJson(head.structure)
         holder.root.safeClick {
             GO.addIdentity(block)

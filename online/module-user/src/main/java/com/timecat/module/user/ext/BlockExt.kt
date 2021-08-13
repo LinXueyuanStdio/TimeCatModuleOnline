@@ -2,7 +2,7 @@ package com.timecat.module.user.ext
 
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.data.block.AppBlock
+import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.*
 import com.timecat.module.user.base.GO
 
@@ -68,7 +68,8 @@ fun Block.simpleAvatar(): String {
             "R.drawable.ic_folder"
         }
         BLOCK_ACTIVITY -> {
-            "R.drawable.ic_comment"//TODO
+            val head = ActivityBlock.fromJson(structure)
+            head.header.avatar
         }
         BLOCK_FOCUS -> {
             "R.drawable.ic_comment"//TODO
@@ -77,7 +78,8 @@ fun Block.simpleAvatar(): String {
             "R.drawable.ic_comment"//TODO
         }
         BLOCK_TASK -> {
-            "R.drawable.ic_comment"//TODO
+            val head = TaskBlock.fromJson(structure)
+            head.header.avatar
         }
         BLOCK_MOMENT -> {
             "R.drawable.ic_comment"
@@ -104,16 +106,23 @@ fun Block.simpleAvatar(): String {
             "R.drawable.ic_person"
         }
         BLOCK_IDENTITY -> {
-            "R.drawable.ic_person"
+            val head = IdentityBlock.fromJson(structure)
+            head.header.avatar
         }
         BLOCK_ROLE -> {
             "R.drawable.ic_person"
         }
         BLOCK_ITEM -> {
-            "R.drawable.ic_comment"
+            val head = ItemBlock.fromJson(structure)
+            head.header.avatar
         }
         BLOCK_MAIL -> {
-            "R.drawable.ic_feed_list_mail_special_24dp"
+            val head = MailBlock.fromJson(structure)
+            head.header.avatar
+        }
+        BLOCK_SHOP -> {
+            val head = ShopBlock.fromJson(structure)
+            head.header.avatar
         }
         else -> "R.drawable.ic_launcher"
     }

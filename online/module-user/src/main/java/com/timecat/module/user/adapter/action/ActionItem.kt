@@ -9,11 +9,13 @@ import com.timecat.identity.data.action.*
 import com.timecat.identity.data.block.type.*
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.ext.friendlyCreateTimeText
+import com.timecat.module.user.ext.simpleAvatar
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 
@@ -48,7 +50,7 @@ class ActionItem(
         position: Int,
         payloads: MutableList<Any>?
     ) {
-        LOAD.image(action.user.avatar, holder.iv_avatar)
+        IconLoader.loadIcon(activity, holder.iv_avatar, action.user.avatar)
         holder.root.safeClick {
             val block = action.block
             GO.toAnyDetail(block)

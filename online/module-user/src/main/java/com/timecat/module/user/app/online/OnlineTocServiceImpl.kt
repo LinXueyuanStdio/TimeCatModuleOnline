@@ -1,15 +1,11 @@
 package com.timecat.module.user.app.online
 
 import android.content.Context
-import com.timecat.component.router.app.NAV
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
-import com.timecat.middle.block.adapter.SubItem
-import com.timecat.middle.block.adapter.SubTypeCard
 import com.timecat.middle.block.adapter.TypeCard
 import com.timecat.middle.block.service.*
-import com.timecat.module.user.ext.*
 import com.xiaojinzi.component.anno.ServiceAnno
 
 /**
@@ -83,15 +79,4 @@ class OnlineTocServiceImpl : ContainerService {
     }
 
 
-    fun mapSubItem2Card(context: Context, homeService: HomeService, subItem: MapSubItem): SubTypeCard {
-        return SubTypeCard(subItem, context, object : SubTypeCard.Listener {
-            override fun loadFor(subItem: SubItem) {
-                homeService.resetTo(subItem.toPath())
-            }
-
-            override fun more(subItem: SubItem) {
-                NAV.go(subItem.helpUrl)
-            }
-        })
-    }
 }

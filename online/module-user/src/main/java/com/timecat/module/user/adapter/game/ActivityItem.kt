@@ -11,10 +11,12 @@ import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.ext.friendlyCreateTimeText
+import com.timecat.module.user.ext.simpleAvatar
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 
@@ -54,7 +56,7 @@ class ActivityItem(
 
         val structure = item.structure
         val head = ActivityBlock.fromJson(structure)
-        LOAD.image(head.header.avatar, holder.iv_avatar)
+        IconLoader.loadIcon(activity, holder.iv_avatar, head.header.avatar)
         holder.root.safeClick {
             //edit
             val path = when (item.subtype) {

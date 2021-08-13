@@ -58,7 +58,7 @@ open class GoodItem(
 
         val structure = item.structure
         val head = ItemBlock.fromJson(structure)
-        LOAD.image(activity, head.header.avatar, holder.iv_avatar)
+        IconLoader.loadIcon(activity, holder.iv_avatar, head.header.avatar)
 
         holder.tv_count.setText("${good.paid} / ${good.max}")
         holder.value.setText("${good.value}")

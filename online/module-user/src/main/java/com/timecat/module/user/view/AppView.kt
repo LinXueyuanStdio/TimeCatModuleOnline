@@ -23,9 +23,9 @@ import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.*
 import com.timecat.identity.service.PluginService
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.ImageAdapter
-import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
 
 /**
@@ -46,29 +46,30 @@ class AppView @JvmOverloads constructor(
     init {
         init(context)
     }
+
     lateinit var placeholder: View
-    
+
     lateinit var icon: ImageView
     lateinit var appname: TextView
-    
+
     lateinit var downloadSum: TextView
     lateinit var download: TextView
     lateinit var commentSum: TextView
     lateinit var focusSum: TextView
     lateinit var focus: TextView
-    
+
     lateinit var preface: RecyclerView
     lateinit var introDetail: TextView
-    
+
     lateinit var userHead: UserHeadView
     lateinit var share: ShareView
 
     private fun init(context: Context, layout: Int = R.layout.header_app_layout_detail) {
         val inflater = LayoutInflater.from(context)
         root = inflater.inflate(layout, this)
-        
+
         placeholder = root.findViewById(R.id.placeholder)
-        
+
         icon = root.findViewById(R.id.icon)
         appname = root.findViewById(R.id.appname)
 
@@ -92,6 +93,7 @@ class AppView @JvmOverloads constructor(
             this.height = height
         }
     }
+
     class InitItem(var title: String)
 
     /**
@@ -108,7 +110,7 @@ class AppView @JvmOverloads constructor(
     }
 
     private fun initAvater(root: View, block: Block) {
-        LOAD.image("R.drawable.ic_launcher", icon)
+        IconLoader.loadIcon(context, icon, "R.drawable.ic_launcher")
         appname.text = block.title
     }
 

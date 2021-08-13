@@ -10,6 +10,7 @@ import com.timecat.identity.data.block.TaskBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.entity.BaseHeaderItem
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.LOAD
@@ -53,7 +54,7 @@ class TaskItem(
 
         val structure = item.structure
         val head = TaskBlock.fromJson(structure)
-        LOAD.image(head.header.avatar, holder.iv_avatar)
+        IconLoader.loadIcon(activity, holder.iv_avatar, head.header.avatar)
         holder.root.safeClick {
             //edit
             NAV.go(RouterHub.USER_DataTaskEditorActivity, "block", item)
