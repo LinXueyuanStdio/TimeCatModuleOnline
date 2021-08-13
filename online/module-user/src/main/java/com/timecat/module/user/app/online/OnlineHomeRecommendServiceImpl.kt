@@ -21,7 +21,6 @@ import com.timecat.middle.block.service.*
 import com.timecat.module.user.adapter.block.MomentItem
 import com.timecat.module.user.adapter.block.NotMoreItem
 import com.timecat.module.user.ext.GLOBAL_OnlineHomeRecommendService
-import com.timecat.module.user.ext.GLOBAL_OnlineHomeService
 import com.xiaojinzi.component.anno.ServiceAnno
 import io.reactivex.disposables.Disposable
 import java.util.*
@@ -56,8 +55,9 @@ class OnlineHomeRecommendServiceImpl : ContainerService {
         val allTabs = TimeCatOnline.homeMapSubItems
         val tabIdx = allTabs.indexOfFirst { it.title == tab }
         val selectedIdx = if (tabIdx == -1) 0 else tabIdx
-        val header = HomeHeaderCard(allTabs, selectedIdx, object :HomeHeaderCard.Listener{
+        val header = HomeHeaderCard(allTabs, selectedIdx, object : HomeHeaderCard.Listener {
             override fun onSelect(item: MapSubItem) {
+                homeService.resetTo(item.toPath())
             }
         })
         homeService.loadHeader(listOf(header))

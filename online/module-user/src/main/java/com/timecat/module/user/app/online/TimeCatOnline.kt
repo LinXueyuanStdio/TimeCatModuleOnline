@@ -2,10 +2,11 @@ package com.timecat.module.user.app.online
 
 import android.net.Uri
 import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.room.record.RoomRecord
-import com.timecat.data.room.space.Space
 import com.timecat.identity.data.block.type.BLOCK_CONTAINER
 import com.timecat.identity.data.block.type.CONTAINER_BLOCK_UNIVERSAL
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
 import com.timecat.middle.block.ext.prettyTitle
 import com.timecat.module.user.ext.*
@@ -16,21 +17,20 @@ import com.timecat.module.user.ext.*
  * @date 2021/8/12
  * @description null
  * @usage null
- * 在线
- * 1. world://timecat.online?db={space-uuid}&recordId={record-uuid}
- * space-uuid 用于提供 IDatabase
- * record-uuid 交给下一步 Path 用于加载容器符文
+ * 在线超空间（重定向到 ServiceImpl）
+ * 1. world://timecat.online?db={space-uuid}
+ * space-uuid 用于提供 IDatabase，加载根目录
  *
  * 2. world://timecat.online?recordId={record-uuid}
- * 不提供 space-uuid 则为默认主数据库
+ * 不需要提供 space-uuid，因为block自带
  *
- * 3. 首页
+ * 3. 首页（重定向到 ServiceImpl）
  * 首页 world://timecat.online/home == world://timecat.online/home?tab=recommend
  * 首页-推荐 world://timecat.online/home?tab=recommend
  * 首页-热门 world://timecat.online/home?tab=hot
  * 首页-关注 world://timecat.online/home?tab=focus
  *
- * 4. 动态
+ * 4. 动态（重定向到 ServiceImpl）
  * 动态 world://timecat.online/moment == world://timecat.online/moment?tab=recommend
  * 动态-推荐 world://timecat.online/moment?tab=recommend
  * 动态-热门 world://timecat.online/moment?tab=hot
@@ -50,12 +50,8 @@ object TimeCatOnline {
 
     const val QUERY_Redirect = "redirect"
 
-    const val QUERY_Space = "db"
-    val DEFAULT_QUERY_Space: String
-        get() = Space.default().dbPath
+    const val QUERY_SpaceId = "spaceId"
     const val QUERY_RecordId = "recordId"
-    const val DEFAULT_QUERY_RecordId: String = ""
-
 
     val homeMapSubItems = listOf(
         MapSubItem(
@@ -113,15 +109,20 @@ object TimeCatOnline {
         return tab
     }
 
-    fun parsePath(parentUuid: String): Pair<String, String> {
+    fun parsePath(
+        parentUuid: String,
+        onSpace: (String) -> Unit,
+        onBlock: (String) -> Unit,
+        onFail: () -> Unit,
+    ) {
         val uri = Uri.parse(parentUuid)
-        val dbPath = uri.getQueryParameter(QUERY_Space) ?: DEFAULT_QUERY_Space
-        val recordId = uri.getQueryParameter(QUERY_RecordId) ?: DEFAULT_QUERY_RecordId
-        return dbPath to recordId
-    }
-
-    fun rootPath(): Path {
-        return toPath(Space.default())
+        val dbPath = uri.getQueryParameter(QUERY_SpaceId)
+        val recordId = uri.getQueryParameter(QUERY_RecordId)
+        when {
+            dbPath != null -> onSpace(dbPath)
+            recordId != null -> onBlock(recordId)
+            else -> onFail()
+        }
     }
 
     fun rootUri() = Uri.EMPTY.buildUpon()
@@ -137,23 +138,24 @@ object TimeCatOnline {
         return url
     }
 
-    fun toPath(space: Space): Path {
+    fun toPath(block: Block): Path {
+        val key = if (block.space == null) QUERY_RecordId else QUERY_SpaceId
         val url = rootUri()
-            .appendQueryParameter(QUERY_Space, space.dbPath)
-            .appendQueryParameter(QUERY_RecordId, DEFAULT_QUERY_RecordId)
+            .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
+            .appendQueryParameter(key, block.uuid)
             .build().toString()
-        return Path(space.title, url, CONTAINER_BLOCK_UNIVERSAL)
+        return Path(block.title, url, CONTAINER_BLOCK_UNIVERSAL)
     }
 
     fun toNavigate(parentPath: Path, record: RoomRecord): Triple<String, String, Int> {
         val uri = Uri.parse(parentPath.uuid)
-        val db = uri.getQueryParameter(QUERY_Space)
+        val db = uri.getQueryParameter(QUERY_SpaceId)
             ?: return Triple(parentPath.name, parentPath.uuid, parentPath.type)
 
         val url = Uri.EMPTY.buildUpon()
             .scheme(uri.scheme)
             .authority(uri.authority)
-            .appendQueryParameter(QUERY_Space, db)
+            .appendQueryParameter(QUERY_SpaceId, db)
             .appendQueryParameter(QUERY_RecordId, record.uuid)
             .build().toString()
         LogUtil.e(url)

@@ -50,6 +50,7 @@ open class HomeHeaderCard(
         holder.front_view.clearOnTabSelectedListeners()
         holder.front_view.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
+                if (selectedIdx == tab.position) return
                 val item = tabs.getOrElse(tab.position) { tabs[0] }
                 listener.onSelect(item)
             }
