@@ -97,7 +97,13 @@ object TimeCatOnline {
     fun getRecordId(url: String): String {
         if (url.startsWith(SCHEMA)) {
             val uri = Uri.parse(url)
-            return uri.getQueryParameter(QUERY_RecordId) ?: ""
+            val dbPath = uri.getQueryParameter(QUERY_SpaceId)
+            val recordId = uri.getQueryParameter(QUERY_RecordId)
+            return when {
+                dbPath != null -> dbPath
+                recordId != null -> recordId
+                else -> ""
+            }
         } else {
             return url
         }

@@ -10,6 +10,7 @@ package com.timecat.module.user.app.block
  * world://official.timecat.online?redirect={url = world://xxx}
  */
 object TimeCatOfficial {
+    const val SCHEMA = "world"
     const val Host = "official.timecat.online"
     const val url = "$SCHEMA://${Host}"
     const val redirect = "redirect"
