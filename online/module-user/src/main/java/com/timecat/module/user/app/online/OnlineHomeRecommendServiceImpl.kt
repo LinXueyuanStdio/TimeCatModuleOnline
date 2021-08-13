@@ -20,7 +20,8 @@ import com.timecat.middle.block.ext.configAdapterEndlessLoad
 import com.timecat.middle.block.service.*
 import com.timecat.module.user.adapter.block.MomentItem
 import com.timecat.module.user.adapter.block.NotMoreItem
-import com.timecat.module.user.ext.GLOBAL_OnlineMomentService
+import com.timecat.module.user.ext.GLOBAL_OnlineHomeRecommendService
+import com.timecat.module.user.ext.GLOBAL_OnlineHomeService
 import com.xiaojinzi.component.anno.ServiceAnno
 import io.reactivex.disposables.Disposable
 import java.util.*
@@ -32,8 +33,8 @@ import java.util.*
  * @description null
  * @usage null
  */
-@ServiceAnno(ContainerService::class, name = [GLOBAL_OnlineMomentService])
-class OnlineMomentServiceImpl : ContainerService {
+@ServiceAnno(ContainerService::class, name = [GLOBAL_OnlineHomeRecommendService])
+class OnlineHomeRecommendServiceImpl : ContainerService {
     val pageSize: Int = 10
     private val notMoreItem: NotMoreItem = NotMoreItem()
 
@@ -51,7 +52,15 @@ class OnlineMomentServiceImpl : ContainerService {
         val tab = TimeCatOnline.parseTabPath(path.uuid)
 
         homeService.loadMenu(EmptyMenuContext())
-        homeService.loadHeader(listOf())
+
+        val allTabs = TimeCatOnline.homeMapSubItems
+        val tabIdx = allTabs.indexOfFirst { it.title == tab }
+        val selectedIdx = if (tabIdx == -1) 0 else tabIdx
+        val header = HomeHeaderCard(allTabs, selectedIdx, object :HomeHeaderCard.Listener{
+            override fun onSelect(item: MapSubItem) {
+            }
+        })
+        homeService.loadHeader(listOf(header))
         homeService.loadChipType(listOf())
         homeService.loadPanel(EmptyPanelContext())
         homeService.loadChipButtons(listOf(Chip(context).apply {

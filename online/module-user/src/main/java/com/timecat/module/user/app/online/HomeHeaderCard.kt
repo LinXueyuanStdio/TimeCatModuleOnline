@@ -1,6 +1,5 @@
 package com.timecat.module.user.app.online
 
-import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
@@ -51,7 +50,7 @@ open class HomeHeaderCard(
         holder.front_view.clearOnTabSelectedListeners()
         holder.front_view.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                val item = tabs.find { it.title == tab.text } ?: return
+                val item = tabs.getOrElse(tab.position) { tabs[0] }
                 listener.onSelect(item)
             }
 

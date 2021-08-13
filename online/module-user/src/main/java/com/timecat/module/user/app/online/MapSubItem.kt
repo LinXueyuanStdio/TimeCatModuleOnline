@@ -1,6 +1,7 @@
 package com.timecat.module.user.app.online
 
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.business.breadcrumb.Path
 import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.TypeItem
 
@@ -24,23 +25,4 @@ class MapSubItem(
 
 fun Map(title: String) = TypeItem(0, title, title)
 
-fun MapSubItems() = listOf(
-    MapSubItem(
-        "推荐",
-        "",
-        "R.drawable.every_drawer_note",
-        TimeCatOnline.TAB_recommend
-    ),
-    MapSubItem(
-        "热门",
-        "",
-        "R.drawable.every_drawer_note",
-        TimeCatOnline.TAB_hot
-    ),
-    MapSubItem(
-        "关注",
-        "",
-        "R.drawable.every_drawer_note",
-        TimeCatOnline.TAB_focus
-    ),
-)
+fun SubItem.toPath(): Path = Path(title, uuid, -1000)

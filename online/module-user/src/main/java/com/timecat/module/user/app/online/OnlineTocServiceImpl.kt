@@ -5,12 +5,11 @@ import com.timecat.component.router.app.NAV
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
+import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.SubTypeCard
 import com.timecat.middle.block.adapter.TypeCard
 import com.timecat.middle.block.service.*
-import com.timecat.middle.block.adapter.SubItem
-import com.timecat.module.user.ext.GLOBAL_OnlineHomeService
-import com.timecat.module.user.ext.GLOBAL_OnlineMomentService
+import com.timecat.module.user.ext.*
 import com.xiaojinzi.component.anno.ServiceAnno
 
 /**
@@ -57,19 +56,6 @@ class OnlineTocServiceImpl : ContainerService {
         callback.onVirtualLoadSuccess(listOf())
     }
 
-    fun mapSubItem2Card(context: Context, homeService: HomeService, subItem: MapSubItem): SubTypeCard {
-        return SubTypeCard(subItem, context, object : SubTypeCard.Listener {
-            override fun loadFor(subItem: SubItem) {
-                val path = Path(subItem.title, subItem.uuid, -1000)
-                homeService.resetTo(path)
-            }
-
-            override fun more(subItem: SubItem) {
-                NAV.go(subItem.helpUrl)
-            }
-        })
-    }
-
     private fun loadForType(
         context: Context,
         parentUuid: String,
@@ -78,8 +64,7 @@ class OnlineTocServiceImpl : ContainerService {
     ) {
         val homeCard = Map("首页").let {
             val card = TypeCard(it)
-            MapSubItems().forEach {
-                it.uuid = TimeCatOnline.tab2Url(TimeCatOnline.PATH_home, GLOBAL_OnlineHomeService, it.uuid)
+            TimeCatOnline.homeMapSubItems.forEach {
                 val subCard = mapSubItem2Card(context, homeService, it)
                 card.addSubItem(subCard)
             }
@@ -87,8 +72,7 @@ class OnlineTocServiceImpl : ContainerService {
         }
         val momentCard = Map("动态").let {
             val card = TypeCard(it)
-            MapSubItems().forEach {
-                it.uuid = TimeCatOnline.tab2Url(TimeCatOnline.PATH_moment, GLOBAL_OnlineMomentService, it.uuid)
+            TimeCatOnline.momentMapSubItems.forEach {
                 val subCard = mapSubItem2Card(context, homeService, it)
                 card.addSubItem(subCard)
             }
@@ -96,5 +80,18 @@ class OnlineTocServiceImpl : ContainerService {
         }
         val allTypeCard = listOf(homeCard, momentCard)
         callback.onVirtualLoadSuccess(allTypeCard)
+    }
+
+
+    fun mapSubItem2Card(context: Context, homeService: HomeService, subItem: MapSubItem): SubTypeCard {
+        return SubTypeCard(subItem, context, object : SubTypeCard.Listener {
+            override fun loadFor(subItem: SubItem) {
+                homeService.resetTo(subItem.toPath())
+            }
+
+            override fun more(subItem: SubItem) {
+                NAV.go(subItem.helpUrl)
+            }
+        })
     }
 }

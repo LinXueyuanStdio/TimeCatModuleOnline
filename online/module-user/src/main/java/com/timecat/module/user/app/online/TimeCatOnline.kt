@@ -8,6 +8,7 @@ import com.timecat.identity.data.block.type.BLOCK_CONTAINER
 import com.timecat.identity.data.block.type.CONTAINER_BLOCK_UNIVERSAL
 import com.timecat.layout.ui.business.breadcrumb.Path
 import com.timecat.middle.block.ext.prettyTitle
+import com.timecat.module.user.ext.*
 
 /**
  * @author 林学渊
@@ -54,6 +55,48 @@ object TimeCatOnline {
         get() = Space.default().dbPath
     const val QUERY_RecordId = "recordId"
     const val DEFAULT_QUERY_RecordId: String = ""
+
+
+    val homeMapSubItems = listOf(
+        MapSubItem(
+            "推荐",
+            "推荐",
+            "R.drawable.every_drawer_note",
+            tab2Url(PATH_home, GLOBAL_OnlineHomeRecommendService, TAB_recommend)
+        ),
+        MapSubItem(
+            "热门",
+            "热门",
+            "R.drawable.every_drawer_note",
+            tab2Url(PATH_home, GLOBAL_OnlineHomeHotService, TAB_hot)
+        ),
+        MapSubItem(
+            "关注",
+            "关注",
+            "R.drawable.every_drawer_note",
+            tab2Url(PATH_home, GLOBAL_OnlineHomeFocusService, TAB_focus)
+        ),
+    )
+    val momentMapSubItems = listOf(
+        MapSubItem(
+            "推荐",
+            "推荐",
+            "R.drawable.every_drawer_note",
+            tab2Url(PATH_moment, GLOBAL_OnlineMomentRecommendService, TAB_recommend)
+        ),
+        MapSubItem(
+            "热门",
+            "热门",
+            "R.drawable.every_drawer_note",
+            tab2Url(PATH_moment, GLOBAL_OnlineMomentHotService, TAB_hot)
+        ),
+        MapSubItem(
+            "关注",
+            "关注",
+            "R.drawable.every_drawer_note",
+            tab2Url(PATH_moment, GLOBAL_OnlineMomentFocusService, TAB_focus)
+        ),
+    )
 
     fun getRecordId(url: String): String {
         if (url.startsWith(SCHEMA)) {
