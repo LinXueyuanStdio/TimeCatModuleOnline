@@ -18,6 +18,7 @@ import com.timecat.module.user.app.online.TimeCatOnline
 import com.timecat.module.user.ext.toRoomRecord
 import com.timecat.module.user.record.OnlineBackendDb
 import com.xiaojinzi.component.anno.ServiceAnno
+import com.xiaojinzi.component.impl.service.ServiceManager
 
 /**
  * @author 林学渊

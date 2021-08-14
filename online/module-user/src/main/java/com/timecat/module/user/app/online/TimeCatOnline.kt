@@ -148,7 +148,7 @@ object TimeCatOnline {
         val key = if (block.space == null) QUERY_SpaceId else QUERY_RecordId
         val url = rootUri()
             .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
-            .appendQueryParameter(key, block.uuid)
+            .appendQueryParameter(key, block.objectId)
             .build().toString()
         return Path(block.title, url, CONTAINER_BLOCK_UNIVERSAL)
     }
@@ -157,7 +157,7 @@ object TimeCatOnline {
         val key = if (block.space == null) QUERY_SpaceId else QUERY_RecordId
         return rootUri()
             .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
-            .appendQueryParameter(key, block.uuid)
+            .appendQueryParameter(key, block.objectId)
             .build().toString()
     }
 

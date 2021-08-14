@@ -100,6 +100,12 @@ fun RoomRecord.copyFrom(record: Block): Block {
     return record
 }
 
+fun Block.withStruct(func: (cn.leancloud.json.JSONObject) -> Unit) {
+    val s = struct
+    func(s)
+    struct = s
+}
+
 var Block.ext: Json
     get() = Json(JSON.parseObject(structure))
     set(value) {
@@ -108,74 +114,99 @@ var Block.ext: Json
 var Block.parentId: String
     get() = parent?.objectId ?: ""
     set(value) {
-        Block().also { it.objectId = value }
+        parent = Block().also { it.objectId = value }
     }
 var Block.icon: String
     get() = simpleAvatar()
     set(value) {
-
+        withStruct {
+            put("icon", value)
+        }
     }
 var Block.cover: String?
     get() = simpleAvatar()
     set(value) {
+        withStruct {
+            put("cover", value)
+        }
     }
 
 var Block.name: String
     get() = struct.getString("name") ?: ""
     set(value) {
-        struct.put("name", value)
+        withStruct {
+            put("name", value)
+        }
     }
 var Block.startTime: Long
     get() = struct.getLong("startTime") ?: 0
     set(value) {
-        struct.put("startTime", value)
+        withStruct {
+            put("startTime", value)
+        }
     }
 
 var Block.totalLength: Long
     get() = struct.getLong("totalLength") ?: 0
     set(value) {
-        struct.put("totalLength", value)
+        withStruct {
+            put("totalLength", value)
+        }
     }
 
 var Block.miniShowType: Int
     get() = struct.getInteger("miniShowType") ?: 0
     set(value) {
-        struct.put("miniShowType", value)
+        withStruct {
+            put("miniShowType", value)
+        }
     }
 
 var Block.render_type: Int
     get() = struct.getInteger("render_type") ?: 0
     set(value) {
-        struct.put("render_type", value)
+        withStruct {
+            put("render_type", value)
+        }
     }
 
 var Block.label: Int
     get() = struct.getInteger("label") ?: 0
     set(value) {
-        struct.put("label", value)
+        withStruct {
+            put("label", value)
+        }
     }
 
 var Block.color: Int
     get() = struct.getInteger("color") ?: 0
     set(value) {
-        struct.put("color", value)
+        withStruct {
+            put("color", value)
+        }
     }
 
 var Block.tags: String
     get() = struct.getString("tags") ?: ""
     set(value) {
-        struct.put("tags", value)
+        withStruct {
+            put("tags", value)
+        }
     }
 var Block.topics: String
     get() = struct.getString("topics") ?: ""
     set(value) {
-        struct.put("topics", value)
+        withStruct {
+            put("topics", value)
+        }
     }
 var Block.attachmentItems: AttachmentTail
     get() {
-        val jsonStr = struct.getString("attachmentItems") ?: ""
+        val jsonStr = struct.getString("attachmentItems") ?: return AttachmentTail(mutableListOf())
         return AttachmentTail.fromJson(jsonStr)
     }
     set(value) {
-        struct.put("attachmentItems", value.toJson())
+        withStruct {
+            put("attachmentItems", value.toJson())
+        }
     }

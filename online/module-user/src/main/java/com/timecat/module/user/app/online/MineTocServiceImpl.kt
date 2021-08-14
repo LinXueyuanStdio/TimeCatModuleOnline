@@ -10,6 +10,7 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.element.alert.ToastUtil
+import com.timecat.identity.data.base.Json
 import com.timecat.identity.data.block.type.BLOCK_DATABASE
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
@@ -18,6 +19,7 @@ import com.timecat.middle.block.ext.configAdapterEndlessLoad
 import com.timecat.middle.block.service.*
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.block.NotMoreItem
+import com.timecat.module.user.ext.ext
 import com.timecat.module.user.ext.name
 import com.xiaojinzi.component.anno.ServiceAnno
 import io.reactivex.disposables.Disposable
@@ -65,6 +67,11 @@ class MineTocServiceImpl : ContainerService {
                 saveBlock {
                     target = Block.forName(I, BLOCK_DATABASE, "新空间").apply {
                         subtype = 1  // TODO 新的数据库类型，这个是在线数据库
+                        objectId = uuid
+                        val schemaService = NAV.service(CreateDatabaseSchemaService::class.java)
+                        schemaService?.simpleDatabaseSchema(context)?.let {
+                            ext = Json(it)
+                        }
                         name = TimeCatOnline.toUrl(this)
                     }
                     onSuccess = {
