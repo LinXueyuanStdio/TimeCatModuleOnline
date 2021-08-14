@@ -9,6 +9,7 @@ import com.timecat.data.bmob.ext.net.allBlock
 import com.timecat.data.bmob.ext.net.allBlockByIds
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.data.room.record.RoomRecord
+import com.timecat.identity.data.block.type.BLOCK_MAIL
 import com.timecat.middle.block.service.IDatabase
 import com.timecat.middle.block.service.RequestListCallback
 import com.timecat.middle.block.service.RequestSingleOrNullCallback
@@ -76,7 +77,9 @@ class OnlineBackendDb(val context: Context, val owner: User, val space: Block) :
     fun runSql(q: AVQuery<Block>, callback: RequestListCallback<RoomRecord>.() -> Unit) {
         val cb = RequestListCallback<RoomRecord>().apply(callback)
         requestBlock {
-            query = q
+            query = q.apply {
+                whereEqualTo("space", space)
+            }
             onSuccess = { cb.onSuccess(it.map { it.toRoomRecord() }.toMutableList()) }
             onError = { cb.onError(it) }
             onEmpty = { cb.onEmpty() }
@@ -96,6 +99,7 @@ class OnlineBackendDb(val context: Context, val owner: User, val space: Block) :
         val q = allBlock().apply {
             skip(offset)
             setLimit(pageSize)
+            whereEqualTo("parent", Block().also { it.objectId = uuid })
         }
         runSql(q, callback)
     }
@@ -108,6 +112,7 @@ class OnlineBackendDb(val context: Context, val owner: User, val space: Block) :
         val q = allBlock().apply {
             skip(offset)
             setLimit(pageSize)
+            whereEqualTo("parent", Block().also { it.objectId = uuid })
         }
         runSql(q, callback)
     }
@@ -146,6 +151,8 @@ class OnlineBackendDb(val context: Context, val owner: User, val space: Block) :
         val q = allBlock().apply {
             skip(offset)
             setLimit(pageSize)
+            whereEqualTo("type", type)
+            whereEqualTo("subtype", subType)
         }
         runSql(q, callback)
     }
@@ -156,10 +163,26 @@ class OnlineBackendDb(val context: Context, val owner: User, val space: Block) :
         offset: Int, pageSize: Int,
         callback: RequestListCallback<RoomRecord>.() -> Unit
     ) {
-        val q = allBlock().apply {
-            skip(offset)
-            setLimit(pageSize)
+        search(query, order, asc, offset, pageSize, callback)
+    }
+    fun search(
+        q: String,
+        order: Int, asc: Boolean,
+        offset: Int, pageSize: Int,
+        callback: RequestListCallback<RoomRecord>.() -> Unit
+    ) {
+        val cb = RequestListCallback<RoomRecord>().apply(callback)
+        searchBlock {
+            query = blockQuery(q).apply {
+                queryString = "type:$BLOCK_MAIL AND $q"
+                skip = offset
+                setLimit(pageSize)
+            }
+            onSuccess = {
+                cb.onSuccess(it.map { it.toBlock().toRoomRecord() }.toMutableList())
+            }
+            onError = { cb.onError(it) }
+            onEmpty = { cb.onEmpty() }
         }
-        runSql(q, callback)
     }
 }

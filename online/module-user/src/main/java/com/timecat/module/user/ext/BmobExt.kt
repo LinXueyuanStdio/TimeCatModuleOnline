@@ -1,9 +1,11 @@
 package com.timecat.module.user.ext
 
 import cn.leancloud.AVObject
+import cn.leancloud.Transformer
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.commonsdk.utils.string.StringUtil
 import com.timecat.data.bmob.data.User
+import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.childrenOf
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.type.BLOCK_DATABASE
@@ -30,3 +32,9 @@ val simpleErrorCallback: (DataError) -> Unit = {
 }
 
 fun User.findAllSpace() = childrenOf(this, listOf(BLOCK_DATABASE))
+
+fun AVObject.toBlock(): Block {
+    val jsonString = toJSONString()
+    val rawObject = AVObject.parseAVObject(jsonString)
+    return Transformer.transform(rawObject, Block::class.java)
+}
