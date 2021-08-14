@@ -26,37 +26,37 @@ import com.timecat.module.user.ext.toRoomRecord
 class OnlineBackendDb(val context: Context, val owner: User, val space: Block) : IDatabase {
     override fun updateRecord(record: RoomRecord) {
         saveBlock {
-            target = record.toBlock(owner)
+            target = record.toBlock(owner, space)
         }
     }
 
     override fun insertRecord(record: RoomRecord) {
         saveBlock {
-            target = record.toBlock(owner)
+            target = record.toBlock(owner, space)
         }
     }
 
     override fun deleteRecord(record: RoomRecord) {
         deleteBlock {
-            target = record.toBlock(owner)
+            target = record.toBlock(owner, space)
         }
     }
 
     override fun replaceRecord(record: RoomRecord) {
         saveBlock {
-            target = record.toBlock(owner)
+            target = record.toBlock(owner, space)
         }
     }
 
     override fun hardDeleteBatch(record: List<RoomRecord>) {
         deleteBatch {
-            target = record.map { it.toBlock(owner) }
+            target = record.map { it.toBlock(owner, space) }
         }
     }
 
     override fun updateRoomRecords(records: List<RoomRecord>) {
         saveBatch {
-            target = records.map { it.toBlock(owner) }
+            target = records.map { it.toBlock(owner, space) }
         }
     }
 

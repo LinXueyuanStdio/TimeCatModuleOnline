@@ -56,12 +56,14 @@ fun Block.copyFrom(record: RoomRecord): RoomRecord {
     return record
 }
 
-fun RoomRecord.toBlock(user: User): Block {
-    return copyFrom(fakeBlock(user))
+fun RoomRecord.toBlock(user: User, space: Block?): Block {
+    return copyFrom(fakeBlock(user, space))
 }
 
-fun RoomRecord.fakeBlock(user: User): Block {
-    return Block.forName(user, type, title)
+fun RoomRecord.fakeBlock(user: User, space: Block? = null): Block {
+    return Block.forName(user, type, title).apply {
+        this.space = space
+    }
 }
 
 fun RoomRecord.copyFrom(record: Block): Block {

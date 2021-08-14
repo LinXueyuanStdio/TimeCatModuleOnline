@@ -64,6 +64,7 @@ class MineTocServiceImpl : ContainerService {
             setShakelessClickListener {
                 saveBlock {
                     target = Block.forName(I, BLOCK_DATABASE, "新空间").apply {
+                        subtype = 1  // TODO 新的数据库类型，这个是在线数据库
                         name = TimeCatOnline.toUrl(this)
                     }
                     onSuccess = {

@@ -1,7 +1,6 @@
 package com.timecat.module.user.app.block
 
 import android.content.Context
-import com.google.android.material.chip.Chip
 import com.same.lib.core.ActionBarMenuItem
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
@@ -10,7 +9,6 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.data.room.record.RoomRecord
-import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
 import com.timecat.layout.ui.entity.BaseItem
@@ -18,7 +16,6 @@ import com.timecat.middle.block.service.*
 import com.timecat.module.user.R
 import com.timecat.module.user.app.online.TimeCatOnline
 import com.timecat.module.user.ext.toRoomRecord
-import com.timecat.module.user.record.EmptyDatabase
 import com.timecat.module.user.record.OnlineBackendDb
 import com.xiaojinzi.component.anno.ServiceAnno
 
@@ -34,9 +31,8 @@ class OnlineBlockDetailServiceImpl : ContainerService {
     val recordContext: RecordContext? by lazy { NAV.service(RecordContext::class.java) }
 
     private fun existSpace(I: User, space: Block, block: Block, path: Path, context: Context, parentUuid: String, homeService: HomeService) {
-        EmptyDatabase()
-        val db = OnlineBackendDb(context, I, space)
-        homeService.loadDatabase(db)
+        val remoteDb = OnlineBackendDb(context, I, space)
+        homeService.loadDatabase(space.uuid, remoteDb)
         homeService.loadContextRecord(block.toRoomRecord())
     }
 
