@@ -11,6 +11,7 @@ import com.timecat.data.bmob.ext.bmob.searchBlock
 import com.timecat.data.bmob.ext.bmob.searchList
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.module.user.adapter.block.SearchBlockItem
+import com.timecat.module.user.ext.toBlock
 
 /**
  * @author 林学渊
@@ -79,8 +80,6 @@ open class SearchBlockFragment : BaseSearchFragment() {
     }
 
     fun transform(user: AVObject): Block {
-        val jsonString = user.toJSONString()
-        val rawObject = AVObject.parseAVObject(jsonString)
-        return Transformer.transform(rawObject, Block::class.java)
+        return user.toBlock()
     }
 }

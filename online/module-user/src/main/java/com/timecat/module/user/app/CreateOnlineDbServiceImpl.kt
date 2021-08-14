@@ -26,30 +26,11 @@ import com.xiaojinzi.component.anno.ServiceAnno
 @ServiceAnno(CreateOnlineDbService::class)
 class CreateOnlineDbServiceImpl : CreateOnlineDbService {
     override fun showCreateOnlineDbDialog(context: Context, onSelect: (String) -> Unit) {
-        val I = UserDao.getCurrentUser()
-        if (I == null) {
-            onSelect("")
-            return
-        }
-        context.showDialog {
-            title(text = "创建在线超空间")
-            input(hint = "在线超空间名称", maxLength = 100) { d, s ->
-                val spaceName = s.toString()
-                saveBlock {
-                    target = Block.forName(I, BLOCK_DATABASE, spaceName).apply {
-                        subtype = 1  // TODO 新的数据库类型，这个是在线数据库
-                        val schemaService = NAV.service(CreateDatabaseSchemaService::class.java)
-                        schemaService?.simpleDatabaseSchema(context)?.let {
-                            ext = Json(it)
-                        }
-                    }
-                    onSuccess = {
-                        onSelect(TimeCatOnline.toUrl(it))
-                    }
-                    onError = {
-                        ToastUtil.e_long(it.localizedMessage)
-                    }
-                }
+        showCreateOnlineDbDialog(context) { block: Block? ->
+            if (block == null) {
+                onSelect("")
+            } else {
+                TimeCatOnline.toUrl(block)
             }
         }
     }
@@ -62,6 +43,36 @@ class CreateOnlineDbServiceImpl : CreateOnlineDbService {
         }
         context.showDialog {
 
+        }
+    }
+}
+
+fun showCreateOnlineDbDialog(context: Context, onSelect: (Block?) -> Unit) {
+    val I = UserDao.getCurrentUser()
+    if (I == null) {
+        onSelect(null)
+        return
+    }
+    context.showDialog {
+        title(text = "创建在线超空间")
+        input(hint = "在线超空间名称", maxLength = 100) { d, s ->
+            val spaceName = s.toString()
+            saveBlock {
+                target = Block.forName(I, BLOCK_DATABASE, spaceName).apply {
+                    subtype = 1  // TODO 新的数据库类型，这个是在线数据库
+                    val schemaService = NAV.service(CreateDatabaseSchemaService::class.java)
+                    schemaService?.simpleDatabaseSchema(context)?.let {
+                        ext = Json(it)
+                    }
+                }
+                onSuccess = {
+                    onSelect(it)
+                }
+                onError = {
+                    onSelect(null)
+                    ToastUtil.e_long(it.localizedMessage)
+                }
+            }
         }
     }
 }

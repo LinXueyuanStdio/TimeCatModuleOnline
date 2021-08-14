@@ -19,6 +19,7 @@ import com.timecat.middle.block.ext.configAdapterEndlessLoad
 import com.timecat.middle.block.service.*
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.block.NotMoreItem
+import com.timecat.module.user.app.showCreateOnlineDbDialog
 import com.timecat.module.user.ext.ext
 import com.timecat.module.user.ext.name
 import com.xiaojinzi.component.anno.ServiceAnno
@@ -64,20 +65,8 @@ class MineTocServiceImpl : ContainerService {
             setChipIconResource(R.drawable.ic_add)
             chipIconTint = ColorStateList.valueOf(Attr.getIconColor(context))
             setShakelessClickListener {
-                saveBlock {
-                    target = Block.forName(I, BLOCK_DATABASE, "新空间").apply {
-                        subtype = 1  // TODO 新的数据库类型，这个是在线数据库
-                        val schemaService = NAV.service(CreateDatabaseSchemaService::class.java)
-                        schemaService?.simpleDatabaseSchema(context)?.let {
-                            ext = Json(it)
-                        }
-                    }
-                    onSuccess = {
-                        homeService.reloadData()
-                    }
-                    onError = {
-                        ToastUtil.e_long(it.localizedMessage)
-                    }
+                showCreateOnlineDbDialog(context) { block: Block? ->
+                    homeService.reloadData()
                 }
             }
         }))
