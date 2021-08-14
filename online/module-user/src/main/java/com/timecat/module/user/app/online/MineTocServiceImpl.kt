@@ -67,12 +67,10 @@ class MineTocServiceImpl : ContainerService {
                 saveBlock {
                     target = Block.forName(I, BLOCK_DATABASE, "新空间").apply {
                         subtype = 1  // TODO 新的数据库类型，这个是在线数据库
-                        objectId = uuid
                         val schemaService = NAV.service(CreateDatabaseSchemaService::class.java)
                         schemaService?.simpleDatabaseSchema(context)?.let {
                             ext = Json(it)
                         }
-                        name = TimeCatOnline.toUrl(this)
                     }
                     onSuccess = {
                         homeService.reloadData()

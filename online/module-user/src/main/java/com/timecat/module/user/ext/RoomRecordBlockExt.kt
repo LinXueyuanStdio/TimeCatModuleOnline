@@ -6,6 +6,8 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.base.AttachmentTail
 import com.timecat.identity.data.base.Json
+import com.timecat.identity.data.block.type.BLOCK_DATABASE
+import com.timecat.module.user.app.online.TimeCatOnline
 
 /**
  * @author 林学渊
@@ -132,7 +134,12 @@ var Block.cover: String?
     }
 
 var Block.name: String
-    get() = struct.getString("name") ?: ""
+    get() {
+        if (type == BLOCK_DATABASE) {
+            return TimeCatOnline.toUrl(this)
+        }
+        return struct.getString("name") ?: ""
+    }
     set(value) {
         withStruct {
             put("name", value)
