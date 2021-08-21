@@ -21,7 +21,7 @@ fun Block.toRoomRecord(): RoomRecord {
 }
 
 fun Block.fakeRecord(): RoomRecord {
-    return RoomRecord.forName("")
+    return RoomRecord.forName(title)
 }
 
 fun Block.copyFrom(record: RoomRecord): RoomRecord {
@@ -58,8 +58,8 @@ fun Block.copyFrom(record: RoomRecord): RoomRecord {
     return record
 }
 
-fun RoomRecord.toBlock(user: User, space: Block?): Block {
-    return copyFrom(fakeBlock(user, space))
+fun RoomRecord.toBlock(user: User, space: Block?, newRecord: Boolean = false): Block {
+    return copyFrom(fakeBlock(user, space), newRecord)
 }
 
 fun RoomRecord.fakeBlock(user: User, space: Block? = null): Block {
@@ -68,11 +68,13 @@ fun RoomRecord.fakeBlock(user: User, space: Block? = null): Block {
     }
 }
 
-fun RoomRecord.copyFrom(record: Block): Block {
+fun RoomRecord.copyFrom(record: Block, newRecord: Boolean = false): Block {
     record.name = name
     record.title = title
     record.content = content
-    record.objectId = uuid
+    if (!newRecord) {
+        record.objectId = uuid
+    }
 //    record.mtime = mtime
     record.icon = icon
     record.cover = coverImageUrl

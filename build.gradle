@@ -4,14 +4,14 @@ buildscript {
     repositories {
         maven { url "file://${gradle.ext.localMavenDir.absolutePath}" }
         google()
-        jcenter()
         mavenCentral()
         maven { url "https://jitpack.io" }
+
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://dl.bintray.com/umsdk/release" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath 'com.android.tools.build:gradle:7.0.0'
         classpath classpath.kotlin
         classpath classpath.component_router
         classpath classpath.bugly
@@ -26,7 +26,7 @@ allprojects {
         maven { url "file://${gradle.ext.localMavenDir.absolutePath}" }
 
         google()
-        jcenter()
+        mavenCentral()
         maven { url "https://jitpack.io" }
 
         maven { url "https://plugins.gradle.org/m2/" }

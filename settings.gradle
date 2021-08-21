@@ -10,8 +10,6 @@ include ':online:module-plugin'
 include ':online:module-theme'
 include ':plugin:shared-host'
 
-rootProject.name = "TimeCatModuleOnline"
-
 //includeBuild(ext.PictureBedPlugin["managerPath"])
 //includeBuild(ext.PictureBedPlugin["pluginPath"])
 //include ':fake:plugin-app'

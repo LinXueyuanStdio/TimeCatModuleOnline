@@ -2,6 +2,7 @@ package com.timecat.module.user.app
 
 import android.content.Context
 import com.afollestad.materialdialogs.input.input
+import com.alibaba.fastjson.JSONObject
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
@@ -62,7 +63,9 @@ fun showCreateOnlineDbDialog(context: Context, onSelect: (Block?) -> Unit) {
                     subtype = 1  // TODO 新的数据库类型，这个是在线数据库
                     val schemaService = NAV.service(CreateDatabaseSchemaService::class.java)
                     schemaService?.simpleDatabaseSchema(context)?.let {
-                        ext = Json(it)
+                        val jo = JSONObject()
+                        jo.put("schema", it)
+                        ext = Json(jo)
                     }
                 }
                 onSuccess = {

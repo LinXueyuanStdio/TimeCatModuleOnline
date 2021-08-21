@@ -33,7 +33,13 @@ class OnlineBackendDb(val context: Context, val owner: User, val space: Block) :
 
     override fun insertRecord(record: RoomRecord) {
         saveBlock {
-            target = record.toBlock(owner, space)
+            target = record.toBlock(owner, space).apply {
+                objectId = ""
+                isFetchWhenSave = true
+            }
+            onSuccess = {
+                record.uuid = it.objectId
+            }
         }
     }
 
