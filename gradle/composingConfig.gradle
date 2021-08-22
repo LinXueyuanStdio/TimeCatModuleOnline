@@ -157,8 +157,13 @@ ext {
              projectMaven: "com.timecat.module:module-git"
             ],
             //组件 local
+            [isLocal     : true,
+             projectPath : "../TimeCatModule-Record",
+             projectName : ":module-master",
+             projectMaven: "com.timecat.module:module-master"
+            ],
             [isLocal     : false,
-             projectPath : ".",
+             projectPath : "../",
              projectName : ":module:module-about",
              projectMaven: "com.timecat.module:module-about"
             ],
