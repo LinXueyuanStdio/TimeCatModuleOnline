@@ -31,7 +31,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class DoubleActivityEditorActivity : BaseActivityAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var task: Block? = null
     override fun title(): String = "双线"
     override fun routerInject() = NAV.inject(this)

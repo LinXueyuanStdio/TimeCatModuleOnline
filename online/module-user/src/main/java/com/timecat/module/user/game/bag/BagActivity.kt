@@ -21,7 +21,6 @@ import com.xiaojinzi.component.impl.Router
 class BagActivity : BaseLoginToolbarFragmentActivity() {
 
     @AttrValueAutowiredAnno("user")
-    @JvmField
     var user: User? = null
 
     override fun title(): String = "背包"

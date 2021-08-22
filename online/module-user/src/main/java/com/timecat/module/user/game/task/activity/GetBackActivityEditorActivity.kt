@@ -31,7 +31,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class GetBackActivityEditorActivity : BaseActivityAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var task: Block? = null
     override fun title(): String = "回归活动"
     override fun routerInject() = NAV.inject(this)

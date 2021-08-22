@@ -29,7 +29,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class EquipItemEditorActivity : BaseItemAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var item: Block? = null
     override fun title(): String = "装备"
     override fun routerInject() = NAV.inject(this)

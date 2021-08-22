@@ -2,6 +2,7 @@ package com.timecat.module.user.adapter.detail
 
 import android.app.Activity
 import android.view.View
+import com.shuyu.textutillib.RichTextView
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
@@ -14,7 +15,6 @@ import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.mySpanCreateListener
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
-import kotlinx.android.synthetic.main.user_base_item_richtext.view.*
 
 /**
  * @author 林学渊
@@ -30,7 +30,9 @@ class SimpleContentItem(
     val topicScope: TopicScope? = null
 ) : BaseDetailItem<SimpleContentItem.DetailVH>("内容描述") {
 
-    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter)
+    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
+         val content: RichTextView by lazy { root.findViewById<RichTextView>(R.id.content) }
+    }
 
     override fun getLayoutRes(): Int = R.layout.user_base_item_richtext
 
@@ -46,18 +48,16 @@ class SimpleContentItem(
         payloads: MutableList<Any>?
     ) {
         super.bindViewHolder(adapter, holder, position, payloads)
-        holder.apply {
-            setRichTextView(root, content)
-        }
+        setRichTextView(holder.content, content)
     }
 
     private fun setRichTextView(
-        holder: View,
+        richTextView: RichTextView,
         content: String,
         atScope: AtScope? = null,
         topicScope: TopicScope? = null
     ) {
-        holder.content.apply {
+        richTextView.apply {
             val color = Attr.getAccentColor(context)
             atColor = color
             topicColor = color

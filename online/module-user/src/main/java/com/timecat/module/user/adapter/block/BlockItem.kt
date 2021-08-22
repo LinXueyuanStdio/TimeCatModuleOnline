@@ -2,8 +2,13 @@ package com.timecat.module.user.adapter.block
 
 import android.text.TextUtils
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
+import com.shuyu.textutillib.RichTextView
 import com.shuyu.textutillib.listener.SpanUrlCallBack
 import com.shuyu.textutillib.model.TopicModel
 import com.shuyu.textutillib.model.UserModel
@@ -29,6 +34,7 @@ import com.timecat.identity.data.block.type.BLOCK_POST
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.identity.readonly.UiHub
 import com.timecat.identity.service.PermissionService
+import com.timecat.layout.ui.business.label_tag_view.TagCloudView
 import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.util.CopyToClipboard
@@ -37,20 +43,15 @@ import com.timecat.module.user.adapter.detail.BaseDetailItem
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.*
-import com.timecat.module.user.permission.PermissionValidator
 import com.timecat.module.user.social.comment.showSubComments
 import com.timecat.module.user.view.MomentHerfView
 import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
-import kotlinx.android.synthetic.main.user_base_item_footer.view.*
-import kotlinx.android.synthetic.main.user_base_item_moment.view.*
-import kotlinx.android.synthetic.main.user_moment_item_main.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * @author 林学渊
@@ -65,8 +66,24 @@ class BlockItem(
 ) : BaseDetailItem<BlockItem.DetailVH>(block.objectId) {
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
-        val headView: UserHeadView = root.findViewById(R.id.head)
-        val momentHerf: MomentHerfView = root.findViewById(R.id.momentHerf)
+        val container: ConstraintLayout by lazy { root.findViewById<ConstraintLayout>(R.id.container) }
+        val head: UserHeadView by lazy { root.findViewById<UserHeadView>(R.id.head) }
+        val saying: LinearLayout by lazy { root.findViewById<LinearLayout>(R.id.saying) }
+        val saying_content: RichTextView by lazy { root.findViewById<RichTextView>(R.id.saying_content) }
+        val circle_image_container: NineGridView by lazy { root.findViewById<NineGridView>(R.id.circle_image_container) }
+        val momentHerf: MomentHerfView by lazy { root.findViewById<MomentHerfView>(R.id.momentHerf) }
+        val tag_cloud_view: TagCloudView by lazy { root.findViewById<TagCloudView>(R.id.tag_cloud_view) }
+        val position: TextView by lazy { root.findViewById<TextView>(R.id.position) }
+        val footer: LinearLayout by lazy { root.findViewById<LinearLayout>(R.id.footer) }
+        val footer_like_ll: LinearLayout by lazy { root.findViewById<LinearLayout>(R.id.footer_like_ll) }
+        val footer_like_icon: ImageView by lazy { root.findViewById<ImageView>(R.id.footer_like_icon) }
+        val footer_like: TextView by lazy { root.findViewById<TextView>(R.id.footer_like) }
+        val footer_comment_ll: LinearLayout by lazy { root.findViewById<LinearLayout>(R.id.footer_comment_ll) }
+        val footer_comment: TextView by lazy { root.findViewById<TextView>(R.id.footer_comment) }
+        val footer_share_ll: LinearLayout by lazy { root.findViewById<LinearLayout>(R.id.footer_share_ll) }
+        val footer_share: TextView by lazy { root.findViewById<TextView>(R.id.footer_share) }
+        val end: View by lazy { root.findViewById<View>(R.id.end) }
+
     }
 
     override fun getLayoutRes(): Int = R.layout.user_moment_item_main
@@ -112,18 +129,18 @@ class BlockItem(
     var updateTimeString: String = block.friendlyUpdateTimeText()
     private fun setHeader(holder: DetailVH, block: Block) {
         val user = block.user
-        holder.headView.bindBlock(user)
+        holder.head.bindBlock(user)
         if (!TextUtils.isEmpty(block.user.intro)) {
-            holder.headView.content = "$timeString | ${block.user.intro}"
+            holder.head.content = "$timeString | ${block.user.intro}"
         } else {
-            holder.headView.content = timeString
+            holder.head.content = timeString
         }
-        holder.headView.moreView.setShakelessClickListener {
+        holder.head.moreView.setShakelessClickListener {
             PopupMenu(it.context, it).apply {
                 inflate(R.menu.social_head)
                 GlobalScope.launch(Dispatchers.IO) {
                     val s = NAV.service(PermissionService::class.java)
-                    s?.validate(UiHub.USER_ITEM_delete_block, object :PermissionService.Callback{
+                    s?.validate(UiHub.USER_ITEM_delete_block, object : PermissionService.Callback {
                         override fun onPass() {
                             GlobalScope.launch(Dispatchers.Main) {
                                 menu.findItem(R.id.delete)?.setVisible(true)
@@ -141,7 +158,7 @@ class BlockItem(
                     when (it.itemId) {
                         R.id.copy -> {
                             LetMeKnow.report(LetMeKnow.CLICK_TIMECAT_COPY)
-                            CopyToClipboard.copy(holder.headView.context, block.content)
+                            CopyToClipboard.copy(holder.head.context, block.content)
                             true
                         }
                         R.id.delete -> {
@@ -168,7 +185,7 @@ class BlockItem(
 
     private fun setForumHeader(holder: DetailVH, block: Block) {
         val b = ForumBlock.fromJson(block.structure)
-        holder.headView.apply {
+        holder.head.apply {
             b.header?.let {
                 icon = it.avatar
             }
@@ -188,19 +205,21 @@ class BlockItem(
                     inflate(R.menu.social_head)
                     GlobalScope.launch(Dispatchers.IO) {
                         val s = NAV.service(PermissionService::class.java)
-                        s?.validate(UiHub.USER_ITEM_delete_block, object :PermissionService.Callback{
-                            override fun onPass() {
-                                GlobalScope.launch(Dispatchers.Main) {
-                                    menu.findItem(R.id.delete)?.setVisible(true)
+                        s?.validate(
+                            UiHub.USER_ITEM_delete_block,
+                            object : PermissionService.Callback {
+                                override fun onPass() {
+                                    GlobalScope.launch(Dispatchers.Main) {
+                                        menu.findItem(R.id.delete)?.setVisible(true)
+                                    }
                                 }
-                            }
 
-                            override fun onReject() {
-                                GlobalScope.launch(Dispatchers.Main) {
-                                    menu.findItem(R.id.delete)?.setVisible(false)
+                                override fun onReject() {
+                                    GlobalScope.launch(Dispatchers.Main) {
+                                        menu.findItem(R.id.delete)?.setVisible(false)
+                                    }
                                 }
-                            }
-                        })
+                            })
                     }
                     setOnMenuItemClickListener {
                         when (it.itemId) {
@@ -278,7 +297,7 @@ class BlockItem(
         atScope: AtScope? = null,
         topicScope: TopicScope? = null
     ) {
-        holder.root.saying_content.apply {
+        holder.saying_content.apply {
             val color = Attr.getAccentColor(context)
             atColor = color
             topicColor = color
@@ -318,9 +337,9 @@ class BlockItem(
         block: Block,
         mediaScope: AttachmentTail? = null
     ) {
-        holder.root.circle_image_container.visibility = View.GONE
+        holder.circle_image_container.visibility = View.GONE
         mediaScope?.let {
-            holder.root.circle_image_container.apply {
+            holder.circle_image_container.apply {
                 if (holder.itemView.tag != block.objectId) return
                 visibility = View.VISIBLE
                 val datas = it.attachmentItems.map {
@@ -344,7 +363,7 @@ class BlockItem(
         block: Block,
         relayScope: RelayScope? = null
     ) {
-        holder.root.momentHerf.visibility = View.GONE
+        holder.momentHerf.visibility = View.GONE
         relayScope?.let {
             requestOneBlockOrNull {
                 query = oneBlockOf(it.objectId)
@@ -382,9 +401,9 @@ class BlockItem(
         block: Block,
         posScope: PosScope? = null
     ) {
-        holder.root.position.visibility = View.GONE
+        holder.position.visibility = View.GONE
         posScope?.let {
-            holder.root.position.apply {
+            holder.position.apply {
                 if (holder.itemView.tag != block.objectId) return
                 visibility = View.VISIBLE
             }
@@ -395,7 +414,7 @@ class BlockItem(
         holder: DetailVH,
         onClick: (View) -> Unit
     ) {
-        holder.root.container.setShakelessClickListener {
+        holder.container.setShakelessClickListener {
             onClick(it)
         }
     }
@@ -418,20 +437,20 @@ class BlockItem(
     }
 
     private fun setFooter(adapter: FlexibleAdapter<IFlexible<*>>, holder: DetailVH, block: Block) {
-        holder.root.footer_like.text = block.likeText()
-        holder.root.footer_comment.text = block.commentText()
-        holder.root.footer_share.text = block.shareText()
+        holder.footer_like.text = block.likeText()
+        holder.footer_comment.text = block.commentText()
+        holder.footer_share.text = block.shareText()
 
         setupLikeBlockButton(
             holder.root.context,
-            holder.root.footer_like_ll,
-            holder.root.footer_like_icon,
-            holder.root.footer_like,
+            holder.footer_like_ll,
+            holder.footer_like_icon,
+            holder.footer_like,
             block
         ) {
 //            rebind(adapter, block)
         }
-        holder.root.footer_comment_ll.apply {
+        holder.footer_comment_ll.apply {
             setOnClickListener {
                 if (UserDao.getCurrentUser() == null) {
                     NAV.go(RouterHub.LOGIN_LoginActivity)
@@ -440,7 +459,7 @@ class BlockItem(
                 addCommentFor(block)
             }
         }
-        holder.root.footer_share_ll.apply {
+        holder.footer_share_ll.apply {
             setOnClickListener {
                 if (UserDao.getCurrentUser() == null) {
                     NAV.go(RouterHub.LOGIN_LoginActivity)

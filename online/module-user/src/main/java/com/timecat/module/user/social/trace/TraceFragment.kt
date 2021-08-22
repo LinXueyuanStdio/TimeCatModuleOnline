@@ -20,7 +20,6 @@ import com.xiaojinzi.component.anno.FragmentAnno
 @FragmentAnno(RouterHub.USER_TraceFragment)
 class TraceFragment : BaseEndlessActionFragment() {
     @AttrValueAutowiredAnno("user")
-    @JvmField
     var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

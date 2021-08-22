@@ -39,15 +39,12 @@ import com.xiaojinzi.component.anno.FragmentAnno
 @FragmentAnno(RouterHub.USER_BuyItemFragment)
 open class BuyItemFragment : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("item")
-    @JvmField
     var item: Block? = null
 
     @AttrValueAutowiredAnno("value")
-    @JvmField
     var value: Int = 99999999
 
     @AttrValueAutowiredAnno("max")
-    @JvmField
     var max: Int = 0
 
     lateinit var shopViewModel: ShopViewModel

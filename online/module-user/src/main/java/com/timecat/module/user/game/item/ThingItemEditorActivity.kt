@@ -29,7 +29,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class ThingItemEditorActivity : BaseItemAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var item: Block? = null
 
     override fun title(): String = "物产"

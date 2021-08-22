@@ -5,6 +5,17 @@
       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="online/module-user/src/main/res/layout/user_base_item_card_herf.xml" value="0.17755825734549138" />
+        <entry key="online/module-user/src/main/res/layout/user_base_item_moment.xml" value="0.17755825734549138" />
+        <entry key="online/module-user/src/main/res/layout/user_base_item_user_head.xml" value="0.17755825734549138" />
+        <entry key="online/module-user/src/main/res/layout/user_base_item_user_relation.xml" value="0.17755825734549138" />
+        <entry key="online/module-user/src/main/res/layout/user_moment_item_main.xml" value="0.17755825734549138" />
+      </map>
+    </option>
+  </component>
   <component name="MarkdownNavigator.ProfileManager" plain-text-search-scope="Project Files" />
   <component name="MarkdownProjectSettings" wasCopied="true">
     <PreviewSettings splitEditorLayout="SPLIT" splitEditorPreview="PREVIEW" useGrayscaleRendering="false" zoomFactor="2.0" maxImageWidth="0" showGitHubPageIfSynced="false" allowBrowsingInPreview="false" synchronizePreviewPosition="true" highlightPreviewType="NONE" highlightFadeOut="5" highlightOnTyping="true" synchronizeSourcePosition="true" verticallyAlignSourceAndPreviewSyncPosition="true" showSearchHighlightsInPreview="false" showSelectionInPreview="true" openRemoteLinks="true" replaceUnicodeEmoji="false" lastLayoutSetsDefault="false">

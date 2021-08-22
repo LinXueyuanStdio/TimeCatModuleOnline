@@ -23,7 +23,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.LOGIN_RegisterVerificationCodeActivity)
 class RegisterVerificationCodeActivity : BaseToolbarActivity() {
     @AttrValueAutowiredAnno("mPhone")
-    @JvmField
     var mPhone: String? = null
 
     override fun title(): String = getString(R.string.xiaoxing_login_verification)

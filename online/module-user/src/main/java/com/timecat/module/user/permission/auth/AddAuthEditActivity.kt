@@ -61,11 +61,9 @@ class AddAuthEditActivity : BaseLoginEditActivity() {
      * 给 target 授权
      */
     @AttrValueAutowiredAnno("target")
-    @JvmField
     var target: User? = null
 
     @ServiceAutowiredAnno
-    @JvmField
     var gameService: GameService ?= null
 
     override fun routerInject() = NAV.inject(this)

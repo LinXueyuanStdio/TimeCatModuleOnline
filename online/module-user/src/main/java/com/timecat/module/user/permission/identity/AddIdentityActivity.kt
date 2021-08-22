@@ -37,7 +37,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class AddIdentityActivity : BaseBlockEditorActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var identity: Block? = null
 
     override fun title(): String = "创建方块"

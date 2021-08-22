@@ -29,7 +29,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_AddWindowsAppActivity)
 class AddWindowsAppActivity : BaseAddAppActivity() {
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var app: Block? = null
 
     override fun title(): String = "Windows 应用"

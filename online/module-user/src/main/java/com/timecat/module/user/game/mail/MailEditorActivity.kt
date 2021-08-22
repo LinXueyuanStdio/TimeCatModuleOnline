@@ -47,7 +47,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class MailEditorActivity : BaseBlockEditorActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var mail: Block? = null
 
     override fun title(): String = "邮件"

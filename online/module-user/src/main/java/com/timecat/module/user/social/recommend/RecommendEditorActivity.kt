@@ -33,21 +33,18 @@ class RecommendEditorActivity : BaseBlockEditorActivity() {
      * 当评论为回复某回复时，parent = 评论，title = 回复
      */
     @AttrValueAutowiredAnno("parent")
-    @JvmField
     var parent: Block? = null
 
     /**
      * 回复某回复时用
      */
     @AttrValueAutowiredAnno("relay")
-    @JvmField
     var relay: Block? = null
 
     /**
      * 更新
      */
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var comment: Block? = null
 
     override fun title(): String = "评论"

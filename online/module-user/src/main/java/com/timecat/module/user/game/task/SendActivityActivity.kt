@@ -35,7 +35,6 @@ class SendActivityActivity : BaseLoginEditActivity() {
      * 要开启的活动
      */
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var task: Block? = null
 
     override fun title(): String = "开启活动"

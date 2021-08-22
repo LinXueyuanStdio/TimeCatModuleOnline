@@ -21,11 +21,9 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.LOGIN_ForgotPwdSetNewPwdActivity)
 class ForgotPwdSetNewPwdActivity : BaseToolbarActivity() {
     @AttrValueAutowiredAnno("mPhone")
-    @JvmField
     var mPhone: String? = null
 
     @AttrValueAutowiredAnno("mCode")
-    @JvmField
     var mCode: String? = null
 
     lateinit var new_password_again_et: EditText

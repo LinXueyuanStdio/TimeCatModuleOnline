@@ -34,7 +34,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class BuffItemEditorActivity : BaseItemAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var item: Block? = null
     override fun title(): String = "Buff"
     override fun routerInject() = NAV.inject(this)

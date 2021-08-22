@@ -28,7 +28,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class AddMacAppActivity : BaseAddAppActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var app: Block? = null
 
     override fun title(): String = "Mac 应用"

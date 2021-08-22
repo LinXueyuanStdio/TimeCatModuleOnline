@@ -1,13 +1,12 @@
 package com.timecat.module.user.adapter.detail
 
 import android.view.View
+import android.widget.TextView
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.requestBlock
 import com.timecat.data.bmob.ext.bmob.requestOneBlock
 import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.element.alert.ToastUtil
 import com.timecat.extend.arms.BaseApplication
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.layout.setShakelessClickListener
@@ -20,7 +19,6 @@ import com.timecat.module.user.ext.starText
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
-import kotlinx.android.synthetic.main.user_base_item_action.view.*
 
 /**
  * @author 林学渊
@@ -33,7 +31,12 @@ class ActionItem(
     var block: Block
 ) : BaseDetailItem<ActionItem.DetailVH>("点赞评论收藏分享") {
 
-    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter)
+    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
+        val like: TextView by lazy { root.findViewById<TextView>(R.id.like) }
+        val comment: TextView by lazy { root.findViewById<TextView>(R.id.comment) }
+        val star: TextView by lazy { root.findViewById<TextView>(R.id.star) }
+        val share: TextView by lazy { root.findViewById<TextView>(R.id.share) }
+    }
 
     override fun getLayoutRes(): Int = R.layout.user_base_item_action
 
@@ -50,12 +53,12 @@ class ActionItem(
     ) {
         super.bindViewHolder(adapter, holder, position, payloads)
         holder.apply {
-            root.like.setText(block.likeText())
-            setupLikeBlockButton(BaseApplication.getContext(), root.like, block) {
+            like.setText(block.likeText())
+            setupLikeBlockButton(BaseApplication.getContext(), like, block) {
                 rebind(adapter, block)
             }
-            root.share.setText(block.shareText())
-            root.share.setShakelessClickListener {
+            share.setText(block.shareText())
+            share.setShakelessClickListener {
                 if (UserDao.getCurrentUser() == null) {
                     NAV.go(RouterHub.LOGIN_LoginActivity)
                     return@setShakelessClickListener
@@ -63,16 +66,16 @@ class ActionItem(
                 //转发动态
                 GO.relayMoment(block.parent, block)
             }
-            root.comment.setText(block.commentText())
-            root.comment.setShakelessClickListener {
+            comment.setText(block.commentText())
+            comment.setShakelessClickListener {
                 if (UserDao.getCurrentUser() == null) {
                     NAV.go(RouterHub.LOGIN_LoginActivity)
                     return@setShakelessClickListener
                 }
                 GO.addCommentFor(block)
             }
-            root.star.setText(block.starText())
-            root.star.setShakelessClickListener {
+            star.setText(block.starText())
+            star.setShakelessClickListener {
 
             }
         }

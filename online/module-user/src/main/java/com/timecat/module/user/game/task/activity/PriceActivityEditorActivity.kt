@@ -31,7 +31,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class PriceActivityEditorActivity : BaseActivityAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var task: Block? = null
     override fun title(): String = "外部链接活动"
     override fun routerInject() = NAV.inject(this)

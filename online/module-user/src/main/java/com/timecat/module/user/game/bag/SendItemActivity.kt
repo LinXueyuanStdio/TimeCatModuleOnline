@@ -34,7 +34,6 @@ class SendItemActivity : BaseLoginEditActivity() {
      * 要发送的邮件
      */
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var item: Block? = null
 
     override fun title(): String = "发送物品"

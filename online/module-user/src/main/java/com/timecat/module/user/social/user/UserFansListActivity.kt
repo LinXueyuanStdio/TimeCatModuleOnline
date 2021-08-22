@@ -25,7 +25,6 @@ import java.util.*
  */
 @RouterAnno(hostAndPath = RouterHub.USER_UserFansListActivity)
 class UserFansListActivity : BaseRefreshListActivity() {
-    @JvmField
     @AttrValueAutowiredAnno("id")
     var id: String? = null
     override fun title(): String {

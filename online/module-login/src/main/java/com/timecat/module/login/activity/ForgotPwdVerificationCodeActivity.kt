@@ -24,7 +24,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class ForgotPwdVerificationCodeActivity : BaseToolbarActivity() {
 
     @AttrValueAutowiredAnno("mPhone")
-    @JvmField
     var mPhone: String? = null
 
     private val code: String

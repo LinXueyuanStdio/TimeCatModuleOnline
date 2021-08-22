@@ -22,19 +22,15 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.LOGIN_RegisterSetPwdActivity)
 class RegisterSetPwdActivity : BaseToolbarActivity() {
     @AttrValueAutowiredAnno("mPhone")
-    @JvmField
     var mPhone: String? = null
 
     @AttrValueAutowiredAnno("mEmail")
-    @JvmField
     var mEmail: String? = null
 
     @AttrValueAutowiredAnno("mUsername")
-    @JvmField
     var mUsername: String? = null
 
     @AttrValueAutowiredAnno("type")
-    @JvmField
     var type: String? = null
 
     override fun title(): String = getString(R.string.xiaoxing_login_set_pwd)

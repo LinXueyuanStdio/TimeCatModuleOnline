@@ -29,21 +29,18 @@ class MomentEditorActivity : BaseArticleBlockEditorActivity() {
      * 被转发的价值块
      */
     @AttrValueAutowiredAnno("parent")
-    @JvmField
     var parent: Block? = null
 
     /**
      * 评论
      */
     @AttrValueAutowiredAnno("relay")
-    @JvmField
     var relay: Block? = null
 
     /**
      * 更新
      */
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var moment: Block? = null
 
     override fun title(): String = "动态"

@@ -2,6 +2,7 @@ package com.timecat.module.user.adapter.detail
 
 import android.app.Activity
 import android.view.View
+import android.widget.TextView
 import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.User
@@ -13,7 +14,6 @@ import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.user.R
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
-import kotlinx.android.synthetic.main.user_base_item_user_relation.view.*
 
 /**
  * @author 林学渊
@@ -27,7 +27,12 @@ class UserRelationItem(
     var user: User
 ) : BaseDetailItem<UserRelationItem.DetailVH>("用户关系") {
 
-    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter)
+    class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
+        val fans: TextView by lazy { root.findViewById(R.id.fans) }
+        val follows: TextView by lazy { root.findViewById(R.id.follows) }
+        val star: TextView by lazy { root.findViewById(R.id.star) }
+        val creation: TextView by lazy { root.findViewById(R.id.creation) }
+    }
 
     override fun getLayoutRes(): Int = R.layout.user_base_item_user_relation
 
@@ -44,7 +49,7 @@ class UserRelationItem(
     ) {
         super.bindViewHolder(adapter, holder, position, payloads)
         holder.apply {
-            root.fans.apply {
+            fans.apply {
                 setTextColor(Attr.getPrimaryTextColor(activity))
                 requestUserRelationCount {
                     query = fansOf(user)
@@ -60,7 +65,7 @@ class UserRelationItem(
                     NAV.go(RouterHub.USER_UserFansListActivity, "id", user.objectId)
                 }
             }
-            root.follows.apply {
+            follows.apply {
                 setTextColor(Attr.getPrimaryTextColor(activity))
                 requestUserRelationCount {
                     query = user.allFollow()

@@ -40,7 +40,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class AddRoleActivity : BaseBlockEditorActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var role: Block? = null
 
     override fun routerInject() = NAV.inject(this)

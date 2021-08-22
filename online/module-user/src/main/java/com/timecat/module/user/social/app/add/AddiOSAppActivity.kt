@@ -30,7 +30,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_AddiOSAppActivity)
 class AddiOSAppActivity : BaseAddAppActivity() {
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var app: Block? = null
 
     override fun title(): String = "iOS 应用"

@@ -30,21 +30,18 @@ class CommentEditorActivity : BaseArticleBlockEditorActivity() {
      * 当评论为评论某评论时，parent = 价值块，relay = 评论，title=reply.title/reply.id
      */
     @AttrValueAutowiredAnno("parent")
-    @JvmField
     var parent: Block? = null
 
     /**
      * 回复某回复时用
      */
     @AttrValueAutowiredAnno("relay")
-    @JvmField
     var relay: Block? = null
 
     /**
      * 更新
      */
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var comment: Block? = null
 
     override fun title(): String = "评论"

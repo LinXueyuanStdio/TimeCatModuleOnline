@@ -22,7 +22,6 @@ import java.util.*
 class RecommendActivity : BaseRefreshListActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var block: Block? = null
     override fun routerInject() = NAV.inject(this)
     lateinit var mAdapter: RecommendAdapter

@@ -1,10 +1,7 @@
-apply from: "${project.rootDir}/gradle/library_header.gradle"
+apply from: "${project.rootDir}/gradle/module_header.gradle"
 
 android {
-    resourcePrefix "user_" //给 Module 内的资源名增加前缀, 避免资源名冲突
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
+    resourcePrefix "user_"
 }
 
 dependencies {
@@ -29,4 +26,4 @@ dependencies {
     api 'com.effective.android:panelSwitchHelper-androidx:1.3.13'
 }
 
-apply from: "${project.rootDir}/gradle/library_tail.gradle"
+apply from: "${project.rootDir}/gradle/module_tail.gradle"

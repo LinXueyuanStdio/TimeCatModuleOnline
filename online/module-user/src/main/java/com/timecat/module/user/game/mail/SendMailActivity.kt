@@ -30,7 +30,6 @@ class SendMailActivity : BaseLoginEditActivity() {
      * 要发送的邮件
      */
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var mail: Block? = null
 
     override fun title(): String = "发送邮件"

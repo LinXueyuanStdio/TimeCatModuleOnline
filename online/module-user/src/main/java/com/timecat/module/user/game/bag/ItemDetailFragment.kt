@@ -35,7 +35,6 @@ import com.xiaojinzi.component.anno.FragmentAnno
 @FragmentAnno(RouterHub.USER_ItemDetailFragment)
 open class ItemDetailFragment : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("item")
-    @JvmField
     var item: Block? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

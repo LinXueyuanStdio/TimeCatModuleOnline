@@ -24,7 +24,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.LOGIN_LoginActivity)
 class LoginActivity : BaseToolbarActivity() {
     @AttrValueAutowiredAnno("path")
-    @JvmField
     var path = ""
 
     override fun title(): String = getString(R.string.xiaoxing_login_login)

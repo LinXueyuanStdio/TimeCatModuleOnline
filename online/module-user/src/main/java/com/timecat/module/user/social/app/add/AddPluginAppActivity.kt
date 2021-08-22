@@ -30,7 +30,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 open class AddPluginAppActivity : BaseAddAppActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var app: Block? = null
 
     override fun title(): String = "时光猫插件"

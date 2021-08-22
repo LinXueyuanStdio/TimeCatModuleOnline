@@ -31,7 +31,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class CardActivityEditorActivity : BaseActivityAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var task: Block? = null
     override fun title(): String = "卡池"
     override fun routerInject() = NAV.inject(this)

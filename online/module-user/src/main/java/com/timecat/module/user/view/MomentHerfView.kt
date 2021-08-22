@@ -4,9 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
+import androidx.cardview.widget.CardView
+import com.makeramen.roundedimageview.RoundedImageView
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.AppBlock
@@ -15,9 +19,7 @@ import com.timecat.identity.data.block.type.BLOCK_MOMENT
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.base.GO
-import com.timecat.module.user.base.LOAD
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
-import kotlinx.android.synthetic.main.user_base_item_card_herf.view.*
 
 /**
  * @author 林学渊
@@ -33,6 +35,11 @@ class MomentHerfView @JvmOverloads constructor(
     @StyleRes defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     lateinit var root: View
+    private val herf: CardView by lazy { root.findViewById<CardView>(R.id.herf) }
+    private val herf_avatar: RoundedImageView by lazy { root.findViewById<RoundedImageView>(R.id.herf_avatar) }
+    private val herf_title: TextView by lazy { root.findViewById<TextView>(R.id.herf_title) }
+    private val herf_intro: TextView by lazy { root.findViewById<TextView>(R.id.herf_intro) }
+    private val herf_go: Button by lazy { root.findViewById<Button>(R.id.herf_go) }
 
     init {
         init(context)
@@ -41,18 +48,18 @@ class MomentHerfView @JvmOverloads constructor(
     private fun init(context: Context, layout: Int = R.layout.user_base_item_card_herf) {
         val inflater = LayoutInflater.from(context)
         root = inflater.inflate(layout, this)
-        root.herf_go.tag = "关注"
+        herf_go.tag = "关注"
     }
 
     fun isNotExist() {
-        root.herf_intro.text = "原块不可见"
-        root.herf_title.visibility = View.GONE
-        root.herf_avatar.visibility = View.GONE
-        root.herf_go.visibility = View.GONE
+        herf_intro.text = "原块不可见"
+        herf_title.visibility = View.GONE
+        herf_avatar.visibility = View.GONE
+        herf_go.visibility = View.GONE
     }
 
     fun setRelay(block: Block) {
-        root.herf_title.text = when (block.type) {
+        herf_title.text = when (block.type) {
             BLOCK_MOMENT -> "转发动态"
             BLOCK_COMMENT -> "转发评论"
             else -> "转发动态"
@@ -63,9 +70,9 @@ class MomentHerfView @JvmOverloads constructor(
      * 必须调用，初始化
      */
     fun bindBlock(block: Block) {
-        root.herf_title.text = block.title
-        root.herf_intro.text = block.content
-        setupFollowBlockButton(context, root.herf_go, block)
+        herf_title.text = block.title
+        herf_intro.text = block.content
+        setupFollowBlockButton(context, herf_go, block)
         loadAvatar(block)
         root.setOnClickListener {
             when (block.type) {
@@ -87,7 +94,7 @@ class MomentHerfView @JvmOverloads constructor(
             BLOCK_MOMENT -> "R.drawable.ic_cloud_white_24dp"
             else -> "R.drawable.ic_block_type_accent_24dp"
         }
-        IconLoader.loadIcon(context, root.herf_avatar, icon)
+        IconLoader.loadIcon(context, herf_avatar, icon)
     }
 
 }

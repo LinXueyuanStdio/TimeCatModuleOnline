@@ -30,7 +30,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class DataItemEditorActivity : BaseItemAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var item: Block? = null
     override fun title(): String = "数据"
     override fun routerInject() = NAV.inject(this)

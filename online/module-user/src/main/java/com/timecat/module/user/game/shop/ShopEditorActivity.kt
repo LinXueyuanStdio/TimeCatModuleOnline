@@ -52,7 +52,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class ShopEditorActivity : BaseBlockEditorActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var shop: Block? = null
 
     override fun title(): String = "商店"

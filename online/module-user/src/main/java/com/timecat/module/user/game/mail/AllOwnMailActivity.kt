@@ -21,7 +21,6 @@ import com.xiaojinzi.component.impl.Router
 @RouterAnno(hostAndPath = RouterHub.USER_AllOwnMailActivity)
 class AllOwnMailActivity : BaseLoginToolbarActivity() {
     @AttrValueAutowiredAnno("user")
-    @JvmField
     var user: User? = null
 
     override fun title(): String = "邮箱"

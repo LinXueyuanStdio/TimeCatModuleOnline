@@ -33,7 +33,6 @@ import kotlinx.coroutines.launch
 @RouterAnno(hostAndPath = RouterHub.USER_AddMetaPermissionActivity)
 class AddMetaPermissionActivity : BaseBlockEditActivity() {
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var block: Block? = null
 
     override fun routerInject() = NAV.inject(this)

@@ -35,7 +35,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 open class AddForumActivity : BaseBlockEditorActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var item: Block? = null
 
     override fun title(): String = "创建论坛"

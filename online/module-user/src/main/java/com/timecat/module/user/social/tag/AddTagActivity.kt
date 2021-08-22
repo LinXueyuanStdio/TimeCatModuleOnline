@@ -35,7 +35,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 open class AddTagActivity : BaseBlockEditorActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var item: Block? = null
 
     override fun title(): String = "创建标签"

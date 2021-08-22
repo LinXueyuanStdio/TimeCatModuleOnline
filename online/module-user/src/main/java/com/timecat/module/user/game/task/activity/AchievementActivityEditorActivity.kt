@@ -31,7 +31,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class AchievementActivityEditorActivity : BaseActivityAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var task: Block? = null
     override fun title(): String = "成就"
     override fun routerInject() = NAV.inject(this)

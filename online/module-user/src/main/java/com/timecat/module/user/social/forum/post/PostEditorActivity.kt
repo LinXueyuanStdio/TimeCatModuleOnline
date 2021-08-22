@@ -24,14 +24,12 @@ class PostEditorActivity : BaseBlockEditorActivity() {
      * 暂时没用
      */
     @AttrValueAutowiredAnno("parent")
-    @JvmField
     var parent: Block? = null
 
     /**
      * 更新
      */
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var post: Block? = null
 
     override fun title(): String = "帖子"

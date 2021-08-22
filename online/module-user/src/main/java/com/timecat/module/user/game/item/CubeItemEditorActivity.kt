@@ -39,7 +39,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class CubeItemEditorActivity : BaseItemAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var item: Block? = null
     override fun title(): String = "方块"
     override fun routerInject() = NAV.inject(this)

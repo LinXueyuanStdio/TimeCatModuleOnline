@@ -29,7 +29,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_AddWebAppActivity)
 class AddWebAppActivity : BaseAddAppActivity() {
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var app: Block? = null
 
     override fun title(): String = "Web 应用"

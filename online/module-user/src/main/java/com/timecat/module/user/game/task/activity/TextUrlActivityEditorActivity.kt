@@ -31,7 +31,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class TextUrlActivityEditorActivity : BaseActivityAddActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var task: Block? = null
     override fun title(): String = "文本活动"
     override fun routerInject() = NAV.inject(this)

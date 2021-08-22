@@ -32,7 +32,6 @@ class SendCubeActivity : BaseLoginEditActivity() {
      * 要发送的邮件
      */
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var cube: Block? = null
 
     override fun title(): String = "发送方块"

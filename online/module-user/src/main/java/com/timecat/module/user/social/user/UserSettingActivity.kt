@@ -32,7 +32,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 class UserSettingActivity : BaseSettingActivity() {
 
     @AttrValueAutowiredAnno("user")
-    @JvmField
     var user: User? = null
 
     override fun title(): String = "编辑资料"

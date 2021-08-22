@@ -25,7 +25,6 @@ import java.io.Serializable
 @RouterAnno(hostAndPath = RouterHub.SEARCH_SelectActivity)
 class SelectActivity : SearchActivity() {
     @AttrValueAutowiredAnno("types")
-    @JvmField
     var types: ArrayList<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

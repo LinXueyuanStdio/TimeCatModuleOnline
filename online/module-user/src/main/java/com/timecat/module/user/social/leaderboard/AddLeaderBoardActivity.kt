@@ -36,7 +36,6 @@ import com.xiaojinzi.component.anno.RouterAnno
 open class AddLeaderBoardActivity : BaseBlockEditorActivity() {
 
     @AttrValueAutowiredAnno("block")
-    @JvmField
     var item: Block? = null
 
     override fun title(): String = "创建排行榜"
