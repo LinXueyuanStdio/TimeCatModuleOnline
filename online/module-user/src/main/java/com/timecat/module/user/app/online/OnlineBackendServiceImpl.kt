@@ -4,10 +4,8 @@ import android.content.Context
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
 import com.timecat.data.bmob.ext.net.oneBlockOf
-import com.timecat.middle.block.service.IDatabase
 import com.timecat.middle.block.service.LoadDbCallback
 import com.timecat.middle.block.service.OnlineBackendService
-import com.timecat.module.user.record.EmptyDatabase
 import com.timecat.module.user.record.OnlineBackendDb
 import com.xiaojinzi.component.anno.ServiceAnno
 
@@ -28,7 +26,7 @@ class OnlineBackendServiceImpl : OnlineBackendService {
             }
             return
         }
-        TimeCatOnline.parsePath(url, onSpace = { uuid ->
+        TimeCatOnline.parseBlockPath(url, onSpace = { uuid ->
             requestOneBlockOrNull {
                 query = oneBlockOf(uuid)
                 onSuccess = {

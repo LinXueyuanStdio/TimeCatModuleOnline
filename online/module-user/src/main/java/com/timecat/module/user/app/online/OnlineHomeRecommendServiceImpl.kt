@@ -29,8 +29,12 @@ import java.util.*
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2021/2/16
- * @description null
- * @usage null
+ * @description world://timecat.online/{pathSeg}?redirect={redirectService}&tab={tab}
+ * pathSeg = home
+ * redirectService = GLOBAL_OnlineMomentHotService
+ * tab = ?
+ * @usage 根据推荐
+ * 目前数据量比较少，先根据更新时间排序
  */
 @ServiceAnno(ContainerService::class, name = [GLOBAL_OnlineHomeRecommendService])
 class OnlineHomeRecommendServiceImpl : ContainerService {
@@ -74,10 +78,12 @@ class OnlineHomeRecommendServiceImpl : ContainerService {
         homeService.reloadData()
     }
 
-    override fun loadForVirtualPath(context: Context,
-                                    parentUuid: String,
-                                    homeService: HomeService,
-                                    callback: ContainerService.LoadCallback) {
+    override fun loadForVirtualPath(
+        context: Context,
+        parentUuid: String,
+        homeService: HomeService,
+        callback: ContainerService.LoadCallback
+    ) {
 
         if (UserDao.getCurrentUser() == null) {
             callback.onError("请登录") {
@@ -114,10 +120,12 @@ class OnlineHomeRecommendServiceImpl : ContainerService {
     }
 
     var current: Disposable? = null
-    fun loadFirst(context: Context,
-                  parentUuid: String,
-                  homeService: HomeService,
-                  callback: ContainerService.LoadCallback) {
+    fun loadFirst(
+        context: Context,
+        parentUuid: String,
+        homeService: HomeService,
+        callback: ContainerService.LoadCallback
+    ) {
         current?.dispose()
         current = requestBlock {
             query = query().apply {

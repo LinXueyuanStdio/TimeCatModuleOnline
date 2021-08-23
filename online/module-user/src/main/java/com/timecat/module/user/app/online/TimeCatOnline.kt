@@ -38,11 +38,34 @@ import com.timecat.module.user.ext.*
  */
 object TimeCatOnline {
     const val SCHEMA = "world"
+
+    /**
+     * 在线地图的目录
+     */
+    const val TocHost = "toc.timecat.online"
+    const val tocUrl = "$SCHEMA://${TocHost}"
+
+    /**
+     * 在线超空间内容
+     */
     const val Host = "timecat.online"
-    const val url = "$SCHEMA://$Host"
+    const val url = "$SCHEMA://${Host}"
+
+    /**
+     * 官方在线超空间目录列表
+     */
+    const val OfficialHost = "official.timecat.online"
+    const val officialUrl = "$SCHEMA://${OfficialHost}"
+
+    /**
+     * 我的在线，即当前登录用户的在线超空间目录列表
+     */
+    const val MineHost = "mine.timecat.online"
+    const val MineUrl = "$SCHEMA://${MineHost}"
 
     const val PATH_home = "home"
     const val PATH_moment = "moment"
+
     const val QUERY_Tab = "tab"
     const val TAB_recommend = "recommend"
     const val TAB_hot = "hot"
@@ -109,13 +132,48 @@ object TimeCatOnline {
         }
     }
 
+
+
+    fun rootUri() = Uri.EMPTY.buildUpon()
+        .scheme(SCHEMA)
+        .authority(Host)
+
+    //region tab
+    /**
+     * world://timecat.online/{pathSeg}?redirect={redirectService}&tab={tab}
+     */
+    fun tab2Url(pathSeg: String, redirectService: String, tab: String): String {
+        val url = rootUri()
+            .path(pathSeg)
+            .appendQueryParameter(QUERY_Redirect, redirectService)
+            .appendQueryParameter(QUERY_Tab, tab)
+            .build().toString()
+        return url
+    }
+
     fun parseTabPath(parentUuid: String): String {
         val uri = Uri.parse(parentUuid)
         val tab = uri.getQueryParameter(QUERY_Tab) ?: TAB_recommend
         return tab
     }
+    //endregion
 
-    fun parsePath(
+    //region block
+    fun block2Url(block: Block): String {
+        val spaceId = block.space?.objectId ?: block.objectId
+        return rootUri()
+            .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
+            .appendQueryParameter(QUERY_SpaceId, spaceId)
+            .appendQueryParameter(QUERY_RecordId, block.objectId)
+            .build().toString()
+    }
+
+    fun block2Path(block: Block): Path {
+        val url = block2Url(block)
+        return Path(block.title, url, CONTAINER_BLOCK_UNIVERSAL)
+    }
+
+    fun parseBlockPath(
         parentUuid: String,
         onSpace: (String) -> Unit,
         onBlock: (String) -> Unit,
@@ -131,37 +189,7 @@ object TimeCatOnline {
         }
     }
 
-    fun rootUri() = Uri.EMPTY.buildUpon()
-        .scheme(SCHEMA)
-        .authority(Host)
-
-    fun tab2Url(pathSeg: String, redirectService: String, tab: String): String {
-        val url = rootUri()
-            .path(pathSeg)
-            .appendQueryParameter(QUERY_Redirect, redirectService)
-            .appendQueryParameter(QUERY_Tab, tab)
-            .build().toString()
-        return url
-    }
-
-    fun toPath(block: Block): Path {
-        val key = if (block.space == null) QUERY_SpaceId else QUERY_RecordId
-        val url = rootUri()
-            .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
-            .appendQueryParameter(key, block.objectId)
-            .build().toString()
-        return Path(block.title, url, CONTAINER_BLOCK_UNIVERSAL)
-    }
-
-    fun toUrl(block: Block): String {
-        val key = if (block.space == null) QUERY_SpaceId else QUERY_RecordId
-        return rootUri()
-            .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
-            .appendQueryParameter(key, block.objectId)
-            .build().toString()
-    }
-
-    fun toNavigate(parentPath: Path, record: RoomRecord): Triple<String, String, Int> {
+    fun blockNavigate(parentPath: Path, record: RoomRecord): Triple<String, String, Int> {
         val uri = Uri.parse(parentPath.uuid)
         val db = uri.getQueryParameter(QUERY_SpaceId)
             ?: return Triple(parentPath.name, parentPath.uuid, parentPath.type)
@@ -169,6 +197,7 @@ object TimeCatOnline {
         val url = Uri.EMPTY.buildUpon()
             .scheme(uri.scheme)
             .authority(uri.authority)
+            .path(uri.path)
             .appendQueryParameter(QUERY_SpaceId, db)
             .appendQueryParameter(QUERY_RecordId, record.uuid)
             .build().toString()
@@ -180,12 +209,15 @@ object TimeCatOnline {
         //-2 :为某个database里的记录，要处理当前TimeCatDatabase。路径在uuid里
         val type = if (record.type == BLOCK_CONTAINER) {
             record.subType
-        } else CONTAINER_BLOCK_UNIVERSAL
+        } else {
+            CONTAINER_BLOCK_UNIVERSAL
+        }
         return Triple(record.prettyTitle, url, type)
     }
 
-    fun toPath(parentPath: Path, record: RoomRecord): Path {
-        val (title, url, type) = toNavigate(parentPath, record)
+    fun blockNavigatePath(parentPath: Path, record: RoomRecord): Path {
+        val (title, url, type) = blockNavigate(parentPath, record)
         return Path(title, url, type, parent = parentPath)
     }
+    //endregion
 }

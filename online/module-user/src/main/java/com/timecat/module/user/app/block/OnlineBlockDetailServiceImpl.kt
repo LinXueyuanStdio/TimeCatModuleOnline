@@ -18,7 +18,6 @@ import com.timecat.module.user.app.online.TimeCatOnline
 import com.timecat.module.user.ext.toRoomRecord
 import com.timecat.module.user.record.OnlineBackendDb
 import com.xiaojinzi.component.anno.ServiceAnno
-import com.xiaojinzi.component.impl.service.ServiceManager
 
 /**
  * @author 林学渊
@@ -31,9 +30,14 @@ import com.xiaojinzi.component.impl.service.ServiceManager
 class OnlineBlockDetailServiceImpl : ContainerService {
     val recordContext: RecordContext? by lazy { NAV.service(RecordContext::class.java) }
 
+    override fun loadFor(parentPath: Path, record: RoomRecord, onParse: (name: String, uuid: String, type: Int) -> Unit) {
+        val (title, url, type) = TimeCatOnline.blockNavigate(parentPath, record)
+        onParse(title, url, type)
+    }
+
     private fun existSpace(I: User, space: Block, block: Block, path: Path, context: Context, parentUuid: String, homeService: HomeService) {
         val remoteDb = OnlineBackendDb(context, I, space)
-        homeService.loadDatabase(TimeCatOnline.toUrl(space), remoteDb)
+        homeService.loadDatabase(TimeCatOnline.block2Url(space), remoteDb)
         homeService.loadContextRecord(block.toRoomRecord())
     }
 
@@ -44,7 +48,7 @@ class OnlineBlockDetailServiceImpl : ContainerService {
             homeService.loadContextRecord(null)
             return
         }
-        TimeCatOnline.parsePath(parentUuid, onSpace = { uuid ->
+        TimeCatOnline.parseBlockPath(parentUuid, onSpace = { uuid ->
             requestOneBlockOrNull {
                 query = oneBlockOf(uuid)
                 onSuccess = {

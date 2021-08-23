@@ -19,12 +19,16 @@ import io.reactivex.disposables.Disposable
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2021/2/16
- * @description null
- * @usage null
+ * @description world://timecat.online/{pathSeg}?redirect={redirectService}&tab={tab}
+ * pathSeg = moment
+ * redirectService = GLOBAL_OnlineMomentHotService
+ * tab = ?
+ * @usage 根据推荐
+ * 目前数据量比较少，先根据更新时间排序
  */
 @ServiceAnno(ContainerService::class, name = [GLOBAL_OnlineMomentRecommendService])
 class OnlineMomentRecommendServiceImpl : ContainerService {
-    val pageSize: Int = 10
+    private val pageSize: Int = 10
     private val notMoreItem: NotMoreItem = NotMoreItem()
 
     override fun loadContextRecord(path: Path, context: Context, parentUuid: String, homeService: HomeService) {
@@ -32,7 +36,7 @@ class OnlineMomentRecommendServiceImpl : ContainerService {
     }
 
     var disposable: Disposable? = null
-    var dataloader: MomentFocus? = null
+    var dataloader: UserMomentFocus? = null
     override fun loadContext(path: Path, context: Context, parentUuid: String, record: RoomRecord?, homeService: HomeService) {
         val tab = TimeCatOnline.parseTabPath(path.uuid)
 
@@ -60,10 +64,12 @@ class OnlineMomentRecommendServiceImpl : ContainerService {
         homeService.reloadData()
     }
 
-    override fun loadForVirtualPath(context: Context,
-                                    parentUuid: String,
-                                    homeService: HomeService,
-                                    callback: ContainerService.LoadCallback) {
+    override fun loadForVirtualPath(
+        context: Context,
+        parentUuid: String,
+        homeService: HomeService,
+        callback: ContainerService.LoadCallback
+    ) {
         val I = UserDao.getCurrentUser()
         if (I == null) {
             callback.onError("请登录") {
@@ -78,7 +84,7 @@ class OnlineMomentRecommendServiceImpl : ContainerService {
                 disposable?.dispose()
                 callback.onVirtualLoadSuccess(listOf())
             }
-            dataloader = MomentFocus(I, pageSize)
+            dataloader = UserMomentFocus(I, pageSize)
             disposable = dataloader?.loadForVirtualPath(context, parentUuid, homeService, callback)
         }
     }

@@ -2,7 +2,6 @@ package com.timecat.module.user.app.online
 
 import android.content.Context
 import com.timecat.data.room.record.RoomRecord
-import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
 import com.timecat.middle.block.service.*
 import com.timecat.module.user.ext.GLOBAL_OnlineHomeHotService
@@ -12,8 +11,11 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2021/7/6
- * @description null
- * @usage null
+ * @description world://timecat.online/{pathSeg}?redirect={redirectService}&tab={tab}
+ * pathSeg = moment
+ * redirectService = GLOBAL_OnlineMomentHotService
+ * tab = ?
+ * @usage 根据热度排序
  */
 @ServiceAnno(ContainerService::class, name = [GLOBAL_OnlineHomeHotService])
 class OnlineHomeHotServiceImpl : ContainerService {
@@ -22,6 +24,7 @@ class OnlineHomeHotServiceImpl : ContainerService {
 //        homeService.loadDatabase()
         homeService.loadContextRecord(null)
     }
+
     override fun loadContext(path: Path, context: Context, parentUuid: String, record: RoomRecord?, homeService: HomeService) {
         val tab = TimeCatOnline.parseTabPath(path.uuid)
         homeService.loadMenu(EmptyMenuContext())

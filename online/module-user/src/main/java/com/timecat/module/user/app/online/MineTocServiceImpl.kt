@@ -7,11 +7,7 @@ import com.timecat.component.identity.Attr
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.data.room.record.RoomRecord
-import com.timecat.element.alert.ToastUtil
-import com.timecat.identity.data.base.Json
-import com.timecat.identity.data.block.type.BLOCK_DATABASE
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
 import com.timecat.layout.ui.layout.setShakelessClickListener
@@ -20,8 +16,6 @@ import com.timecat.middle.block.service.*
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.block.NotMoreItem
 import com.timecat.module.user.app.showCreateOnlineDbDialog
-import com.timecat.module.user.ext.ext
-import com.timecat.module.user.ext.name
 import com.xiaojinzi.component.anno.ServiceAnno
 import io.reactivex.disposables.Disposable
 
@@ -73,11 +67,11 @@ class MineTocServiceImpl : ContainerService {
         homeService.reloadData()
     }
 
-    val pageSize: Int = 10
+    private val pageSize: Int = 10
     private val notMoreItem: NotMoreItem = NotMoreItem()
 
     var disposable: Disposable? = null
-    var dataloader: MineSpace? = null
+    var dataloader: UserSpace? = null
     override fun loadForVirtualPath(context: Context, parentUuid: String, homeService: HomeService, callback: ContainerService.LoadCallback) {
         val I = UserDao.getCurrentUser()
         if (I == null) {
@@ -93,7 +87,7 @@ class MineTocServiceImpl : ContainerService {
                 disposable?.dispose()
                 callback.onVirtualLoadSuccess(listOf())
             }
-            dataloader = MineSpace(I, pageSize)
+            dataloader = UserSpace(I, pageSize)
             disposable = dataloader?.loadForVirtualPath(context, parentUuid, homeService, callback)
         }
     }

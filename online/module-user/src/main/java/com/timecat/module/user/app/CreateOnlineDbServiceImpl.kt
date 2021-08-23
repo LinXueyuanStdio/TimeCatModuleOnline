@@ -31,7 +31,7 @@ class CreateOnlineDbServiceImpl : CreateOnlineDbService {
             if (block == null) {
                 onSelect("")
             } else {
-                TimeCatOnline.toUrl(block)
+                TimeCatOnline.block2Url(block)
             }
         }
     }

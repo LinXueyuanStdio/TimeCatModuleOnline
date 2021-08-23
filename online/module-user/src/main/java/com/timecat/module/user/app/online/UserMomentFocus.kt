@@ -2,17 +2,18 @@ package com.timecat.module.user.app.online
 
 import android.content.Context
 import cn.leancloud.AVQuery
+import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlock
-import com.timecat.identity.readonly.RouterHub
-import com.timecat.middle.block.adapter.SubItem
+import com.timecat.data.bmob.ext.bmob.requestUserRelation
+import com.timecat.data.bmob.ext.net.allFollow
+import com.timecat.data.bmob.ext.net.findAllMoment
 import com.timecat.middle.block.service.ContainerService
 import com.timecat.middle.block.service.HomeService
 import com.timecat.module.user.adapter.block.MomentItem
-import com.timecat.module.user.ext.findAllSpace
-import com.timecat.module.user.ext.icon
 import io.reactivex.disposables.Disposable
+import java.util.*
 
 /**
  * @author 林学渊
@@ -21,17 +22,46 @@ import io.reactivex.disposables.Disposable
  * @description null
  * @usage null
  */
-class MineSpace(
+class UserMomentFocus(
     val I: User,
     val pageSize: Int = 10,
+    var focus_ids: List<User> = mutableListOf()
 ) {
+    fun loadForVirtualPath(
+        context: Context,
+        parentUuid: String,
+        homeService: HomeService,
+        callback: ContainerService.LoadCallback
+    ): Disposable {
+        return requestUserRelation {
+            query = I.allFollow()
+            onError = {
+                callback.onError("加载失败") {
+                    homeService.reloadData()
+                }
+                focus_ids = mutableListOf()
+                LogUtil.se(it)
+            }
+            onEmpty = {
+                focus_ids = mutableListOf()
+                loadFirst(context, parentUuid, homeService, callback)
+            }
+            onSuccess = {
+                focus_ids = it.map { it.target }
+                loadFirst(context, parentUuid, homeService, callback)
+            }
+        }
+    }
+
     var current: Disposable? = null
-    fun loadForVirtualPath(context: Context,
-                           parentUuid: String,
-                           homeService: HomeService,
-                           callback: ContainerService.LoadCallback): Disposable {
+    private fun loadFirst(
+        context: Context,
+        parentUuid: String,
+        homeService: HomeService,
+        callback: ContainerService.LoadCallback
+    ) {
         current?.dispose()
-        return requestBlock {
+        current = requestBlock {
             query = query().apply {
                 setLimit(pageSize)
                 setSkip(0)
@@ -40,29 +70,32 @@ class MineSpace(
             }
             onSuccess = {
                 val items = it.map {
-                    val item = SubItem(it.type, it.subtype, it.title, it.content, it.icon, "", RouterHub.ABOUT_HelpActivity, uuid = TimeCatOnline.toUrl(it))
-                    val subCard = mapSubItem2Card(context, homeService, item)
-                    subCard
+                    MomentItem(context, it)
                 }
                 callback.onVirtualLoadSuccess(items)
             }
             onEmpty = {
                 callback.onEmpty("空") {
-                    loadForVirtualPath(context, parentUuid, homeService, callback)
+                    loadFirst(context, parentUuid, homeService, callback)
                 }
             }
             onError = {
                 callback.onError(it.localizedMessage ?: "") {
-                    loadForVirtualPath(context, parentUuid, homeService, callback)
+                    loadFirst(context, parentUuid, homeService, callback)
                 }
             }
-        }.also {
-            current = it
         }
     }
 
     private fun query(): AVQuery<Block> {
-        return I.findAllSpace()
+        // 合并两个条件，进行"或"查询
+        // 查询 我关注的人的动态 和 自己的动态
+        val queries: MutableList<AVQuery<Block>> = ArrayList()
+        for (user in focus_ids) {
+            queries.add(user.findAllMoment())
+        }
+        queries.add(I.findAllMoment())
+        return AVQuery.or(queries)
             .include("user")
             .include("parent")
             .order("-createdAt")
@@ -78,9 +111,7 @@ class MineSpace(
             }
             onSuccess = {
                 val items = it.map {
-                    val item = SubItem(it.type, it.subtype, it.title, it.content, it.icon, "", RouterHub.ABOUT_HelpActivity, uuid = TimeCatOnline.toUrl(it))
-                    val subCard = mapSubItem2Card(context, homeService, item)
-                    subCard
+                    MomentItem(context, it)
                 }
                 callback.onVirtualLoadSuccess(items)
             }

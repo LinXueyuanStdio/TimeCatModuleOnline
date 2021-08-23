@@ -138,7 +138,7 @@ var Block.cover: String?
 var Block.name: String
     get() {
         if (type == BLOCK_DATABASE) {
-            return TimeCatOnline.toUrl(this)
+            return TimeCatOnline.block2Url(this)
         }
         return struct.getString("name") ?: ""
     }
