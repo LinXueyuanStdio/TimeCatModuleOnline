@@ -125,8 +125,8 @@ object TimeCatOnline {
         val dbPath = uri.getQueryParameter(QUERY_SpaceId)
         val recordId = uri.getQueryParameter(QUERY_RecordId)
         when {
-            dbPath != null -> onSpace(dbPath)
             recordId != null -> onBlock(recordId)
+            dbPath != null -> onSpace(dbPath)
             else -> onFail()
         }
     }
