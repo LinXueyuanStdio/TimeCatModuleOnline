@@ -1,5 +1,6 @@
 package com.timecat.module.user.app
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.afollestad.materialdialogs.input.input
 import com.alibaba.fastjson.JSONObject
@@ -10,6 +11,7 @@ import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.Json
 import com.timecat.identity.data.block.type.BLOCK_DATABASE
+import com.timecat.identity.data.block.type.BLOCK_SPACE
 import com.timecat.middle.block.ext.showDialog
 import com.timecat.middle.block.service.CreateDatabaseSchemaService
 import com.timecat.middle.block.service.CreateOnlineDbService
@@ -48,6 +50,7 @@ class CreateOnlineDbServiceImpl : CreateOnlineDbService {
     }
 }
 
+@SuppressLint("CheckResult")
 fun showCreateOnlineDbDialog(context: Context, onSelect: (Block?) -> Unit) {
     val I = UserDao.getCurrentUser()
     if (I == null) {
@@ -56,11 +59,11 @@ fun showCreateOnlineDbDialog(context: Context, onSelect: (Block?) -> Unit) {
     }
     context.showDialog {
         title(text = "创建在线超空间")
-        input(hint = "在线超空间名称", maxLength = 100) { d, s ->
+        input(hint = "在线超空间名称（名称长度短于 100 个字符）", maxLength = 100) { d, s ->
             val spaceName = s.toString()
             saveBlock {
-                target = Block.forName(I, BLOCK_DATABASE, spaceName).apply {
-                    subtype = 1  // TODO 新的数据库类型，这个是在线数据库
+                target = Block.forName(I, BLOCK_SPACE, spaceName).apply {
+                    subtype = 0
                     val schemaService = NAV.service(CreateDatabaseSchemaService::class.java)
                     schemaService?.simpleDatabaseSchema(context)?.let {
                         val jo = JSONObject()

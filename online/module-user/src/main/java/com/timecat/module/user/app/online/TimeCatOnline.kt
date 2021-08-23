@@ -5,6 +5,7 @@ import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.block.type.BLOCK_CONTAINER
+import com.timecat.identity.data.block.type.BLOCK_SPACE
 import com.timecat.identity.data.block.type.CONTAINER_BLOCK_UNIVERSAL
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
@@ -133,7 +134,6 @@ object TimeCatOnline {
     }
 
 
-
     fun rootUri() = Uri.EMPTY.buildUpon()
         .scheme(SCHEMA)
         .authority(Host)
@@ -159,8 +159,19 @@ object TimeCatOnline {
     //endregion
 
     //region block
+    fun space2Url(block: Block): String {
+        val spaceId = block.space?.objectId ?: block.objectId // 如果space为空，说明block就是超空间
+        return rootUri()
+            .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
+            .appendQueryParameter(QUERY_SpaceId, spaceId)
+            .build().toString()
+    }
+
     fun block2Url(block: Block): String {
-        val spaceId = block.space?.objectId ?: block.objectId
+        if (block.type == BLOCK_SPACE || block.space == null) {
+            return space2Url(block)
+        }
+        val spaceId = block.space?.objectId ?: block.objectId // 如果space为空，说明block就是超空间
         return rootUri()
             .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
             .appendQueryParameter(QUERY_SpaceId, spaceId)

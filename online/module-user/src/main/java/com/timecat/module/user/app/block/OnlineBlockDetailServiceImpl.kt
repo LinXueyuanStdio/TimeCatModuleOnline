@@ -37,7 +37,7 @@ class OnlineBlockDetailServiceImpl : ContainerService {
 
     private fun existSpace(I: User, space: Block, block: Block, path: Path, context: Context, parentUuid: String, homeService: HomeService) {
         val remoteDb = OnlineBackendDb(context, I, space)
-        homeService.loadDatabase(TimeCatOnline.block2Url(space), remoteDb)
+        homeService.loadDatabase(TimeCatOnline.space2Url(space), remoteDb)
         homeService.loadContextRecord(block.toRoomRecord())
     }
 
