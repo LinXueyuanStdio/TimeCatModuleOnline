@@ -15,6 +15,7 @@ import com.timecat.middle.block.service.RequestListCallback
 import com.timecat.middle.block.service.RequestSingleOrNullCallback
 import com.timecat.module.user.ext.toBlock
 import com.timecat.module.user.ext.toRoomRecord
+import com.umeng.analytics.pro.cb
 
 /**
  * @author 林学渊
@@ -31,15 +32,17 @@ class OnlineBackendDb(val context: Context, val owner: User, val space: Block) :
         }
     }
 
-    override fun insertRecord(record: RoomRecord) {
+    override fun insertRecord(
+        record: RoomRecord,
+        callback: RequestSingleOrNullCallback<RoomRecord>.() -> Unit
+    ) {
+        val cb = RequestSingleOrNullCallback<RoomRecord>().apply(callback)
         saveBlock {
-            target = record.toBlock(owner, space).apply {
-                objectId = ""
+            target = record.toBlock(owner, space, true).apply {
                 isFetchWhenSave = true
             }
-            onSuccess = {
-                record.uuid = it.objectId
-            }
+            onSuccess = { cb.onSuccess(it.toRoomRecord()) }
+            onError = { cb.onError(it) }
         }
     }
 

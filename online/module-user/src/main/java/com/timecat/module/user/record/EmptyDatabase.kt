@@ -24,7 +24,12 @@ class EmptyDatabase : IDatabase {
     override fun updateRecord(record: RoomRecord) {
     }
 
-    override fun insertRecord(record: RoomRecord) {
+    override fun insertRecord(
+        record: RoomRecord,
+        callback: RequestSingleOrNullCallback<RoomRecord>.() -> Unit
+    ) {
+        val cb = RequestSingleOrNullCallback<RoomRecord>().apply(callback)
+        cb.onEmpty()
     }
 
     override fun deleteRecord(record: RoomRecord) {
