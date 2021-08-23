@@ -18,10 +18,10 @@ dependencies {
     api rootProject.ext.timecat["identity-Resource"]
     api rootProject.ext.timecat["module-controller"]
     api rootProject.ext.timecat["module-master"]
-    api rootProject.ext.timecat["module-scarlet"]
-    api rootProject.ext.timecat["module-note-org"]
+//    api rootProject.ext.timecat["module-scarlet"]
+//    api rootProject.ext.timecat["module-note-org"]
 
-    api rootProject.ext.timecat["module-welcome"]
+//    api rootProject.ext.timecat["module-welcome"]
 //    api rootProject.ext.timecat["module-file"]
 
     api rootProject.ext.timecat["component-CommonSetting"]

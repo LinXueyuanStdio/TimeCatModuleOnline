@@ -3,18 +3,18 @@ package com.timecat.module.login.activity
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.TextView
+import com.blankj.utilcode.util.KeyboardUtils
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.jess.arms.utils.DeviceUtils
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.ext.bmob.EasyRequestUser
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.module.login.R
 import com.timecat.page.base.friend.toolbar.BaseToolbarActivity
-import com.timecat.page.base.view.MyClickListener
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
 import com.xiaojinzi.component.anno.RouterAnno
 
@@ -50,16 +50,16 @@ class LoginActivity : BaseToolbarActivity() {
     }
 
     override fun initView() {
-        btnLogin.setOnClickListener(MyClickListener {
-            DeviceUtils.hideSoftKeyboard(this@LoginActivity, btnLogin)
+        btnLogin.setShakelessClickListener {
+            KeyboardUtils.hideSoftInput(btnLogin)
             login()
-        })
-        tvReg.setOnClickListener(MyClickListener {
+        }
+        tvReg.setShakelessClickListener {
             NAV.go(this@LoginActivity, RouterHub.LOGIN_RegisterCheckExistActivity)
-        })
-        tvForgotPwd.setOnClickListener(MyClickListener {
+        }
+        tvForgotPwd.setShakelessClickListener {
             NAV.go(this@LoginActivity, RouterHub.LOGIN_ForgotPwdCheckExistActivity)
-        })
+        }
     }
 
     private fun login() {
