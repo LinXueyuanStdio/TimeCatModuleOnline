@@ -4,11 +4,10 @@ import android.content.Context
 import cn.leancloud.AVQuery
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.net.findAllMoment
+import com.timecat.data.bmob.ext.net.allMoment
 import com.timecat.layout.ui.entity.BaseItem
 import com.timecat.middle.block.service.HomeService
 import com.timecat.module.user.adapter.block.MomentItem
-import java.util.*
 
 /**
  * @author 林学渊
@@ -17,11 +16,10 @@ import java.util.*
  * @description null
  * @usage null
  */
-class UserMomentFocus(
+class UserMomentRecommend(
     I: User,
     pageSize: Int = 10,
-    focus_ids: List<User> = mutableListOf()
-) : UserFocus(I, pageSize, focus_ids) {
+) : UserRecommend(I, pageSize) {
     override fun transform(context: Context, block: Block, homeService: HomeService): BaseItem<*> {
         return MomentItem(context, block)
     }
@@ -29,15 +27,6 @@ class UserMomentFocus(
     override fun query(): AVQuery<Block> {
         // 合并两个条件，进行"或"查询
         // 查询 我关注的人的动态 和 自己的动态
-        val queries: MutableList<AVQuery<Block>> = ArrayList()
-        for (user in focus_ids) {
-            queries.add(user.findAllMoment())
-        }
-        queries.add(I.findAllMoment())
-        return AVQuery.or(queries)
-            .include("user")
-            .include("parent")
-            .order("-createdAt")
+        return allMoment()
     }
-
 }

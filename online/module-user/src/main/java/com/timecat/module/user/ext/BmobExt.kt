@@ -9,6 +9,7 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.net.childrenOf
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.type.BLOCK_DATABASE
+import com.timecat.identity.data.block.type.BLOCK_SPACE
 import com.timecat.identity.data.service.DataError
 import org.joda.time.DateTime
 import java.util.*
@@ -31,7 +32,7 @@ val simpleErrorCallback: (DataError) -> Unit = {
     LogUtil.e("发生错误：$it")
 }
 
-fun User.findAllSpace() = childrenOf(this, listOf(BLOCK_DATABASE))
+fun User.findAllSpace() = childrenOf(this, listOf(BLOCK_SPACE))
 
 fun AVObject.toBlock(): Block {
     val jsonString = toJSONString()

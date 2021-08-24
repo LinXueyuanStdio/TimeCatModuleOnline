@@ -113,7 +113,9 @@ fun Block.withStruct(func: (cn.leancloud.json.JSONObject) -> Unit) {
 var Block.ext: Json
     get() = Json(JSON.parseObject(structure))
     set(value) {
-        structure = value.toJson()
+        withStruct {
+            it.put("ext", value)
+        }
     }
 var Block.parentId: String
     get() = parent?.objectId ?: ""
@@ -121,17 +123,17 @@ var Block.parentId: String
         parent = Block().also { it.objectId = value }
     }
 var Block.icon: String
-    get() = simpleAvatar()
+    get() = struct.getString("icon") ?: simpleAvatar()
     set(value) {
         withStruct {
-            put("icon", value)
+            it.put("icon", value)
         }
     }
 var Block.cover: String?
-    get() = simpleAvatar()
+    get() = struct.getString("cover") ?: simpleAvatar()
     set(value) {
         withStruct {
-            put("cover", value)
+            it.put("cover", value)
         }
     }
 
@@ -144,14 +146,14 @@ var Block.name: String
     }
     set(value) {
         withStruct {
-            put("name", value)
+            it.put("name", value)
         }
     }
 var Block.startTime: Long
     get() = struct.getLong("startTime") ?: 0
     set(value) {
         withStruct {
-            put("startTime", value)
+            it.put("startTime", value)
         }
     }
 
@@ -159,7 +161,7 @@ var Block.totalLength: Long
     get() = struct.getLong("totalLength") ?: 0
     set(value) {
         withStruct {
-            put("totalLength", value)
+            it.put("totalLength", value)
         }
     }
 
@@ -167,7 +169,7 @@ var Block.miniShowType: Int
     get() = struct.getInteger("miniShowType") ?: 0
     set(value) {
         withStruct {
-            put("miniShowType", value)
+            it.put("miniShowType", value)
         }
     }
 
@@ -175,7 +177,7 @@ var Block.render_type: Int
     get() = struct.getInteger("render_type") ?: 0
     set(value) {
         withStruct {
-            put("render_type", value)
+            it.put("render_type", value)
         }
     }
 
@@ -183,7 +185,7 @@ var Block.label: Int
     get() = struct.getInteger("label") ?: 0
     set(value) {
         withStruct {
-            put("label", value)
+            it.put("label", value)
         }
     }
 
@@ -191,7 +193,7 @@ var Block.color: Int
     get() = struct.getInteger("color") ?: 0
     set(value) {
         withStruct {
-            put("color", value)
+            it.put("color", value)
         }
     }
 
@@ -199,23 +201,23 @@ var Block.tags: String
     get() = struct.getString("tags") ?: ""
     set(value) {
         withStruct {
-            put("tags", value)
+            it.put("tags", value)
         }
     }
 var Block.topics: String
     get() = struct.getString("topics") ?: ""
     set(value) {
         withStruct {
-            put("topics", value)
+            it.put("topics", value)
         }
     }
 var Block.attachmentItems: AttachmentTail
     get() {
-        val jsonStr = struct.getString("attachmentItems") ?: return AttachmentTail(mutableListOf())
-        return AttachmentTail.fromJson(jsonStr)
+        val jsonStr = struct.getJSONObject("attachmentItems") ?: return AttachmentTail(mutableListOf())
+        return AttachmentTail.fromJson(jsonStr.toJSONString())
     }
     set(value) {
         withStruct {
-            put("attachmentItems", value.toJson())
+            it.put("attachmentItems", value.toJsonObject())
         }
     }

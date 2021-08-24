@@ -36,7 +36,7 @@ class OnlineMomentRecommendServiceImpl : ContainerService {
     }
 
     var disposable: Disposable? = null
-    var dataloader: UserMomentFocus? = null
+    var dataloader: UserMomentRecommend? = null
     override fun loadContext(path: Path, context: Context, parentUuid: String, record: RoomRecord?, homeService: HomeService) {
         val tab = TimeCatOnline.parseTabPath(path.uuid)
 
@@ -84,7 +84,7 @@ class OnlineMomentRecommendServiceImpl : ContainerService {
                 disposable?.dispose()
                 callback.onVirtualLoadSuccess(listOf())
             }
-            dataloader = UserMomentFocus(I, pageSize)
+            dataloader = UserMomentRecommend(I, pageSize)
             disposable = dataloader?.loadForVirtualPath(context, parentUuid, homeService, callback)
         }
     }

@@ -10,7 +10,6 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.Json
-import com.timecat.identity.data.block.type.BLOCK_DATABASE
 import com.timecat.identity.data.block.type.BLOCK_SPACE
 import com.timecat.middle.block.ext.showDialog
 import com.timecat.middle.block.service.CreateDatabaseSchemaService
@@ -45,7 +44,7 @@ class CreateOnlineDbServiceImpl : CreateOnlineDbService {
             return
         }
         context.showDialog {
-
+            title(text = "未实现")
         }
     }
 }
