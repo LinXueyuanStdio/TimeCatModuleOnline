@@ -1,12 +1,13 @@
 package com.timecat.module.user.ext
 
-import com.alibaba.fastjson.JSON
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.base.AttachmentTail
 import com.timecat.identity.data.base.Json
 import com.timecat.identity.data.block.type.BLOCK_DATABASE
+import com.timecat.identity.data.block.type.BLOCK_SPACE
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.app.online.TimeCatOnline
 
 /**
@@ -111,26 +112,43 @@ fun Block.withStruct(func: (cn.leancloud.json.JSONObject) -> Unit) {
 }
 
 var Block.ext: Json
-    get() = Json(JSON.parseObject(structure))
+    get() = Json.fromJson(extObj.toJSONString())
+    set(value) {
+        val jsonString = value.toJson()
+        extObj = cn.leancloud.json.JSON.parseObject(jsonString)
+    }
+var Block.extObj: cn.leancloud.json.JSONObject
+    get() = struct.getJSONObject("ext") ?: cn.leancloud.json.JSONObject.Builder.create(null)
     set(value) {
         withStruct {
             it.put("ext", value)
         }
     }
+
 var Block.parentId: String
     get() = parent?.objectId ?: ""
     set(value) {
-        parent = Block().also { it.objectId = value }
+        if (value == objectId) return
+        if (value.isEmpty()) {
+            if (type != BLOCK_SPACE) {
+                parent = space
+            }
+        } else {
+            parent = Block().also { it.objectId = value }
+        }
+        //会优先保存新的block，即新建的parent
+        //但是当parent.objectId==""时，保存失败，会导致接下来主体的保存也失败
+        //所以不能用""表示父节点，必须用space.objectId
     }
 var Block.icon: String
-    get() = struct.getString("icon") ?: simpleAvatar()
+    get() = struct.getString("icon") ?: IconLoader.randomAvatar(uuid)
     set(value) {
         withStruct {
             it.put("icon", value)
         }
     }
 var Block.cover: String?
-    get() = struct.getString("cover") ?: simpleAvatar()
+    get() = struct.getString("cover") ?: IconLoader.randomCover(uuid)
     set(value) {
         withStruct {
             it.put("cover", value)
@@ -204,6 +222,7 @@ var Block.tags: String
             it.put("tags", value)
         }
     }
+
 var Block.topics: String
     get() = struct.getString("topics") ?: ""
     set(value) {
@@ -211,6 +230,7 @@ var Block.topics: String
             it.put("topics", value)
         }
     }
+
 var Block.attachmentItems: AttachmentTail
     get() {
         val jsonStr = struct.getJSONObject("attachmentItems") ?: return AttachmentTail(mutableListOf())
