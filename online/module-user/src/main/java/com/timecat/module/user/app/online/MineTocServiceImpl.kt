@@ -15,7 +15,7 @@ import com.timecat.middle.block.ext.configAdapterEndlessLoad
 import com.timecat.middle.block.service.*
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.block.NotMoreItem
-import com.timecat.module.user.app.showCreateOnlineDbDialog
+import com.timecat.module.user.app.showCreateOnlineSpaceDialog
 import com.xiaojinzi.component.anno.ServiceAnno
 import io.reactivex.disposables.Disposable
 
@@ -59,7 +59,7 @@ class MineTocServiceImpl : ContainerService {
             setChipIconResource(R.drawable.ic_add)
             chipIconTint = ColorStateList.valueOf(Attr.getIconColor(context))
             setShakelessClickListener {
-                showCreateOnlineDbDialog(context) { block: Block? ->
+                showCreateOnlineSpaceDialog(context) { block: Block? ->
                     homeService.reloadData()
                 }
             }

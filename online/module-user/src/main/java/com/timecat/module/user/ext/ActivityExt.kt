@@ -221,7 +221,7 @@ fun Activity.chooseImage(aspectRatio: ImageAspectRatio = ImageAspectRatio.Avatar
         val choice = listOf(
             "拍照",
             "本地相册",
-            "随机图标",
+            "随机大图",
 //                "我的在线相册" TODO
         )
         positiveButton(R.string.ok)
@@ -432,6 +432,7 @@ fun Activity.receiveImage(
     val ans = mutableListOf<String>()
     for (path in filePaths) {
         if (path.startsWith(IconLoader.AVATAR_SCHEME) ||
+            path.startsWith(IconLoader.COVER_SCHEME) ||
             path.startsWith(IconLoader.FONTAWESOME_SCHEME) ||
             path.startsWith(IconLoader.APP_SCHEME) ||
             path.startsWith(IconLoader.BUILDIN_DRAWABLE_SCHEME) ||

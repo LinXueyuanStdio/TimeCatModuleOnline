@@ -2,6 +2,7 @@ package com.timecat.module.user.app
 
 import android.annotation.SuppressLint
 import android.content.Context
+import cn.leancloud.AVACL
 import com.afollestad.materialdialogs.input.input
 import com.alibaba.fastjson.JSONObject
 import com.timecat.component.router.app.NAV
@@ -10,6 +11,7 @@ import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.saveBlock
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.base.Json
+import com.timecat.identity.data.block.type.BLOCK_DATABASE
 import com.timecat.identity.data.block.type.BLOCK_SPACE
 import com.timecat.middle.block.ext.showDialog
 import com.timecat.middle.block.service.CreateDatabaseSchemaService
@@ -57,11 +59,11 @@ fun showCreateOnlineDbDialog(context: Context, onSelect: (Block?) -> Unit) {
         return
     }
     context.showDialog {
-        title(text = "创建在线超空间")
-        input(hint = "在线超空间名称（名称长度短于 100 个字符）", maxLength = 100) { d, s ->
+        title(text = "创建在线数据库")
+        input(hint = "在线数据库名称（名称长度短于 100 个字符）", maxLength = 100) { d, s ->
             val spaceName = s.toString()
             saveBlock {
-                target = Block.forName(I, BLOCK_SPACE, spaceName).apply {
+                target = Block.forName(I, BLOCK_DATABASE, spaceName).apply {
                     subtype = 0
                     val schemaService = NAV.service(CreateDatabaseSchemaService::class.java)
                     schemaService?.simpleDatabaseSchema(context)?.let {
@@ -69,6 +71,37 @@ fun showCreateOnlineDbDialog(context: Context, onSelect: (Block?) -> Unit) {
                         jo.put("schema", it)
                         ext = Json(jo)
                     }
+                }
+                onSuccess = {
+                    onSelect(it)
+                }
+                onError = {
+                    onSelect(null)
+                    ToastUtil.e_long(it.localizedMessage)
+                }
+            }
+        }
+    }
+}
+@SuppressLint("CheckResult")
+fun showCreateOnlineSpaceDialog(context: Context, onSelect: (Block?) -> Unit) {
+    val I = UserDao.getCurrentUser()
+    if (I == null) {
+        onSelect(null)
+        return
+    }
+    context.showDialog {
+        title(text = "创建在线超空间")
+        input(hint = "在线超空间名称（名称长度短于 100 个字符）", maxLength = 100) { d, s ->
+            val spaceName = s.toString()
+            saveBlock {
+                target = Block.forName(I, BLOCK_SPACE, spaceName).apply {
+                    val ownerAcl = AVACL()
+                    ownerAcl.publicReadAccess = false
+                    ownerAcl.publicWriteAccess = false
+                    ownerAcl.setReadAccess(I, true)
+                    ownerAcl.setWriteAccess(I, true)
+                    acl = ownerAcl
                 }
                 onSuccess = {
                     onSelect(it)

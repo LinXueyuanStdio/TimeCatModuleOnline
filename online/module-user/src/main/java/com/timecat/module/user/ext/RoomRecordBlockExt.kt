@@ -1,5 +1,7 @@
 package com.timecat.module.user.ext
 
+import cn.leancloud.AVACL
+import cn.leancloud.AVRole
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.room.record.RoomRecord
@@ -241,3 +243,31 @@ var Block.attachmentItems: AttachmentTail
             it.put("attachmentItems", value.toJsonObject())
         }
     }
+
+fun Block.privateAcl(I: User) {
+    val ownerAcl = AVACL()
+    ownerAcl.publicReadAccess = false
+    ownerAcl.publicWriteAccess = false
+    ownerAcl.setReadAccess(I, true)
+    ownerAcl.setWriteAccess(I, true)
+    acl = ownerAcl
+}
+
+fun Block.publicViewAcl(I: User) {
+    val ownerAcl = AVACL()
+    ownerAcl.publicReadAccess = true
+    ownerAcl.publicWriteAccess = false
+    ownerAcl.setReadAccess(I, true)
+    ownerAcl.setWriteAccess(I, true)
+    acl = ownerAcl
+}
+
+fun Block.publicCommentAcl(I: User) {
+    val ownerAcl = AVACL()
+    ownerAcl.publicReadAccess = true
+    ownerAcl.publicWriteAccess = false
+    ownerAcl.setReadAccess(I, true)
+    ownerAcl.setWriteAccess(I, true)
+    acl = ownerAcl
+    AVRole()
+}

@@ -36,7 +36,7 @@ import com.xiaojinzi.component.anno.RouterAnno
 @RouterAnno(hostAndPath = RouterHub.USER_UserDetailActivity)
 class UserDetailCollapseActivity : BaseDetailCollapseActivity() {
     @AttrValueAutowiredAnno("userId")
-    lateinit var userId: String
+    var userId: String = ""
     lateinit var viewModel: UserViewModel
     lateinit var card: UserCard
     override fun routerInject() = NAV.inject(this)
