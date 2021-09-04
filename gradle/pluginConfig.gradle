@@ -1,9 +1,9 @@
 ext {
     PictureBedPlugin = [
-            managerPath       : "../a/TimeCatPluginManager",
+            managerPath       : "../TimeCatPluginManager",
             managerName       : "TimeCatPluginManager",
             managerProjectName: "reader-manager",
-            pluginPath        : "../a/TimeCat-Plugin-PictureBed-Github",
+            pluginPath        : "../TimeCat-Plugin-PictureBed-Github",
             pluginName        : "TimeCat-Plugin-PictureBed-Github",
             pluginProjectName : "plugin-shadow-apk",
             pluginProjectName1 : "plugin-main-lib",

@@ -141,6 +141,7 @@ class PluginMainActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 1) {
             for (i in permissions.indices) {
                 if (permissions[i] == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
