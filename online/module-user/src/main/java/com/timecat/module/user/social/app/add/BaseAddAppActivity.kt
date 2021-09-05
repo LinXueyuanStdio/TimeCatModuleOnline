@@ -9,6 +9,7 @@ import com.timecat.data.bmob.ext.net.checkAppExistByTitle
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.AppBlock
 import com.timecat.identity.data.block.ItemBlock
+import com.timecat.middle.block.ext.launch
 import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.timecat.module.user.base.BaseComplexEditorActivity
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +42,7 @@ abstract class BaseAddAppActivity : BaseBlockEditorActivity() {
 
     override fun ok() {
         if (currentBlock() == null) {
-            GlobalScope.launch(Dispatchers.IO) {
+            this.launch(Dispatchers.IO) {
                 requestExistBlock {
                     query = checkAppExistByTitle(formData.title)
                     onError = errorCallback

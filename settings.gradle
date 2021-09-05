@@ -1,15 +1,8 @@
 rootProject.name = "TimeCatModuleOnline"
 
-apply from: "gradle/pluginConfig.gradle"
 apply from: "context.gradle"
 
 include ':app'
 include ':online:module-login'
 include ':online:module-user'
-include ':online:module-plugin'
 include ':online:module-theme'
-include ':plugin:shared-host'
-
-includeBuild(ext.PictureBedPlugin["managerPath"])
-includeBuild(ext.PictureBedPlugin["pluginPath"])
-include ':fake:plugin-app'

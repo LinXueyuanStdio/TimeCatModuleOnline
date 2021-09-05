@@ -19,6 +19,7 @@ import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.*
 import com.timecat.layout.ui.business.setting.ContainerItem
 import com.timecat.layout.ui.business.setting.NextItem
+import com.timecat.middle.block.ext.showDialog
 import com.timecat.module.user.R
 import com.timecat.module.user.base.BaseBlockEditorActivity
 import com.xiaojinzi.component.anno.AttrValueAutowiredAnno
@@ -180,8 +181,7 @@ class AddIdentityActivity : BaseBlockEditorActivity() {
     }
 
     private fun addRole() {
-        MaterialDialog(this).show {
-            lifecycleOwner(this@AddIdentityActivity)
+        this.showDialog {
             message(R.string.load_dialog_wait)
             requestBlock {
                 query = allRole()
@@ -201,9 +201,7 @@ class AddIdentityActivity : BaseBlockEditorActivity() {
     }
 
     private fun showAddRoleDialog(roles: List<Block>) {
-        MaterialDialog(this, BottomSheet()).show {
-            lifecycleOwner(this@AddIdentityActivity)
-
+        this.showDialog {
             val initSelection = ArrayList<Int>()
             for (i in roles) {
                 for (j in formData.blocks) {

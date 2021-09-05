@@ -3,8 +3,7 @@ package com.timecat.module.user.adapter
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.jess.arms.utils.ArmsUtils
-import com.timecat.component.commonsdk.image.config.CommonImageConfigImpl
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 
 /**
@@ -20,11 +19,7 @@ class ImageAdapter(data: MutableList<String>) :
         val u = if (url.startsWith("http://bmob")) {
             "R.drawable.ic_launcher"
         } else url
-        ArmsUtils.obtainAppComponentFromContext(context).imageLoader()
-            .loadImage(
-                context,
-                CommonImageConfigImpl.builder().imageView(v).url(u).build()
-            )
+        IconLoader.loadIcon(context, v, u)
     }
 
     override fun convert(holder: BaseViewHolder, item: String) {
