@@ -85,8 +85,63 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
         keyboard = findViewById(R.id.keyboard)
     }
 
-    override fun onStart() {
-        super.onStart()
+    protected open fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
+        return 0
+    }
+
+    override fun onBackPressed() {
+        if (mHelper?.hookSystemBackByPanelSwitcher() == null) {
+            return
+        }
+        super.onBackPressed()
+    }
+
+    override fun initViewAfterLogin() {
+        super.initViewAfterLogin()
+        photo.setShakelessClickListener {
+            onAddImage()
+        }
+        at.setShakelessClickListener {
+            val intent = Intent(this, UserListBlockActivity::class.java)
+            startActivityForResult(intent, REQUEST_USER_CODE_CLICK)
+        }
+
+        topic.setShakelessClickListener {
+            val intent = Intent(this, TopicListBlockActivity::class.java)
+            startActivityForResult(intent, REQUEST_TOPIC_CODE_CLICK)
+        }
+
+        block.setShakelessClickListener {
+
+        }
+
+        more.setShakelessClickListener {
+
+        }
+
+        keyboard.setShakelessClickListener {
+            mHelper?.apply {
+                when {
+                    isPanelState() -> toKeyboardState()
+                    isKeyboardState() -> hideKeyboard()
+                    else -> toKeyboardState()
+                }
+            }
+        }
+
+        val richEditBuilder = RichEditBuilder()
+        richEditBuilder.setEditText(emojiEditText)
+            .setTopicModels(topicModels)
+            .setUserModels(nameList)
+            .setColorAtUser("#2962FF")
+            .setColorTopic("#2962FF")
+            .setEditTextAtUtilJumpListener(object : OnEditTextUtilJumpListener {
+                override fun notifyAt() = atUser()
+
+                override fun notifyTopic() = atTopic()
+            })
+            .builder()
+
         if (mHelper == null) {
             mHelper = PanelSwitchHelper.Builder(this)
 //                .addKeyboardStateListener {
@@ -149,64 +204,6 @@ abstract class BaseComplexEditorActivity : BaseSimpleEditorActivity() {
                 .logTrack(true)                   //可选，默认false，是否开启log信息输出
                 .build(panel_switch_layout, true)                      //可选，默认false，是否默认打开输入法
         }
-    }
-
-    protected open fun getScrollDistanceOfScrollView(defaultDistance: Int): Int {
-        return 0
-    }
-
-    override fun onBackPressed() {
-        if (mHelper?.hookSystemBackByPanelSwitcher() == null) {
-            return
-        }
-        super.onBackPressed()
-    }
-
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
-        photo.setShakelessClickListener {
-            onAddImage()
-        }
-        at.setShakelessClickListener {
-            val intent = Intent(this, UserListBlockActivity::class.java)
-            startActivityForResult(intent, REQUEST_USER_CODE_CLICK)
-        }
-
-        topic.setShakelessClickListener {
-            val intent = Intent(this, TopicListBlockActivity::class.java)
-            startActivityForResult(intent, REQUEST_TOPIC_CODE_CLICK)
-        }
-
-        block.setShakelessClickListener {
-
-        }
-
-        more.setShakelessClickListener {
-
-        }
-
-        keyboard.setShakelessClickListener {
-            mHelper?.apply {
-                when {
-                    isPanelState() -> toKeyboardState()
-                    isKeyboardState() -> hideKeyboard()
-                    else -> toKeyboardState()
-                }
-            }
-        }
-
-        val richEditBuilder = RichEditBuilder()
-        richEditBuilder.setEditText(emojiEditText)
-            .setTopicModels(topicModels)
-            .setUserModels(nameList)
-            .setColorAtUser("#2962FF")
-            .setColorTopic("#2962FF")
-            .setEditTextAtUtilJumpListener(object : OnEditTextUtilJumpListener {
-                override fun notifyAt() = atUser()
-
-                override fun notifyTopic() = atTopic()
-            })
-            .builder()
     }
 
     protected fun atUser() {

@@ -8,8 +8,10 @@ import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.APP_Plugin
 import com.timecat.identity.data.block.AppBlock
 import com.timecat.identity.data.block.PluginApp
+import com.timecat.identity.data.block.UpdateInfo
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Image
+import com.timecat.layout.ui.business.form.NumberInput
 import com.timecat.layout.ui.business.form.OneLineInput
 import com.timecat.layout.ui.business.form.add
 import com.timecat.module.user.ext.ImageAspectRatio
@@ -62,6 +64,8 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
         formData.titleItem = OneLineInput("标题", "新建应用", autoAdd = false)
         formData.urlItem = OneLineInput("下载地址", "http://", autoAdd = false)
         formData.packageNameItem = OneLineInput("包名", "", autoAdd = false)
+        formData.versionCodeItem = NumberInput("版本号", "", autoAdd = false)
+        formData.versionNameItem = OneLineInput("版本名", "", autoAdd = false)
 
         add(
             formData.iconItem to 0,
@@ -69,6 +73,8 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
             formData.titleItem to 2,
             formData.urlItem to 3,
             formData.packageNameItem to 4,
+            formData.versionCodeItem to 5,
+            formData.versionNameItem to 6,
         )
     }
 
@@ -107,6 +113,16 @@ open class AddPluginAppActivity : BaseAddAppActivity() {
             topicScope = formData.topicScope,
             structure = PluginApp(
                 formData.packageName,
+                updateInfo = mutableListOf(
+                    UpdateInfo(
+                        "10 Kb",
+                        formData.versionName,
+                        formData.versionCode,
+                        formData.url,
+                        "更新",
+                        System.currentTimeMillis()
+                    )
+                )
             ).toJsonObject(),
             header = PageHeader(
                 icon = formData.icon,

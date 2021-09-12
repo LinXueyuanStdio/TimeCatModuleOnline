@@ -19,9 +19,9 @@ import com.timecat.module.user.R
 abstract class BaseBlockEditorActivity : BaseComplexEditorActivity() {
 
     override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
         container.apply(initFormView())
         validateForm()
+        super.initViewAfterLogin()
         currentBlock()?.apply(loadFromExistingBlock())
     }
 

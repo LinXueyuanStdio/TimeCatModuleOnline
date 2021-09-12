@@ -46,6 +46,18 @@ class MaterialForm {
             packageNameItem.text = value
         }
     lateinit var packageNameItem: InputItem
+    var versionCode: Int
+        get() = versionCodeItem.text.toIntOrNull() ?: 0
+        set(value) {
+            versionCodeItem.text = "$value"
+        }
+    lateinit var versionCodeItem: InputItem
+    var versionName: String
+        get() = versionNameItem.text
+        set(value) {
+            versionNameItem.text = value
+        }
+    lateinit var versionNameItem: InputItem
     //endregion
 
     //region blockItem -> blockId
