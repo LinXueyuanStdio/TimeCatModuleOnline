@@ -1,11 +1,19 @@
 package com.timecat.module.user.app.online
 
 import android.content.Context
+import com.google.android.material.chip.Chip
+import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
+import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.middle.block.ext.configAdapterEndlessLoad
 import com.timecat.middle.block.service.*
+import com.timecat.module.user.adapter.block.NotMoreItem
 import com.timecat.module.user.ext.GLOBAL_OnlineMomentHotService
 import com.xiaojinzi.component.anno.ServiceAnno
+import io.reactivex.disposables.Disposable
 
 /**
  * @author 林学渊
@@ -19,14 +27,18 @@ import com.xiaojinzi.component.anno.ServiceAnno
  */
 @ServiceAnno(ContainerService::class, name = [GLOBAL_OnlineMomentHotService])
 class OnlineMomentHotServiceImpl : ContainerService {
+    private val pageSize: Int = 10
+    private val notMoreItem: NotMoreItem = NotMoreItem()
 
     override fun loadContextRecord(path: Path, context: Context, parentUuid: String, homeService: HomeService) {
-//        homeService.loadDatabase()
         homeService.loadContextRecord(null)
     }
 
+    var disposable: Disposable? = null
+    var dataloader: UserMomentHot? = null
     override fun loadContext(path: Path, context: Context, parentUuid: String, record: RoomRecord?, homeService: HomeService) {
         val tab = TimeCatOnline.parseTabPath(path.uuid)
+
         homeService.loadMenu(EmptyMenuContext())
 
         val allTabs = TimeCatOnline.momentMapSubItems
@@ -38,20 +50,45 @@ class OnlineMomentHotServiceImpl : ContainerService {
             }
         })
         homeService.loadHeader(listOf(header))
-        homeService.loadPanel(EmptyPanelContext())
-        homeService.loadInputSend(EmptyInputContext())
-        homeService.loadCommand(EmptyCommandContext())
-        homeService.loadChipButtons(listOf())
         homeService.loadChipType(listOf())
+        homeService.loadPanel(EmptyPanelContext())
+        homeService.loadChipButtons(listOf(Chip(context).apply {
+            text = "进入社区"
+            setShakelessClickListener {
+                NAV.go(RouterHub.USER_CloudActivity)
+            }
+        }))
+        homeService.loadCommand(EmptyCommandContext())
+        homeService.loadInputSend(EmptyInputContext())
         homeService.reloadData()
     }
 
-    override fun loadForVirtualPath(context: Context, parentUuid: String, homeService: HomeService, callback: ContainerService.LoadCallback) {
-        callback.onEmpty("页面未实现") {}
+    override fun loadForVirtualPath(
+        context: Context,
+        parentUuid: String,
+        homeService: HomeService,
+        callback: ContainerService.LoadCallback
+    ) {
+        val I = UserDao.getCurrentUser()
+        if (I == null) {
+            callback.onError("请登录") {
+                NAV.go(RouterHub.LOGIN_LoginActivity)
+            }
+        } else {
+            val listener = homeService.itemCommonListener()
+            configAdapterEndlessLoad(listener.adapter(), false, pageSize, 4, notMoreItem) { lastPosition: Int, currentPage: Int ->
+                listener.loadMore(lastPosition, currentPage)
+            }
+            callback.onLoading("正在连接服务器") {
+                disposable?.dispose()
+                callback.onVirtualLoadSuccess(listOf())
+            }
+            dataloader = UserMomentHot(I, pageSize)
+            disposable = dataloader?.loadForVirtualPath(context, parentUuid, homeService, callback)
+        }
     }
 
     override fun loadMoreForVirtualPath(context: Context, parentUuid: String, offset: Int, homeService: HomeService, callback: ContainerService.LoadMoreCallback) {
-        callback.onEmpty("页面未实现")
+        dataloader?.loadMoreForVirtualPath(context, parentUuid, offset, homeService, callback)
     }
-
 }

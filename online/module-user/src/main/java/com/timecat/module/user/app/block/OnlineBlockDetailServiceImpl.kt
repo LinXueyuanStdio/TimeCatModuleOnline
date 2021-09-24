@@ -30,9 +30,9 @@ import com.xiaojinzi.component.anno.ServiceAnno
 class OnlineBlockDetailServiceImpl : ContainerService {
     val recordContext: RecordContext? by lazy { NAV.service(RecordContext::class.java) }
 
-    override fun loadFor(parentPath: Path, record: RoomRecord, onParse: (name: String, uuid: String, type: Int) -> Unit) {
+    override fun loadFor(parentPath: Path, record: RoomRecord, onParse: ParseCallback) {
         val (title, url, type) = TimeCatOnline.blockNavigate(parentPath, record)
-        onParse(title, url, type)
+        onParse.onParse(title, url, type)
     }
 
     private fun existSpace(I: User, space: Block, block: Block, path: Path, context: Context, parentUuid: String, homeService: HomeService) {
