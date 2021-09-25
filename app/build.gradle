@@ -13,7 +13,6 @@ dependencies {
     api rootProject.ext.androidx_lib["appcompat"]
     api project(':online:module-login')
     api project(':online:module-user')
-    api project(':online:module-theme')
 
     api rootProject.ext.timecat["identity-Resource"]
     api rootProject.ext.timecat["module-controller"]
