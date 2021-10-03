@@ -24,6 +24,7 @@ import com.timecat.identity.data.block.*
 import com.timecat.identity.service.PluginService
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.layout.ui.utils.IconLoader
+import com.timecat.middle.block.view.ExpandableTextView
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.ImageAdapter
 import com.timecat.module.user.view.dsl.setupFollowBlockButton
@@ -59,7 +60,7 @@ class AppView @JvmOverloads constructor(
     lateinit var focus: TextView
 
     lateinit var preface: RecyclerView
-    lateinit var introDetail: TextView
+    lateinit var introDetail: ExpandableTextView
 
     lateinit var userHead: UserHeadView
     lateinit var share: ShareView
