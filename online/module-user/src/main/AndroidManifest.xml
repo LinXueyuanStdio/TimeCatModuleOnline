@@ -70,9 +70,6 @@
             android:name="com.timecat.module.user.social.comment.CommentEditorActivity"
             android:theme="@style/ThemeLight" />
         <activity
-            android:name="com.timecat.module.user.social.app.plugin.PluginListActivity"
-            android:theme="@style/ThemeLight" />
-        <activity
             android:name="com.timecat.module.user.social.app.add.AddPluginAppActivity"
             android:theme="@style/ThemeLight" />
         <activity

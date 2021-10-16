@@ -1,17 +1,9 @@
 package com.timecat.module.user.record
 
-import cn.leancloud.AVQuery
-import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.bmob.ext.bmob.*
-import com.timecat.data.bmob.ext.net.allBlock
-import com.timecat.data.bmob.ext.net.allBlockByIds
-import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.middle.block.service.IDatabase
 import com.timecat.middle.block.service.RequestListCallback
 import com.timecat.middle.block.service.RequestSingleOrNullCallback
-import com.timecat.module.user.ext.toBlock
-import com.timecat.module.user.ext.toRoomRecord
 
 /**
  * @author 林学渊
@@ -101,6 +93,11 @@ class EmptyDatabase : IDatabase {
         offset: Int, pageSize: Int,
         callback: RequestListCallback<RoomRecord>.() -> Unit
     ) {
+        runSql(callback)
+    }
+
+    override fun getAllByTypeAndSubtype(type: Int, subTypes: List<Int>, order: Int, asc: Boolean, offset: Int, pageSize: Int, callback: RequestListCallback<RoomRecord>.() -> Unit) {
+        runSql(callback)
         runSql(callback)
     }
 

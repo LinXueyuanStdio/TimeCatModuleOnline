@@ -117,8 +117,10 @@ class GameHomeFragment : BaseLoginMainFragment() {
         water.chipIcon = FontDrawable(context, tf, R.string.fa_fire_solid).apply { textSize = 24f }
         currency.chipIcon = FontDrawable(context, tf, R.string.fa_dice_d6_solid).apply { textSize = 24f }
         charge.chipIcon = FontDrawable(context, tf, R.string.fa_globe_europe_solid).apply { textSize = 24f }
+    }
 
-        val user = I()
+    override fun loadDetail(user: User) {
+        super.loadDetail(user)
         loadGameData(user)
     }
 

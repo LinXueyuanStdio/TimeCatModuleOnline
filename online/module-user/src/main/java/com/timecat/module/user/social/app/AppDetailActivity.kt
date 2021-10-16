@@ -28,7 +28,7 @@ class AppDetailActivity : BaseBlockDetailActivity() {
     override fun title(): String = "应用"
 
     @AttrValueAutowiredAnno("blockId")
-    lateinit var blockId: String
+    var blockId: String = ""
     lateinit var card: AppView
 
     override fun initViewAfterLogin() {
