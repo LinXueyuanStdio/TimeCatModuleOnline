@@ -1,6 +1,7 @@
 package com.timecat.module.user.app.create
 
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
@@ -28,6 +29,7 @@ class CreateBlockTypeService_BLOCK_ACTIVITY : CreateBlockTypeService {
 
 class CreateSubTypeService_BLOCK_ACTIVITY : CreateBlockSubTypeService {
     override fun subtype(): List<Int> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             ACTIVITY_Url,
             ACTIVITY_Text_url,
@@ -46,6 +48,7 @@ class CreateSubTypeService_BLOCK_ACTIVITY : CreateBlockSubTypeService {
     }
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             SubItem(BLOCK_ACTIVITY, ACTIVITY_Url, "外链", "【需登录】外链", IconLoader.randomAvatar(), "活动符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),
             SubItem(BLOCK_ACTIVITY, ACTIVITY_Text_url, "公告", "【需登录】公告", IconLoader.randomAvatar(), "活动符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),

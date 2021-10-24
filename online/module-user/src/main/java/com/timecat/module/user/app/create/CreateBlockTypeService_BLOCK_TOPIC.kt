@@ -1,6 +1,7 @@
 package com.timecat.module.user.app.create
 
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.block.type.BLOCK_LEADER_BOARD
 import com.timecat.identity.data.block.type.BLOCK_TOPIC
@@ -29,10 +30,12 @@ class CreateBlockTypeService_BLOCK_TOPIC : CreateBlockTypeService {
 
 class CreateSubTypeService_BLOCK_TOPIC : CreateBlockSubTypeService {
     override fun subtype(): List<Int> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(0)
     }
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             SubItem(BLOCK_TOPIC, 0, "话题", "话题", "R.drawable.every_drawer_note", "话题符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )

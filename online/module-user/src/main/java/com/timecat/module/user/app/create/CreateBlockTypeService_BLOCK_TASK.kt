@@ -1,6 +1,7 @@
 package com.timecat.module.user.app.create
 
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.block.type.BLOCK_TASK
 import com.timecat.identity.data.block.type.SHOP_Basic
@@ -31,6 +32,7 @@ class CreateBlockTypeService_BLOCK_TASK : CreateBlockTypeService {
 
 class CreateSubTypeService_BLOCK_TASK : CreateBlockSubTypeService {
     override fun subtype(): List<Int> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             TASK_Data,
             TASK_Story,
@@ -38,6 +40,7 @@ class CreateSubTypeService_BLOCK_TASK : CreateBlockSubTypeService {
     }
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             SubItem(BLOCK_TASK, TASK_Data, "统计数据任务", "【需登录】如：登录0/1，战斗2／5，胜利3／7", IconLoader.randomAvatar(), "任务符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),
             SubItem(BLOCK_TASK, TASK_Story, "剧情任务", "【需登录】剧情任务", IconLoader.randomAvatar(), "任务符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),
