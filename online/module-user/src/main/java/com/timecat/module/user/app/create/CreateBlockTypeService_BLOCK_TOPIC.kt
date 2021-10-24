@@ -1,8 +1,11 @@
 package com.timecat.module.user.app.create
 
+import com.timecat.component.router.app.NAV
 import com.timecat.data.room.record.RoomRecord
+import com.timecat.identity.data.block.type.BLOCK_LEADER_BOARD
 import com.timecat.identity.data.block.type.BLOCK_TOPIC
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.TypeItem
 import com.timecat.middle.block.service.CreateBlockSubTypeService
@@ -35,7 +38,12 @@ class CreateSubTypeService_BLOCK_TOPIC : CreateBlockSubTypeService {
         )
     }
 
+    override fun create(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+        createInActivity(subItem, parent, listener)
+    }
+
     override fun createInActivity(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+        NAV.go(RouterHub.USER_AddTopicActivity)
     }
 
     override fun createInDialog(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {

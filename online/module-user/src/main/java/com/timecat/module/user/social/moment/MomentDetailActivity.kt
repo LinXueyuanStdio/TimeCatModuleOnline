@@ -23,7 +23,7 @@ import com.xiaojinzi.component.anno.RouterAnno
 class MomentDetailActivity : BaseBlockDetailActivity() {
     override fun title(): String = "动态"
     @AttrValueAutowiredAnno("blockId")
-    lateinit var blockId: String
+    var blockId: String = ""
     lateinit var card: MomentView
 
     override fun initViewAfterLogin() {

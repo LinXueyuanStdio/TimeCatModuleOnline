@@ -162,6 +162,7 @@ class MainActivity : AppCompatActivity() {
 
         linearLayout.addView(createText("帖子"))
         linearLayout.addView(createPathButton(RouterHub.USER_AllForumActivity))
+        linearLayout.addView(createPathButton(RouterHub.USER_AddForumActivity))
         linearLayout.addView(createPathButton(RouterHub.USER_AddPostActivity))
 
         linearLayout.addView(createText("话题"))
