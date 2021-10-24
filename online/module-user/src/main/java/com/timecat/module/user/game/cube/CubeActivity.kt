@@ -26,7 +26,7 @@ class CubeActivity : BaseBlockDetailActivity() {
     override fun title(): String = "方块"
 
     @AttrValueAutowiredAnno("blockId")
-    lateinit var blockId: String
+    var blockId: String = ""
 
     lateinit var card: TopicCard
     override fun routerInject() = NAV.inject(this)

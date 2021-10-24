@@ -1,5 +1,6 @@
 package com.timecat.module.user.app.create
 
+import com.timecat.component.router.app.NAV
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.base.NOTE
 import com.timecat.identity.data.block.type.BLOCK_IDENTITY
@@ -17,7 +18,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
 @ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_FACTORY_MainCreateBlockTypeService_BLOCK_IDENTITY])
 class CreateBlockTypeService_BLOCK_IDENTITY : CreateBlockTypeService {
     override fun type(): Int = BLOCK_IDENTITY
-    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_IDENTITY, "Markdown", "Markdown 符文。", true)
+    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_IDENTITY, "方块符文", "方块符文", true)
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_IDENTITY()
 }
 
@@ -28,11 +29,16 @@ class CreateSubTypeService_BLOCK_IDENTITY : CreateBlockSubTypeService {
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
         return listOf(
-            SubItem(BLOCK_MAIL, 0, "邮件", "【需登录】邮件可附上其他符文，接收者可领取物品", IconLoader.randomAvatar(), "邮件符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
+            SubItem(BLOCK_IDENTITY, 0, "身份／方块", "【需登录】身份带有角色，因而有权限，可访问指定的路径", IconLoader.randomAvatar(), "方块符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )
     }
 
+    override fun create(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+        createInActivity(subItem, parent, listener)
+    }
+
     override fun createInActivity(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+        NAV.go(RouterHub.USER_AddIdentityActivity)
     }
 
     override fun createInDialog(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {

@@ -18,7 +18,7 @@ import com.xiaojinzi.component.anno.RouterAnno
 class TaskActivity : BaseLoginToolbarFragmentActivity() {
 
     @AttrValueAutowiredAnno("blockId")
-    lateinit var blockId: String
+    var blockId: String = ""
 
     override fun routerInject() = NAV.inject(this)
     override fun title(): String = "任务"

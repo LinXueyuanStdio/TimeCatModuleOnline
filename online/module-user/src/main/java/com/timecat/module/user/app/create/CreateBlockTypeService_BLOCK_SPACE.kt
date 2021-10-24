@@ -18,7 +18,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @author 林学渊
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2021/10/23
- * @description null
+ * @description 在线超空间
  * @usage null
  */
 @ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_FACTORY_MainCreateBlockTypeService_BLOCK_SPACE])
@@ -35,7 +35,7 @@ class CreateSubTypeService_BLOCK_SPACE : CreateBlockSubTypeService {
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
         return listOf(
-            SubItem(BLOCK_MAIL, 0, "邮件", "【需登录】邮件可附上其他符文，接收者可领取物品", IconLoader.randomAvatar(), "邮件符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
+            SubItem(BLOCK_SPACE, 0, "邮件", "【需登录】邮件可附上其他符文，接收者可领取物品", IconLoader.randomAvatar(), "邮件符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )
     }
 

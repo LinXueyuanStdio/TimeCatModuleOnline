@@ -1,7 +1,9 @@
 package com.timecat.module.user.app.create
 
+import com.timecat.component.router.app.NAV
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.base.NOTE
+import com.timecat.identity.data.block.type.BLOCK_LEADER_BOARD
 import com.timecat.identity.data.block.type.BLOCK_MAIL
 import com.timecat.identity.data.block.type.BLOCK_POST
 import com.timecat.identity.data.block.type.BLOCK_RECORD
@@ -24,7 +26,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
 @ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_FACTORY_MainCreateBlockTypeService_BLOCK_POST])
 class CreateBlockTypeService_BLOCK_POST : CreateBlockTypeService {
     override fun type(): Int = BLOCK_POST
-    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_POST, "Markdown", "Markdown 符文。", true)
+    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_POST, "帖子符文", "帖子符文", true)
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_POST()
 }
 
@@ -35,11 +37,16 @@ class CreateSubTypeService_BLOCK_POST : CreateBlockSubTypeService {
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
         return listOf(
-            SubItem(BLOCK_MAIL, 0, "邮件", "【需登录】邮件可附上其他符文，接收者可领取物品", IconLoader.randomAvatar(), "邮件符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
+            SubItem(BLOCK_POST, 0, "帖子", "【需登录】", IconLoader.randomAvatar(), "帖子符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )
     }
 
+    override fun create(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+        createInActivity(subItem, parent, listener)
+    }
+
     override fun createInActivity(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+        NAV.go(RouterHub.USER_AddPostActivity)
     }
 
     override fun createInDialog(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {

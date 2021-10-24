@@ -32,7 +32,7 @@ class TopicDetailCollapseActivity : BaseBlockDetailActivity() {
     override fun title(): String = "话题"
 
     @AttrValueAutowiredAnno("blockId")
-    lateinit var blockId: String
+    var blockId: String = ""
     lateinit var card: TopicCard
 
     override fun initViewAfterLogin() {

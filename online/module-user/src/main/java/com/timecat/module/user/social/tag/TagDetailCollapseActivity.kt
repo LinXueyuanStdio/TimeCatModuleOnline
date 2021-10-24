@@ -29,7 +29,7 @@ import com.xiaojinzi.component.anno.RouterAnno
 class TagDetailCollapseActivity : BaseBlockDetailActivity() {
     override fun title(): String = "标签"
     @AttrValueAutowiredAnno("blockId")
-    lateinit var blockId: String
+    var blockId: String = ""
     lateinit var card: TagCard
     override fun routerInject() = NAV.inject(this)
 

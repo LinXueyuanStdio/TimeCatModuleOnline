@@ -31,7 +31,7 @@ class ForumDetailCollapseActivity : BaseBlockDetailActivity() {
     override fun title(): String = "论坛"
 
     @AttrValueAutowiredAnno("blockId")
-    lateinit var blockId: String
+    var blockId: String = ""
     lateinit var card: ForumCard
     override fun routerInject() = NAV.inject(this)
 

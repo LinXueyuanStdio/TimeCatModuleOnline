@@ -22,7 +22,7 @@ class PostDetailActivity : BaseBlockDetailActivity() {
     override fun title(): String = "帖子"
 
     @AttrValueAutowiredAnno("blockId")
-    lateinit var blockId: String
+    var blockId: String = ""
     lateinit var card: PostView
 
     override fun initViewAfterLogin() {

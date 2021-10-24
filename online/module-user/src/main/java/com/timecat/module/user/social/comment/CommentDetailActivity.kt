@@ -22,7 +22,7 @@ class CommentDetailActivity : BaseBlockDetailActivity() {
     override fun title(): String = "评论"
 
     @AttrValueAutowiredAnno("blockId")
-    lateinit var blockId: String
+    var blockId: String = ""
     lateinit var card: CommentView
 
     override fun initViewAfterLogin() {

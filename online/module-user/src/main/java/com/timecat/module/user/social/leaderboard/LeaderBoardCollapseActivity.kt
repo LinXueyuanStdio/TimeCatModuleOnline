@@ -35,7 +35,7 @@ import com.xiaojinzi.component.anno.RouterAnno
 class LeaderBoardCollapseActivity : BaseBlockDetailActivity() {
     override fun title(): String = "排行榜"
     @AttrValueAutowiredAnno("blockId")
-    lateinit var blockId: String
+    var blockId: String = ""
     lateinit var card: TopicCard
     override fun routerInject() = NAV.inject(this)
 
