@@ -1,6 +1,7 @@
 package com.timecat.module.user.app.create
 
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.block.type.BLOCK_SHOP
 import com.timecat.identity.data.block.type.SHOP_Basic
@@ -31,6 +32,7 @@ class CreateBlockTypeService_BLOCK_SHOP : CreateBlockTypeService {
 
 class CreateSubTypeService_BLOCK_SHOP : CreateBlockSubTypeService {
     override fun subtype(): List<Int> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             SHOP_Basic,
             SHOP_User_Basic,
@@ -39,6 +41,7 @@ class CreateSubTypeService_BLOCK_SHOP : CreateBlockSubTypeService {
     }
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             SubItem(BLOCK_SHOP, SHOP_Basic, "官方物品商店", "【需登录】基本版，游戏化的永久商店，用于提供基本的物质交换", IconLoader.randomAvatar(), "商店符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),
             SubItem(BLOCK_SHOP, SHOP_User_Basic, "用户自己开店", "【需登录】用户自己开店，卖游戏数值", IconLoader.randomAvatar(), "商店符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),

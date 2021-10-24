@@ -1,6 +1,7 @@
 package com.timecat.module.user.app.create
 
 import com.timecat.component.router.app.NAV
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.base.NOTE
 import com.timecat.identity.data.block.type.BLOCK_LEADER_BOARD
@@ -34,10 +35,12 @@ class CreateBlockTypeService_BLOCK_RECOMMEND : CreateBlockTypeService {
 
 class CreateSubTypeService_BLOCK_RECOMMEND : CreateBlockSubTypeService {
     override fun subtype(): List<Int> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf()
     }
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
 //            SubItem(BLOCK_RECOMMEND, 0, "推荐入榜", "【需登录】", IconLoader.randomAvatar(), "推荐符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )

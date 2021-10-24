@@ -1,5 +1,6 @@
 package com.timecat.module.user.app.create
 
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.base.NOTE
 import com.timecat.identity.data.block.type.BLOCK_MAIL
@@ -30,10 +31,12 @@ class CreateBlockTypeService_BLOCK_MOMENT : CreateBlockTypeService {
 
 class CreateSubTypeService_BLOCK_MOMENT : CreateBlockSubTypeService {
     override fun subtype(): List<Int> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(0)
     }
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             SubItem(BLOCK_MAIL, 0, "邮件", "【需登录】邮件可附上其他符文，接收者可领取物品", IconLoader.randomAvatar(), "邮件符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )

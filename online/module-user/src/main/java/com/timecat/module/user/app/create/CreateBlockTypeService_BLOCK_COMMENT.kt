@@ -1,5 +1,6 @@
 package com.timecat.module.user.app.create
 
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.block.type.BLOCK_COMMENT
 import com.timecat.identity.readonly.RouterHub
@@ -28,10 +29,12 @@ class CreateBlockTypeService_BLOCK_COMMENT : CreateBlockTypeService {
 
 class CreateSubTypeService_BLOCK_COMMENT : CreateBlockSubTypeService {
     override fun subtype(): List<Int> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf()
     }
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
+        if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
 //            SubItem(BLOCK_COMMENT, 0, "评论", "【需登录】", IconLoader.randomAvatar(), "评论符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )
