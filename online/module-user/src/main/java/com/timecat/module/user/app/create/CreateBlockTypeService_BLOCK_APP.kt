@@ -8,6 +8,7 @@ import com.timecat.identity.data.block.type.BLOCK_APP
 import com.timecat.identity.data.block.type.BLOCK_MAIL
 import com.timecat.identity.data.block.type.BLOCK_RECORD
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.identity.readonly.UiHub
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.TypeItem
@@ -30,14 +31,14 @@ class CreateBlockTypeService_BLOCK_APP : CreateBlockTypeService {
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_APP()
 }
 
-class CreateSubTypeService_BLOCK_APP : CreateBlockSubTypeService {
+class CreateSubTypeService_BLOCK_APP : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_APP)) return listOf()
         return listOf(0)
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_APP)) return listOf()
         return listOf(
             SubItem(BLOCK_APP, 0, "应用", "【需登录】邮件可附上其他符文，接收者可领取物品", IconLoader.randomAvatar(), "应用符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )

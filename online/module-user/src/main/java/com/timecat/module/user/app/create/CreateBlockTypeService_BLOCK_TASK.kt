@@ -9,6 +9,7 @@ import com.timecat.identity.data.block.type.SHOP_Basic
 import com.timecat.identity.data.block.type.TASK_Data
 import com.timecat.identity.data.block.type.TASK_Story
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.identity.readonly.UiHub
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.TypeItem
@@ -31,9 +32,9 @@ class CreateBlockTypeService_BLOCK_TASK : CreateBlockTypeService {
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_TASK()
 }
 
-class CreateSubTypeService_BLOCK_TASK : CreateBlockSubTypeService {
+class CreateSubTypeService_BLOCK_TASK : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_TASK)) return listOf()
         return listOf(
             TASK_Data,
             TASK_Story,
@@ -41,7 +42,7 @@ class CreateSubTypeService_BLOCK_TASK : CreateBlockSubTypeService {
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_TASK)) return listOf()
         return listOf(
             SubItem(BLOCK_TASK, TASK_Data, "统计数据任务", "【需登录】如：登录0/1，战斗2／5，胜利3／7", IconLoader.randomAvatar(), "任务符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),
             SubItem(BLOCK_TASK, TASK_Story, "剧情任务", "【需登录】剧情任务", IconLoader.randomAvatar(), "任务符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),

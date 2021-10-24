@@ -30,14 +30,14 @@ class CreateBlockTypeService_BLOCK_FOCUS : CreateBlockTypeService {
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_FOCUS()
 }
 
-class CreateSubTypeService_BLOCK_FOCUS : CreateBlockSubTypeService {
+class CreateSubTypeService_BLOCK_FOCUS : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLogin()) return listOf()
         return listOf(0)
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLogin()) return listOf()
         return listOf(
             SubItem(BLOCK_MAIL, 0, "邮件", "【需登录】邮件可附上其他符文，接收者可领取物品", IconLoader.randomAvatar(), "邮件符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )

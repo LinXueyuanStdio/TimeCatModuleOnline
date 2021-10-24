@@ -28,14 +28,14 @@ class CreateBlockTypeService_BLOCK_COMMENT : CreateBlockTypeService {
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_COMMENT()
 }
 
-class CreateSubTypeService_BLOCK_COMMENT : CreateBlockSubTypeService {
+class CreateSubTypeService_BLOCK_COMMENT : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLogin()) return listOf()
         return listOf()
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLogin()) return listOf()
         return listOf(
 //            SubItem(BLOCK_COMMENT, 0, "评论", "【需登录】", IconLoader.randomAvatar(), "评论符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )

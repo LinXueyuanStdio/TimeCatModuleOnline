@@ -34,14 +34,14 @@ class CreateBlockTypeService_BLOCK_RECOMMEND : CreateBlockTypeService {
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_RECOMMEND()
 }
 
-class CreateSubTypeService_BLOCK_RECOMMEND : CreateBlockSubTypeService {
+class CreateSubTypeService_BLOCK_RECOMMEND : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLogin()) return listOf()
         return listOf()
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLogin()) return listOf()
         return listOf(
 //            SubItem(BLOCK_RECOMMEND, 0, "推荐入榜", "【需登录】", IconLoader.randomAvatar(), "推荐符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )

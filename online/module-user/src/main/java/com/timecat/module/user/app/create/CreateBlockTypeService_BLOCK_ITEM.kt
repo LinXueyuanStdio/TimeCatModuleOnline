@@ -6,6 +6,7 @@ import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.identity.readonly.UiHub
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.TypeItem
@@ -21,9 +22,9 @@ class CreateBlockTypeService_BLOCK_ITEM : CreateBlockTypeService {
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_ITEM()
 }
 
-class CreateSubTypeService_BLOCK_ITEM : CreateBlockSubTypeService {
+class CreateSubTypeService_BLOCK_ITEM : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_ITEM)) return listOf()
         return listOf(
             ITEM_Thing,
             ITEM_Package,
@@ -35,7 +36,7 @@ class CreateSubTypeService_BLOCK_ITEM : CreateBlockSubTypeService {
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_ITEM)) return listOf()
         return listOf(
             SubItem(BLOCK_ITEM, ITEM_Thing, "物产", "【需登录】物产，用于合成。如碎片，如装备碎片、方块碎片；如突破材料", IconLoader.randomAvatar(), "物品符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),
             SubItem(BLOCK_ITEM, ITEM_Package, "礼包", "【需登录】礼包，指定数量个物品的组合", IconLoader.randomAvatar(), "物品符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),

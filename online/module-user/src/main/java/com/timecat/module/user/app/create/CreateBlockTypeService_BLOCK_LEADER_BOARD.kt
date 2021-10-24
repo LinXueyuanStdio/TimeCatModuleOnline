@@ -7,6 +7,7 @@ import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.base.NOTE
 import com.timecat.identity.data.block.type.*
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.identity.readonly.UiHub
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.TypeItem
@@ -29,14 +30,14 @@ class CreateBlockTypeService_BLOCK_LEADER_BOARD : CreateBlockTypeService {
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_LEADER_BOARD()
 }
 
-class CreateSubTypeService_BLOCK_LEADER_BOARD : CreateBlockSubTypeService {
+class CreateSubTypeService_BLOCK_LEADER_BOARD : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_LEADER_BOARD)) return listOf()
         return listOf(0)
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_LEADER_BOARD)) return listOf()
         return listOf(
             SubItem(BLOCK_LEADER_BOARD, 0, "排行榜", "【需登录】发布一个排行榜", IconLoader.randomAvatar(), "排名符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )

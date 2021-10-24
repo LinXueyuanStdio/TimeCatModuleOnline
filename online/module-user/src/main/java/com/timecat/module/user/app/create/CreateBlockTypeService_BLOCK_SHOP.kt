@@ -9,6 +9,7 @@ import com.timecat.identity.data.block.type.SHOP_Basic
 import com.timecat.identity.data.block.type.SHOP_User_Basic
 import com.timecat.identity.data.block.type.SHOP_User_Rend
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.identity.readonly.UiHub
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.TypeItem
@@ -31,9 +32,9 @@ class CreateBlockTypeService_BLOCK_SHOP : CreateBlockTypeService {
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_SHOP()
 }
 
-class CreateSubTypeService_BLOCK_SHOP : CreateBlockSubTypeService {
+class CreateSubTypeService_BLOCK_SHOP : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_SHOP)) return listOf()
         return listOf(
             SHOP_Basic,
             SHOP_User_Basic,
@@ -42,7 +43,7 @@ class CreateSubTypeService_BLOCK_SHOP : CreateBlockSubTypeService {
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_SHOP)) return listOf()
         return listOf(
             SubItem(BLOCK_SHOP, SHOP_Basic, "官方物品商店", "【需登录】基本版，游戏化的永久商店，用于提供基本的物质交换", IconLoader.randomAvatar(), "商店符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),
             SubItem(BLOCK_SHOP, SHOP_User_Basic, "用户自己开店", "【需登录】用户自己开店，卖游戏数值", IconLoader.randomAvatar(), "商店符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),

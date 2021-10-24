@@ -27,14 +27,14 @@ class CreateBlockTypeService_BLOCK_SPACE : CreateBlockTypeService {
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_SPACE()
 }
 
-class CreateSubTypeService_BLOCK_SPACE : CreateBlockSubTypeService {
+class CreateSubTypeService_BLOCK_SPACE : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLogin()) return listOf()
         return listOf(0)
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (UserDao.getCurrentUser() == null) return listOf()
+        if (checkNotLogin()) return listOf()
         return listOf(
             SubItem(BLOCK_SPACE, 0, "超空间", "【需登录】在线超空间", IconLoader.randomAvatar(), "空间符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )
