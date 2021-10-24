@@ -18,7 +18,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:contentInsetStart="12dp" />
+            app:contentInsetStart="12dp">
+
+            <com.timecat.layout.ui.standard.navi.BottomBar
+                android:id="@+id/bottomBar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom" />
+        </com.timecat.page.base.view.BlurringToolbar>
 
         <com.gturedi.views.StatefulLayout
             android:id="@+id/ll_stateful"

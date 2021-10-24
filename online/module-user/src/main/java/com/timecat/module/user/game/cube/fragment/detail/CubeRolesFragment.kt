@@ -43,7 +43,7 @@ class CubeRolesFragment : BaseCubeFragment() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
-        cubeViewModel.cube.observe(this) {
+        cubeViewModel.cube.observe(viewLifecycleOwner) {
             loadRoles(it)
         }
     }

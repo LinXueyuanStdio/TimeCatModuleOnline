@@ -19,6 +19,8 @@ import com.timecat.identity.font.FontDrawable
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.TimerView
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.layout.ui.standard.navi.BottomBar
+import com.timecat.layout.ui.standard.navi.BottomBarIvTextTab
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
 import com.timecat.module.user.base.login.BaseLoginMainFragment
@@ -40,9 +42,10 @@ import org.greenrobot.eventbus.Subscribe
  * @usage null
  */
 @FragmentAnno(RouterHub.USER_GameHomeFragment)
-class GameHomeFragment : BaseLoginMainFragment() {
+class GameHomeFragment : BaseLoginMainFragment(), BottomBar.OnTabSelectedListener {
     override fun needEventBus(): Boolean = true
     override fun layout(): Int = R.layout.user_fragment_game_home
+    lateinit var mBottomBar: BottomBar
 
     lateinit var main: ImageView
     lateinit var cube: Button
@@ -69,7 +72,8 @@ class GameHomeFragment : BaseLoginMainFragment() {
         val background: View = view.findViewById(R.id.background)
         toolbar.setBlurredView(background)
         toolbar.setPaddingStatusBar(_mActivity)
-        toolbar.setTitle("游戏化")
+
+        mBottomBar = view.findViewById(R.id.bottomBar)
 
         main = view.findViewById(R.id.main)
         exp_bar = view.findViewById(R.id.exp_bar)
@@ -93,6 +97,8 @@ class GameHomeFragment : BaseLoginMainFragment() {
 
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
+        mBottomBar.setOnTabSelectedListener(this)
+
         cube.setShakelessClickListener {
             NAV.go(RouterHub.USER_AllOwnCubeActivity)
         }
@@ -119,8 +125,33 @@ class GameHomeFragment : BaseLoginMainFragment() {
         charge.chipIcon = FontDrawable(context, tf, R.string.fa_globe_europe_solid).apply { textSize = 24f }
     }
 
+    //region BottomBar.OnTabSelectedListener
+    override fun onTabSelected(position: Int, prePosition: Int) {
+        LogUtil.sd("select $position, $prePosition")
+        //选中时触发
+        when (position) {
+            0 -> NAV.go(RouterHub.USER_UserFollowListActivity)
+            1 -> NAV.go(RouterHub.USER_AllIllustratedBookActivity)
+            2 -> NAV.go(RouterHub.APP_SettingActivity)
+        }
+    }
+
+    override fun onTabUnselected(position: Int) {}
+    override fun onTabLongSelected(position: Int) {}
+    override fun onTabReselected(position: Int) {}
+    //endregion
+
     override fun loadDetail(user: User) {
-        super.loadDetail(user)
+        mBottomBar.removeAllViews()
+        mBottomBar.addHorizonSV()
+        val tabs = listOf(
+            BottomBarIvTextTab(_mActivity, "R.drawable.ic_person", "好友"),
+            BottomBarIvTextTab(_mActivity, "R.drawable.ic_notebook", "图鉴"),
+            BottomBarIvTextTab(_mActivity, "R.drawable.ic_settings", "设置"),
+        )
+        for (tab in tabs) {
+            mBottomBar.addItem(tab)
+        }
         loadGameData(user)
     }
 

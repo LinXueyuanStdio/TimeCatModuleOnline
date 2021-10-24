@@ -232,6 +232,7 @@
         <activity android:name=".game.shop.ShopEditorActivity" />
         <activity android:name=".game.shop.AllShopActivity" />
         <activity android:name=".game.shop.AllOwnShopActivity" />
+        <activity android:name=".game.illustration.AllIllustratedBookActivity" />
 
         <meta-data
             android:name="com.timecat.module.user.app.GlobalConfiguration"
