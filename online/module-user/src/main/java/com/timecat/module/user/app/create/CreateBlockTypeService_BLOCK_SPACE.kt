@@ -50,5 +50,6 @@ class CreateSubTypeService_BLOCK_SPACE : BaseCreateSubTypeService() {
     }
 
     override fun createInPage(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+
     }
 }
