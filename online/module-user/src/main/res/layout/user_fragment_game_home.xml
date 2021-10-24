@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -166,12 +167,32 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_small"
+                    android:background="?attr/selectableItemBackground"
                     android:contentDescription="@string/home"
                     android:scaleType="centerInside"
                     android:src="@mipmap/ic_launcher"
                     app:layout_constraintBottom_toTopOf="@id/exp_bar"
                     app:layout_constraintEnd_toEndOf="@id/exp_bar"
                     app:layout_constraintStart_toStartOf="@id/exp_bar" />
+
+                <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                    android:id="@+id/exp_bar"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/small_spacing"
+                    app:layout_constraintBottom_toTopOf="@id/exp"
+                    app:layout_constraintEnd_toEndOf="@id/level"
+                    app:layout_constraintStart_toStartOf="@id/level" />
+
+                <TextView
+                    android:id="@+id/exp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_xsmall"
+                    android:textColor="@color/master_textColorSecondary"
+                    app:layout_constraintBottom_toTopOf="@id/level"
+                    app:layout_constraintEnd_toEndOf="@id/level"
+                    app:layout_constraintStart_toStartOf="@id/level"
+                    tools:text="0 / 1000" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/level"
@@ -184,14 +205,6 @@
                     app:chipIconTint="@color/master_textColorPrimary"
                     app:layout_constraintBottom_toTopOf="@id/cube"
                     app:layout_constraintEnd_toEndOf="parent" />
-
-                <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
-                    android:id="@+id/exp_bar"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/small_spacing"
-                    app:layout_constraintBottom_toTopOf="@id/level"
-                    app:layout_constraintEnd_toEndOf="@id/level"
-                    app:layout_constraintStart_toStartOf="@id/level" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/cube"

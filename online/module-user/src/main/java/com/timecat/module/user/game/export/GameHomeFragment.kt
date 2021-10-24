@@ -23,6 +23,7 @@ import com.timecat.layout.ui.standard.navi.BottomBar
 import com.timecat.layout.ui.standard.navi.BottomBarIvTextTab
 import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.module.user.R
+import com.timecat.module.user.base.GO
 import com.timecat.module.user.base.login.BaseLoginMainFragment
 import com.timecat.module.user.game.core.Level
 import com.timecat.module.user.game.core.Water
@@ -48,6 +49,7 @@ class GameHomeFragment : BaseLoginMainFragment(), BottomBar.OnTabSelectedListene
     lateinit var mBottomBar: BottomBar
 
     lateinit var main: ImageView
+    lateinit var exp: TextView
     lateinit var cube: Button
     lateinit var bag: Button
     lateinit var mail: Button
@@ -76,6 +78,7 @@ class GameHomeFragment : BaseLoginMainFragment(), BottomBar.OnTabSelectedListene
         mBottomBar = view.findViewById(R.id.bottomBar)
 
         main = view.findViewById(R.id.main)
+        exp = view.findViewById(R.id.exp)
         exp_bar = view.findViewById(R.id.exp_bar)
         level = view.findViewById(R.id.level)
         card = view.findViewById(R.id.card)
@@ -98,6 +101,16 @@ class GameHomeFragment : BaseLoginMainFragment(), BottomBar.OnTabSelectedListene
     override fun initViewAfterLogin() {
         super.initViewAfterLogin()
         mBottomBar.setOnTabSelectedListener(this)
+        mBottomBar.removeAllViews()
+        mBottomBar.addHorizonSV()
+        val tabs = listOf(
+            BottomBarIvTextTab(_mActivity, "R.drawable.ic_person", "好友"),
+            BottomBarIvTextTab(_mActivity, "R.drawable.ic_notebook", "图鉴"),
+            BottomBarIvTextTab(_mActivity, "R.drawable.ic_settings", "设置"),
+        )
+        for (tab in tabs) {
+            mBottomBar.addItem(tab)
+        }
 
         cube.setShakelessClickListener {
             NAV.go(RouterHub.USER_AllOwnCubeActivity)
@@ -138,20 +151,16 @@ class GameHomeFragment : BaseLoginMainFragment(), BottomBar.OnTabSelectedListene
 
     override fun onTabUnselected(position: Int) {}
     override fun onTabLongSelected(position: Int) {}
-    override fun onTabReselected(position: Int) {}
+    override fun onTabReselected(position: Int) {
+        when (position) {
+            0 -> NAV.go(RouterHub.USER_UserFollowListActivity)
+            1 -> NAV.go(RouterHub.USER_AllIllustratedBookActivity)
+            2 -> NAV.go(RouterHub.APP_SettingActivity)
+        }
+    }
     //endregion
 
     override fun loadDetail(user: User) {
-        mBottomBar.removeAllViews()
-        mBottomBar.addHorizonSV()
-        val tabs = listOf(
-            BottomBarIvTextTab(_mActivity, "R.drawable.ic_person", "好友"),
-            BottomBarIvTextTab(_mActivity, "R.drawable.ic_notebook", "图鉴"),
-            BottomBarIvTextTab(_mActivity, "R.drawable.ic_settings", "设置"),
-        )
-        for (tab in tabs) {
-            mBottomBar.addItem(tab)
-        }
         loadGameData(user)
     }
 
@@ -170,15 +179,12 @@ class GameHomeFragment : BaseLoginMainFragment(), BottomBar.OnTabSelectedListene
     private fun loadGameView(user: User) {
         LogUtil.e(user.toJSONString())
         IconLoader.loadIcon(_mActivity, main, user.avatar)
+        main.setShakelessClickListener {
+            GO.userDetail(user.objectId)
+        }
         val (currentLevel, currentExp) = Level.getLevel(user.exp)
         notifyLevel(currentLevel, currentExp)
 
-        exp_bar.setShakelessClickListener {
-            ToastUtil.i("当前经验 $currentExp / ${Level.expLimit(currentLevel)}")
-        }
-        level.setShakelessClickListener {
-            ToastUtil.i("当前等级 $currentLevel")
-        }
         star.text = "星级 ${user.star}"
         star.setShakelessClickListener {
             ToastUtil.i("当前星级 ${user.star}")
@@ -258,6 +264,17 @@ class GameHomeFragment : BaseLoginMainFragment(), BottomBar.OnTabSelectedListene
         level.text = "等级 ${currentLevel}"
         exp_bar.max = Level.expLimit(currentLevel).toFloat()
         exp_bar.progress = currentExp.toFloat()
+        exp.text = "$currentExp / ${Level.expLimit(currentLevel)}"
+
+        exp.setShakelessClickListener {
+            ToastUtil.i("当前经验 $currentExp / ${Level.expLimit(currentLevel)}")
+        }
+        exp_bar.setShakelessClickListener {
+            ToastUtil.i("当前经验 $currentExp / ${Level.expLimit(currentLevel)}")
+        }
+        level.setShakelessClickListener {
+            ToastUtil.i("当前等级 $currentLevel")
+        }
     }
 
 

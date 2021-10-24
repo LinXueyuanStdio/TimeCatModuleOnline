@@ -26,7 +26,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
 @ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_FACTORY_MainCreateBlockTypeService_BLOCK_LEADER_BOARD])
 class CreateBlockTypeService_BLOCK_LEADER_BOARD : CreateBlockTypeService {
     override fun type(): Int = BLOCK_LEADER_BOARD
-    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_LEADER_BOARD, "排名符文", "排名符文", true)
+    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_LEADER_BOARD, "排名符文 -> ${parent?.title ?: "根目录"}", "排名符文", true)
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_LEADER_BOARD()
 }
 

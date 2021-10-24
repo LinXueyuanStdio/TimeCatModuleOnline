@@ -27,7 +27,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
 @ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_FACTORY_MainCreateBlockTypeService_BLOCK_SKIN])
 class CreateBlockTypeService_BLOCK_SKIN : CreateBlockTypeService {
     override fun type(): Int = BLOCK_SKIN
-    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_SKIN, "Markdown", "Markdown 符文。", true)
+    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_SKIN, "Markdown -> ${parent?.title ?: "根目录"}", "Markdown 符文。", true)
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_SKIN()
 }
 

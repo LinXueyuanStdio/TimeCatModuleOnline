@@ -30,7 +30,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
 @ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_FACTORY_MainCreateBlockTypeService_BLOCK_RECOMMEND])
 class CreateBlockTypeService_BLOCK_RECOMMEND : CreateBlockTypeService {
     override fun type(): Int = BLOCK_RECOMMEND
-    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_RECOMMEND, "推荐符文", "推荐符文", true)
+    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_RECOMMEND, "推荐符文 -> ${parent?.title ?: "根目录"}", "推荐符文", true)
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_RECOMMEND()
 }
 

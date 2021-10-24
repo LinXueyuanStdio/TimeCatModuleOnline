@@ -176,6 +176,26 @@ class OnlineBackendDb(val context: Context, val owner: User, val space: Block) :
         runSql(q, callback)
     }
 
+    override fun getAllByTypeAndSubtypeAndTitle(
+        type: Int,
+        subTypes: List<Int>,
+        titles: List<String>,
+        order: Int,
+        asc: Boolean,
+        offset: Int,
+        pageSize: Int,
+        callback: RequestListCallback<RoomRecord>.() -> Unit
+    ) {
+        val q = allBlock().apply {
+            skip(offset)
+            setLimit(pageSize)
+            whereEqualTo("type", type)
+            whereContainedIn("subtype", subTypes)
+            whereContainedIn("title", titles)
+        }
+        runSql(q, callback)
+    }
+
     override fun searchAll(
         query: String,
         order: Int, asc: Boolean,
