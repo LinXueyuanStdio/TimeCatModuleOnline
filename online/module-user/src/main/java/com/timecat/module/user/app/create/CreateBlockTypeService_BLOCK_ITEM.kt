@@ -1,5 +1,6 @@
 package com.timecat.module.user.app.create
 
+import android.content.Context
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
@@ -21,7 +22,7 @@ class CreateBlockTypeService_BLOCK_ITEM : CreateBlockTypeService {
 }
 
 class CreateSubTypeService_BLOCK_ITEM : CreateBlockSubTypeService {
-    override fun subtype(): List<Int> {
+    override suspend fun subtype(): List<Int> {
         if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             ITEM_Thing,
@@ -33,7 +34,7 @@ class CreateSubTypeService_BLOCK_ITEM : CreateBlockSubTypeService {
         )
     }
 
-    override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
+    override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
         if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             SubItem(BLOCK_ITEM, ITEM_Thing, "物产", "【需登录】物产，用于合成。如碎片，如装备碎片、方块碎片；如突破材料", IconLoader.randomAvatar(), "物品符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),
@@ -45,11 +46,11 @@ class CreateSubTypeService_BLOCK_ITEM : CreateBlockSubTypeService {
         )
     }
 
-    override fun create(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
-        createInActivity(subItem, parent, listener)
+    override fun create(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+        createInActivity(context, subItem, parent, listener)
     }
 
-    override fun createInActivity(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+    override fun createInActivity(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
         val path = when (subItem.subType) {
             ITEM_Thing -> RouterHub.USER_ThingItemEditorActivity
             ITEM_Package -> RouterHub.USER_PackageItemEditorActivity
@@ -62,9 +63,9 @@ class CreateSubTypeService_BLOCK_ITEM : CreateBlockSubTypeService {
         NAV.go(path)
     }
 
-    override fun createInDialog(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+    override fun createInDialog(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
     }
 
-    override fun createInPage(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+    override fun createInPage(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
     }
 }

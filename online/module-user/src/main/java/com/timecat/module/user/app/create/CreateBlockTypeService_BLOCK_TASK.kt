@@ -1,5 +1,6 @@
 package com.timecat.module.user.app.create
 
+import android.content.Context
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
@@ -31,7 +32,7 @@ class CreateBlockTypeService_BLOCK_TASK : CreateBlockTypeService {
 }
 
 class CreateSubTypeService_BLOCK_TASK : CreateBlockSubTypeService {
-    override fun subtype(): List<Int> {
+    override suspend fun subtype(): List<Int> {
         if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             TASK_Data,
@@ -39,7 +40,7 @@ class CreateSubTypeService_BLOCK_TASK : CreateBlockSubTypeService {
         )
     }
 
-    override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
+    override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
         if (UserDao.getCurrentUser() == null) return listOf()
         return listOf(
             SubItem(BLOCK_TASK, TASK_Data, "统计数据任务", "【需登录】如：登录0/1，战斗2／5，胜利3／7", IconLoader.randomAvatar(), "任务符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: ""),
@@ -47,11 +48,11 @@ class CreateSubTypeService_BLOCK_TASK : CreateBlockSubTypeService {
         )
     }
 
-    override fun create(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
-        createInActivity(subItem, parent, listener)
+    override fun create(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+        createInActivity(context, subItem, parent, listener)
     }
 
-    override fun createInActivity(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+    override fun createInActivity(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
         val path = when (subItem.subType) {
             TASK_Data -> RouterHub.USER_DataTaskEditorActivity
             TASK_Story -> RouterHub.USER_DataTaskEditorActivity
@@ -60,9 +61,9 @@ class CreateSubTypeService_BLOCK_TASK : CreateBlockSubTypeService {
         NAV.go(path)
     }
 
-    override fun createInDialog(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+    override fun createInDialog(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
     }
 
-    override fun createInPage(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+    override fun createInPage(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
     }
 }
