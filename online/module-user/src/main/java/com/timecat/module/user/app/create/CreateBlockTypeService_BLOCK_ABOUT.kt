@@ -1,10 +1,8 @@
 package com.timecat.module.user.app.create
 
-import com.timecat.component.commonsdk.utils.override.LogUtil
+import com.timecat.component.router.app.NAV
 import com.timecat.data.room.record.RoomRecord
-import com.timecat.identity.data.base.NOTE
 import com.timecat.identity.data.block.type.BLOCK_ABOUT
-import com.timecat.identity.data.block.type.BLOCK_RECORD
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.TypeItem
@@ -29,16 +27,17 @@ class CreateBlockTypeService_BLOCK_ABOUT : CreateBlockTypeService {
 
 class CreateSubTypeService_BLOCK_ABOUT : CreateBlockSubTypeService {
     override fun subtype(): List<Int> {
-        return listOf(NOTE)
+        return listOf(0)
     }
 
     override fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
         return listOf(
-            SubItem(BLOCK_RECORD, NOTE, "时间笔记", "笔记+时间 = 笔记+提醒+习惯+目标+...", "R.drawable.every_drawer_note", "记录符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
+            SubItem(BLOCK_ABOUT, 0, "时间笔记", "笔记+时间 = 笔记+提醒+习惯+目标+...", "R.drawable.every_drawer_note", "记录符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )
     }
 
     override fun createInActivity(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+        NAV.go(RouterHub.USER_MailEditorActivity)
     }
 
     override fun createInDialog(subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
