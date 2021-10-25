@@ -167,7 +167,7 @@ class GameHomeFragment : BaseLoginMainFragment(), BottomBar.OnTabSelectedListene
     private fun loadGameData(user: User) {
         mStatefulLayout?.showLoading()
         user.fetchInBackground().subscribe({
-            mStatefulLayout?.showContent()
+            // loadGameView 内部必须调用 showContent
             loadGameView(I())
         }, {
             mStatefulLayout?.showError {
@@ -189,7 +189,7 @@ class GameHomeFragment : BaseLoginMainFragment(), BottomBar.OnTabSelectedListene
         star.setShakelessClickListener {
             ToastUtil.i("当前星级 ${user.star}")
         }
-        loadWater()
+        loadWater()  // 这里会调用 showContent
 
         water.setShakelessClickListener {
             showWaterDialog()
