@@ -9,6 +9,7 @@ import com.timecat.middle.block.service.CardBuilderFactory
 import com.timecat.middle.block.service.FunctionCardBuilderFactory
 import com.timecat.middle.block.service.ItemCommonListener
 import com.timecat.module.user.adapter.readonly.moment.MomentCard
+import com.xiaojinzi.component.anno.ServiceAnno
 
 /**
  * @author 林学渊
@@ -17,6 +18,7 @@ import com.timecat.module.user.adapter.readonly.moment.MomentCard
  * @description null
  * @usage null
  */
+@ServiceAnno(BlockTypeService::class)
 class BlockTypeService_BLOCK_MOMENT : BlockTypeService {
     override fun forType(): Int = BLOCK_MOMENT
     override suspend fun buildFactory(): CardBuilderFactory {

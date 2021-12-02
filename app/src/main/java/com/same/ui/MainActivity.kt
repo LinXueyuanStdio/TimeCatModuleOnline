@@ -31,6 +31,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AVOSCloud.setLogLevel(AVLogger.Level.DEBUG)
+        DoKit.Builder(application)
+            .productId("需要使用平台功能的话，需要到dokit.cn平台申请id")
+            .build()
         LogUtil.DEBUG = true
         LogUtil.OPEN_LOG = true
         permissionService = NAV.service(PermissionService::class.java)
