@@ -2,6 +2,9 @@ package com.timecat.module.user.ext
 
 import cn.leancloud.AVACL
 import cn.leancloud.AVRole
+import cn.leancloud.AVUser
+import cn.leancloud.Transformer
+import com.alibaba.fastjson.JSONObject
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.room.record.RoomRecord
@@ -58,6 +61,8 @@ fun Block.copyFrom(record: RoomRecord): RoomRecord {
     record.parent = parentId
     record.ext = ext
     record.attachmentItems = attachmentItems
+    record.bag.setUser(user)
+    record.bag.setSpace(space)
     return record
 }
 
@@ -104,7 +109,29 @@ fun RoomRecord.copyFrom(record: Block, newRecord: Boolean = false): Block {
     record.parentId = parent
     record.ext = ext
     record.attachmentItems = attachmentItems
+    record.user = bag.getUser()!!
+    record.space = bag.getSpace()
     return record
+}
+
+fun JSONObject.getUser(): User? {
+    val userObj = getString("user") ?: return null
+    return User.transform(userObj)
+}
+
+fun JSONObject.setUser(user: User) {
+    put("user", user.toJSONObject().toJSONString())
+}
+
+fun JSONObject.getSpace(): Block? {
+    val jsonString = getString("space") ?: return null
+    val rawObject = AVUser.parseAVObject(jsonString)
+    return Transformer.transform(rawObject, Block::class.java)
+}
+
+fun JSONObject.setSpace(space: Block?) {
+    if (space == null) return
+    put("user", space.toJSONObject().toJSONString())
 }
 
 fun Block.withStruct(func: (cn.leancloud.json.JSONObject) -> Unit) {

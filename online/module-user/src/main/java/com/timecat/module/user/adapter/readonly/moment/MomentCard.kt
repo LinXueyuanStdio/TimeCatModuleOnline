@@ -29,6 +29,7 @@ import com.timecat.layout.ui.business.label_tag_view.TagCloudView
 import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.layout.ui.layout.setShakelessClickListener
 import com.timecat.middle.block.item.BaseRecordItem
+import com.timecat.middle.block.service.ItemCommonListener
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
@@ -48,8 +49,9 @@ import eu.davidea.flexibleadapter.items.IFlexible
  */
 class MomentCard(
     val context: Context,
-    var block: RoomRecord,
-) : BaseRecordItem<MomentCard.DetailVH>(block) {
+    var record: RoomRecord,
+    val commonListener: ItemCommonListener
+) : BaseRecordItem<MomentCard.DetailVH>(record) {
 
     class DetailVH(val root: View, adapter: FlexibleAdapter<*>) : BaseDetailVH(root, adapter) {
         val container: ConstraintLayout by lazy { root.findViewById<ConstraintLayout>(R.id.container) }
@@ -85,6 +87,7 @@ class MomentCard(
         payloads: MutableList<Any>?
     ) {
         super.bindViewHolder(adapter, holder, position, payloads)
+        setMomentContent(holder, record.toBlock(record.bag.getUser()!!, record.bag.getSpace(), false))
     }
 
     private fun setMomentContent(holder: DetailVH, block: Block) {

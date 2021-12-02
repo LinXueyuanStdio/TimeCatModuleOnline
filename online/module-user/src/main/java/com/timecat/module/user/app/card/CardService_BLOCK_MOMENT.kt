@@ -31,6 +31,6 @@ class CardService_BLOCK_MOMENT : BlockTypeService {
         context: Context,
         commonListener: ItemCommonListener
     ): BaseRecordItem<*> {
-        return MomentCard(context, record)
+        return MomentCard(context, record, commonListener)
     }
 }

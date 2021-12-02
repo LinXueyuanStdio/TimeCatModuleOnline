@@ -20,3 +20,5 @@ const val GLOBAL_OnlineHomeFocusService = RouterHub.GLOBAL + "user" + RouterHub.
 const val GLOBAL_OnlineMomentRecommendService = RouterHub.GLOBAL + "user" + RouterHub.SERVICE + "/OnlineMomentRecommendServiceImpl"
 const val GLOBAL_OnlineMomentHotService = RouterHub.GLOBAL + "user" + RouterHub.SERVICE + "/OnlineMomentHotServiceImpl"
 const val GLOBAL_OnlineMomentFocusService = RouterHub.GLOBAL + "user" + RouterHub.SERVICE + "/OnlineMomentFocusServiceImpl"
+
+const val GLOBAL_OnlineGameService = RouterHub.GLOBAL + "user" + RouterHub.SERVICE + "/OnlineGameServiceImpl"

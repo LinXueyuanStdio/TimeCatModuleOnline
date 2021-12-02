@@ -66,6 +66,7 @@ object TimeCatOnline {
 
     const val PATH_home = "home"
     const val PATH_moment = "moment"
+    const val PATH_game = "game"
 
     const val QUERY_Tab = "tab"
     const val TAB_recommend = "recommend"
@@ -115,6 +116,14 @@ object TimeCatOnline {
             "关注",
             "R.drawable.every_drawer_note",
             tab2Url(PATH_moment, GLOBAL_OnlineMomentFocusService, TAB_focus)
+        ),
+    )
+    val gameMapSubItems = listOf(
+        MapSubItem(
+            "图鉴",
+            "物品等",
+            "R.drawable.every_drawer_note",
+            tab2Url(PATH_game, GLOBAL_OnlineGameService, TAB_recommend)
         ),
     )
 

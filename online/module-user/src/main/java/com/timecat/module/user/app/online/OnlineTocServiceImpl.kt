@@ -74,7 +74,15 @@ class OnlineTocServiceImpl : ContainerService {
             }
             card
         }
-        val allTypeCard = listOf(homeCard, momentCard)
+        val gameCard = Map("游戏").let {
+            val card = TypeCard(it)
+            TimeCatOnline.gameMapSubItems.forEach {
+                val subCard = mapSubItem2Card(context, homeService, it)
+                card.addSubItem(subCard)
+            }
+            card
+        }
+        val allTypeCard = listOf(homeCard, momentCard, gameCard)
         callback.onVirtualLoadSuccess(allTypeCard)
     }
 
