@@ -3,6 +3,7 @@ package com.timecat.module.user.app.card
 import android.content.Context
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.block.type.BLOCK_MOMENT
+import com.timecat.identity.readonly.RouterHub
 import com.timecat.middle.block.item.BaseRecordItem
 import com.timecat.middle.block.service.BlockTypeService
 import com.timecat.middle.block.service.CardBuilderFactory
@@ -18,8 +19,8 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @description null
  * @usage null
  */
-@ServiceAnno(BlockTypeService::class)
-class BlockTypeService_BLOCK_MOMENT : BlockTypeService {
+@ServiceAnno(BlockTypeService::class, name=[RouterHub.CARD_CardService_BLOCK_MOMENT])
+class CardService_BLOCK_MOMENT : BlockTypeService {
     override fun forType(): Int = BLOCK_MOMENT
     override suspend fun buildFactory(): CardBuilderFactory {
         return FunctionCardBuilderFactory(::buildCard)

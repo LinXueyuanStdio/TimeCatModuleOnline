@@ -11,13 +11,15 @@ import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
-import com.timecat.layout.ui.entity.BaseItem
+import com.timecat.middle.block.ext.launch
 import com.timecat.middle.block.service.*
 import com.timecat.module.user.R
 import com.timecat.module.user.app.online.TimeCatOnline
 import com.timecat.module.user.ext.toRoomRecord
 import com.timecat.module.user.record.OnlineBackendDb
 import com.xiaojinzi.component.anno.ServiceAnno
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * @author 林学渊
@@ -37,98 +39,86 @@ class OnlineBlockDetailServiceImpl : ContainerService {
     }
 
     override fun loadContextRecord(path: Path, context: Context, parentUuid: String, homeService: HomeService) {
-        recordContext?.init(context, homeService.getPermission())
-        val I = UserDao.getCurrentUser()
-        if (I == null) {
-            homeService.loadContextRecord(null)
-            return
-        }
-        TimeCatOnline.parseBlockPath(parentUuid, onSpace = { uuid ->
-            requestOneBlockOrNull {
-                query = oneBlockOf(uuid)
-                onSuccess = {
-                    val space = it
-                    existSpace(I, space, it, path, context, parentUuid, homeService)
-                }
-                onError = {
-                    homeService.loadContextRecord(null)
-                }
-                onEmpty = {
-                    homeService.loadContextRecord(null)
-                }
+        context.launch(Dispatchers.IO) {
+            recordContext?.init(context, homeService.getPermission(), homeService)
+            loadContextRecordByDefault(path, context, parentUuid, homeService)
+            val I = UserDao.getCurrentUser()
+            if (I == null) {
+                homeService.loadContextRecord(null)
+                return@launch
             }
-        }, onBlock = { uuid ->
-            requestOneBlockOrNull {
-                query = oneBlockOf(uuid)
-                onSuccess = {
-                    val space = it.space
-                    if (space == null) {
-                        homeService.loadContextRecord(null)
-                    } else {
+            TimeCatOnline.parseBlockPath(parentUuid, onSpace = { uuid ->
+                requestOneBlockOrNull {
+                    query = oneBlockOf(uuid)
+                    onSuccess = {
+                        val space = it
                         existSpace(I, space, it, path, context, parentUuid, homeService)
                     }
+                    onError = {
+                        homeService.loadContextRecord(null)
+                    }
+                    onEmpty = {
+                        homeService.loadContextRecord(null)
+                    }
                 }
-                onError = {
-                    homeService.loadContextRecord(null)
+            }, onBlock = { uuid ->
+                requestOneBlockOrNull {
+                    query = oneBlockOf(uuid)
+                    onSuccess = {
+                        val space = it.space
+                        if (space == null) {
+                            homeService.loadContextRecord(null)
+                        } else {
+                            existSpace(I, space, it, path, context, parentUuid, homeService)
+                        }
+                    }
+                    onError = {
+                        homeService.loadContextRecord(null)
+                    }
+                    onEmpty = {
+                        homeService.loadContextRecord(null)
+                    }
                 }
-                onEmpty = {
-                    homeService.loadContextRecord(null)
-                }
-            }
-        }, onFail = {
-            homeService.loadContextRecord(null)
-        })
+            }, onFail = {
+                homeService.loadContextRecord(null)
+            })
+        }
     }
 
     override fun loadContext(path: Path, context: Context, parentUuid: String, record: RoomRecord?, homeService: HomeService) {
-        val commonListener = homeService.itemCommonListener()
-        recordContext?.getMenu(path, context, parentUuid, record, homeService) {
-            homeService.loadMenu(object : MenuContext by it {
+        context.launch(Dispatchers.IO) {
+            val menuContext = recordContext?.getMenu(path, context, parentUuid, record, homeService) ?: EmptyMenuContext()
+            val headers = recordContext?.getHeader(path, context, parentUuid, record, homeService) ?: listOf()
+            val inputContext = recordContext?.getInputSend(path, context, parentUuid, record, homeService) ?: EmptyInputContext()
+            val commandContext = recordContext?.getCommand(path, context, parentUuid, record, homeService) ?: EmptyCommandContext()
+            val types = recordContext?.getChipType(path, context, parentUuid, record, homeService) ?: listOf()
+            val panel = recordContext?.getPanel(path, context, parentUuid, record, homeService) ?: EmptyPanelContext()
+
+            val menuContext2 = object : MenuContext by menuContext {
                 override fun configStatusMenu(view: ActionBarMenuItem) {
                     view.setIcon(R.drawable.ic_apps_white_24dp)
                 }
-            })
+            }
 
-        } ?: homeService.loadMenu(EmptyMenuContext())
-        recordContext?.getChipType(path, context, parentUuid, record, homeService) {
-            val types = it
-            homeService.loadChipType(types)
-        } ?: homeService.loadChipType(listOf())
+            val buttons = recordContext?.getChipButtons(path, context, parentUuid, record, homeService) ?: listOf()
 
-        recordContext?.getPanel(path, context, parentUuid, record, homeService) {
-            val panel = it
-            homeService.loadPanel(panel)
-        } ?: homeService.loadPanel(EmptyPanelContext())
+            withContext(Dispatchers.Main) {
+                homeService.loadMenu(menuContext2)
+                homeService.loadHeader(headers)
+                homeService.loadInputSend(inputContext)
+                homeService.loadCommand(commandContext)
+                homeService.loadChipType(types)
+                homeService.loadPanel(panel)
+                homeService.loadChipButtons(buttons)
 
-        recordContext?.getInputSend(path, context, parentUuid, record, homeService) {
-            homeService.loadInputSend(object : InputContext by it {
-
-            })
-
-        } ?: homeService.loadInputSend(EmptyInputContext())
-
-
-        recordContext?.getCommand(path, context, parentUuid, record, homeService) {
-            homeService.loadCommand(object : CommandContext by it {
-
-            })
-        } ?: homeService.loadCommand(EmptyCommandContext())
-
-        recordContext?.getHeader(path, context, parentUuid, record, homeService) {
-            val headers = mutableListOf<BaseItem<*>>()
-            headers.addAll(it)
-            homeService.loadHeader(headers)
-        } ?: homeService.loadHeader(listOf())
-
-        //chip button
-        recordContext?.getChipButtons(path, context, parentUuid, record, homeService) {
-            homeService.loadChipButtons(it)
-        } ?: homeService.loadChipButtons(listOf())
-
-        if (record == null) {
-            commonListener.setInitSortTypeAndSortAsc(0, true)
-        } else {
-            commonListener.setInitSortTypeAndSortAsc(record.sortType, record.sortAsc)
+                //只能手动排序
+                recordContext?.setInitSortTypeAndSortAsc(homeService, 0, true)
+                if (record == null) {
+                    recordContext?.setInitSortTypeAndSortAsc(homeService, 0, true)
+                } else {
+                    recordContext?.setInitSortTypeAndSortAsc(homeService, record.sortType, record.sortAsc)
+                }
+            }
         }
     }
 

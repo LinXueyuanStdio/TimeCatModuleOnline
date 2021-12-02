@@ -15,11 +15,11 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @description null
  * @usage null
  */
-@ServiceAnno(BlockTypeNaviService::class, name = [RouterHub.NAVI_BlockTypeNaviService_BLOCK_MOMENT])
-class BlockTypeNaviService_Online : BlockTypeNaviService {
+@ServiceAnno(BlockTypeNaviService::class, name = [RouterHub.NAVI_NaviService_BLOCK_MOMENT])
+class NaviService_BLOCK_MOMENT : BlockTypeNaviService {
     override fun forType(): Int = BLOCK_MOMENT
     override suspend fun buildFactory(): NaviBuilderFactory {
-        return FunctionNaviBuilderFactory { parentPath, record ->
+        return FunctionNaviBuilderFactory { context, parentPath, record ->
             TimeCatOnline.blockNavigatePath(parentPath, record)
         }
     }
