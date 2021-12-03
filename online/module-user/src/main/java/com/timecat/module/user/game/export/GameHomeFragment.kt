@@ -99,7 +99,7 @@ class GameHomeFragment : BaseLoginMainFragment(), BottomBar.OnTabSelectedListene
     }
 
     override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
+//        super.initViewAfterLogin()
         mBottomBar.setOnTabSelectedListener(this)
         mBottomBar.removeAllViews()
         mBottomBar.addHorizonSV()
