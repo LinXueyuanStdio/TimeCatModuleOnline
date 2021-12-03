@@ -38,10 +38,12 @@ import com.xiaojinzi.component.anno.FragmentAnno
 @FragmentAnno(RouterHub.USER_MailDetailFragment)
 class MailDetailFragment : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("ownMail")
+    var _ownMail: OwnMail? = null
     lateinit var ownMail: OwnMail
 
     override fun onCreate(savedInstanceState: Bundle?) {
         NAV.inject(this)
+        ownMail = _ownMail!!
         super.onCreate(savedInstanceState)
     }
 

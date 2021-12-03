@@ -47,6 +47,10 @@ class OnlineBlockDetailServiceImpl : ContainerService {
                 homeService.loadContextRecord(null)
                 return@launch
             }
+//            val (spaceId, recordId) = TimeCatOnline.parsePath(parentUuid)
+//            if (recordId != null) {
+//
+//            }
             TimeCatOnline.parseBlockPath(parentUuid, onSpace = { uuid ->
                 requestOneBlockOrNull {
                     query = oneBlockOf(uuid)

@@ -44,10 +44,12 @@ import eu.davidea.flexibleadapter.Payload
 @FragmentAnno(USER_CommentDetailBottomSheet)
 class CommentDetailBottomSheet : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("block")
+    var _block: Block?=null
     lateinit var block: Block
 
     override fun onCreate(savedInstanceState: Bundle?) {
         NAV.inject(this)
+        block = _block!!
         super.onCreate(savedInstanceState)
     }
 

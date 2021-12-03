@@ -12,7 +12,6 @@ import com.timecat.data.bmob.ext.game.*
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.*
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.business.form.Body
 import com.timecat.layout.ui.business.form.CenterBody
 import com.timecat.layout.ui.business.form.MaterialButton
 import com.timecat.layout.ui.layout.dp
@@ -33,10 +32,12 @@ import com.xiaojinzi.component.anno.FragmentAnno
 @FragmentAnno(RouterHub.USER_OwnItemDetailFragment)
 class OwnItemDetailFragment : ItemDetailFragment() {
     @AttrValueAutowiredAnno("ownItem")
+    var _ownItem: OwnItem? = null
     lateinit var ownItem: OwnItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         NAV.inject(this)
+        ownItem = _ownItem!!
         item = ownItem.item
         super.onCreate(savedInstanceState)
     }

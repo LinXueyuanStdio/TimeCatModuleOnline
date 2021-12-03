@@ -36,9 +36,11 @@ import com.xiaojinzi.component.anno.FragmentAnno
 @FragmentAnno(USER_ShowFinishTasksBottomSheet)
 class ShowFinishTasksBottomSheet : BottomSheetDialogFragment() {
     @AttrValueAutowiredAnno("block")
+    var _block: Block?=null
     lateinit var block: Block
     override fun onCreate(savedInstanceState: Bundle?) {
         NAV.inject(this)
+        block = _block!!
         super.onCreate(savedInstanceState)
     }
 

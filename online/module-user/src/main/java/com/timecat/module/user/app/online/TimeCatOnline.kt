@@ -208,6 +208,14 @@ object TimeCatOnline {
             else -> onFail()
         }
     }
+    fun parsePath(
+        parentUuid: String,
+    ):Pair<String?, String?> {
+        val uri = Uri.parse(parentUuid)
+        val dbPath = uri.getQueryParameter(QUERY_SpaceId)
+        val recordId = uri.getQueryParameter(QUERY_RecordId)
+        return dbPath to recordId
+    }
 
     fun blockNavigate(parentPath: Path, record: RoomRecord): Triple<String, String, Int> {
         val uri = Uri.parse(parentPath.uuid)
