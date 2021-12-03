@@ -24,7 +24,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @usage null
  */
 @ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_CreateService_BLOCK_PERMISSION])
-class CREATE_CreateService_BLOCK_PERMISSION : CreateBlockTypeService {
+class CreateService_BLOCK_PERMISSION : CreateBlockTypeService {
     override fun type(): Int = BLOCK_PERMISSION
     override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_PERMISSION, "权限符文 -> ${parent?.title ?: "根目录"}", "权限符文", true)
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_PERMISSION()

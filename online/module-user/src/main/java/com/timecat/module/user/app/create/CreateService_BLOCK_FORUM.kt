@@ -1,10 +1,17 @@
 package com.timecat.module.user.app.create
 
 import android.content.Context
+import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
-import com.timecat.identity.data.block.type.BLOCK_ABOUT
+import com.timecat.identity.data.base.NOTE
+import com.timecat.identity.data.block.type.BLOCK_FORUM
+import com.timecat.identity.data.block.type.BLOCK_LEADER_BOARD
+import com.timecat.identity.data.block.type.BLOCK_MAIL
+import com.timecat.identity.data.block.type.BLOCK_RECORD
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.identity.readonly.UiHub
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.TypeItem
 import com.timecat.middle.block.service.CreateBlockSubTypeService
@@ -19,23 +26,23 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @description null
  * @usage null
  */
-@ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_CreateService_BLOCK_ABOUT])
-class CREATE_CreateService_BLOCK_ABOUT : CreateBlockTypeService {
-    override fun type(): Int = BLOCK_ABOUT
-    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_ABOUT, "公告符文 -> ${parent?.title ?: "根目录"}", "公告符文", true)
-    override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_ABOUT()
+@ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_CreateService_BLOCK_FORUM])
+class CreateService_BLOCK_FORUM : CreateBlockTypeService {
+    override fun type(): Int = BLOCK_FORUM
+    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_FORUM, "论坛符文 -> ${parent?.title ?: "根目录"}", "论坛符文", true)
+    override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_FORUM()
 }
 
-class CreateSubTypeService_BLOCK_ABOUT : BaseCreateSubTypeService() {
+class CreateSubTypeService_BLOCK_FORUM : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (checkNotLogin()) return listOf()
-        return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_FORUM)) return listOf()
+        return listOf(0)
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (checkNotLogin()) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_FORUM)) return listOf()
         return listOf(
-//            SubItem(BLOCK_ABOUT, 0, "公告", "", "R.drawable.every_drawer_note", "公告符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
+            SubItem(BLOCK_FORUM, 0, "论坛", "【需登录】", IconLoader.randomAvatar(), "论坛符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )
     }
 
@@ -44,6 +51,7 @@ class CreateSubTypeService_BLOCK_ABOUT : BaseCreateSubTypeService() {
     }
 
     override fun createInActivity(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
+        NAV.go(RouterHub.USER_AddForumActivity)
     }
 
     override fun createInDialog(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
@@ -51,4 +59,5 @@ class CreateSubTypeService_BLOCK_ABOUT : BaseCreateSubTypeService() {
 
     override fun createInPage(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
     }
+
 }

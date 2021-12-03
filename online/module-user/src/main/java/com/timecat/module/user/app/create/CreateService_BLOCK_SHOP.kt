@@ -26,7 +26,7 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @usage null
  */
 @ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_CreateService_BLOCK_SHOP])
-class CREATE_CreateService_BLOCK_SHOP : CreateBlockTypeService {
+class CreateService_BLOCK_SHOP : CreateBlockTypeService {
     override fun type(): Int = BLOCK_SHOP
     override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_SHOP, "商店符文 -> ${parent?.title ?: "根目录"}", "商店符文", true)
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_SHOP()
