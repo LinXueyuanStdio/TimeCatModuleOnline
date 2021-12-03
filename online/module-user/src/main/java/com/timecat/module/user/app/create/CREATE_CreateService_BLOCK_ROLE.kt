@@ -2,12 +2,8 @@ package com.timecat.module.user.app.create
 
 import android.content.Context
 import com.timecat.component.router.app.NAV
-import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
-import com.timecat.identity.data.base.NOTE
-import com.timecat.identity.data.block.type.BLOCK_IDENTITY
-import com.timecat.identity.data.block.type.BLOCK_MAIL
-import com.timecat.identity.data.block.type.BLOCK_RECORD
+import com.timecat.identity.data.block.type.BLOCK_ROLE
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.identity.readonly.UiHub
 import com.timecat.layout.ui.utils.IconLoader
@@ -18,23 +14,23 @@ import com.timecat.middle.block.service.CreateBlockTypeService
 import com.timecat.middle.block.service.ItemCommonListener
 import com.xiaojinzi.component.anno.ServiceAnno
 
-@ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_FACTORY_MainCreateBlockTypeService_BLOCK_IDENTITY])
-class CreateBlockTypeService_BLOCK_IDENTITY : CreateBlockTypeService {
-    override fun type(): Int = BLOCK_IDENTITY
-    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_IDENTITY, "方块符文 -> ${parent?.title ?: "根目录"}", "方块符文", true)
-    override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_IDENTITY()
+@ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_CreateService_BLOCK_ROLE])
+class CREATE_CreateService_BLOCK_ROLE : CreateBlockTypeService {
+    override fun type(): Int = BLOCK_ROLE
+    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_ROLE, "角色符文 -> ${parent?.title ?: "根目录"}", "角色符文", true)
+    override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_ROLE()
 }
 
-class CreateSubTypeService_BLOCK_IDENTITY : BaseCreateSubTypeService() {
+class CreateSubTypeService_BLOCK_ROLE : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
-        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_IDENTITY)) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_ROLE)) return listOf()
         return listOf(0)
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
-        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_IDENTITY)) return listOf()
+        if (checkNotLoginOrNotPermission(UiHub.MASTER_MainActivity_create_block_BLOCK_ROLE)) return listOf()
         return listOf(
-            SubItem(BLOCK_IDENTITY, 0, "身份／方块", "【需登录】身份带有角色，因而有权限，可访问指定的路径", IconLoader.randomAvatar(), "方块符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
+            SubItem(BLOCK_ROLE, 0, "角色", "【需登录】权限角色，批量管理权限", IconLoader.randomAvatar(), "角色符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )
     }
 
@@ -43,7 +39,7 @@ class CreateSubTypeService_BLOCK_IDENTITY : BaseCreateSubTypeService() {
     }
 
     override fun createInActivity(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
-        NAV.go(RouterHub.USER_AddIdentityActivity)
+        NAV.go(RouterHub.USER_AddRoleActivity)
     }
 
     override fun createInDialog(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {

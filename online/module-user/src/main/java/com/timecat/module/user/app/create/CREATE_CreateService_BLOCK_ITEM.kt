@@ -15,8 +15,8 @@ import com.timecat.middle.block.service.CreateBlockTypeService
 import com.timecat.middle.block.service.ItemCommonListener
 import com.xiaojinzi.component.anno.ServiceAnno
 
-@ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_FACTORY_MainCreateBlockTypeService_BLOCK_ITEM])
-class CreateBlockTypeService_BLOCK_ITEM : CreateBlockTypeService {
+@ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_CreateService_BLOCK_ITEM])
+class CREATE_CreateService_BLOCK_ITEM : CreateBlockTypeService {
     override fun type(): Int = BLOCK_ITEM
     override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_ITEM, "物品符文 -> ${parent?.title ?: "根目录"}", "物品符文", true)
     override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_ITEM()

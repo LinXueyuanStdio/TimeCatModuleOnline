@@ -27,7 +27,7 @@ fun Block.simpleAvatar(): String {
         BLOCK_DATABASE -> {
             "R.drawable.ic_comment"
         }
-        BLOCK_NOVEL -> {
+        BLOCK_CARD -> {
             "R.drawable.ic_comment"
         }
         BLOCK_MARKDOWN -> {

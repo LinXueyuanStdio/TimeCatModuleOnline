@@ -3,8 +3,12 @@ package com.timecat.module.user.app.create
 import android.content.Context
 import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.room.record.RoomRecord
-import com.timecat.identity.data.block.type.BLOCK_ABOUT
+import com.timecat.identity.data.base.NOTE
+import com.timecat.identity.data.block.type.BLOCK_FOCUS
+import com.timecat.identity.data.block.type.BLOCK_MAIL
+import com.timecat.identity.data.block.type.BLOCK_RECORD
 import com.timecat.identity.readonly.RouterHub
+import com.timecat.layout.ui.utils.IconLoader
 import com.timecat.middle.block.adapter.SubItem
 import com.timecat.middle.block.adapter.TypeItem
 import com.timecat.middle.block.service.CreateBlockSubTypeService
@@ -19,30 +23,29 @@ import com.xiaojinzi.component.anno.ServiceAnno
  * @description null
  * @usage null
  */
-@ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_FACTORY_MainCreateBlockTypeService_BLOCK_ABOUT])
-class CreateBlockTypeService_BLOCK_ABOUT : CreateBlockTypeService {
-    override fun type(): Int = BLOCK_ABOUT
-    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_ABOUT, "公告符文 -> ${parent?.title ?: "根目录"}", "公告符文", true)
-    override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_ABOUT()
+@ServiceAnno(CreateBlockTypeService::class, name = [RouterHub.CREATE_CreateService_BLOCK_FOCUS])
+class CREATE_CreateService_BLOCK_FOCUS : CreateBlockTypeService {
+    override fun type(): Int = BLOCK_FOCUS
+    override fun typeItem(parent: RoomRecord?): TypeItem = TypeItem(BLOCK_FOCUS, "Markdown -> ${parent?.title ?: "根目录"}", "Markdown 符文。", true)
+    override suspend fun buildFactory(): CreateBlockSubTypeService = CreateSubTypeService_BLOCK_FOCUS()
 }
 
-class CreateSubTypeService_BLOCK_ABOUT : BaseCreateSubTypeService() {
+class CreateSubTypeService_BLOCK_FOCUS : BaseCreateSubTypeService() {
     override suspend fun subtype(): List<Int> {
         if (checkNotLogin()) return listOf()
-        return listOf()
+        return listOf(0)
     }
 
     override suspend fun subItems(parent: RoomRecord?, listener: ItemCommonListener): List<SubItem> {
         if (checkNotLogin()) return listOf()
         return listOf(
-//            SubItem(BLOCK_ABOUT, 0, "公告", "", "R.drawable.every_drawer_note", "公告符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
+            SubItem(BLOCK_MAIL, 0, "邮件", "【需登录】邮件可附上其他符文，接收者可领取物品", IconLoader.randomAvatar(), "邮件符文", RouterHub.ABOUT_HelpActivity, parent?.uuid ?: "")
         )
     }
 
     override fun create(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
         createInActivity(context, subItem, parent, listener)
     }
-
     override fun createInActivity(context: Context, subItem: SubItem, parent: RoomRecord?, listener: ItemCommonListener) {
     }
 
