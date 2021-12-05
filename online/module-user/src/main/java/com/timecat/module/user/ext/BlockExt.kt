@@ -1,5 +1,6 @@
 package com.timecat.module.user.ext
 
+import cn.leancloud.json.JSONObject
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.*
@@ -137,3 +138,31 @@ fun Block.showDetail() {
     }
 }
 
+//region share
+var Block.shareToPublic: Boolean
+    get() = struct.getBoolean("shareToPublic") ?: false
+    set(value) {
+        withStruct {
+            it.put("shareToPublic", value)
+        }
+    }
+var Block.allowPublicEdit: Boolean
+    get() = struct.getBoolean("allowPublicEdit") ?: false
+    set(value) {
+        withStruct {
+            it.put("allowPublicEdit", value)
+        }
+    }
+var Block.allowPublicInteract: Boolean
+    get() = struct.getBoolean("allowPublicInteract") ?: false
+    set(value) {
+        withStruct {
+            it.put("allowPublicInteract", value)
+        }
+    }
+var Block.allowPublicRead: Boolean
+    get() = shareToPublic
+    set(value) {
+        shareToPublic = value
+    }
+//endregion

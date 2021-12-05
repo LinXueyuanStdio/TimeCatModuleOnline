@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import cn.leancloud.AVLogger
 import cn.leancloud.AVOSCloud
+import com.didichuxing.doraemonkit.DoKit
 import com.google.android.material.button.MaterialButton
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.component.router.app.NAV

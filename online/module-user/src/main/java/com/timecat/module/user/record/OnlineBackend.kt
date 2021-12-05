@@ -11,6 +11,9 @@ import com.timecat.middle.block.service.EmptyDatabase
 import com.timecat.middle.block.service.IBackend
 import com.timecat.middle.block.service.IDatabase
 import com.timecat.module.user.app.online.TimeCatOnline
+import com.timecat.module.user.ext.allowPublicEdit
+import com.timecat.module.user.ext.allowPublicInteract
+import com.timecat.module.user.ext.allowPublicRead
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -75,10 +78,17 @@ class OnlineBackend(val context: Context, val I: User?) : IBackend {
         val space = getBlock(context, query) ?: return CardPermission.NoAccess
         val canRead = space.acl.getReadAccess(I)
         val canEdit = space.acl.getWriteAccess(I)
-        if (space.user.objectId == I.objectId) return CardPermission.FullAccess
-        if (canEdit) return CardPermission.Editable
-        if (canRead) return CardPermission.ReadOnly
-        return CardPermission.NoAccess
+        val permission = when {
+            //高权限 优先判断
+            space.user.objectId == I.objectId -> CardPermission.FullAccess
+            space.allowPublicEdit -> CardPermission.Editable
+            canEdit -> CardPermission.Editable
+            space.allowPublicInteract -> CardPermission.Interactive
+            space.allowPublicRead -> CardPermission.ReadOnly
+            canRead -> CardPermission.ReadOnly
+            else -> CardPermission.NoAccess
+        }
+        return permission
     }
 
     override suspend fun getDatabaseAndPermission(context: Context, spaceId: String): Pair<CardPermission, IDatabase> {
@@ -89,9 +99,16 @@ class OnlineBackend(val context: Context, val I: User?) : IBackend {
         val db = OnlineBackendDb(context, I, space)
         val canRead = space.acl.getReadAccess(I)
         val canEdit = space.acl.getWriteAccess(I)
-        if (space.user.objectId == I.objectId) return CardPermission.FullAccess to db
-        if (canEdit) return CardPermission.Editable to db
-        if (canRead) return CardPermission.ReadOnly to db
-        return CardPermission.NoAccess to db
+        val permission = when {
+            //高权限 优先判断
+            space.user.objectId == I.objectId -> CardPermission.FullAccess
+            space.allowPublicEdit -> CardPermission.Editable
+            canEdit -> CardPermission.Editable
+            space.allowPublicInteract -> CardPermission.Interactive
+            space.allowPublicRead -> CardPermission.ReadOnly
+            canRead -> CardPermission.ReadOnly
+            else -> CardPermission.NoAccess
+        }
+        return permission to db
     }
 }

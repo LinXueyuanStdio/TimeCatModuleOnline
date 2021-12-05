@@ -9,7 +9,6 @@ import com.timecat.layout.ui.business.breadcrumb.Path
 import com.timecat.middle.block.ext.launch
 import com.timecat.middle.block.service.*
 import com.timecat.module.user.R
-import com.timecat.module.user.app.online.TimeCatOnline
 import com.xiaojinzi.component.anno.ServiceAnno
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -90,23 +89,36 @@ class OnlineBlockDetailServiceImpl : ContainerService {
             val commandContext = recordContext?.getCommand(path, context, parentUuid, record, homeService) ?: EmptyCommandContext()
             val types = recordContext?.getChipType(path, context, parentUuid, record, homeService) ?: listOf()
             val panel = recordContext?.getPanel(path, context, parentUuid, record, homeService) ?: EmptyPanelContext()
-
-            val menuContext2 = object : MenuContext by menuContext {
-                override fun configStatusMenu(view: ActionBarMenuItem) {
-                    view.setIcon(R.drawable.ic_apps_white_24dp)
-                }
-            }
-
             val buttons = recordContext?.getChipButtons(path, context, parentUuid, record, homeService) ?: listOf()
 
+            val permission = homeService.getPermission()
+
             withContext(Dispatchers.Main) {
-                homeService.loadMenu(menuContext2)
-                homeService.loadHeader(headers)
-                homeService.loadInputSend(inputContext)
-                homeService.loadCommand(commandContext)
-                homeService.loadChipType(types)
-                homeService.loadPanel(panel)
-                homeService.loadChipButtons(buttons)
+                if (permission.canEdit()) {
+                    val menuContext2 = object : MenuContext by menuContext {
+                        override fun configStatusMenu(view: ActionBarMenuItem) {
+                            view.setIcon(R.drawable.ic_apps_white_24dp)
+                        }
+                    }
+                    val headers2 = headers
+                    val inputContext2 = inputContext
+                    val commandContext2 = commandContext
+                    val types2 = types
+                    val panel2 = panel
+                    val buttons2 = buttons
+                    homeService.loadMenu(menuContext2)
+                    homeService.loadHeader(headers2)
+                    homeService.loadInputSend(inputContext2)
+                    homeService.loadCommand(commandContext2)
+                    homeService.loadChipType(types2)
+                    homeService.loadPanel(panel2)
+                    homeService.loadChipButtons(buttons2)
+                } else if (permission.canRead()) {
+                    //can read
+                    onCanRead(homeService)
+                } else {
+                    onNoAccess(homeService)
+                }
 
                 //只能手动排序
                 if (record == null) {
@@ -116,6 +128,26 @@ class OnlineBlockDetailServiceImpl : ContainerService {
                 }
             }
         }
+    }
+
+    fun onNoAccess(homeService: HomeService) {
+        homeService.loadMenu(EmptyMenuContext())
+        homeService.loadHeader(listOf())
+        homeService.loadInputSend(EmptyInputContext())
+        homeService.loadCommand(EmptyCommandContext())
+        homeService.loadChipType(listOf())
+        homeService.loadPanel(EmptyPanelContext())
+        homeService.loadChipButtons(listOf())
+    }
+
+    fun onCanRead(homeService: HomeService) {
+        homeService.loadMenu(EmptyMenuContext())
+        homeService.loadHeader(listOf())
+        homeService.loadInputSend(EmptyInputContext())
+        homeService.loadCommand(EmptyCommandContext())
+        homeService.loadChipType(listOf())
+        homeService.loadPanel(EmptyPanelContext())
+        homeService.loadChipButtons(listOf())
     }
 
     override fun loadForVirtualPath(context: Context, parentUuid: String, homeService: HomeService, callback: ContainerService.LoadCallback) {
