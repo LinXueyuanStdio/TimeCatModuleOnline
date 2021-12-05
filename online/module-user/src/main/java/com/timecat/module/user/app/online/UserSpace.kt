@@ -37,6 +37,7 @@ class UserSpace(
                 setLimit(pageSize)
                 setSkip(0)
                 order("-createdAt")
+                includeACL(true)
                 cachePolicy = AVQuery.CachePolicy.NETWORK_ONLY
             }
             onSuccess = {
@@ -90,6 +91,7 @@ class UserSpace(
                 setLimit(pageSize)
                 setSkip(offset)
                 order("-createdAt")
+                includeACL(true)
                 cachePolicy = AVQuery.CachePolicy.NETWORK_ONLY
             }
             onSuccess = {

@@ -105,7 +105,13 @@ class OnlineBlockDetailServiceImpl : ContainerService {
                             //TODO 根据权限展示内容
                             val commonListener = homeService.itemCommonListener()
                             val db = homeService.primaryDb()
-                            val page = DockPage(commonListener.primarySpaceId(), db, commonListener.getCurrentCardFactory(), commonListener.getPermission())
+                            val page = DockPage(
+                                record,
+                                commonListener.primarySpaceId(),
+                                db,
+                                commonListener.getCurrentCardFactory(),
+                                commonListener.getPermission()
+                            )
                             commonListener.openPage(page, false, false)
                         }
                     }

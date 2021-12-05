@@ -28,6 +28,10 @@ import com.timecat.middle.block.support.ChangeReminderService
 import com.timecat.middle.block.support.HabitService
 import com.timecat.middle.block.view.ThingAction
 import com.timecat.module.user.R
+import com.timecat.module.user.adapter.virtual.PermissionHeaderCard
+import com.timecat.module.user.ext.getSpace
+import com.timecat.module.user.ext.getUser
+import com.timecat.module.user.ext.toBlock
 import eu.davidea.flexibleadapter.items.IFlexible
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -41,6 +45,7 @@ import java.util.*
  * @usage null
  */
 class DockPage(
+    val record: RoomRecord,
     val spaceId: String,
     val db: IDatabase,
     val parentCardFactory: CardFactory,
@@ -48,6 +53,7 @@ class DockPage(
 ) : BaseSearchDockPage() {
     override fun title(): String = "聚合"
 
+    val block = record.toBlock(record.bag.getUser()!!, record.bag.getSpace(), false)
     var cardFactory: CardFactory = parentCardFactory
     var cardPermission: CardPermission = parentCardPermission
     private val habitService: HabitService? by lazy { NAV.service(HabitService::class.java) }
@@ -74,13 +80,15 @@ class DockPage(
 
     //region dock
     override suspend fun getDockData(context: Context): List<BaseItem<*>> {
+        //header
+        val header = PermissionHeaderCard(context, block, commonListener)
         // 推荐
         val recommend = TypeItem(0, "推荐完成", "推荐优先完成的任务、习惯、目标")
         val recommendCard = TypeCard(recommend)
         getDoing(context).forEach {
             recommendCard.addSubItem(it)
         }
-        return listOf(recommendCard)
+        return listOf(header, recommendCard)
     }
 
     override suspend fun getDockMoreData(context: Context): List<BaseItem<*>> {

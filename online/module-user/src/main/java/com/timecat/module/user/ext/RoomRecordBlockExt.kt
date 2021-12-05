@@ -5,6 +5,7 @@ import cn.leancloud.AVRole
 import cn.leancloud.AVUser
 import cn.leancloud.Transformer
 import com.alibaba.fastjson.JSONObject
+import com.timecat.data.bmob.dao.UserDao
 import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.room.record.RoomRecord
@@ -109,7 +110,7 @@ fun RoomRecord.copyFrom(record: Block, newRecord: Boolean = false): Block {
     record.parentId = parent
     record.ext = ext
     record.attachmentItems = attachmentItems
-    record.user = bag.getUser()!!
+    record.user = bag.getUser() ?: UserDao.getCurrentUser()!! //TODO 离线情况下，可能因为没有登录，导致崩溃
     record.space = bag.getSpace()
     return record
 }
