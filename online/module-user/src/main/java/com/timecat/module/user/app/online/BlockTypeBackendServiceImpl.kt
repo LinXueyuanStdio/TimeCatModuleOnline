@@ -2,12 +2,9 @@ package com.timecat.module.user.app.online
 
 import android.content.Context
 import com.timecat.data.bmob.dao.UserDao
-import com.timecat.data.bmob.ext.bmob.requestOneBlockOrNull
-import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.middle.block.service.*
-import com.timecat.module.user.record.OnlineBackend
-import com.timecat.module.user.record.OnlineBackendDb
+import com.timecat.module.user.backend.OnlineBackend
 import com.xiaojinzi.component.anno.ServiceAnno
 
 /**
