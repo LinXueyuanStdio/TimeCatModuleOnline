@@ -10,6 +10,8 @@ import com.timecat.identity.data.block.type.CONTAINER_BLOCK_UNIVERSAL
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.breadcrumb.Path
 import com.timecat.middle.block.ext.prettyTitle
+import com.timecat.middle.block.service.DNS
+import com.timecat.middle.block.service.RouteSchema
 import com.timecat.module.user.ext.*
 
 /**
@@ -73,11 +75,6 @@ object TimeCatOnline {
     const val TAB_hot = "hot"
     const val TAB_focus = "focus"
 
-    const val QUERY_Redirect = "redirect"
-
-    const val QUERY_SpaceId = "spaceId"
-    const val QUERY_RecordId = "recordId"
-
     val homeMapSubItems = listOf(
         MapSubItem(
             "推荐",
@@ -126,26 +123,7 @@ object TimeCatOnline {
             tab2Url(PATH_game, GLOBAL_OnlineGameService, TAB_recommend)
         ),
     )
-
-    fun getRecordId(url: String): String {
-        if (url.startsWith(SCHEMA)) {
-            val uri = Uri.parse(url)
-            val dbPath = uri.getQueryParameter(QUERY_SpaceId)
-            val recordId = uri.getQueryParameter(QUERY_RecordId)
-            return when {
-                recordId != null -> recordId
-                dbPath != null -> dbPath
-                else -> ""
-            }
-        } else {
-            return url
-        }
-    }
-
-
-    fun rootUri() = Uri.EMPTY.buildUpon()
-        .scheme(SCHEMA)
-        .authority(Host)
+    fun rootUri() = DNS.buildUri().authority(Host)
 
     //region tab
     /**
@@ -154,7 +132,7 @@ object TimeCatOnline {
     fun tab2Url(pathSeg: String, redirectService: String, tab: String): String {
         val url = rootUri()
             .path(pathSeg)
-            .appendQueryParameter(QUERY_Redirect, redirectService)
+            .appendQueryParameter(DNS.QUERY_Redirect, redirectService)
             .appendQueryParameter(QUERY_Tab, tab)
             .build().toString()
         return url
@@ -168,84 +146,19 @@ object TimeCatOnline {
     //endregion
 
     //region block
-    fun space2Url(block: Block): String {
-        val spaceId = block.space?.objectId ?: block.objectId // 如果space为空，说明block就是超空间
-        return rootUri()
-            .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
-            .appendQueryParameter(QUERY_SpaceId, spaceId)
-            .build().toString()
-    }
-
     fun block2Url(block: Block): String {
-        if (block.type == BLOCK_SPACE || block.space == null) {
-            return space2Url(block)
-        }
-        val spaceId = block.space?.objectId ?: block.objectId // 如果space为空，说明block就是超空间
-        return rootUri()
-            .appendQueryParameter(QUERY_Redirect, RouterHub.GLOBAL_BlockDetailService)
-            .appendQueryParameter(QUERY_SpaceId, spaceId)
-            .appendQueryParameter(QUERY_RecordId, block.objectId)
-            .build().toString()
-    }
-
-    fun block2Path(block: Block): Path {
-        val url = block2Url(block)
-        return Path(block.title, url, CONTAINER_BLOCK_UNIVERSAL)
-    }
-
-    fun parseBlockPath(
-        parentUuid: String,
-        onSpace: (String) -> Unit,
-        onBlock: (String) -> Unit,
-        onFail: () -> Unit,
-    ) {
-        val uri = Uri.parse(parentUuid)
-        val dbPath = uri.getQueryParameter(QUERY_SpaceId)
-        val recordId = uri.getQueryParameter(QUERY_RecordId)
-        when {
-            recordId != null -> onBlock(recordId)
-            dbPath != null -> onSpace(dbPath)
-            else -> onFail()
-        }
-    }
-    fun parsePath(
-        parentUuid: String,
-    ):Pair<String?, String?> {
-        val uri = Uri.parse(parentUuid)
-        val dbPath = uri.getQueryParameter(QUERY_SpaceId)
-        val recordId = uri.getQueryParameter(QUERY_RecordId)
-        return dbPath to recordId
-    }
-
-    fun blockNavigate(parentPath: Path, record: RoomRecord): Triple<String, String, Int> {
-        val uri = Uri.parse(parentPath.uuid)
-        val db = uri.getQueryParameter(QUERY_SpaceId)
-            ?: return Triple(parentPath.name, parentPath.uuid, parentPath.type)
-
-        val url = Uri.EMPTY.buildUpon()
-            .scheme(uri.scheme)
-            .authority(uri.authority)
-            .path(uri.path)
-            .appendQueryParameter(QUERY_SpaceId, db)
-            .appendQueryParameter(QUERY_RecordId, record.uuid)
-            .build().toString()
-        LogUtil.e(url)
-        //TODO 支持包括文件夹的其他类型
-        //type
-        //-1 :为本space下的记录。本space下的BLOCK_DATABASE仍然是-1
-        //>0 :为嵌入应用的记录
-        //-2 :为某个database里的记录，要处理当前TimeCatDatabase。路径在uuid里
-        val type = if (record.type == BLOCK_CONTAINER) {
-            record.subType
+        val spaceId = if (block.type == BLOCK_SPACE || block.space == null) {
+            block.objectId
         } else {
-            CONTAINER_BLOCK_UNIVERSAL
+            block.space?.objectId ?: DNS.DEFAULT_QUERY_SpaceId
         }
-        return Triple(record.prettyTitle, url, type)
+        // 如果space为空，说明block就是超空间
+        return DNS.buildUri(encodeSpaceId(spaceId), block.objectId, RouterHub.GLOBAL_BlockDetailService)
+            .authority(Host)
+            .build().toString()
     }
 
-    fun blockNavigatePath(parentPath: Path, record: RoomRecord): Path {
-        val (title, url, type) = blockNavigate(parentPath, record)
-        return Path(title, url, type, parent = parentPath)
-    }
+    fun encodeSpaceId(spaceId:String) :String = "${RouteSchema.OnlineHost}/${spaceId}"
+    fun decodeSpaceId(spaceId:String) :String = spaceId.substringAfter("${RouteSchema.OnlineHost}/")
     //endregion
 }

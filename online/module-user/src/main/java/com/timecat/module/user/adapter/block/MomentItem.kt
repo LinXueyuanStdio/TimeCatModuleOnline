@@ -34,21 +34,19 @@ import com.timecat.identity.service.PermissionService
 import com.timecat.layout.ui.business.label_tag_view.TagCloudView
 import com.timecat.layout.ui.business.ninegrid.NineGridView
 import com.timecat.layout.ui.layout.setShakelessClickListener
+import com.timecat.middle.block.ext.launch
 import com.timecat.middle.block.util.CopyToClipboard
 import com.timecat.module.user.R
 import com.timecat.module.user.adapter.detail.BaseDetailItem
 import com.timecat.module.user.adapter.detail.BaseDetailVH
 import com.timecat.module.user.base.GO
 import com.timecat.module.user.ext.*
-import com.timecat.module.user.permission.PermissionValidator
 import com.timecat.module.user.view.MomentHerfView
 import com.timecat.module.user.view.UserHeadView
 import com.timecat.module.user.view.dsl.setupLikeBlockButton
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * @author 林学渊
@@ -116,17 +114,17 @@ class MomentItem(
         holder.head.moreView.setShakelessClickListener {
             PopupMenu(it.context, it).apply {
                 inflate(R.menu.social_head)
-                GlobalScope.launch(Dispatchers.IO) {
+                context.launch(Dispatchers.IO) {
                     val s = NAV.service(PermissionService::class.java)
-                    s?.validate(UiHub.USER_ITEM_delete_block, object : PermissionService.Callback{
+                    s?.validate(UiHub.USER_ITEM_delete_block, object : PermissionService.Callback {
                         override fun onPass() {
-                            GlobalScope.launch(Dispatchers.Main) {
+                            context.launch(Dispatchers.Main) {
                                 menu.findItem(R.id.delete)?.setVisible(true)
                             }
                         }
 
                         override fun onReject() {
-                            GlobalScope.launch(Dispatchers.Main) {
+                            context.launch(Dispatchers.Main) {
                                 menu.findItem(R.id.delete)?.setVisible(false)
                             }
                         }

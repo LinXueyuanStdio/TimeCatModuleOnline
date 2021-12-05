@@ -83,6 +83,7 @@ fun showCreateOnlineDbDialog(context: Context, onSelect: (Block?) -> Unit) {
         }
     }
 }
+
 @SuppressLint("CheckResult")
 fun showCreateOnlineSpaceDialog(context: Context, onSelect: (Block?) -> Unit) {
     val I = UserDao.getCurrentUser()
