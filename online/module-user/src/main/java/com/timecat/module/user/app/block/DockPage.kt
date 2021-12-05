@@ -42,7 +42,7 @@ import java.util.*
  * @email linxy59@mail2.sysu.edu.cn
  * @date 2021/12/5
  * @description null
- * @usage null
+ * @usage TODO 根据权限展示内容
  */
 class DockPage(
     val record: RoomRecord,
@@ -80,15 +80,19 @@ class DockPage(
 
     //region dock
     override suspend fun getDockData(context: Context): List<BaseItem<*>> {
-        //header
-        val header = PermissionHeaderCard(context, block, commonListener)
+        val dockList= mutableListOf<BaseItem<*>>()
+        if (cardPermission.fullAccess()) {
+            //header
+            dockList.add(PermissionHeaderCard(context, block, commonListener))
+        }
         // 推荐
         val recommend = TypeItem(0, "推荐完成", "推荐优先完成的任务、习惯、目标")
         val recommendCard = TypeCard(recommend)
         getDoing(context).forEach {
             recommendCard.addSubItem(it)
         }
-        return listOf(header, recommendCard)
+        dockList.add(recommendCard)
+        return dockList
     }
 
     override suspend fun getDockMoreData(context: Context): List<BaseItem<*>> {

@@ -102,7 +102,6 @@ class OnlineBlockDetailServiceImpl : ContainerService {
 
                         override fun onStatusMenuClick(view: ActionBarMenuItem) {
                             if (record == null) return
-                            //TODO 根据权限展示内容
                             val commonListener = homeService.itemCommonListener()
                             val db = homeService.primaryDb()
                             val page = DockPage(
@@ -115,25 +114,19 @@ class OnlineBlockDetailServiceImpl : ContainerService {
                             commonListener.openPage(page, false, false)
                         }
                     }
-                    val headers2 = headers
-                    val inputContext2 = inputContext
-                    val commandContext2 = commandContext
-                    val types2 = types
-                    val panel2 = panel
-                    val buttons2 = buttons
                     homeService.loadMenu(menuContext2)
-                    homeService.loadHeader(headers2)
-                    homeService.loadInputSend(inputContext2)
-                    homeService.loadCommand(commandContext2)
-                    homeService.loadChipType(types2)
-                    homeService.loadPanel(panel2)
-                    homeService.loadChipButtons(buttons2)
                 } else if (permission.canRead()) {
-                    //can read
-                    onCanRead(homeService)
+                    homeService.loadMenu(EmptyMenuContext())
                 } else {
-                    onNoAccess(homeService)
+                    homeService.loadMenu(EmptyMenuContext())
                 }
+                // recordContext 内部已经处理过权限了
+                homeService.loadHeader(headers)
+                homeService.loadInputSend(inputContext)
+                homeService.loadCommand(commandContext)
+                homeService.loadChipType(types)
+                homeService.loadPanel(panel)
+                homeService.loadChipButtons(buttons)
 
                 //只能手动排序
                 if (record == null) {
@@ -143,26 +136,6 @@ class OnlineBlockDetailServiceImpl : ContainerService {
                 }
             }
         }
-    }
-
-    fun onNoAccess(homeService: HomeService) {
-        homeService.loadMenu(EmptyMenuContext())
-        homeService.loadHeader(listOf())
-        homeService.loadInputSend(EmptyInputContext())
-        homeService.loadCommand(EmptyCommandContext())
-        homeService.loadChipType(listOf())
-        homeService.loadPanel(EmptyPanelContext())
-        homeService.loadChipButtons(listOf())
-    }
-
-    fun onCanRead(homeService: HomeService) {
-        homeService.loadMenu(EmptyMenuContext())
-        homeService.loadHeader(listOf())
-        homeService.loadInputSend(EmptyInputContext())
-        homeService.loadCommand(EmptyCommandContext())
-        homeService.loadChipType(listOf())
-        homeService.loadPanel(EmptyPanelContext())
-        homeService.loadChipButtons(listOf())
     }
 
     override fun loadForVirtualPath(context: Context, parentUuid: String, homeService: HomeService, callback: ContainerService.LoadCallback) {
