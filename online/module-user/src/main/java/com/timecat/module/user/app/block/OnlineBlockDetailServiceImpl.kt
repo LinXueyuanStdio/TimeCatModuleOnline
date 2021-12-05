@@ -99,6 +99,15 @@ class OnlineBlockDetailServiceImpl : ContainerService {
                         override fun configStatusMenu(view: ActionBarMenuItem) {
                             view.setIcon(R.drawable.ic_apps_white_24dp)
                         }
+
+                        override fun onStatusMenuClick(view: ActionBarMenuItem) {
+                            if (record == null) return
+                            //TODO 根据权限展示内容
+                            val commonListener = homeService.itemCommonListener()
+                            val db = homeService.primaryDb()
+                            val page = DockPage(commonListener.primarySpaceId(), db, commonListener.getCurrentCardFactory(), commonListener.getPermission())
+                            commonListener.openPage(page, false, false)
+                        }
                     }
                     val headers2 = headers
                     val inputContext2 = inputContext

@@ -1,10 +1,11 @@
 package com.timecat.module.user.ext
 
-import cn.leancloud.json.JSONObject
+import com.timecat.data.bmob.data.User
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.element.alert.ToastUtil
 import com.timecat.identity.data.block.*
 import com.timecat.identity.data.block.type.*
+import com.timecat.middle.block.service.CardPermission
 import com.timecat.module.user.base.GO
 
 /**
@@ -139,6 +140,23 @@ fun Block.showDetail() {
 }
 
 //region share
+fun Block.getPermissionForUser(I: User): CardPermission {
+    val roles = I.rolesInBackground.blockingFirst()
+    val canRead = acl.publicReadAccess || acl.getReadAccess(I) || roles.any { acl.getRoleReadAccess(it.objectId) }
+    val canEdit = acl.publicWriteAccess || acl.getWriteAccess(I) || roles.any { acl.getRoleWriteAccess(it.objectId) }
+    val permission = when {
+        //高权限 优先判断
+        user.objectId == I.objectId -> CardPermission.FullAccess
+        allowPublicEdit -> CardPermission.Editable
+        canEdit -> CardPermission.Editable
+        allowPublicInteract -> CardPermission.Interactive
+        allowPublicRead -> CardPermission.ReadOnly
+        canRead -> CardPermission.ReadOnly
+        else -> CardPermission.NoAccess
+    }
+    return permission
+}
+
 var Block.shareToPublic: Boolean
     get() = struct.getBoolean("shareToPublic") ?: false
     set(value) {
