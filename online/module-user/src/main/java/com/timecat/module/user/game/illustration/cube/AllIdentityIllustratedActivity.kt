@@ -1,4 +1,4 @@
-package com.timecat.module.user.game.cube
+package com.timecat.module.user.game.illustration.cube
 
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -11,14 +11,14 @@ import com.timecat.component.router.app.FallBackFragment
 import com.timecat.component.router.app.NAV
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.data.game.OwnCube
-import com.timecat.data.bmob.ext.bmob.requestOwnCube
-import com.timecat.data.bmob.ext.net.allOwnCube
+import com.timecat.data.bmob.ext.bmob.requestBlock
+import com.timecat.data.bmob.ext.net.allIdentity
 import com.timecat.identity.data.block.IdentityBlock
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.standard.navi.BottomBarIvTextTab
 import com.timecat.module.user.base.BaseNavCollapseActivity
 import com.timecat.module.user.game.cube.fragment.*
-import com.timecat.module.user.game.cube.vm.CubeViewModel
+import com.timecat.module.user.game.cube.vm.IdentityViewModel
 import com.timecat.module.user.social.common.CommentListFragment
 import com.timecat.module.user.social.common.LikeListFragment
 import com.timecat.module.user.social.common.MomentListFragment
@@ -32,21 +32,15 @@ import com.xiaojinzi.component.anno.RouterAnno
  * @description 方块（人物）
  * @usage null
  */
-@RouterAnno(hostAndPath = RouterHub.USER_AllOwnCubeActivity)
-class AllOwnCubeActivity : BaseNavCollapseActivity() {
-    lateinit var cubeViewModel: CubeViewModel
+@RouterAnno(hostAndPath = RouterHub.USER_AllIdentityIllustratedActivity)
+class AllIdentityIllustratedActivity : BaseNavCollapseActivity() {
+    lateinit var cubeViewModel: IdentityViewModel
     lateinit var card: TopicCard
     override fun routerInject() = NAV.inject(this)
 
     override fun initViewModel() {
         super.initViewModel()
-        cubeViewModel = ViewModelProvider(this).get(CubeViewModel::class.java)
-        cubeViewModel.ownCube.observe(this, {
-            it?.let {
-                loadDetail(it)
-                onContentLoaded()
-            }
-        })
+        cubeViewModel = ViewModelProvider(this).get(IdentityViewModel::class.java)
         cubeViewModel.cube.observe(this) {
             blockViewModel.block.postValue(it)
         }
@@ -61,10 +55,10 @@ class AllOwnCubeActivity : BaseNavCollapseActivity() {
             mBottomBar.removeAllViews()
             mBottomBar.addHorizonSV()
             it.forEach {
-                val head = IdentityBlock.fromJson(it.cube.structure)
+                val head = IdentityBlock.fromJson(it.structure)
                 val icon = head.header.avatar
-                val title = it.cube.title
-                val tab = BottomBarIvTextTab(this@AllOwnCubeActivity, icon, title)
+                val title = it.title
+                val tab = BottomBarIvTextTab(this@AllIdentityIllustratedActivity, icon, title)
                 mBottomBar.addItem(tab)
             }
         })
@@ -82,8 +76,9 @@ class AllOwnCubeActivity : BaseNavCollapseActivity() {
         cubeViewModel.loadCube(cube)
     }
 
-    private fun loadDetail(ownCube: OwnCube) {
-        val cube = ownCube.cube
+    override fun loadDetail(block: Block) {
+        super.loadDetail(block)
+        val cube = block
         val head = IdentityBlock.fromJson(cube.structure)
         // 1. 加载头部卡片
         titleString = cube.title
@@ -95,20 +90,20 @@ class AllOwnCubeActivity : BaseNavCollapseActivity() {
     }
 
     override fun setupTabs(block: Block) {
-        tabs.getTabAt(6)?.let {
+        tabs.getTabAt(4)?.let {
             it.text = "评论${block.comments}"
         }
-        tabs.getTabAt(7)?.let {
+        tabs.getTabAt(5)?.let {
             it.text = "转发${block.relays}"
         }
-        tabs.getTabAt(8)?.let {
+        tabs.getTabAt(6)?.let {
             it.text = "赞${block.likes}"
         }
     }
 
     override fun fetch() {
-        cubeViewModel attach requestOwnCube {
-            query = I().allOwnCube().apply {
+        cubeViewModel attach requestBlock {
+            query = I().allIdentity().apply {
                 cachePolicy = AVQuery.CachePolicy.NETWORK_ELSE_CACHE
             }
             onSuccess = {
@@ -130,19 +125,17 @@ class AllOwnCubeActivity : BaseNavCollapseActivity() {
     }
 
     class DetailAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getCount(): Int = 9
+        override fun getCount(): Int = 7
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> CubeAttrFragment()
+                0 -> IdentityAttrFragment()
                 1 -> CubeRolesFragment()
-                2 -> CubeSettingFragment()
-                3 -> CubeSkillFragment()
-                4 -> CubeEquipFragment()
-                5 -> CubeDataFragment()
-                6 -> CommentListFragment()
-                7 -> MomentListFragment()
-                8 -> LikeListFragment()
+                2 -> CubeSkillFragment()
+                3 -> CubeDataFragment()
+                4 -> CommentListFragment()
+                5 -> MomentListFragment()
+                6 -> LikeListFragment()
                 else -> FallBackFragment()
             }
         }
@@ -151,13 +144,11 @@ class AllOwnCubeActivity : BaseNavCollapseActivity() {
             return when (position) {
                 0 -> "属性"
                 1 -> "权柄"
-                2 -> "设置"
-                3 -> "技能"
-                4 -> "装备"
-                5 -> "资料"
-                6 -> "讨论"
-                7 -> "动态"
-                8 -> "赞"
+                2 -> "技能"
+                3 -> "资料"
+                4 -> "讨论"
+                5 -> "动态"
+                6 -> "赞"
                 else -> super.getPageTitle(position)
             }
         }

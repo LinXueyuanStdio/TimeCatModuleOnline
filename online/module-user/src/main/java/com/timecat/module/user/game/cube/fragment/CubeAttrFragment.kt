@@ -1,4 +1,4 @@
-package com.timecat.module.user.game.cube.fragment.detail
+package com.timecat.module.user.game.cube.fragment
 
 import android.view.ViewGroup
 import android.widget.Button

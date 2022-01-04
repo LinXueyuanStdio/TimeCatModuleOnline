@@ -1,4 +1,4 @@
-package com.timecat.module.user.game.cube.fragment.detail
+package com.timecat.module.user.game.cube.fragment
 
 import androidx.lifecycle.ViewModelProvider
 import com.timecat.data.bmob.data.game.OwnCube

@@ -23,13 +23,13 @@ class AllIllustratedBookActivity : BaseSimpleListActivity() {
 
     override fun onRefresh() {
         val data = listOf(
-            IllustratedBook("物品", IconLoader.randomAvatar(), RouterHub.USER_AllItemActivity),
-            IllustratedBook("角色", IconLoader.randomAvatar(), RouterHub.USER_AllIdentityActivity),
+            IllustratedBook("物品图鉴", IconLoader.randomAvatar(), RouterHub.USER_AllItemIllustratedActivity),
+            IllustratedBook("角色图鉴", IconLoader.randomAvatar(), RouterHub.USER_AllIdentityIllustratedActivity),
         ).map {
             it.toCard(this)
         }
         mAdapter.reload(data)
-        super.onRefresh()
+        mRefreshLayout.isRefreshing = false
     }
 
     data class IllustratedBook(

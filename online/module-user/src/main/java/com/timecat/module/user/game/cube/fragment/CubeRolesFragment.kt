@@ -1,9 +1,10 @@
-package com.timecat.module.user.game.cube.fragment.detail
+package com.timecat.module.user.game.cube.fragment
 
 import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.common.Block
 import com.timecat.data.bmob.ext.bmob.requestBlockRelation
 import com.timecat.data.bmob.ext.net.findAllRole
+import com.timecat.module.user.base.BaseBlockFragment
 import com.timecat.module.user.ext.AvatarHead
 import io.reactivex.disposables.Disposable
 
@@ -15,7 +16,7 @@ import io.reactivex.disposables.Disposable
  * 创建者，关注，点赞数等
  * @usage null
  */
-class CubeRolesFragment : BaseCubeFragment() {
+class CubeRolesFragment : BaseBlockFragment() {
 
     var current: Disposable? = null
     fun loadRoles(block: Block) {
@@ -38,14 +39,11 @@ class CubeRolesFragment : BaseCubeFragment() {
                 mStatefulLayout?.showContent()
             }
         }
-        cubeViewModel attach current
+        blockViewModel attach current
     }
 
-    override fun initViewAfterLogin() {
-        super.initViewAfterLogin()
-        cubeViewModel.cube.observe(viewLifecycleOwner) {
-            loadRoles(it)
-        }
+    override fun loadDetail(block: Block) {
+        loadRoles(block)
     }
 
     var roles: List<Block> = listOf()
