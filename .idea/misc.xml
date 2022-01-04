@@ -9,6 +9,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../TimeCat-Plugin-PictureBed-Github/plugin-main-lib/src/main/res/layout/github_bed_view.xml" value="0.22871376811594202" />
+        <entry key="online/module-login/src/main/res/layout/login_activity_login.xml" value="0.29931972789115646" />
         <entry key="online/module-user/src/main/res/layout/user_activity_simple_add.xml" value="0.15364583333333334" />
         <entry key="online/module-user/src/main/res/layout/user_base_item_card_herf.xml" value="0.17755825734549138" />
         <entry key="online/module-user/src/main/res/layout/user_base_item_moment.xml" value="0.17755825734549138" />

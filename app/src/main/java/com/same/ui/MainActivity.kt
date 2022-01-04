@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             .build()
         LogUtil.DEBUG = true
         LogUtil.OPEN_LOG = true
+        RouteDebug.debug = true
         permissionService = NAV.service(PermissionService::class.java)
         val linearLayout = LinearLayout(this)
         linearLayout.orientation = LinearLayout.VERTICAL
