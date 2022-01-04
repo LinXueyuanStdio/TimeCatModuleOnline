@@ -106,7 +106,6 @@ class OnlineBlockDetailServiceImpl : ContainerService {
                             val db = homeService.primaryDb()
                             val page = DockPage(
                                 record,
-                                commonListener.primarySpaceId(),
                                 db,
                                 commonListener.getCurrentCardFactory(),
                                 commonListener.getPermission()

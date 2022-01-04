@@ -1,15 +1,9 @@
 package com.timecat.module.user.app.online
 
 import android.net.Uri
-import com.timecat.component.commonsdk.utils.override.LogUtil
 import com.timecat.data.bmob.data.common.Block
-import com.timecat.data.room.record.RoomRecord
-import com.timecat.identity.data.block.type.BLOCK_CONTAINER
 import com.timecat.identity.data.block.type.BLOCK_SPACE
-import com.timecat.identity.data.block.type.CONTAINER_BLOCK_UNIVERSAL
 import com.timecat.identity.readonly.RouterHub
-import com.timecat.layout.ui.business.breadcrumb.Path
-import com.timecat.middle.block.ext.prettyTitle
 import com.timecat.middle.block.service.DNS
 import com.timecat.middle.block.service.RouteSchema
 import com.timecat.module.user.ext.*
@@ -51,7 +45,7 @@ object TimeCatOnline {
     /**
      * 在线超空间内容
      */
-    const val Host = "timecat.online"
+    const val Host = RouteSchema.OnlineHost
     const val url = "$SCHEMA://${Host}"
 
     /**
@@ -123,7 +117,8 @@ object TimeCatOnline {
             tab2Url(PATH_game, GLOBAL_OnlineGameService, TAB_recommend)
         ),
     )
-    fun rootUri() = DNS.buildUri().authority(Host)
+
+    fun rootUri() = DNS.buildUri(Host)
 
     //region tab
     /**
@@ -153,12 +148,8 @@ object TimeCatOnline {
             block.space?.objectId ?: DNS.DEFAULT_QUERY_SpaceId
         }
         // 如果space为空，说明block就是超空间
-        return DNS.buildUri(encodeSpaceId(spaceId), block.objectId, RouterHub.GLOBAL_BlockDetailService)
-            .authority(Host)
+        return DNS.buildUri(Host, spaceId, block.objectId, RouterHub.GLOBAL_BlockDetailService)
             .build().toString()
     }
-
-    fun encodeSpaceId(spaceId:String) :String = "${RouteSchema.OnlineHost}/${spaceId}"
-    fun decodeSpaceId(spaceId:String) :String = spaceId.substringAfter("${RouteSchema.OnlineHost}/")
     //endregion
 }

@@ -49,8 +49,7 @@ class OnlineBackend(val context: Context, val I: User?) : IBackend {
 
     override suspend fun getDatabase(context: Context, spaceId: String): IDatabase {
         if (I == null) return EmptyDatabase()
-        val realSpaceId = TimeCatOnline.decodeSpaceId(spaceId)
-        val space = getBlock(context, oneBlockOf(realSpaceId)) ?: return EmptyDatabase()
+        val space = getBlock(context, oneBlockOf(spaceId)) ?: return EmptyDatabase()
         return OnlineBackendDb(context, I, space)
 
 //        requestOneBlockOrNull {
@@ -71,8 +70,7 @@ class OnlineBackend(val context: Context, val I: User?) : IBackend {
 
     override suspend fun getPermission(context: Context, spaceId: String): CardPermission {
         if (I == null) return CardPermission.NoAccess
-        val realSpaceId = TimeCatOnline.decodeSpaceId(spaceId)
-        val query = oneBlockOf(realSpaceId).includeACL(true)
+        val query = oneBlockOf(spaceId).includeACL(true)
         val space = getBlock(context, query) ?: return CardPermission.NoAccess
         val permission = space.getPermissionForUser(I)
         return permission
@@ -80,8 +78,7 @@ class OnlineBackend(val context: Context, val I: User?) : IBackend {
 
     override suspend fun getDatabaseAndPermission(context: Context, spaceId: String): Pair<CardPermission, IDatabase> {
         if (I == null) return CardPermission.NoAccess to EmptyDatabase()
-        val realSpaceId = TimeCatOnline.decodeSpaceId(spaceId)
-        val query = oneBlockOf(realSpaceId).includeACL(true)
+        val query = oneBlockOf(spaceId).includeACL(true)
         val space = getBlock(context, query) ?: return CardPermission.NoAccess to EmptyDatabase()
         val db = OnlineBackendDb(context, I, space)
         val permission = space.getPermissionForUser(I)

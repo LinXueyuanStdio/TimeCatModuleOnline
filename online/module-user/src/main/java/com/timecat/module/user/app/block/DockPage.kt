@@ -46,7 +46,6 @@ import java.util.*
  */
 class DockPage(
     val record: RoomRecord,
-    val spaceId: String,
     val db: IDatabase,
     val parentCardFactory: CardFactory,
     val parentCardPermission: CardPermission,
@@ -139,7 +138,6 @@ class DockPage(
         context,
         dockAdapter,
         dockRecycleView,
-        spaceId,
         db,
         habitService,
         timeService
@@ -195,7 +193,6 @@ class DockPage(
         context: Context,
         val mAdapter: BaseAdapter,
         val mRecyclerView: RecyclerView,
-        val currentSpaceId: String,
         val currentDb: IDatabase,
         val habitService: HabitService? = null,
         val timeService: ChangeReminderService? = null,
@@ -233,10 +230,6 @@ class DockPage(
                     mAdapter.updateItem(mAdapter.getGlobalPositionOf(item), newItem, null)
                 }
             }
-        }
-
-        override fun primarySpaceId(): String {
-            return currentSpaceId
         }
 
         override fun primaryDb(): IDatabase {

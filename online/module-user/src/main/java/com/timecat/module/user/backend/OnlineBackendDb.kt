@@ -10,7 +10,7 @@ import com.timecat.data.bmob.ext.net.allBlockByIds
 import com.timecat.data.bmob.ext.net.oneBlockOf
 import com.timecat.data.room.record.RoomRecord
 import com.timecat.identity.data.block.type.BLOCK_MAIL
-import com.timecat.middle.block.service.IDatabase
+import com.timecat.middle.block.service.*
 import com.timecat.middle.block.service.RequestListCallback
 import com.timecat.middle.block.service.RequestSingleOrNullCallback
 import com.timecat.module.user.ext.toBlock
@@ -25,6 +25,10 @@ import com.timecat.module.user.ext.toRoomRecord
  * @usage null
  */
 class OnlineBackendDb(val context: Context, val owner: User, val space: Block) : IDatabase {
+    override fun primaryDbUrl(): String {
+        return DNS.buildUri(RouteSchema.OnlineHost, space.objectId).build().toString()
+    }
+
     override fun updateRecord(record: RoomRecord) {
         saveBlock {
             target = record.toBlock(owner, space)

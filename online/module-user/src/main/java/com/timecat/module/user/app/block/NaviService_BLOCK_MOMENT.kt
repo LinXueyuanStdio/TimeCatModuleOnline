@@ -26,8 +26,7 @@ class NaviService_BLOCK_MOMENT : BlockTypeNaviService {
             val uri = Uri.parse(parentPath.uuid)
             val spaceId = DNS.getSpaceId(uri)
             val redirectUrl = RouterHub.GLOBAL_BlockDetailService
-            val url = DNS.buildUri(spaceId, record.uuid, redirectUrl)
-                .authority(uri.authority)
+            val url = DNS.buildUri(uri.authority!!, spaceId, record.uuid, redirectUrl)
                 .build().toString()
             Path(record.prettyTitle, url, DNS.type)
         }
