@@ -8,6 +8,7 @@ import com.timecat.identity.data.base.PageHeader
 import com.timecat.identity.data.block.ActivityBlock
 import com.timecat.identity.data.block.ActivityUrlBlock
 import com.timecat.identity.data.block.ItemBlock
+import com.timecat.identity.data.block.type.ACTIVITY_Seven_day_sign
 import com.timecat.identity.data.block.type.ACTIVITY_Url
 import com.timecat.identity.readonly.RouterHub
 import com.timecat.layout.ui.business.form.Image
@@ -32,7 +33,7 @@ class SevenDaySignActivityEditorActivity : BaseActivityAddActivity() {
 
     @AttrValueAutowiredAnno("block")
     var task: Block? = null
-    override fun title(): String = "外部链接活动"
+    override fun title(): String = "7 日登录活动"
     override fun routerInject() = NAV.inject(this)
 
     override fun loadFromExistingBlock(): Block.() -> Unit = {
@@ -91,7 +92,7 @@ class SevenDaySignActivityEditorActivity : BaseActivityAddActivity() {
         return 0
     }
 
-    override fun subtype(): Int = ACTIVITY_Url
+    override fun subtype(): Int = ACTIVITY_Seven_day_sign
     override fun getItemBlock(): ActivityBlock {
         return ActivityBlock(
             type = subtype(),
