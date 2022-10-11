@@ -2,6 +2,7 @@ apply from: "${project.rootDir}/gradle/module_header.gradle"
 
 android {
     resourcePrefix "user_"
+    namespace 'com.timecat.module.user'
 }
 
 dependencies {

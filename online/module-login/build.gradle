@@ -2,6 +2,7 @@ apply from: "${project.rootDir}/gradle/module_header.gradle"
 
 android {
     resourcePrefix "login_"
+    namespace 'com.timecat.module.login'
 }
 
 dependencies {

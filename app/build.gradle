@@ -6,6 +6,7 @@ android {
         dataBinding = true
         // viewBinding = true
     }
+    namespace 'com.timecat.fake.online'
 }
 
 dependencies {
